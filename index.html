@@ -424,7 +424,8 @@
     </div>
 
     <script>
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxsKzxfHi_ZyfOeisBe_YDgBNnFifEFEzyyY-8X6Wh3vcg6mdZcOQx1f-ipczjxQAhs/exec";
+        // 🛠️ 健太さんに共有していただいた最新のGAS本物URLを設定しました
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWVudytK2lGzkVGFdmC-_rIqwj3tcIhoL7s7bhqU9izygL_-750oHnmLttaV2BqxCX/exec";
 
         const terakoyaDates2026 = [
             "2026-05-20", "2026-06-03", "2026-06-17", "2026-07-08",
@@ -453,7 +454,6 @@
         async function fetchCloudData() {
             try {
                 logDebug("☁️ Googleスプレッドシートからデータを取得中...");
-                // 🛠️ GET通信時のCORSエラー対策として、一般的なフォームデータ形式に擬態
                 const response = await fetch(GAS_WEB_APP_URL);
                 const textData = await response.text(); 
                 globalCloudData = JSON.parse(textData);
@@ -474,7 +474,6 @@
         async function saveCloudData(key, value) {
             document.getElementById('saveStatus').textContent = "☁️ 保存中...";
             try {
-                // 🛠️ FORM送信形式（URLエンコード）に変換してブラウザ制限を完全に回避
                 const payload = { action: 'save', key: key, value: value };
                 await fetch(GAS_WEB_APP_URL, {
                     method: 'POST',
@@ -528,7 +527,6 @@
             document.getElementById('haruto-bento-alert').style.display = isBento ? "block" : "none";
         }
 
-        // 🛠️ セキュリティ制限を完全に潜り抜ける通信コア関数
         async function sendToGasWithFormStandard(payload) {
             const response = await fetch(GAS_WEB_APP_URL, {
                 method: 'POST',
@@ -551,7 +549,7 @@
             reader.onload = async function(evt) {
                 const base64Data = evt.target.result.split(',')[1];
                 try {
-                    logDebug("🚀 セキュリティ制限を回避してGASへ送信中...");
+                    logDebug("🚀 最新URL宛てに通信を送信中...");
                     const res = await sendToGasWithFormStandard({
                         action: 'analyze_definition',
                         fileData: base64Data,
@@ -584,7 +582,7 @@
             reader.onload = async function(evt) {
                 const base64Data = evt.target.result.split(',')[1];
                 try {
-                    logDebug("🚀 セキュリティ制限を回避してGASへ送信中...");
+                    logDebug("🚀 最新URL宛てに通信を送信中...");
                     const res = await sendToGasWithFormStandard({
                         action: 'analyze_file',
                         fileData: base64Data,
