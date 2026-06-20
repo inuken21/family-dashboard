@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>【共働き応援】こども準備＆保育登録メモ</title>
     
-    <!-- 📱 スマホのホーム画面用アイコン画像の設定（icon.pngと連動） -->
     <link rel="apple-touch-icon" href="icon.png">
 
     <style>
@@ -97,7 +96,7 @@
         .day-btn-container {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             gap: 4px;
         }
         .day-btn {
@@ -116,6 +115,19 @@
         .day-btn.active {
             background-color: #1a73e8;
             color: white;
+        }
+
+        /* 🆕 選択日付表示エリアのスタイル */
+        .selected-date-display {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.05rem;
+            color: #1a73e8;
+            background-color: #f0f7ff;
+            padding: 6px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border: 1px dashed #4a90e2;
         }
 
         .schedule-row {
@@ -385,7 +397,6 @@
         <h1>Family Dashboard</h1>
     </header>
 
-    <!-- 🟢 1番目：予定（スケジュール表示エリア） -->
     <div class="schedule-box">
         
         <div class="week-nav">
@@ -402,6 +413,8 @@
             <button type="button" class="day-btn" id="btn-day-5">金</button>
         </div>
         
+        <div class="selected-date-display" id="selected-date-label">📆 読み込み中...</div>
+        
         <div class="schedule-row">
             <span class="name-label kouta-label">こうた</span>
             <span id="display-kouta" class="schedule-text-display">読み込み中...</span>
@@ -416,7 +429,6 @@
             <button type="button" id="edit-btn-haruto" class="edit-btn">修正</button>
         </div>
 
-        <!-- 🤖 予約確認パネル -->
         <div class="reservation-panel">
             <div class="res-row">
                 <div class="res-label-box">🎒 わくわく</div>
@@ -446,7 +458,6 @@
         </div>
     </div>
 
-    <!-- 🟢 2番目：こうた宮崎小カレンダー -->
     <details class="kouta-details">
         <summary>🏫 こうた 宮崎小カレンダー</summary>
         <div class="details-content">
@@ -458,7 +469,6 @@
             </div>
             <div class="cal-container" id="kouta-calendar"></div>
             
-            <!-- クイック操作パネル -->
             <div class="quick-panel" id="kouta-quick-panel">
                 <div class="quick-panel-title" id="kouta-panel-date-title">設定</div>
                 <div class="panel-block">
@@ -478,7 +488,7 @@
                     
                     <div class="panel-row" id="panel-b4-lunch-row" style="display:none; background:#ffe0b2; padding:4px; border-radius:4px; width:100%; justify-content:center;">
                         <label class="panel-checkbox-label" style="color:#e65100;">
-                            <input type="checkbox" id="panel-lunch-checkbox"> 🥢 給食・清補まで実施する
+                            <input type="checkbox" id="panel-lunch-checkbox"> 🥢 給食・清掃まで実施する
                         </label>
                     </div>
                     
@@ -490,7 +500,6 @@
         </div>
     </details>
 
-    <!-- 🟢 3番目：はるとお弁当カレンダー -->
     <details class="bento-details">
         <summary>🍱 はるとお弁当カレンダー</summary>
         <div class="details-content">
@@ -507,14 +516,12 @@
         </div>
     </details>
 
-    <!-- 🟢 4番目：メモ ＆ TODOリスト -->
     <div class="card" style="border: 2px solid #1a73e8;">
         <h2 style="color: #1a73e8; border-bottom-color: #1a73e8;">✍️ メモ ＆ TODOリスト</h2>
         <textarea id="customMemo" class="memo-textarea" placeholder="ここに書いた内容はご夫婦のスマホに自動共有されます"></textarea>
         <div id="saveStatus" class="save-status">同期完了</div>
     </div>
 
-    <!-- 👦 康太の持ち物リスト -->
     <div class="card kouta-card">
         <h2 class="kouta-header">👦 康太（こうた）持ち物リスト</h2>
         <div id="kouta-terakoya-alert" class="terakoya-alert">📖 本日は【寺子屋（宮崎小）Bチーム】の開講日です！宿題・ドリル・筆記用具を忘れずに！</div>
@@ -586,7 +593,6 @@
         </details>
     </div>
 
-    <!-- 👶 はるとの持ち物リスト -->
     <div class="card haruto-card">
         <h2 class="haruto-header">👶 はると 持ち物リスト</h2>
         <div id="haruto-bento-alert" class="bento-alert">🍱 本日は【お弁当の日】です！お弁当と食具を忘れずに。</div>
@@ -641,7 +647,6 @@
         </details>
     </div>
 
-    <!-- 🐛 コピペ文面 -->
     <div class="card">
         <h2>🐛 あおむし広場 予約用定型文（コピペ用）</h2>
         <textarea class="responsive-textarea" style="height:110px; font-family:monospace;" readonly>月：スイミング
@@ -802,6 +807,14 @@
             const targetDateStr = getTargetDateStr(dayNum);
             updateWeekTitle();
             
+            // 🆕 選択された「〇月〇日（曜日）」を画面に分かりやすく出力
+            const parts = targetDateStr.split('-');
+            const days = ["日", "月", "火", "水", "木", "金", "土"];
+            const dateLabelEl = document.getElementById('selected-date-label');
+            if (dateLabelEl) {
+                dateLabelEl.textContent = `📅 ${parts[0]}年${parseInt(parts[1])}月${parseInt(parts[2])}日 (${days[dayNum]})`;
+            }
+
             const isTerakoya = (dayNum === 3) && terakoyaDates2026.includes(targetDateStr);
             let koutaSched = globalCloudData["custom_" + targetDateStr + "_kouta"];
             let isDuty = false;
@@ -881,7 +894,6 @@
             const bentoBadge = document.getElementById('haruto-bento-badge');
             if (bentoBadge) bentoBadge.style.display = (isBento && !offFlag) ? "inline" : "none";
 
-            // 🛠️ 安全ガードの追加：セレクトボックスが存在する場合のみ値をセットする
             const wakuVal = globalCloudData["res_wakuwaku_status_" + targetDateStr] || "yet";
             const aomuVal = globalCloudData["res_aomushi_status_" + targetDateStr] || "yet";
             
