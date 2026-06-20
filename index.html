@@ -71,7 +71,6 @@
             margin-bottom: 15px;
         }
         
-        /* 🆕 週ナビゲーション用のスタイル */
         .week-nav {
             display: flex;
             justify-content: space-between;
@@ -676,8 +675,6 @@
 
         let globalCloudData = {};
         let selectedDayNum = 1;
-        
-        // 🆕 スケジュール表示週をズラすための基準変数（0なら今週、1なら来週、-1なら先週）
         let currentWeekOffset = 0;
 
         let currentCalYear = new Date().getFullYear();
@@ -727,17 +724,14 @@
             } catch (e) { document.getElementById('saveStatus').textContent = "❌ 保存失敗"; }
         }
 
-        // 🆕 週オフセット（週めくり）に対応した正確な日付文字列算出ロジック
         function getTargetDateStr(dayNum) {
             const today = new Date();
             const currentDayIdx = today.getDay();
             let baseDate = new Date(today);
             
-            // 土日の場合は来週月曜を当週の基準とする
             if (currentDayIdx === 0) baseDate.setDate(today.getDate() + 1);
             else if (currentDayIdx === 6) baseDate.setDate(today.getDate() + 2);
             
-            // 現在選択されている週のオフセット分（7日 × オフセット数）を足し引きする
             baseDate.setDate(baseDate.getDate() + (dayNum - baseDate.getDay()) + (currentWeekOffset * 7));
             
             return `${baseDate.getFullYear()}-${String(baseDate.getMonth() + 1).padStart(2, '0')}-${String(baseDate.getDate()).padStart(2, '0')}`;
@@ -773,7 +767,6 @@
             await saveCloudData("res_" + type + "_status_" + targetDateStr, val);
         }
 
-        // 🆕 週表示タイトル（「今週」「来週」などのバッジテキスト）を動的生成
         function updateWeekTitle() {
             const titleEl = document.getElementById('week-title');
             if (currentWeekOffset === 0) titleEl.textContent = "📅 今週の予定";
@@ -791,17 +784,18 @@
             document.getElementById('btn-day-' + dayNum).className = 'day-btn active';
 
             const targetDateStr = getTargetDateStr(dayNum);
-            const parts = targetDateStr.split('-');
             const days = ["日", "月", "火", "水", "木", "金", "土"];
             
-            // ナビゲーションタイトルと日付を同期表示
             updateWeekTitle();
+            
+            // 🛠️ バグ修正箇所：日付キーを「年-月-日（ハイフン繋ぎ）」に完全統一
+            const parts = targetDateStr.split('-');
             document.getElementById('schedule-box-title').textContent = `予定: ${parts[1]}月${parts[2]}日 (${days[dayNum]})`;
 
-            const dateKey = parts[0] + "_" + parts[1] + "_" + parts[2];
             const isTerakoya = (dayNum === 3) && terakoyaDates2026.includes(targetDateStr);
             
-            let koutaSched = globalCloudData["custom_" + dateKey + "_kouta"];
+            // 🛠️ バグ修正箇所：クラウド連携用のキーをカレンダーと完全に同一のハイフン型に統一
+            let koutaSched = globalCloudData["custom_" + targetDateStr + "_kouta"];
             let isDuty = false;
             
             if (!koutaSched) {
@@ -847,10 +841,11 @@
             try { bentoList = JSON.parse(globalCloudData["haruto_bento_days"] || "[]"); } catch(e){}
             const isBento = bentoList.includes(targetDateStr);
 
-            let harutoSched = globalCloudData["custom_" + dateKey + "_haruto"] || defaultSchedules[dayNum].haruto;
-            if (isDayOff(targetDateStr) && !globalCloudData["custom_" + dateKey + "_haruto"]) {
+            // 🛠️ バグ修正箇所：はると側の読み込み用日付キーもハイフン型に統一
+            let harutoSched = globalCloudData["custom_" + targetDateStr + "_haruto"] || defaultSchedules[dayNum].haruto;
+            if (isDayOff(targetDateStr) && !globalCloudData["custom_" + targetDateStr + "_haruto"]) {
                 harutoSched = "💤 保育園はお休みです";
-            } else if (isBento && !globalCloudData["custom_" + dateKey + "_haruto"]) {
+            } else if (isBento && !globalCloudData["custom_" + targetDateStr + "_haruto"]) {
                 harutoSched = harutoSched.split(" (")[0] + " 🍱【今日はお弁当の日！】";
             }
             document.getElementById('display-haruto').textContent = harutoSched;
@@ -863,7 +858,6 @@
             document.getElementById('haruto-bento-alert').style.display = (isBento && !offFlag) ? "block" : "none";
             document.getElementById('haruto-bento-badge').style.display = (isBento && !offFlag) ? "inline" : "none";
 
-            // 3色予約ステータスをロード
             const wakuVal = globalCloudData["res_wakuwaku_status_" + targetDateStr] || "yet";
             const aomuVal = globalCloudData["res_aomushi_status_" + targetDateStr] || "yet";
             
@@ -877,15 +871,8 @@
             applySelectStyle(selAomu, aomuVal);
         }
 
-        // 🆕 週ナビゲーション（週めくり）ボタンのクリックイベント
-        document.getElementById('week-prev').addEventListener('click', () => {
-            currentWeekOffset--;
-            selectDay(selectedDayNum);
-        });
-        document.getElementById('week-next').addEventListener('click', () => {
-            currentWeekOffset++;
-            selectDay(selectedDayNum);
-        });
+        document.getElementById('week-prev').addEventListener('click', () => { currentWeekOffset--; selectDay(selectedDayNum); });
+        document.getElementById('week-next').addEventListener('click', () => { currentWeekOffset++; selectDay(selectedDayNum); });
 
         function renderKoutaCalendar(year, month) {
             const container = document.getElementById('kouta-calendar');
@@ -1047,11 +1034,12 @@
         document.getElementById('cal-prev').addEventListener('click', () => { currentCalMonth--; if (currentCalMonth < 0) { currentCalMonth = 11; currentCalYear--; } renderBentoCalendar(currentCalYear, currentCalMonth); });
         document.getElementById('cal-next').addEventListener('click', () => { currentCalMonth++; if (currentCalMonth > 11) { currentCalMonth = 0; currentCalYear++; } renderBentoCalendar(currentCalYear, currentCalMonth); });
 
+        // 🛠️ バグ修正箇所：手動修正時の保存用日付キーもハイフン型に統一
         async function toggleEdit(target) {
             const displayEl = document.getElementById("display-" + target);
             const inputEl = document.getElementById("input-" + target);
             const btnEl = document.getElementById("edit-btn-" + target);
-            const dateKey = getTargetDateStr(selectedDayNum).replace(/-/g, "_");
+            const targetDateStr = getTargetDateStr(selectedDayNum);
 
             if (btnEl.textContent === "修正") {
                 inputEl.value = displayEl.textContent;
@@ -1059,7 +1047,7 @@
                 btnEl.textContent = "保存"; btnEl.className = "edit-btn saving";
             } else {
                 displayEl.textContent = inputEl.value;
-                await saveCloudData("custom_" + dateKey + "_" + target, inputEl.value);
+                await saveCloudData("custom_" + targetDateStr + "_" + target, inputEl.value);
                 inputEl.style.display = "none"; displayEl.style.display = "block";
                 btnEl.textContent = "修正"; btnEl.className = "edit-btn";
             }
