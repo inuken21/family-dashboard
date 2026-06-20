@@ -152,7 +152,6 @@
         }
         .edit-btn.saving { background-color: #2b8a3e; }
 
-        /* 📸 アップロードアコーディオン用スタイル */
         .upload-details {
             border: 2px solid #1a73e8;
             background-color: #fff;
@@ -260,8 +259,6 @@
             margin-bottom: 8px;
         }
         .bento-login-info { font-size: 0.85rem; color: #555; background: #fafafa; padding: 6px 10px; border-radius: 4px; border: 1px dashed #ddd; margin: 0; }
-        
-        /* 🍱 はるとお弁当カレンダーのスタイル */
         .bento-details { border: 2px solid #fb8c00; background-color: #fff; padding: 12px; border-radius: var(--border-radius); margin-bottom: 15px; }
         .bento-details summary { color: #e65100; font-size: 1.15rem; font-weight: bold; cursor: pointer; outline: none; }
 
@@ -298,7 +295,6 @@
         <p style="margin: 5px 0 0 0; font-size: 0.85rem;">Google Cloud ＆ Gemini AI 連携版</p>
     </header>
 
-    <!-- 📅 1. スケジュールエリア -->
     <div class="schedule-box">
         <div class="schedule-title" id="schedule-box-title">📅 スケジュール選択</div>
         <div class="day-btn-container">
@@ -324,18 +320,15 @@
         </div>
     </div>
 
-    <!-- 📸 2. 【位置変更＆初期非表示】アップロードアコーディオンメニュー -->
     <details class="upload-details">
         <summary>📄 学校プリント自動スキャン (Gemini)</summary>
         <div class="details-content">
             <div class="upload-split-container">
-                <!-- A/Bタイム定義（初回のみ） -->
                 <div class="upload-box-half">
                     <p style="margin:0; font-size:0.75rem; font-weight:bold;">① A/Bタイム時程表<br><span style="color:#666; font-weight:normal;">(年1回・ルール変更時のみ)</span></p>
                     <label for="defInput" class="upload-label-btn sec-btn">📁 時程表を登録</label>
                     <input type="file" id="defInput" class="upload-input" accept="application/pdf,image/*">
                 </div>
-                <!-- 毎月の学年だより -->
                 <div class="upload-box-half">
                     <p style="margin:0; font-size:0.75rem; font-weight:bold;">② 今月の学年だより<br><span style="color:#1a73e8; font-weight:normal;">(毎月の配信時にアップ)</span></p>
                     <label for="fileInput" class="upload-label-btn">📁 お便りを読込</label>
@@ -346,12 +339,11 @@
         </div>
     </details>
 
-    <!-- 🍱 3. 【名称変更＆初期非表示】はるとお弁当カレンダー -->
     <details class="bento-details">
         <summary>🍱 はるとお弁当カレンダー</summary>
         <div class="details-content">
             <div class="bento-link-box">
-                <a href="[https://www.fl39.jp/](https://www.fl39.jp/)" target="_blank" rel="noopener noreferrer" class="bento-link-btn">🌐 お弁当予約サイトを開く ↗</a>
+                <a href="https://www.fl39.jp/" target="_blank" rel="noopener noreferrer" class="bento-link-btn">🌐 お弁当予約サイトを開く ↗</a>
                 <p class="bento-login-info">ID: <strong>inahata0208</strong> / PW: <strong>kentaina0118</strong></p>
             </div>
             <div class="cal-month-nav">
@@ -363,14 +355,12 @@
         </div>
     </details>
 
-    <!-- ✍️ 突発メモ -->
     <div class="card" style="border: 2px solid #1a73e8;">
         <h2 style="color: #1a73e8; border-bottom-color: #1a73e8;">✍️ 突発メモ ＆ 一時TODOリスト</h2>
         <textarea id="customMemo" class="memo-textarea" placeholder="ここに書いた内容はご夫婦のスマホに自動共有されます"></textarea>
         <div id="saveStatus" class="save-status">同期完了</div>
     </div>
 
-    <!-- 👦 康太の持ち物リスト -->
     <div class="card kouta-card">
         <h2 class="kouta-header">👦 康太（こうた）持ち物リスト</h2>
         <div id="kouta-terakoya-alert" class="terakoya-alert">📖 本日は【寺子屋（宮崎小）Bチーム】の開講日です！宿題・ドリル・筆記用具を忘れずに！</div>
@@ -394,7 +384,6 @@
         </details>
     </div>
 
-    <!-- 👶 はるとの持ち物リスト -->
     <div class="card haruto-card">
         <h2 class="haruto-header">👶 はると 持ち物リスト</h2>
         <div id="haruto-bento-alert" class="bento-alert">🍱 本日は【お弁当の日】です！</div>
@@ -410,7 +399,7 @@
     </div>
 
     <script>
-        const GAS_WEB_APP_URL = "[https://script.google.com/macros/s/AKfycbxsKzxfHi_ZyfOeisBe_YDgBNnFifEFEzyyY-8X6Wh3vcg6mdZcOQx1f-ipczjxQAhs/exec](https://script.google.com/macros/s/AKfycbxsKzxfHi_ZyfOeisBe_YDgBNnFifEFEzyyY-8X6Wh3vcg6mdZcOQx1f-ipczjxQAhs/exec)";
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxsKzxfHi_ZyfOeisBe_YDgBNnFifEFEzyyY-8X6Wh3vcg6mdZcOQx1f-ipczjxQAhs/exec";
 
         const terakoyaDates2026 = [
             "2026-05-20", "2026-06-03", "2026-06-17", "2026-07-08",
@@ -431,12 +420,22 @@
         let currentCalYear = new Date().getFullYear();
         let currentCalMonth = new Date().getMonth();
 
+        // 🛠️ 通信エラー対策：エラー検知とデータパースを大幅に強化
         async function fetchCloudData() {
             try {
                 const response = await fetch(GAS_WEB_APP_URL);
-                globalCloudData = await response.json();
+                const textData = await response.text(); 
+                globalCloudData = JSON.parse(textData);
                 document.getElementById('loading').style.display = 'none';
-            } catch (e) { document.getElementById('loading').textContent = "⚠️ 読み込み失敗。"; }
+                renderCalendar(currentCalYear, currentCalMonth);
+                let currentDay = new Date().getDay();
+                if (currentDay === 0 || currentDay === 6) currentDay = 1;
+                selectDay(currentDay);
+                document.getElementById('customMemo').value = globalCloudData["memo"] || "";
+            } catch (e) { 
+                console.error(e);
+                document.getElementById('loading').textContent = "⚠️ クラウドデータの読み込みに失敗しました。時間をおいて再読み込みしてください。"; 
+            }
         }
 
         async function saveCloudData(key, value) {
@@ -444,6 +443,7 @@
             try {
                 await fetch(GAS_WEB_APP_URL, {
                     method: 'POST',
+                    mode: 'no-cors', // クロスドメイン制限を確実にバイパス
                     body: JSON.stringify({ action: 'save', key: key, value: value })
                 });
                 globalCloudData[key] = value;
@@ -504,13 +504,12 @@
             reader.onload = async function(evt) {
                 const base64Data = evt.target.result.split(',')[1];
                 try {
-                    const response = await fetch(GAS_WEB_APP_URL, {
+                    await fetch(GAS_WEB_APP_URL, {
                         method: 'POST',
+                        mode: 'no-cors',
                         body: JSON.stringify({ action: 'analyze_definition', fileData: base64Data, mimeType: file.type })
                     });
-                    const res = await response.json();
-                    if (res.status === 'success') statusEl.textContent = "✅ 時程ルール（定義）の同期に成功しました！";
-                    else statusEl.textContent = "❌ 解析失敗: " + res.message;
+                    statusEl.textContent = "✅ 時程ルール（定義）を送信しました。15秒ほど待ってから再読み込みしてください。";
                 } catch(err) { statusEl.textContent = "❌ 通信エラー。"; }
             };
             reader.readAsDataURL(file);
@@ -527,16 +526,13 @@
             reader.onload = async function(evt) {
                 const base64Data = evt.target.result.split(',')[1];
                 try {
-                    const response = await fetch(GAS_WEB_APP_URL, {
+                    await fetch(GAS_WEB_APP_URL, {
                         method: 'POST',
+                        mode: 'no-cors',
                         body: JSON.stringify({ action: 'analyze_file', fileData: base64Data, mimeType: file.type })
                     });
-                    const res = await response.json();
-                    if (res.status === 'success') {
-                        statusEl.textContent = "✅ スケジュール自動更新完了！";
-                        await fetchCloudData();
-                        selectDay(selectedDayNum);
-                    } else statusEl.textContent = "❌ 解析失敗: " + res.message;
+                    statusEl.textContent = "✅ スケジュールデータを送信しました。少し待ってから再読み込みしてください。";
+                    setTimeout(fetchCloudData, 15000); // 15秒後に自動リロード
                 } catch(err) { statusEl.textContent = "❌ 通信エラー。"; }
             };
             reader.readAsDataURL(file);
@@ -592,14 +588,7 @@
         let memoTimeout;
         document.getElementById('customMemo').addEventListener('input', (e) => { clearTimeout(memoTimeout); memoTimeout = setTimeout(() => { saveCloudData("memo", e.target.value); }, 1000); });
 
-        window.addEventListener('DOMContentLoaded', async () => {
-            await fetchCloudData();
-            let currentDay = new Date().getDay();
-            if (currentDay === 0 || currentDay === 6) currentDay = 1;
-            renderCalendar(currentCalYear, currentCalMonth);
-            selectDay(currentDay);
-            document.getElementById('customMemo').value = globalCloudData["memo"] || "";
-        });
+        window.addEventListener('DOMContentLoaded', fetchCloudData);
 
         for (let i = 1; i <= 5; i++) document.getElementById('btn-day-' + i).addEventListener('click', () => selectDay(i));
         document.getElementById('edit-btn-kouta').addEventListener('click', () => toggleEdit('kouta'));
