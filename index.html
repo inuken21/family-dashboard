@@ -152,7 +152,6 @@
         }
         .edit-btn.saving { background-color: #2b8a3e; }
 
-        /* カレンダー共通のスタイリング */
         .cal-container {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -169,7 +168,7 @@
             font-size: 0.9rem;
             cursor: pointer;
             position: relative;
-            min-height: 42px;
+            min-height: 44px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -178,87 +177,68 @@
         }
         .cal-day.empty { background-color: transparent; border: none; cursor: default; min-height: auto; }
         
-        /* こうたカレンダー専用スタイル */
-        .cal-day.kouta-active-b {
-            background-color: #ffebee;
-            border-color: #e53935;
+        .cal-day.kouta-active-b { background-color: #ffebee; border-color: #e53935; }
+        
+        .cal-day .kouta-badge-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            align-items: center;
+            margin-top: 2px;
         }
         .cal-day .kouta-badge {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: bold;
             padding: 1px 3px;
             border-radius: 3px;
-            margin-top: 2px;
             color: white;
-            background-color: #1e88e5; /* Aタイムは青 */
+            background-color: #1e88e5;
         }
-        .cal-day.kouta-active-b .kouta-badge {
-            background-color: #e53935; /* Bタイムは赤 */
-        }
-
-        /* はるとカレンダー専用スタイル */
-        .cal-day.bento-active {
-            background-color: #ffe0b2;
-            border-color: #fb8c00;
-            color: #e65100;
+        .cal-day.kouta-active-b .kouta-badge { background-color: #e53935; }
+        
+        .cal-day .kouta-duty-badge {
+            font-size: 0.55rem;
+            background-color: #9c27b0;
+            color: white;
+            padding: 0px 2px;
+            border-radius: 2px;
             font-weight: bold;
         }
-        .cal-day.bento-active::after {
-            content: "🍱";
-            position: absolute;
-            top: -2px;
-            right: -2px;
-            font-size: 0.65rem;
-        }
 
-        .cal-month-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            margin-top: 10px;
-        }
-        .cal-nav-btn {
-            background-color: #fff;
-            border: 1px solid #ccc;
-            padding: 4px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+        .cal-day.bento-active { background-color: #ffe0b2; border-color: #fb8c00; color: #e65100; font-weight: bold; }
+        .cal-day.bento-active::after { content: "🍱"; position: absolute; top: -2px; right: -2px; font-size: 0.65rem; }
 
-        /* クイック設定パネル */
+        .cal-month-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; margin-top: 10px; }
+        .cal-nav-btn { background-color: #fff; border: 1px solid #ccc; padding: 4px 10px; border-radius: 4px; cursor: pointer; }
+
+        /* クイック設定パネルの拡張 */
         .quick-panel {
             background-color: #f0f4f8;
-            border: 1px solid #cbd5e1;
+            border: 2px solid #cbd5e1;
             border-radius: 6px;
-            padding: 10px;
+            padding: 12px;
             margin-top: 10px;
             display: none;
         }
-        .quick-panel-title { font-weight: bold; font-size: 0.85rem; color: #1e88e5; margin-bottom: 8px; text-align: center; }
-        .panel-row { display: flex; justify-content: space-around; align-items: center; gap: 8px; }
-        .panel-select { padding: 4px 8px; font-size: 0.85rem; border-radius: 4px; border: 1px solid #ccc; }
+        .quick-panel-title { font-weight: bold; font-size: 0.9rem; color: #1e88e5; margin-bottom: 10px; text-align: center; }
+        .panel-block { display: flex; flex-direction: column; gap: 8px; }
+        .panel-row { display: flex; justify-content: space-around; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .panel-select { padding: 4px 8px; font-size: 0.85rem; border-radius: 4px; border: 1px solid #ccc; background: white; }
         .panel-checkbox-label { font-size: 0.85rem; font-weight: bold; display: flex; align-items: center; gap: 4px; cursor: pointer; }
-
-        .bento-link-box {
+        .panel-preview-box {
             background-color: #fff;
-            border: 1px solid #fb8c00;
-            border-radius: 6px;
-            padding: 10px;
-            margin-bottom: 12px;
-        }
-        .bento-link-btn {
-            display: block;
-            text-align: center;
-            background-color: #fb8c00;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            padding: 10px;
+            border: 1px solid #94a3b8;
+            padding: 6px;
             border-radius: 4px;
-            font-size: 0.95rem;
-            margin-bottom: 8px;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #334155;
+            margin-top: 4px;
         }
+
+        .bento-link-box { background-color: #fff; border: 1px solid #fb8c00; border-radius: 6px; padding: 10px; margin-bottom: 12px; }
+        .bento-link-btn { display: block; text-align: center; background-color: #fb8c00; color: white; text-decoration: none; font-weight: bold; padding: 10px; border-radius: 4px; font-size: 0.95rem; margin-bottom: 8px; }
         .bento-login-info { font-size: 0.85rem; color: #555; background: #fafafa; padding: 6px 10px; border-radius: 4px; border: 1px dashed #ddd; margin: 0; }
         
         .kouta-details { border: 2px solid #1e88e5; background-color: #fff; padding: 12px; border-radius: var(--border-radius); margin-bottom: 15px; }
@@ -297,7 +277,7 @@
 
     <header>
         <h1>Family Dashboard</h1>
-        <p style="margin: 5px 0 0 0; font-size: 0.85rem;">宮崎小完全手動カレンダー ＆ 同期版</p>
+        <p style="margin: 5px 0 0 0; font-size: 0.85rem;">宮崎小カレンダー時程拡張版</p>
     </header>
 
     <!-- 🟢 1番目：予定（スケジュール表示エリア） -->
@@ -326,11 +306,11 @@
         </div>
     </div>
 
-    <!-- 🟢 2番目：こうた宮崎小カレンダー（旧・学年だより解析枠）※初期状態で閉じたアコーディオン -->
+    <!-- 🟢 2番目：こうた宮崎小カレンダー ※初期状態で閉じたアコーディオン -->
     <details class="kouta-details">
         <summary>🏫 こうた 宮崎小カレンダー</summary>
         <div class="details-content">
-            <p style="margin:0 0 8px 0; font-size:0.8rem; color:#666; text-align:center;">日付をタップして、校時(4〜6時間)とBタイムをかんたん変更設定</p>
+            <p style="margin:0 0 8px 0; font-size:0.8rem; color:#666; text-align:center;">日付をタップして、校時(4〜6)・Bタイム・給食当番を設定</p>
             <div class="cal-month-nav">
                 <button type="button" class="cal-nav-btn" id="kouta-cal-prev">◀ 前月</button>
                 <span id="kouta-cal-month-title" style="font-weight: bold; font-size: 1.1rem;"></span>
@@ -338,18 +318,35 @@
             </div>
             <div class="cal-container" id="kouta-calendar"></div>
             
-            <!-- クイック操作パネル -->
+            <!-- 拡張クイック操作パネル -->
             <div class="quick-panel" id="kouta-quick-panel">
-                <div class="quick-panel-title" id="kouta-panel-date-title">6月3日の設定</div>
-                <div class="panel-row">
-                    <select id="panel-period-select" class="panel-select">
-                        <option value="4">4時間授業</option>
-                        <option value="5">5時間授業</option>
-                        <option value="6">6時間授業</option>
-                    </select>
-                    <label class="panel-checkbox-label">
-                        <input type="checkbox" id="panel-btime-checkbox"> 🅱️ Bタイム指定
-                    </label>
+                <div class="quick-panel-title" id="kouta-panel-date-title">設定</div>
+                <div class="panel-block">
+                    <div class="panel-row">
+                        <select id="panel-period-select" class="panel-select">
+                            <option value="4">4時間授業</option>
+                            <option value="5">5時間授業</option>
+                            <option value="6">6時間授業</option>
+                        </select>
+                        <label class="panel-checkbox-label">
+                            <input type="checkbox" id="panel-btime-checkbox"> 🅱️ Bタイム
+                        </label>
+                        <label class="panel-checkbox-label" style="color:#9c27b0;">
+                            <input type="checkbox" id="panel-duty-checkbox"> 🧺 給食当番
+                        </label>
+                    </div>
+                    
+                    <!-- Bタイムかつ4時間の時だけ自動出現する給食・清掃トグル -->
+                    <div class="panel-row" id="panel-b4-lunch-row" style="display:none; background:#ffe0b2; padding:4px; border-radius:4px; width:100%; justify-content:center;">
+                        <label class="panel-checkbox-label" style="color:#e65100;">
+                            <input type="checkbox" id="panel-lunch-checkbox"> 🥢 給食・清掃まで実施する
+                        </label>
+                    </div>
+                    
+                    <!-- 下校想定時刻のリアルタイムプレビュー表示 -->
+                    <div class="panel-preview-box">
+                        🕒 下校想定時刻: <span id="panel-time-preview" style="color:#e53935; font-size:0.95rem;">--:--</span> 頃
+                    </div>
                 </div>
             </div>
         </div>
@@ -412,8 +409,8 @@
                 </ul>
             </div>
         </details>
-        <details>
-            <summary>給食当番の時</summary>
+        <details id="kouta-lunch-details">
+            <summary>🧺 給食当番の時 <span id="kouta-lunch-badge" class="badge" style="background-color:#9c27b0; display:none;">本日当番！</span></summary>
             <div class="details-content">
                 <ul class="todo-list">
                     <li class="todo-item"><input type="checkbox" id="k-lunch1"><label for="k-lunch1"><strong>マスク</strong>（給食袋の中にイン！）</label></li>
@@ -543,7 +540,6 @@
         let globalCloudData = {};
         let selectedDayNum = 1;
         
-        // カレンダー表示用（こうたと、はるとで独立してコントロール可）
         let currentCalYear = new Date().getFullYear();
         let currentCalMonth = new Date().getMonth();
         let koutaCalYear = new Date().getFullYear();
@@ -581,6 +577,16 @@
             return `${baseDate.getFullYear()}-${String(baseDate.getMonth() + 1).padStart(2, '0')}-${String(baseDate.getDate()).padStart(2, '0')}`;
         }
 
+        // 下校時刻を算出する内部ヘルパー
+        function calculateKoutaTime(config) {
+            if (config.isBTime && config.period === "4") {
+                // Bタイム4時間授業で給食清掃ありなら12:55
+                return config.hasLunch ? "12:55" : "11:55"; 
+            }
+            const typeStr = config.isBTime ? "B" : "A";
+            return miyazakiTimeTable[typeStr][config.period];
+        }
+
         function selectDay(dayNum) {
             selectedDayNum = dayNum;
             for(let i=1; i<=5; i++) document.getElementById('btn-day-' + i).className = 'day-btn';
@@ -594,26 +600,52 @@
             const dateKey = parts[0] + "_" + parts[1] + "_" + parts[2];
             const isTerakoya = (dayNum === 3) && terakoyaDates2026.includes(targetDateStr);
             
-            // 🎒 こうたの予定作成ロジック（宮崎小カレンダーの設定を最優先反映）
+            // 🎒 こうたの予定作成ロジック（宮崎小設定を反映）
             let koutaSched = globalCloudData["custom_" + dateKey + "_kouta"];
+            let isDuty = false;
+            
             if (!koutaSched) {
-                // カレンダー設定データ（初期値は5時間・Aタイム）
-                let config = { period: "5", isBTime: false };
+                // 初期設定値（5時間・Aタイム・給食清掃あり・当番なし）
+                let config = { period: "5", isBTime: false, hasLunch: true, isDuty: false };
                 try {
                     if (globalCloudData["kouta_config_" + targetDateStr]) {
                         config = JSON.parse(globalCloudData["kouta_config_" + targetDateStr]);
                     }
                 } catch(e){}
 
+                isDuty = !!config.isDuty;
                 const typeStr = config.isBTime ? "B" : "A";
-                const limitTime = miyazakiTimeTable[typeStr][config.period];
-                const baseText = isTerakoya ? "🔥 わくわく → 【寺子屋Bチーム 13:55〜14:55】" : defaultSchedules[dayNum].kouta;
+                const limitTime = calculateKoutaTime(config);
                 
-                koutaSched = `🎒 ${typeStr}タイム (${config.period}時間授業・${limitTime}頃下校) / ${baseText}`;
+                let detailLabel = `${typeStr}タイム (${config.period}時間授業`;
+                if (config.isBTime && config.period === "4") {
+                    detailLabel += config.hasLunch ? "・給食清掃あり" : "・給食なし";
+                }
+                detailLabel += `・${limitTime}頃下校)`;
+
+                // 寺子屋の日なら自動でスケジュールの後ろに結合して表現
+                const baseText = isTerakoya ? "🔥 わくわく → 【寺子屋Bチーム 13:55〜14:55】" : defaultSchedules[dayNum].kouta;
+                const dutyLabel = isDuty ? " 🧺[今週は給食当番！]" : "";
+                
+                koutaSched = `🎒 ${detailLabel}${dutyLabel} / ${baseText}`;
+            } else {
+                // 手動修正テキストが入っている場合でも、当番フラグだけはカレンダーデータから補足確認
+                try {
+                    if (globalCloudData["kouta_config_" + targetDateStr]) {
+                        const config = JSON.parse(globalCloudData["kouta_config_" + targetDateStr]);
+                        isDuty = !!config.isDuty;
+                    }
+                } catch(e){}
             }
             document.getElementById('display-kouta').textContent = koutaSched;
 
-            // 弁当リスト取得
+            // 給食当番アコーディオン・バッジ連動
+            document.getElementById('kouta-lunch-badge').style.display = isDuty ? "inline-block" : "none";
+            if (isDuty) {
+                document.getElementById('kouta-lunch-details').open = true;
+            }
+
+            // はると用お弁当データ取得
             let bentoList = [];
             try { bentoList = JSON.parse(globalCloudData["haruto_bento_days"] || "[]"); } catch(e){}
             const isBento = bentoList.includes(targetDateStr);
@@ -638,7 +670,6 @@
             container.innerHTML = '';
             document.getElementById('kouta-cal-month-title').textContent = `${year}年${month + 1}月`;
             
-            // 曜日ヘッダー
             ['日','月','火','水','木','金','土'].forEach(w => {
                 const h = document.createElement('div'); h.className = 'cal-header'; h.textContent = w; container.appendChild(h);
             });
@@ -655,8 +686,7 @@
 
                 const cStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
                 
-                // クラウドデータから日付設定を取得（無い場合はデフォルト: 5時間/Aタイム）
-                let config = { period: "5", isBTime: false };
+                let config = { period: "5", isBTime: false, hasLunch: true, isDuty: false };
                 try {
                     if (globalCloudData["kouta_config_" + cStr]) {
                         config = JSON.parse(globalCloudData["kouta_config_" + cStr]);
@@ -665,17 +695,38 @@
 
                 if (config.isBTime) dayEl.classList.add('kouta-active-b');
                 
+                const badgeContainer = document.createElement('div');
+                badgeContainer.className = 'kouta-badge-container';
+
                 const badge = document.createElement('div');
                 badge.className = 'kouta-badge';
-                badge.textContent = `${config.period}${config.isBTime ? 'B' : 'A'}`;
-                dayEl.appendChild(badge);
+                
+                let displayType = config.isBTime ? 'B' : 'A';
+                if (config.isBTime && config.period === "4" && !config.hasLunch) {
+                    displayType = 'B(無)'; // 給食なし
+                }
+                badge.textContent = `${config.period}${displayType}`;
+                badgeContainer.appendChild(badge);
 
-                // タップした時のクイック設定パネル表示アクション
+                // 給食当番バッジ
+                if (config.isDuty) {
+                    const dutyBadge = document.createElement('div');
+                    dutyBadge.className = 'kouta-duty-badge';
+                    dutyBadge.textContent = "当番";
+                    badgeContainer.appendChild(dutyBadge);
+                }
+
+                dayEl.appendChild(badgeContainer);
+
                 dayEl.addEventListener('click', () => {
                     activePanelDateStr = cStr;
                     document.getElementById('kouta-panel-date-title').textContent = `${month + 1}月${date}日の下校時程設定`;
                     document.getElementById('panel-period-select').value = config.period;
                     document.getElementById('panel-btime-checkbox').checked = config.isBTime;
+                    document.getElementById('panel-lunch-checkbox').checked = config.hasLunch !== false;
+                    document.getElementById('panel-duty-checkbox').checked = !!config.isDuty;
+                    
+                    updatePanelLivePreview();
                     document.getElementById('kouta-quick-panel').style.display = 'block';
                 });
 
@@ -683,13 +734,42 @@
             }
         }
 
-        // クイックパネルの変更イベント監視
+        // クイックパネル内のプレビュー表示＆表示連動
+        function updatePanelLivePreview() {
+            const period = document.getElementById('panel-period-select').value;
+            const isBTime = document.getElementById('panel-btime-checkbox').checked;
+            const hasLunch = document.getElementById('panel-lunch-checkbox').checked;
+            
+            // Bタイムかつ4時間のときだけ「給食清掃あり」チェックボックスを表示
+            const lunchRow = document.getElementById('panel-b4-lunch-row');
+            if (isBTime && period === "4") {
+                lunchRow.style.display = 'flex';
+            } else {
+                lunchRow.style.display = 'none';
+            }
+
+            // 下校想定時刻のプレビュー計算
+            const mockConfig = { period: period, isBTime: isBTime, hasLunch: hasLunch };
+            const timePreview = calculateKoutaTime(mockConfig);
+            document.getElementById('panel-time-preview').textContent = timePreview;
+        }
+
+        // クイックパネルの変更変更保存
         async function saveKoutaPanelConfig() {
             if (!activePanelDateStr) return;
             const period = document.getElementById('panel-period-select').value;
             const isBTime = document.getElementById('panel-btime-checkbox').checked;
+            const hasLunch = document.getElementById('panel-lunch-checkbox').checked;
+            const isDuty = document.getElementById('panel-duty-checkbox').checked;
             
-            const configValue = JSON.stringify({ period: period, isBTime: isBTime });
+            updatePanelLivePreview();
+
+            const configValue = JSON.stringify({ 
+                period: period, 
+                isBTime: isBTime, 
+                hasLunch: hasLunch,
+                isDuty: isDuty
+            });
             await saveCloudData("kouta_config_" + activePanelDateStr, configValue);
             
             renderKoutaCalendar(koutaCalYear, koutaCalMonth);
@@ -698,6 +778,8 @@
 
         document.getElementById('panel-period-select').addEventListener('change', saveKoutaPanelConfig);
         document.getElementById('panel-btime-checkbox').addEventListener('change', saveKoutaPanelConfig);
+        document.getElementById('panel-lunch-checkbox').addEventListener('change', saveKoutaPanelConfig);
+        document.getElementById('panel-duty-checkbox').addEventListener('change', saveKoutaPanelConfig);
 
         // はると用お弁当カレンダーの生成
         function renderBentoCalendar(year, month) {
@@ -727,7 +809,7 @@
             }
         }
 
-        // ナビゲーションイベント
+        // ナびゲーション
         document.getElementById('kouta-cal-prev').addEventListener('click', () => { koutaCalMonth--; if (koutaCalMonth < 0) { koutaCalMonth = 11; koutaCalYear--; } renderKoutaCalendar(koutaCalYear, koutaCalMonth); document.getElementById('kouta-quick-panel').style.display='none'; });
         document.getElementById('kouta-cal-next').addEventListener('click', () => { koutaCalMonth++; if (koutaCalMonth > 11) { koutaCalMonth = 0; koutaCalYear++; } renderKoutaCalendar(koutaCalYear, koutaCalMonth); document.getElementById('kouta-quick-panel').style.display='none'; });
 
