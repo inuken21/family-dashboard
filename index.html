@@ -175,20 +175,36 @@
             margin-top: 10px;
             text-align: center;
         }
-        .upload-input { display: none; }
-        .upload-label {
-            background-color: #4a90e2;
+        
+        .prompt-textarea {
+            width: 100%;
+            height: 100px;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            margin-top: 6px;
+            resize: vertical;
+        }
+
+        .analyze-action-btn {
+            background-color: #34d399;
             color: white;
-            padding: 6px 14px;
+            border: none;
+            padding: 8px 18px;
             border-radius: 4px;
             font-weight: bold;
+            font-size: 0.9rem;
             cursor: pointer;
+            margin-top: 8px;
             display: inline-block;
-            font-size: 0.85rem;
-            margin-top: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            -webkit-appearance: none;
         }
-        .upload-label.accent-btn {
-            background-color: #34d399;
+
+        .analyze-action-btn.blue-btn {
+            background-color: #4a90e2;
         }
 
         .bento-cal-container {
@@ -290,7 +306,7 @@
 
     <header>
         <h1>Family Dashboard</h1>
-        <p style="margin: 5px 0 0 0; font-size: 0.85rem;">インテリジェント圧縮 ＆ Gemini 直通版</p>
+        <p style="margin: 5px 0 0 0; font-size: 0.85rem;">爆速テキストコピペ ＆ Gemini 直通版</p>
     </header>
 
     <div class="schedule-box">
@@ -322,18 +338,18 @@
         <summary>📄 学年だより解析（Geminiスキャン）</summary>
         <div class="details-content">
             <div class="upload-section">
-                <p style="margin:0; font-size:0.85rem; font-weight:bold; color:#333;">①初回のみ登録：A/Bタイムの定義ファイル</p>
-                <p style="margin:2px 0 6px 0; font-size:0.75rem; color:#666;">時程ルール（Aタイム・Bタイムの各校時ごとの詳細時間）が書かれたファイルを読み込ませます。</p>
-                <label for="defFileInput" class="upload-label">📁 定義ファイルを登録</label>
-                <input type="file" id="defFileInput" class="upload-input" accept="image/*">
+                <p style="margin:0; font-size:0.85rem; font-weight:bold; color:#333;">①初回のみ登録：A/Bタイムの定義ルール（テキスト）</p>
+                <p style="margin:2px 0 4px 0; font-size:0.75rem; color:#666;">時程ルール（Aタイム・Bタイムの各校時ごとの詳細な下校時刻）の文字をここに貼り付けます。</p>
+                <textarea id="defTextInput" class="prompt-textarea" placeholder="例: Aタイム 4校時13:20、5校時14:15... Bタイム 4校時11:55... 等"></textarea>
+                <button type="button" id="btnSaveDef" class="analyze-action-btn blue-btn">📋 時程ルールをシステムに登録</button>
                 <div id="defUploadStatus" style="margin-top:5px; font-weight:bold; color:#10b981; font-size:0.8rem;"></div>
             </div>
 
             <div class="upload-section" style="margin-top:12px;">
-                <p style="margin:0; font-size:0.85rem; font-weight:bold; color:#333;">②毎月投稿：学年だより</p>
-                <p style="margin:2px 0 6px 0; font-size:0.75rem; color:#666;">配布された最新の学年だよりスクショを読み込ませ、下校予定を一括解析・マッピングします。</p>
-                <label for="fileInput" class="upload-label accent-btn">📁 今月の学年だよりを解析</label>
-                <input type="file" id="fileInput" class="upload-input" accept="image/*">
+                <p style="margin:0; font-size:0.85rem; font-weight:bold; color:#333;">②毎月投稿：今月の予定テキスト</p>
+                <p style="margin:2px 0 4px 0; font-size:0.75rem; color:#666;">お便りPDFやWEBの日付・行事部分のテキストをまるごとコピーしてここに貼り付けます。</p>
+                <textarea id="fileTextInput" class="prompt-textarea" placeholder="例: 6月3日(水) 4B 避難訓練、6月12日(金) 5A 個人面談... 等"></textarea>
+                <button type="button" id="btnAnalyzeText" class="analyze-action-btn">⚡ 貼り付けたお便りを解析</button>
                 <div id="uploadStatus" style="margin-top:5px; font-weight:bold; color:#1a73e8; font-size:0.8rem;"></div>
             </div>
         </div>
@@ -519,39 +535,6 @@
         let currentCalYear = new Date().getFullYear();
         let currentCalMonth = new Date().getMonth();
 
-        // 🧠 画像を文字を潰さずに10分の1の容量に圧縮する、賢いリサイズ関数
-        function resizeAndCompressImage(file) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const img = new Image();
-                    img.onload = function () {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-                        
-                        // 文字認識が劣化しない限界の横幅（1200px）に縮小
-                        const MAX_WIDTH = 1200;
-                        if (width > MAX_WIDTH) {
-                            height = Math.round((height * MAX_WIDTH) / width);
-                            width = MAX_WIDTH;
-                        }
-                        
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        
-                        // JPEG形式で画質をやや落とし（0.7）、容量を大暴落させる
-                        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
-                        resolve(dataUrl.split(',')[1]); 
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
         async function fetchCloudData() {
             try {
                 const response = await fetch(GAS_WEB_APP_URL);
@@ -625,51 +608,46 @@
             document.getElementById('haruto-bento-badge').style.display = isBento ? "inline" : "none";
         }
 
-        // ① 初回のみ登録：定義ファイル（圧縮付き）
-        document.getElementById('defFileInput').addEventListener('change', async function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
+        // ① 初回のみ登録：定義ルールの保存（テキスト形式でそのままスプレッドシートへ）
+        document.getElementById('btnSaveDef').addEventListener('click', async function() {
+            const textData = document.getElementById('defTextInput').value.trim();
+            if (!textData) { alert("テキストを入力してください。"); return; }
             const statusEl = document.getElementById('defUploadStatus');
-            statusEl.textContent = "⌛ 画像を最適化してシステムに登録中...";
+            statusEl.textContent = "⌛ 時程ルール定義テキストを同期保存中...";
             try {
-                const compressedBase64 = await resizeAndCompressImage(file);
-                await saveCloudData("time_definition_file", compressedBase64);
-                statusEl.textContent = "✅ 定義ファイルの初期登録に成功しました！";
-            } catch(err) { statusEl.textContent = "❌ 登録失敗。通信状態を確認してください。"; }
+                await saveCloudData("time_definition_text", textData);
+                statusEl.textContent = "✅ 時程ルールのテキスト登録に成功しました！";
+            } catch(err) { statusEl.textContent = "❌ 登録失敗。"; }
         });
 
-        // 🔥 ② 毎月投稿：自動軽量圧縮 ＆ Gemini API 直通スキャン
-        document.getElementById('fileInput').addEventListener('change', async function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
+        // 🔥 ② 毎月投稿：爆速テキスト解析 ＆ Gemini直通システム（超高精度）
+        document.getElementById('btnAnalyzeText').addEventListener('click', async function() {
+            const rawText = document.getElementById('fileTextInput').value.trim();
+            if (!rawText) { alert("お便りのテキストを貼り付けてください。"); return; }
 
             const statusEl = document.getElementById('uploadStatus');
-            statusEl.textContent = "⚙️ 画像を10分の1に軽量圧縮中 ➔ Gemini AIへ送信中...";
+            statusEl.textContent = "⌛ Gemini AIがテキスト解析を起動中...(約2秒)";
+
+            // 事前に登録された時程ルールがあれば、それも一緒にGeminiに渡して精度を100%にする
+            const savedDefText = globalCloudData["time_definition_text"] || "なし";
+
+            const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+            
+            const prompt = `あなたは小学校2年生の学年だよりを解析する優秀なアシスタントです。\n` +
+                           `以下の【時程ルール】と【お便りテキスト】を注意深く読み解き、2年生の日ごとの正確な下校予定（Aタイム・Bタイムの適用や下校時刻）を導き出してください。\n\n` +
+                           `【時程ルール】:\n${savedDefText}\n\n` +
+                           `【お便りテキスト】:\n${rawText}\n\n` +
+                           `解析結果は、必ず以下の【出力フォーマット】の純粋なJSON形式でのみ返してください。解説やマークダウン（\`\`\`json 等）は一切不要です。\n\n` +
+                           `【出力フォーマット】\n` +
+                           `{\n` +
+                           `  "2026-06-03": "Bタイム (4時間授業・11:55まで)",\n` +
+                           `  "2026-06-12": "Aタイム (5時間授業・14:15まで)"\n` +
+                           `}`;
+
+            const payload = { "contents": [{ "parts": [{ "text": prompt }] }] };
 
             try {
-                // スマホの重いスクショを内部で一瞬で10分の1に軽量化！
-                const compressedBase64 = await resizeAndCompressImage(file);
-                
-                statusEl.textContent = "⌛ Gemini AIが解析中...(約8〜12秒)";
-                
-                const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-                
-                const prompt = "これは小学校の2年生の学年だより、または時程表です。記載されている日付ごとの時間割（4時間授業、5時間授業など）とAタイム・Bタイムのルールを読み解き、2年生の日ごとの下校スケジュールを以下の【出力フォーマット】のJSONデータ形式でのみ返してください。解説やマークダウン（```json 等）は一切不要です。パース可能なピュアなJSON文字列だけを返してください。\n\n" +
-                               "【出力フォーマット】\n" +
-                               "{\n" +
-                               "  \"2026-06-03\": \"Bタイム (4時間授業・11:55まで)\",\n" +
-                               "  \"2026-06-12\": \"Aタイム (5時間授業・14:15まで)\"\n" +
-                               "}";
-
-                const payload = {
-                    "contents": [{
-                        "parts": [
-                            { "text": prompt },
-                            { "inlineData": { "mimeType": "image/jpeg", "data": compressedBase64 } }
-                        ]
-                    }]
-                };
-
+                // 文字列のみの軽量リクエストなので瞬時に通信完了！
                 const response = await fetch(geminiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -686,7 +664,7 @@
                 
                 const parsedSchedule = JSON.parse(aiText);
                 
-                statusEl.textContent = "☁️ 解析成功！カレンダーの予定枠へ同期しています...";
+                statusEl.textContent = "☁️ 解析成功！カレンダーの予定枠へ同期保存しています...";
                 
                 for (let dateStr in parsedSchedule) {
                     const dateKey = dateStr.replace(/-/g, "_");
@@ -700,12 +678,13 @@
                     });
                 }
                 
-                statusEl.textContent = "✅ スキャン＆同期完了！すべての予定がマッピングされました。";
+                statusEl.textContent = "✅ テキスト解析＆同期完了！すべての予定が最新になりました。";
+                document.getElementById('fileTextInput').value = ""; // 入力欄をクリア
                 await fetchCloudData();
                 selectDay(selectedDayNum);
                 
             } catch(err) {
-                statusEl.textContent = "❌ 解析エラー: 画像の読み込み、または通信に失敗しました。";
+                statusEl.textContent = "❌ 解析エラー: 通信またはJSONパースに失敗しました。";
                 console.error(err);
             }
         });
