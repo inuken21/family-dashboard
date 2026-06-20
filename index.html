@@ -264,7 +264,6 @@
         .memo-textarea { width: 100%; height: 120px; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; resize: vertical; background-color: #fafafa; line-height: 1.5; }
         .save-status { font-size: 0.8rem; color: #1a73e8; text-align: right; margin-top: 5px; font-weight: bold; }
         
-        /* ローディング中表示 */
         .loading-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); display: flex; justify-content: center; align-items: center; z-index: 9999; font-weight: bold; color: #1a73e8; font-size: 1.2rem; }
     </style>
 </head>
@@ -274,9 +273,10 @@
 
     <header>
         <h1>Family Dashboard</h1>
-        <p style="margin: 5px 0 0 0; font-size: 0.85rem;">Google Cloud 同期版</p>
+        <p style="margin: 5px 0 0 0; font-size: 0.85rem;">Google Cloud 同期・完全版</p>
     </header>
 
+    <!-- 📅 スケジュールエリア -->
     <div class="schedule-box">
         <div class="schedule-title" id="schedule-box-title">📅 スケジュール選択</div>
         <div class="day-btn-container">
@@ -302,8 +302,9 @@
         </div>
     </div>
 
-    <details class="bento-details">
-        <summary>🍱 はるとお弁当カレンダー</summary>
+    <!-- 🍱 お弁当カレンダー -->
+    <details class="bento-details" open>
+        <summary>🍱 またはるとお弁当カレンダー</summary>
         <div class="details-content">
             <div class="bento-link-box">
                 <a href="https://www.fl39.jp/" target="_blank" rel="noopener noreferrer" class="bento-link-btn">🌐 お弁当予約サイトを開く ↗</a>
@@ -323,61 +324,168 @@
         </div>
     </details>
 
+    <!-- ✍️ 突発メモ -->
     <div class="card" style="border: 2px solid #1a73e8;">
         <h2 style="color: #1a73e8; border-bottom-color: #1a73e8;">✍️ 突発メモ ＆ 一時TODOリスト</h2>
         <textarea id="customMemo" class="memo-textarea" placeholder="ここに書いた内容はご夫婦のスマホに自動共有されます"></textarea>
         <div id="saveStatus" class="save-status">同期完了</div>
     </div>
 
+    <!-- 👦 康太の持ち物リスト（フル版復活） -->
     <div class="card kouta-card">
         <h2 class="kouta-header">👦 康太（こうた）持ち物リスト</h2>
-        <div id="kouta-terakoya-alert" class="terakoya-alert">📖 本日は【寺子屋（宮崎小）Bチーム】の開講日です！</div>
-        <details id="kouta-base-details">
+        <div id="kouta-terakoya-alert" class="terakoya-alert">📖 本日は【寺子屋（宮崎小）Bチーム】の開講日です！宿題・ドリル・筆記用具を忘れずに！</div>
+        
+        <details>
             <summary>毎日の基本セット</summary>
             <div class="details-content">
                 <ul class="todo-list">
-                    <li class="todo-item"><input type="checkbox" id="k-base1"><label for="k-base1"><strong>給食袋セット</strong>（ランチョンマット・お口ふき・ウェットティッシュ）</label></li>
+                    <li class="todo-item">
+                        <input type="checkbox" id="k-base1">
+                        <label for="k-base1"><strong>給食袋セット</strong>
+                            <ul class="sub-list">
+                                <li>・ランチョンマット</li>
+                                <li>・お口ふき小さいタオル</li>
+                                <li>・ウェットティッシュ</li>
+                            </ul>
+                        </label>
+                    </li>
                     <li class="todo-item"><input type="checkbox" id="k-base2"><label for="k-base2"><strong>水筒</strong></label></li>
                 </ul>
             </div>
         </details>
-        <details id="kouta-terakoya-details" style="border: 2px solid var(--terakoya-border);">
-            <summary style="color: var(--terakoya-border);">📖 寺子屋セット</summary>
+        <details id="kouta-terakoya-details">
+            <summary>📖 寺子屋セット（水曜・隔週Bチーム）</summary>
             <div class="details-content">
                 <ul class="todo-list">
-                    <li class="todo-item"><input type="checkbox" id="k-tk1"><label for="k-tk1"><strong>寺子屋参加カード</strong>（保護者印）</label></li>
-                    <li class="todo-item"><input type="checkbox" id="k-tk2"><label for="k-tk2">宿題・自習用の教材・筆記用具</label></li>
+                    <li class="todo-item"><input type="checkbox" id="k-tk1"><label for="k-tk1"><strong>寺子屋参加カード</strong>（保護者印を確認）</label></li>
+                    <li class="todo-item"><input type="checkbox" id="k-tk2"><label for="k-tk2">宿題・自習用のドリルなど教材</label></li>
+                    <li class="todo-item"><input type="checkbox" id="k-tk3"><label for="k-tk3">筆記用具（筆箱）</label></li>
+                </ul>
+            </div>
+        </details>
+        <details>
+            <summary>給食当番の時</summary>
+            <div class="details-content">
+                <ul class="todo-list">
+                    <li class="todo-item"><input type="checkbox" id="k-lunch1"><label for="k-lunch1"><strong>マスク</strong>（給食袋の中にイン！）</label></li>
+                </ul>
+            </div>
+        </details>
+        <details>
+            <summary>プール（学校）の時</summary>
+            <div class="details-content">
+                <ul class="todo-list">
+                    <li class="todo-item"><input type="checkbox" id="k-schoolp1"><label for="k-schoolp1">プールカード</label></li>
+                    <li class="todo-item"><input type="checkbox" id="k-schoolp2"><label for="k-schoolp2">帽子</label></li>
+                    <li class="todo-item"><input type="checkbox" id="k-schoolp3"><label for="k-schoolp3">水着（鷺沼スイミングのもの）</label></li>
+                    <li class="todo-item"><input type="checkbox" id="k-schoolp4"><label for="k-schoolp4">ゴーグル</label></li>
+                    <li class="todo-item"><input type="checkbox" id="k-schoolp5"><label for="k-schoolp5">ラッシュガード</label></li>
+                </ul>
+            </div>
+        </details>
+        <details>
+            <summary>プール（鷺沼スイミング）</summary>
+            <div class="details-content">
+                <ul class="todo-list">
+                    <li class="todo-item"><input type="checkbox" id="k-swimming1"><label for="k-swimming1">帽子・水着</label></li>
+                    <li class="todo-item"><input type="checkbox" id="k-swimming2"><label for="k-swimming2">タオル / タオル袋・会員証</label></li>
+                </ul>
+            </div>
+        </details>
+        <details>
+            <summary>大塚体操</summary>
+            <div class="details-content">
+                <ul class="todo-list">
+                    <li class="todo-item"><input type="checkbox" id="k-gym1"><label for="k-gym1"><strong>体操セット</strong>（ボール / なわとび）</label></li>
                 </ul>
             </div>
         </details>
     </div>
 
+    <!-- 👶 はるとの持ち物リスト（フル版復活） -->
     <div class="card haruto-card">
         <h2 class="haruto-header">👶 はると 持ち物リスト</h2>
-        <div id="haruto-bento-alert" class="bento-alert">🍱 本日は【お弁当の日】です！</div>
+        <div id="haruto-bento-alert" class="bento-alert">🍱 本日は【お弁当の日】です！お弁当と食具を忘れずに。</div>
+        
         <details>
             <summary>毎日の基本セット</summary>
             <div class="details-content">
                 <ul class="todo-list">
-                    <li class="todo-item"><input type="checkbox" id="y-base1"><label for="y-base1">タオル・コップ袋・赤パン袋・バインダー</label></li>
+                    <li class="todo-item"><input type="checkbox" id="y-base1"><label for="y-base1">タオル</label></li>
+                    <li class="todo-item"><input type="checkbox" id="y-base2"><label for="y-base2">コップ袋（コップ / 歯ブラシ）</label></li>
+                    <li class="todo-item"><input type="checkbox" id="y-base3"><label for="y-base3">赤パン袋（赤パン）</label></li>
+                    <li class="todo-item"><input type="checkbox" id="y-base4"><label for="y-base4">お手紙バインダー</label></li>
                     <li class="todo-item"><input type="checkbox" id="y-base5"><label for="y-base5">弁当 / 食具 <span id="haruto-bento-badge" class="badge" style="display:none;">本日必要！</span></label></li>
                     <li class="todo-item"><input type="checkbox" id="y-base6"><label for="y-base6">水筒</label></li>
                 </ul>
             </div>
         </details>
+        <details>
+            <summary>あおむし広場</summary>
+            <div class="details-content">
+                <div class="rule-box" style="border-left-color: #e67e22; background-color: #fdf2e9; margin-bottom: 12px;">⚠️ スイミングの日は、朝事務所の前のかごに入れること！</div>
+                <ul class="todo-list">
+                    <li class="todo-item"><input type="checkbox" id="y-ao1"><label for="y-ao1">あおむしバック</label></li>
+                    <li class="todo-item"><input type="checkbox" id="y-ao2"><label for="y-ao2">おやつ（※スイミング以外の日）</label></li>
+                </ul>
+            </div>
+        </details>
+        <details>
+            <summary>プール（鷺沼スイミング）</summary>
+            <div class="details-content">
+                <ul class="todo-list">
+                    <li class="todo-item"><input type="checkbox" id="y-sw1"><label for="y-sw1">帽子・水着</label></li>
+                    <li class="todo-item"><input type="checkbox" id="y-sw2"><label for="y-sw2">タオル / タオル袋・会員証</label></li>
+                </ul>
+            </div>
+        </details>
+        <details>
+            <summary>サッカー</summary>
+            <div class="details-content">
+                <ul class="todo-list">
+                    <li class="todo-item"><input type="checkbox" id="y-sc1"><label for="y-sc1">サッカーボール</label></li>
+                </ul>
+            </div>
+        </details>
+        <details>
+            <summary>大塚体操</summary>
+            <div class="details-content">
+                <ul class="todo-list">
+                    <li class="todo-item"><input type="checkbox" id="y-gt1"><label for="y-gt1"><strong>体操セット</strong>（ボール / なわとび）</label></li>
+                </ul>
+            </div>
+        </details>
+    </div>
+
+    <!-- 🐛 コピペ文面 -->
+    <div class="card">
+        <h2>🐛 あおむし広場 予約用定型文（コピペ用）</h2>
+        <textarea style="width:100%; height:110px; font-size:0.95rem; font-family:monospace; padding:8px;" readonly>月：スイミング
+火：なし
+水：なし
+木：サッカー15時30分まで
+金：大塚体操15時20分まで</textarea>
     </div>
 
     <script>
         // ⚠️【必須】ここに先ほど取得したGASのURLを入れてください
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxsKzxfHi_ZyfOeisBe_YDgBNnFifEFEzyyY-8X6Wh3vcg6mdZcOQx1f-ipczjxQAhs/exec";
+        const GAS_WEB_APP_URL = "ここにあなたのGASのウェブアプリURLを貼り付け";
 
-        const terakoyaDates2026 = ["2026-05-20", "2026-06-03", "2026-06-17", "2026-07-08", "2026-09-02"];
+        // 2026年 寺子屋Bチーム開講日カレンダー
+        const terakoyaDates2026 = [
+            "2026-05-20", "2026-06-03", "2026-06-17", "2026-07-08",
+            "2026-09-02", "2026-09-16", "2026-10-07", "2026-10-21",
+            "2026-11-04", "2026-11-18", "2026-12-02", "2026-12-16",
+            "2027-01-13", "2027-01-27", "2027-02-10", "2027-02-24", "2027-03-03"
+        ];
+
         const defaultSchedules = {
-            1: { kouta: "わくわく → スイミング", haruto: "あおむし → スイミング" },
-            2: { kouta: "わくわく広場", haruto: "あおむし広場" },
-            3: { kouta: "わくわく広場", haruto: "あおむし広場" },
-            4: { kouta: "わくわく → スイミング", haruto: "あおむし → サッカー" },
-            5: { kouta: "わくわく → 大塚体操", haruto: "あおむし → 大塚体操" }
+            1: { kouta: "わくわく → スイミング (16:00〜17:00)", haruto: "あおむし → スイミング (15:00〜16:00)" },
+            2: { kouta: "わくわく広場 (〜17:00まで)", haruto: "あおむし広場 (〜18:00まで)" },
+            3: { kouta: "わくわく広場 (〜17:00まで)", haruto: "あおむし広場 (〜18:00まで)" },
+            4: { kouta: "わくわく → スイミング (16:00〜17:00)", haruto: "あおむし → サッカー (14:00〜17:30)" },
+            5: { kouta: "わくわく → 大塚体操 (15:50〜16:50)", haruto: "あおむし → 大塚体操 (14:50〜15:50)" }
         };
 
         let globalCloudData = {};
@@ -427,7 +535,8 @@
 
             const targetDateStr = getTargetDateStr(dayNum);
             const parts = targetDateStr.split('-');
-            document.getElementById('schedule-box-title').textContent = `📅 予定: ${parts[1]}月${parts[2]}日`;
+            const days = ["日", "月", "火", "水", "木", "金", "土"];
+            document.getElementById('schedule-box-title').textContent = `📅 予定: ${parts[1]}月${parts[2]}日 (${days[dayNum]})`;
 
             const dateKey = parts[0] + "_" + parts[1] + "_" + parts[2];
             const isTerakoya = (dayNum === 3) && terakoyaDates2026.includes(targetDateStr);
@@ -436,11 +545,25 @@
             try { bentoList = JSON.parse(globalCloudData["haruto_bento_days"] || "[]"); } catch(e){}
             const isBento = bentoList.includes(targetDateStr);
 
-            document.getElementById('display-kouta').textContent = globalCloudData["custom_" + dateKey + "_kouta"] || (isTerakoya ? "🔥 寺子屋Bチーム開講日" : defaultSchedules[dayNum].kouta);
-            document.getElementById('display-haruto').textContent = globalCloudData["custom_" + dateKey + "_haruto"] || (isBento ? "🍱 お弁当の日！" : defaultSchedules[dayNum].haruto);
+            // 予定への反映ロジック
+            let koutaSched = globalCloudData["custom_" + dateKey + "_kouta"];
+            if (!koutaSched) {
+                koutaSched = isTerakoya ? "🔥 わくわく → 【寺子屋Bチーム 13:55〜14:55】" : defaultSchedules[dayNum].kouta;
+            }
+            document.getElementById('display-kouta').textContent = koutaSched;
 
+            let harutoSched = globalCloudData["custom_" + dateKey + "_haruto"];
+            if (!harutoSched) {
+                harutoSched = defaultSchedules[dayNum].haruto;
+                if (isBento) harutoSched = harutoSched.split(" (")[0] + " 🍱【今日はお弁当の日！】";
+            }
+            document.getElementById('display-haruto').textContent = harutoSched;
+
+            // アラート・連動表示
             document.getElementById('kouta-terakoya-alert').style.display = isTerakoya ? "block" : "none";
             document.getElementById('kouta-terakoya-details').style.display = isTerakoya ? "block" : "none";
+            if (isTerakoya) document.getElementById('kouta-terakoya-details').open = true;
+
             document.getElementById('haruto-bento-alert').style.display = isBento ? "block" : "none";
             document.getElementById('haruto-bento-badge').style.display = isBento ? "inline" : "none";
         }
@@ -481,6 +604,18 @@
                 container.appendChild(dayEl);
             }
         }
+
+        // カレンダーが無限に進めるようにバグ修正
+        document.getElementById('cal-prev').addEventListener('click', () => {
+            currentCalMonth--;
+            if (currentCalMonth < 0) { currentCalMonth = 11; currentCalYear--; }
+            renderCalendar(currentCalYear, currentCalMonth);
+        });
+        document.getElementById('cal-next').addEventListener('click', () => {
+            currentCalMonth++;
+            if (currentCalMonth > 11) { currentCalMonth = 0; currentCalYear++; }
+            renderCalendar(currentCalYear, currentCalMonth);
+        });
 
         async function toggleEdit(target) {
             const displayEl = document.getElementById("display-" + target);
