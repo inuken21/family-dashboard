@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>【共働き応援】こども準備＆保育登録メモ</title>
+    
+    <!-- 📱 スマホのホーム画面用アイコン画像の設定（icon.pngと連動） -->
+    <link rel="apple-touch-icon" href="icon.png">
+
     <style>
         :root {
             --primary-color: #4a90e2;
@@ -33,13 +37,13 @@
             text-align: center;
             background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%);
             color: white;
-            padding: 15px;
+            padding: 20px 15px;
             border-radius: var(--border-radius);
             margin-bottom: 15px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
-        header h1 { margin: 0; font-size: 1.3rem; }
+        header h1 { margin: 0; font-size: 1.4rem; }
 
         .card {
             background: white;
@@ -177,7 +181,6 @@
         }
         .cal-day.empty { background-color: transparent; border: none; cursor: default; min-height: auto; }
         
-        /* 💤 土日祝日のロック用スタイル */
         .cal-day.day-off {
             background-color: #e2e8f0;
             color: #94a3b8;
@@ -272,7 +275,21 @@
         .bento-alert { background-color: #fff3e0; border-left: 4px solid #fb8c00; color: #e65100; font-weight: bold; padding: 8px; margin-bottom: 10px; font-size: 0.9rem; display: none; }
         
         .badge { background-color: var(--accent-color); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 5px; }
-        .memo-textarea { width: 100%; height: 120px; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; resize: vertical; background-color: #fafafa; line-height: 1.5; }
+        
+        /* 📱 はみ出し防止（box-sizing）を徹底したテキストエリアの共通スタイル */
+        .memo-textarea, .responsive-textarea { 
+            width: 100%; 
+            height: 120px; 
+            padding: 10px; 
+            box-sizing: border-box; 
+            border: 1px solid #ccc; 
+            border-radius: 6px; 
+            font-size: 1rem; 
+            resize: vertical; 
+            background-color: #fafafa; 
+            line-height: 1.5; 
+        }
+        
         .save-status { font-size: 0.8rem; color: #1a73e8; text-align: right; margin-top: 5px; font-weight: bold; }
         
         .loading-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); display: flex; justify-content: center; align-items: center; z-index: 9999; font-weight: bold; color: #1a73e8; font-size: 1.2rem; }
@@ -284,7 +301,6 @@
 
     <header>
         <h1>Family Dashboard</h1>
-        <p style="margin: 5px 0 0 0; font-size: 0.85rem;">宮崎小カレンダー時程拡張版</p>
     </header>
 
     <!-- 🟢 1番目：予定（スケジュール表示エリア） -->
@@ -313,7 +329,7 @@
         </div>
     </div>
 
-    <!-- 🟢 2番目：こうた宮崎小カレンダー ※初期状態で閉じたアコーディオン -->
+    <!-- 🟢 2番目：こうた宮崎小カレンダー -->
     <details class="kouta-details">
         <summary>🏫 こうた 宮崎小カレンダー</summary>
         <div class="details-content">
@@ -357,7 +373,7 @@
         </div>
     </details>
 
-    <!-- 🟢 3番目：はるとお弁当カレンダー ※初期状態で閉じたアコーディオン -->
+    <!-- 🟢 3番目：はるとお弁当カレンダー -->
     <details class="bento-details">
         <summary>🍱 はるとお弁当カレンダー</summary>
         <div class="details-content">
@@ -511,7 +527,8 @@
     <!-- 🐛 コピペ文面 -->
     <div class="card">
         <h2>🐛 あおむし広場 予約用定型文（コピペ用）</h2>
-        <textarea style="width:100%; height:110px; font-size:0.95rem; font-family:monospace; padding:8px;" readonly>月：スイミング
+        <!-- 💡 画面幅100%に完璧追従させ、絶対にはみ出さないように改良したテキストエリア -->
+        <textarea class="responsive-textarea" style="height:110px; font-family:monospace;" readonly>月：スイミング
 火：なし
 水：なし
 木：サッカー15時30分まで
@@ -528,7 +545,6 @@
             "2027-01-13", "2027-01-27", "2027-02-10", "2027-02-24", "2027-03-03"
         ];
 
-        // 🎌 日本の祝日（2026年〜2027年分を内蔵して完全スタンドアロン化）
         const japaneseHolidays = [
             "2026-01-01", "2026-01-12", "2026-02-11", "2026-02-23", "2026-03-20",
             "2026-04-29", "2026-05-03", "2026-05-04", "2026-05-05", "2026-05-06",
@@ -591,12 +607,11 @@
             return `${baseDate.getFullYear()}-${String(baseDate.getMonth() + 1).padStart(2, '0')}-${String(baseDate.getDate()).padStart(2, '0')}`;
         }
 
-        // 土日祝日判定ヘルパー
         function isDayOff(dateStr) {
             const d = new Date(dateStr);
             const dayIdx = d.getDay();
-            if (dayIdx === 0 || dayIdx === 6) return true; // 土日
-            if (japaneseHolidays.includes(dateStr)) return true; // 祝日
+            if (dayIdx === 0 || dayIdx === 6) return true;
+            if (japaneseHolidays.includes(dateStr)) return true;
             return false;
         }
 
@@ -625,7 +640,6 @@
             let isDuty = false;
             
             if (!koutaSched) {
-                // 土日祝日の場合は「学校お休み」と明記
                 if (isDayOff(targetDateStr)) {
                     koutaSched = "💤 学校はお休みです";
                 } else {
@@ -676,7 +690,6 @@
             }
             document.getElementById('display-haruto').textContent = harutoSched;
 
-            // アラート表示の制御（平日のみ）
             const offFlag = isDayOff(targetDateStr);
             document.getElementById('kouta-terakoya-alert').style.display = (isTerakoya && !offFlag) ? "block" : "none";
             document.getElementById('kouta-terakoya-details').style.display = (isTerakoya && !offFlag) ? "block" : "none";
@@ -686,7 +699,6 @@
             document.getElementById('haruto-bento-badge').style.display = (isBento && !offFlag) ? "inline" : "none";
         }
 
-        // 🏫 こうた宮崎小カレンダーの生成（土日祝日除外ロジック内蔵）
         function renderKoutaCalendar(year, month) {
             const container = document.getElementById('kouta-calendar');
             container.innerHTML = '';
@@ -708,11 +720,10 @@
 
                 const cStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
                 
-                // 🛑 土日祝日チェック
                 if (isDayOff(cStr)) {
                     dayEl.classList.add('day-off');
                     container.appendChild(dayEl);
-                    continue; // 土日祝日はここでバッジ処理やタップイベントをスキップして終了
+                    continue;
                 }
 
                 let config = { period: "5", isBTime: false, hasLunch: true, isDuty: false };
@@ -805,7 +816,6 @@
         document.getElementById('panel-lunch-checkbox').addEventListener('change', saveKoutaPanelConfig);
         document.getElementById('panel-duty-checkbox').addEventListener('change', saveKoutaPanelConfig);
 
-        // はると用お弁当カレンダーの生成（土日祝日除外ロジック内蔵）
         function renderBentoCalendar(year, month) {
             const container = document.getElementById('bento-calendar');
             container.innerHTML = '';
@@ -827,7 +837,7 @@
                 if (isDayOff(cStr)) {
                     dayEl.classList.add('day-off');
                     container.appendChild(dayEl);
-                    continue; // 土日祝日はロックしてクリック不可にする
+                    continue;
                 }
 
                 if (bentoList.includes(cStr)) dayEl.classList.add('bento-active');
