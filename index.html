@@ -331,7 +331,7 @@
         <div id="saveStatus" class="save-status">同期完了</div>
     </div>
 
-    <!-- 👦 康太の持ち物リスト（フル版復活） -->
+    <!-- 👦 康太の持ち物リスト -->
     <div class="card kouta-card">
         <h2 class="kouta-header">👦 康太（こうた）持ち物リスト</h2>
         <div id="kouta-terakoya-alert" class="terakoya-alert">📖 本日は【寺子屋（宮崎小）Bチーム】の開講日です！宿題・ドリル・筆記用具を忘れずに！</div>
@@ -403,7 +403,7 @@
         </details>
     </div>
 
-    <!-- 👶 はるとの持ち物リスト（フル版復活） -->
+    <!-- 👶 はるとの持ち物リスト -->
     <div class="card haruto-card">
         <h2 class="haruto-header">👶 はると 持ち物リスト</h2>
         <div id="haruto-bento-alert" class="bento-alert">🍱 本日は【お弁当の日】です！お弁当と食具を忘れずに。</div>
@@ -469,8 +469,8 @@
     </div>
 
     <script>
-        // ⚠️【必須】ここに先ほど取得したGASのURLを入れてください
-        const GAS_WEB_APP_URL = "ここにあなたのGASのウェブアプリURLを貼り付け";
+        // 🚀 ご提示いただいたGASのウェブアプリURLを埋め込み済みです
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxsKzxfHi_ZyfOeisBe_YDgBNnFifEFEzyyY-8X6Wh3vcg6mdZcOQx1f-ipczjxQAhs/exec";
 
         // 2026年 寺子屋Bチーム開講日カレンダー
         const terakoyaDates2026 = [
@@ -545,7 +545,6 @@
             try { bentoList = JSON.parse(globalCloudData["haruto_bento_days"] || "[]"); } catch(e){}
             const isBento = bentoList.includes(targetDateStr);
 
-            // 予定への反映ロジック
             let koutaSched = globalCloudData["custom_" + dateKey + "_kouta"];
             if (!koutaSched) {
                 koutaSched = isTerakoya ? "🔥 わくわく → 【寺子屋Bチーム 13:55〜14:55】" : defaultSchedules[dayNum].kouta;
@@ -559,7 +558,6 @@
             }
             document.getElementById('display-haruto').textContent = harutoSched;
 
-            // アラート・連動表示
             document.getElementById('kouta-terakoya-alert').style.display = isTerakoya ? "block" : "none";
             document.getElementById('kouta-terakoya-details').style.display = isTerakoya ? "block" : "none";
             if (isTerakoya) document.getElementById('kouta-terakoya-details').open = true;
@@ -605,7 +603,6 @@
             }
         }
 
-        // カレンダーが無限に進めるようにバグ修正
         document.getElementById('cal-prev').addEventListener('click', () => {
             currentCalMonth--;
             if (currentCalMonth < 0) { currentCalMonth = 11; currentCalYear--; }
