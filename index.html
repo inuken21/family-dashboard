@@ -152,26 +152,43 @@
         }
         .edit-btn.saving { background-color: #2b8a3e; }
 
-        /* 📸 分離・洗練させたアップロードゾーンのスタイル */
-        .upload-card {
-            border: 2px dashed #4a90e2;
-            background-color: #f8fafc;
+        .gemini-details {
+            border: 2px solid #4a90e2;
+            background-color: #fff;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
         }
-        .upload-zone {
+        .gemini-details summary {
+            color: #1a73e8;
+            font-size: 1.15rem;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .upload-section {
+            background-color: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
             text-align: center;
-            padding: 5px 0;
         }
         .upload-input { display: none; }
         .upload-label {
             background-color: #4a90e2;
             color: white;
-            padding: 10px 20px;
-            border-radius: 6px;
+            padding: 6px 14px;
+            border-radius: 4px;
             font-weight: bold;
             cursor: pointer;
             display: inline-block;
-            font-size: 0.95rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        .upload-label.accent-btn {
+            background-color: #34d399;
         }
 
         .bento-cal-container {
@@ -230,7 +247,7 @@
         .bento-link-btn {
             display: block;
             text-align: center;
-            background-color: #fb8000;
+            background-color: #fb8c00;
             color: white;
             text-decoration: none;
             font-weight: bold;
@@ -276,18 +293,6 @@
         <p style="margin: 5px 0 0 0; font-size: 0.85rem;">Google Cloud ＆ Gemini AI 連携版</p>
     </header>
 
-    <!-- 📥 【指示反映】学年だよりアップロード専用独立カード（上部に配置） -->
-    <div class="card upload-card">
-        <h2 style="color: #4a90e2; border-bottom-color: #4a90e2;">📄 学年だより自動解析 (Geminiスキャン)</h2>
-        <div class="upload-zone">
-            <p style="margin-top:0; font-size:0.85rem; color:#555; text-align:left; margin-bottom:12px;">毎月のお便りPDFや写真をアップロードすると、A/Bタイムや変則的な下校時刻をAIが自動抽出し、下のスケジュール枠へ自動マッピングします。</p>
-            <label for="fileInput" class="upload-label">📁 お便りファイルを読み込む</label>
-            <input type="file" id="fileInput" class="upload-input" accept="application/pdf,image/*">
-            <div id="uploadStatus" style="margin-top:10px; font-weight:bold; color:#1a73e8; font-size:0.9rem;"></div>
-        </div>
-    </div>
-
-    <!-- 📅 スケジュール表示エリア -->
     <div class="schedule-box">
         <div class="schedule-title" id="schedule-box-title">📅 スケジュール選択</div>
         <div class="day-btn-container">
@@ -313,9 +318,29 @@
         </div>
     </div>
 
-    <!-- 🍱 お弁当カレンダー -->
-    <details class="bento-details" open>
-        <summary>🍱 またはるとお弁当カレンダー</summary>
+    <details class="gemini-details">
+        <summary>📄 学年だより解析（Geminiスキャン）</summary>
+        <div class="details-content">
+            <div class="upload-section">
+                <p style="margin:0; font-size:0.85rem; font-weight:bold; color:#333;">①初回のみ登録：A/Bタイムの定義ファイル</p>
+                <p style="margin:2px 0 6px 0; font-size:0.75rem; color:#666;">時程ルール（Aタイム・Bタイムの各校時ごとの詳細時間）が書かれたファイルを読み込ませます。</p>
+                <label for="defFileInput" class="upload-label">📁 定義ファイルを登録</label>
+                <input type="file" id="defFileInput" class="upload-input" accept="application/pdf,image/*">
+                <div id="defUploadStatus" style="margin-top:5px; font-weight:bold; color:#10b981; font-size:0.8rem;"></div>
+            </div>
+
+            <div class="upload-section" style="margin-top:12px;">
+                <p style="margin:0; font-size:0.85rem; font-weight:bold; color:#333;">②毎月投稿：学年だより</p>
+                <p style="margin:2px 0 6px 0; font-size:0.75rem; color:#666;">配布された最新の学年だよりを読み込ませ、下校予定を一括解析・マッピングします。</p>
+                <label for="fileInput" class="upload-label accent-btn">📁 今月の学年だよりを解析</label>
+                <input type="file" id="fileInput" class="upload-input" accept="application/pdf,image/*">
+                <div id="uploadStatus" style="margin-top:5px; font-weight:bold; color:#1a73e8; font-size:0.8rem;"></div>
+            </div>
+        </div>
+    </details>
+
+    <details class="bento-details">
+        <summary>🍱 はるとお弁当カレンダー</summary>
         <div class="details-content">
             <div class="bento-link-box">
                 <a href="https://www.fl39.jp/" target="_blank" rel="noopener noreferrer" class="bento-link-btn">🌐 お弁当予約サイトを開く ↗</a>
@@ -330,14 +355,12 @@
         </div>
     </details>
 
-    <!-- ✍️ 突発メモ -->
     <div class="card" style="border: 2px solid #1a73e8;">
-        <h2 style="color: #1a73e8; border-bottom-color: #1a73e8;">✍️ 突発メモ ＆ 一時TODOリスト</h2>
+        <h2 style="color: #1a73e8; border-bottom-color: #1a73e8;">✍️ メモ ＆ TODOリスト</h2>
         <textarea id="customMemo" class="memo-textarea" placeholder="ここに書いた内容はご夫婦のスマホに自動共有されます"></textarea>
         <div id="saveStatus" class="save-status">同期完了</div>
     </div>
 
-    <!-- 👦 康太の持ち物リスト -->
     <div class="card kouta-card">
         <h2 class="kouta-header">👦 康太（こうた）持ち物リスト</h2>
         <div id="kouta-terakoya-alert" class="terakoya-alert">📖 本日は【寺子屋（宮崎小）Bチーム】の開講日です！宿題・ドリル・筆記用具を忘れずに！</div>
@@ -409,7 +432,6 @@
         </details>
     </div>
 
-    <!-- 👶 はるとの持ち物リスト -->
     <div class="card haruto-card">
         <h2 class="haruto-header">👶 はると 持ち物リスト</h2>
         <div id="haruto-bento-alert" class="bento-alert">🍱 本日は【お弁当の日】です！お弁当と食具を忘れずに。</div>
@@ -464,7 +486,6 @@
         </details>
     </div>
 
-    <!-- 🐛 コピペ文面 -->
     <div class="card">
         <h2>🐛 あおむし広場 予約用定型文（コピペ用）</h2>
         <textarea style="width:100%; height:110px; font-size:0.95rem; font-family:monospace; padding:8px;" readonly>月：スイミング
@@ -475,8 +496,10 @@
     </div>
 
     <script>
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWVudytK2lGzkVGFdmC-_rIqwj3tcIhoL7s7bhqU9izygL_-750oHnmLttaV2BqxCX/exec";
+        // 🚀 新しく引き直された無敵のGASウェブアプリURLを埋め込み済みです
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw0YdRq2aEPNBXCtByhIst6wVS0WDDv1olhdg49m66yUFP6hoyTf8m_lo4V6JL98lkU/exec";
 
+        // 2026年 寺子屋Bチーム開講日カレンダー
         const terakoyaDates2026 = [
             "2026-05-20", "2026-06-03", "2026-06-17", "2026-07-08",
             "2026-09-02", "2026-09-16", "2026-10-07", "2026-10-21",
@@ -502,7 +525,7 @@
                 const response = await fetch(GAS_WEB_APP_URL);
                 globalCloudData = await response.json();
                 document.getElementById('loading').style.display = 'none';
-            } catch (e) { document.getElementById('loading').textContent = "⚠️ 読み込み失敗。"; }
+            } catch (e) { document.getElementById('loading').textContent = "⚠️ 同期エラー。URLを確認してください。"; }
         }
 
         async function saveCloudData(key, value) {
@@ -570,6 +593,24 @@
             document.getElementById('haruto-bento-badge').style.display = isBento ? "inline" : "none";
         }
 
+        // ① 初回のみ登録：定義ファイルのアップロード処理
+        document.getElementById('defFileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const statusEl = document.getElementById('defUploadStatus');
+            statusEl.textContent = "⌛ 時程ルール定義ファイルをシステムに登録中...";
+            const reader = new FileReader();
+            reader.onload = async function(evt) {
+                const base64Data = evt.target.result.split(',')[1];
+                try {
+                    await saveCloudData("time_definition_file", base64Data);
+                    statusEl.textContent = "✅ 定義ファイルの初期登録に成功しました！";
+                } catch(err) { statusEl.textContent = "❌ 登録失敗。通信状態を確認してください。"; }
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // ② 毎月投稿：学年だよりの解析処理
         document.getElementById('fileInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
