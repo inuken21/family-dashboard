@@ -152,62 +152,8 @@
         }
         .edit-btn.saving { background-color: #2b8a3e; }
 
-        .gemini-details {
-            border: 2px solid #4a90e2;
-            background-color: #fff;
-            padding: 12px;
-            border-radius: var(--border-radius);
-            margin-bottom: 15px;
-        }
-        .gemini-details summary {
-            color: #1a73e8;
-            font-size: 1.15rem;
-            font-weight: bold;
-            cursor: pointer;
-            outline: none;
-        }
-
-        .upload-section {
-            background-color: #f8fafc;
-            border: 1px dashed #cbd5e1;
-            padding: 12px;
-            border-radius: 6px;
-            margin-top: 10px;
-            text-align: center;
-        }
-        
-        .prompt-textarea {
-            width: 100%;
-            height: 100px;
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            margin-top: 6px;
-            resize: vertical;
-        }
-
-        .analyze-action-btn {
-            background-color: #34d399;
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            cursor: pointer;
-            margin-top: 8px;
-            display: inline-block;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            -webkit-appearance: none;
-        }
-
-        .analyze-action-btn.blue-btn {
-            background-color: #4a90e2;
-        }
-
-        .bento-cal-container {
+        /* カレンダー共通のスタイリング */
+        .cal-container {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 5px;
@@ -216,15 +162,41 @@
         }
         .cal-header { font-weight: bold; font-size: 0.8rem; color: #666; }
         .cal-day {
-            padding: 8px 0;
+            padding: 6px 0;
             background-color: #f8f9fa;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 0.9rem;
             cursor: pointer;
             position: relative;
+            min-height: 42px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
         }
-        .cal-day.empty { background-color: transparent; border: none; cursor: default; }
+        .cal-day.empty { background-color: transparent; border: none; cursor: default; min-height: auto; }
+        
+        /* こうたカレンダー専用スタイル */
+        .cal-day.kouta-active-b {
+            background-color: #ffebee;
+            border-color: #e53935;
+        }
+        .cal-day .kouta-badge {
+            font-size: 0.65rem;
+            font-weight: bold;
+            padding: 1px 3px;
+            border-radius: 3px;
+            margin-top: 2px;
+            color: white;
+            background-color: #1e88e5; /* Aタイムは青 */
+        }
+        .cal-day.kouta-active-b .kouta-badge {
+            background-color: #e53935; /* Bタイムは赤 */
+        }
+
+        /* はるとカレンダー専用スタイル */
         .cal-day.bento-active {
             background-color: #ffe0b2;
             border-color: #fb8c00;
@@ -238,6 +210,7 @@
             right: -2px;
             font-size: 0.65rem;
         }
+
         .cal-month-nav {
             display: flex;
             justify-content: space-between;
@@ -252,6 +225,20 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
+        /* クイック設定パネル */
+        .quick-panel {
+            background-color: #f0f4f8;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 10px;
+            display: none;
+        }
+        .quick-panel-title { font-weight: bold; font-size: 0.85rem; color: #1e88e5; margin-bottom: 8px; text-align: center; }
+        .panel-row { display: flex; justify-content: space-around; align-items: center; gap: 8px; }
+        .panel-select { padding: 4px 8px; font-size: 0.85rem; border-radius: 4px; border: 1px solid #ccc; }
+        .panel-checkbox-label { font-size: 0.85rem; font-weight: bold; display: flex; align-items: center; gap: 4px; cursor: pointer; }
 
         .bento-link-box {
             background-color: #fff;
@@ -273,6 +260,10 @@
             margin-bottom: 8px;
         }
         .bento-login-info { font-size: 0.85rem; color: #555; background: #fafafa; padding: 6px 10px; border-radius: 4px; border: 1px dashed #ddd; margin: 0; }
+        
+        .kouta-details { border: 2px solid #1e88e5; background-color: #fff; padding: 12px; border-radius: var(--border-radius); margin-bottom: 15px; }
+        .kouta-details summary { color: #1e88e5; font-size: 1.15rem; font-weight: bold; cursor: pointer; outline: none; }
+        
         .bento-details { border: 2px solid #fb8c00; background-color: #fff; padding: 12px; border-radius: var(--border-radius); margin-bottom: 15px; }
         .bento-details summary { color: #e65100; font-size: 1.15rem; font-weight: bold; cursor: pointer; outline: none; }
 
@@ -306,7 +297,7 @@
 
     <header>
         <h1>Family Dashboard</h1>
-        <p style="margin: 5px 0 0 0; font-size: 0.85rem;">鉄壁パースガード ＆ Gemini 直通版</p>
+        <p style="margin: 5px 0 0 0; font-size: 0.85rem;">宮崎小完全手動カレンダー ＆ 同期版</p>
     </header>
 
     <!-- 🟢 1番目：予定（スケジュール表示エリア） -->
@@ -335,26 +326,31 @@
         </div>
     </div>
 
-    <!-- 🟢 2番目：学年だより解析（Geminiスキャン）※初期状態で閉じたアコーディオン -->
-    <details class="gemini-details">
-        <summary>📄 学年だより解析（Geminiスキャン）</summary>
+    <!-- 🟢 2番目：こうた宮崎小カレンダー（旧・学年だより解析枠）※初期状態で閉じたアコーディオン -->
+    <details class="kouta-details">
+        <summary>🏫 こうた 宮崎小カレンダー</summary>
         <div class="details-content">
-            <!-- ①初回のみ登録枠 -->
-            <div class="upload-section">
-                <p style="margin:0; font-size:0.85rem; font-weight:bold; color:#333;">①初回のみ登録：A/Bタイムの定義ルール（テキスト）</p>
-                <p style="margin:2px 0 4px 0; font-size:0.75rem; color:#666;">時程ルール（Aタイム・Bタイムの各校時ごとの詳細な下校時刻）の文字をここに貼り付けます。</p>
-                <textarea id="defTextInput" class="prompt-textarea" placeholder="例: Aタイム 4校時13:20、5校時14:15... Bタイム 4校時11:55... 等"></textarea>
-                <button type="button" id="btnSaveDef" class="analyze-action-btn blue-btn">📋 時程ルールをシステムに登録</button>
-                <div id="defUploadStatus" style="margin-top:5px; font-weight:bold; color:#10b981; font-size:0.8rem;"></div>
+            <p style="margin:0 0 8px 0; font-size:0.8rem; color:#666; text-align:center;">日付をタップして、校時(4〜6時間)とBタイムをかんたん変更設定</p>
+            <div class="cal-month-nav">
+                <button type="button" class="cal-nav-btn" id="kouta-cal-prev">◀ 前月</button>
+                <span id="kouta-cal-month-title" style="font-weight: bold; font-size: 1.1rem;"></span>
+                <button type="button" class="cal-nav-btn" id="kouta-cal-next">次月 ▶</button>
             </div>
-
-            <!-- ②毎月投稿枠 -->
-            <div class="upload-section" style="margin-top:12px;">
-                <p style="margin:0; font-size:0.85rem; font-weight:bold; color:#333;">②毎月投稿：今月の予定テキスト</p>
-                <p style="margin:2px 0 4px 0; font-size:0.75rem; color:#666;">お便りPDFやWEBの日付・行事部分のテキストをまるごとコピーしてここに貼り付けます。</p>
-                <textarea id="fileTextInput" class="prompt-textarea" placeholder="例: 6月3日(水) 4B 避難訓練、6月12日(金) 5A 個人面談... 等"></textarea>
-                <button type="button" id="btnAnalyzeText" class="analyze-action-btn">⚡ 貼り付けたお便りを解析</button>
-                <div id="uploadStatus" style="margin-top:5px; font-weight:bold; color:#1a73e8; font-size:0.8rem;"></div>
+            <div class="cal-container" id="kouta-calendar"></div>
+            
+            <!-- クイック操作パネル -->
+            <div class="quick-panel" id="kouta-quick-panel">
+                <div class="quick-panel-title" id="kouta-panel-date-title">6月3日の設定</div>
+                <div class="panel-row">
+                    <select id="panel-period-select" class="panel-select">
+                        <option value="4">4時間授業</option>
+                        <option value="5">5時間授業</option>
+                        <option value="6">6時間授業</option>
+                    </select>
+                    <label class="panel-checkbox-label">
+                        <input type="checkbox" id="panel-btime-checkbox"> 🅱️ Bタイム指定
+                    </label>
+                </div>
             </div>
         </div>
     </details>
@@ -372,7 +368,7 @@
                 <span id="cal-month-title" style="font-weight: bold; font-size: 1.1rem;"></span>
                 <button type="button" class="cal-nav-btn" id="cal-next">次月 ▶</button>
             </div>
-            <div class="bento-cal-container" id="bento-calendar"></div>
+            <div class="cal-container" id="bento-calendar"></div>
         </div>
     </details>
 
@@ -522,7 +518,6 @@
 
     <script>
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw0YdRq2aEPNBXCtByhIst6wVS0WDDv1olhdg49m66yUFP6hoyTf8m_lo4V6JL98lkU/exec";
-        const GEMINI_API_KEY = "AQ.Ab8RN6KHAiXwDHetlASIzwanGXiIV0reU_RVsAObw1UbqwY7HA";
 
         const terakoyaDates2026 = [
             "2026-05-20", "2026-06-03", "2026-06-17", "2026-07-08",
@@ -539,10 +534,22 @@
             5: { kouta: "わくわく → 大塚体操 (15:50〜16:50)", haruto: "あおむし → 大塚体操 (14:50〜15:50)" }
         };
 
+        // 🏫 宮崎小学校2年生の完全ルール時程表マッピング
+        const miyazakiTimeTable = {
+            "A": { "4": "12:20", "5": "14:15", "6": "15:00" },
+            "B": { "4": "11:55", "5": "13:40", "6": "14:25" }
+        };
+
         let globalCloudData = {};
         let selectedDayNum = 1;
+        
+        // カレンダー表示用（こうたと、はるとで独立してコントロール可）
         let currentCalYear = new Date().getFullYear();
         let currentCalMonth = new Date().getMonth();
+        let koutaCalYear = new Date().getFullYear();
+        let koutaCalMonth = new Date().getMonth();
+
+        let activePanelDateStr = null;
 
         async function fetchCloudData() {
             try {
@@ -587,18 +594,26 @@
             const dateKey = parts[0] + "_" + parts[1] + "_" + parts[2];
             const isTerakoya = (dayNum === 3) && terakoyaDates2026.includes(targetDateStr);
             
-            const aiSchedule = globalCloudData["ai_schedule_" + dateKey];
-            
+            // 🎒 こうたの予定作成ロジック（宮崎小カレンダーの設定を最優先反映）
             let koutaSched = globalCloudData["custom_" + dateKey + "_kouta"];
             if (!koutaSched) {
-                if (aiSchedule) {
-                    koutaSched = `🎒 ${aiSchedule}`;
-                } else {
-                    koutaSched = isTerakoya ? "🔥 わくわく → 【寺子屋Bチーム 13:55〜14:55】" : defaultSchedules[dayNum].kouta;
-                }
+                // カレンダー設定データ（初期値は5時間・Aタイム）
+                let config = { period: "5", isBTime: false };
+                try {
+                    if (globalCloudData["kouta_config_" + targetDateStr]) {
+                        config = JSON.parse(globalCloudData["kouta_config_" + targetDateStr]);
+                    }
+                } catch(e){}
+
+                const typeStr = config.isBTime ? "B" : "A";
+                const limitTime = miyazakiTimeTable[typeStr][config.period];
+                const baseText = isTerakoya ? "🔥 わくわく → 【寺子屋Bチーム 13:55〜14:55】" : defaultSchedules[dayNum].kouta;
+                
+                koutaSched = `🎒 ${typeStr}タイム (${config.period}時間授業・${limitTime}頃下校) / ${baseText}`;
             }
             document.getElementById('display-kouta').textContent = koutaSched;
 
+            // 弁当リスト取得
             let bentoList = [];
             try { bentoList = JSON.parse(globalCloudData["haruto_bento_days"] || "[]"); } catch(e){}
             const isBento = bentoList.includes(targetDateStr);
@@ -617,105 +632,75 @@
             document.getElementById('haruto-bento-badge').style.display = isBento ? "inline" : "none";
         }
 
-        // ① 初回のみ登録：定義ルールの保存
-        document.getElementById('btnSaveDef').addEventListener('click', async function() {
-            const textData = document.getElementById('defTextInput').value.trim();
-            if (!textData) { alert("テキストを入力してください。"); return; }
-            const statusEl = document.getElementById('defUploadStatus');
-            statusEl.textContent = "⌛ 時程ルール定義テキストを同期保存中...";
-            try {
-                await saveCloudData("time_definition_text", textData);
-                statusEl.textContent = "✅ 時程ルールのテキスト登録に成功しました！";
-            } catch(err) { statusEl.textContent = "❌ 登録失敗。"; }
-        });
-
-        // 🔥 ② 毎月投稿：鉄壁のJSON抽出ガード付き解析ロジック
-        document.getElementById('btnAnalyzeText').addEventListener('click', async function() {
-            const rawText = document.getElementById('fileTextInput').value.trim();
-            if (!rawText) { alert("お便りのテキストを貼り付けてください。"); return; }
-
-            const statusEl = document.getElementById('uploadStatus');
-            statusEl.textContent = "⌛ Gemini AIがテキスト解析を起動中...(約2秒)";
-
-            const savedDefText = globalCloudData["time_definition_text"] || "なし";
-            const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        // 🏫 こうた宮崎小カレンダーの生成
+        function renderKoutaCalendar(year, month) {
+            const container = document.getElementById('kouta-calendar');
+            container.innerHTML = '';
+            document.getElementById('kouta-cal-month-title').textContent = `${year}年${month + 1}月`;
             
-            const prompt = `あなたは小学校2年生の学年だよりを解析する優秀なアシスタントです。\n` +
-                           `以下の【時程ルール】と【お便りテキスト】を読み解き、2年生の日ごとの正確な下校予定（Aタイム・Bタイムの適用や下校時刻）を導き出してください。\n\n` +
-                           `【時程ルール】:\n${savedDefText}\n\n` +
-                           `【お便りテキスト】:\n${rawText}\n\n` +
-                           `解析結果は、必ず以下の【出力フォーマット】の純粋なJSON形式でのみ返してください。前後の解説や挨拶、マークダウン表記などは一切不要です。\n\n` +
-                           `【出力フォーマット】\n` +
-                           `{\n` +
-                           `  "2026-06-03": "Bタイム (4時間授業・11:55まで)",\n` +
-                           `  "2026-06-12": "Aタイム (5時間授業・14:15まで)"\n` +
-                           `}`;
+            // 曜日ヘッダー
+            ['日','月','火','水','木','金','土'].forEach(w => {
+                const h = document.createElement('div'); h.className = 'cal-header'; h.textContent = w; container.appendChild(h);
+            });
+            
+            const firstDay = new Date(year, month, 1).getDay();
+            const lastDate = new Date(year, month + 1, 0).getDate();
+            
+            for (let i = 0; i < firstDay; i++) container.appendChild(document.createElement('div')).className = 'cal-day empty';
+            
+            for (let date = 1; date <= lastDate; date++) {
+                const dayEl = document.createElement('div'); dayEl.className = 'cal-day';
+                const dateText = document.createElement('div'); dateText.textContent = date;
+                dayEl.appendChild(dateText);
 
-            const payload = { "contents": [{ "parts": [{ "text": prompt }] }] };
+                const cStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
+                
+                // クラウドデータから日付設定を取得（無い場合はデフォルト: 5時間/Aタイム）
+                let config = { period: "5", isBTime: false };
+                try {
+                    if (globalCloudData["kouta_config_" + cStr]) {
+                        config = JSON.parse(globalCloudData["kouta_config_" + cStr]);
+                    }
+                } catch(e){}
 
-            try {
-                const response = await fetch(geminiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                if (config.isBTime) dayEl.classList.add('kouta-active-b');
+                
+                const badge = document.createElement('div');
+                badge.className = 'kouta-badge';
+                badge.textContent = `${config.period}${config.isBTime ? 'B' : 'A'}`;
+                dayEl.appendChild(badge);
+
+                // タップした時のクイック設定パネル表示アクション
+                dayEl.addEventListener('click', () => {
+                    activePanelDateStr = cStr;
+                    document.getElementById('kouta-panel-date-title').textContent = `${month + 1}月${date}日の下校時程設定`;
+                    document.getElementById('panel-period-select').value = config.period;
+                    document.getElementById('panel-btime-checkbox').checked = config.isBTime;
+                    document.getElementById('kouta-quick-panel').style.display = 'block';
                 });
-                
-                const resJson = await response.json();
-                let aiText = resJson.contents[0].parts[0].text.trim();
-                
-                // 🛠️ 【鉄壁ガード】AIが余計なお喋りテキストを混ぜてきても、{ } に囲まれたJSON部分だけを強制抽出する
-                const jsonMatch = aiText.match(/\{[\s\S]*\}/);
-                if (!jsonMatch) {
-                    throw new Error("AIの返答から有効なJSON構造が見つかりませんでした。");
-                }
-                const cleanJsonText = jsonMatch[0];
-                
-                const parsedSchedule = JSON.parse(cleanJsonText);
-                
-                statusEl.textContent = "☁️ 解析成功！カレンダーの予定枠へ同期保存しています...";
-                
-                for (let dateStr in parsedSchedule) {
-                    const dateKey = dateStr.replace(/-/g, "_");
-                    await fetch(GAS_WEB_APP_URL, {
-                        method: 'POST',
-                        body: JSON.stringify({
-                            action: 'save',
-                            key: "ai_schedule_" + dateKey,
-                            value: parsedSchedule[dateStr]
-                        })
-                    });
-                }
-                
-                statusEl.textContent = "✅ テキスト解析＆同期完了！すべての予定が最新になりました。";
-                document.getElementById('fileTextInput').value = "";
-                await fetchCloudData();
-                selectDay(selectedDayNum);
-                
-            } catch(err) {
-                statusEl.textContent = "❌ 解析エラー: AIの出力テキストが異常、または通信に失敗しました。";
-                console.error(err);
-            }
-        });
 
-        async function toggleEdit(target) {
-            const displayEl = document.getElementById("display-" + target);
-            const inputEl = document.getElementById("input-" + target);
-            const btnEl = document.getElementById("edit-btn-" + target);
-            const dateKey = getTargetDateStr(selectedDayNum).replace(/-/g, "_");
-
-            if (btnEl.textContent === "修正") {
-                inputEl.value = displayEl.textContent;
-                displayEl.style.display = "none"; inputEl.style.display = "block";
-                btnEl.textContent = "保存"; btnEl.className = "edit-btn saving";
-            } else {
-                displayEl.textContent = inputEl.value;
-                await saveCloudData("custom_" + dateKey + "_" + target, inputEl.value);
-                inputEl.style.display = "none"; displayEl.style.display = "block";
-                btnEl.textContent = "修正"; btnEl.className = "edit-btn";
+                container.appendChild(dayEl);
             }
         }
 
-        function renderCalendar(year, month) {
+        // クイックパネルの変更イベント監視
+        async function saveKoutaPanelConfig() {
+            if (!activePanelDateStr) return;
+            const period = document.getElementById('panel-period-select').value;
+            const isBTime = document.getElementById('panel-btime-checkbox').checked;
+            
+            const configValue = JSON.stringify({ period: period, isBTime: isBTime });
+            await saveCloudData("kouta_config_" + activePanelDateStr, configValue);
+            
+            renderKoutaCalendar(koutaCalYear, koutaCalMonth);
+            selectDay(selectedDayNum);
+        }
+
+        document.getElementById('panel-period-select').addEventListener('change', saveKoutaPanelConfig);
+        document.getElementById('panel-btime-checkbox').addEventListener('change', saveKoutaPanelConfig);
+
+        // はると用お弁当カレンダーの生成
+        function renderBentoCalendar(year, month) {
             const container = document.getElementById('bento-calendar');
             container.innerHTML = '';
             document.getElementById('cal-month-title').textContent = `${year}年${month + 1}月`;
@@ -735,14 +720,37 @@
                     if (bentoList.includes(cStr)) bentoList = bentoList.filter(d => d !== cStr);
                     else bentoList.push(cStr);
                     await saveCloudData("haruto_bento_days", JSON.stringify(bentoList));
+                    renderBentoCalendar(currentCalYear, currentCalMonth);
                     selectDay(selectedDayNum);
                 });
                 container.appendChild(dayEl);
             }
         }
 
-        document.getElementById('cal-prev').addEventListener('click', () => { currentCalMonth--; if (currentCalMonth < 0) { currentCalMonth = 11; currentCalYear--; } renderCalendar(currentCalYear, currentCalMonth); });
-        document.getElementById('cal-next').addEventListener('click', () => { currentCalMonth++; if (currentCalMonth > 11) { currentCalMonth = 0; currentCalYear++; } renderCalendar(currentCalYear, currentCalMonth); });
+        // ナビゲーションイベント
+        document.getElementById('kouta-cal-prev').addEventListener('click', () => { koutaCalMonth--; if (koutaCalMonth < 0) { koutaCalMonth = 11; koutaCalYear--; } renderKoutaCalendar(koutaCalYear, koutaCalMonth); document.getElementById('kouta-quick-panel').style.display='none'; });
+        document.getElementById('kouta-cal-next').addEventListener('click', () => { koutaCalMonth++; if (koutaCalMonth > 11) { koutaCalMonth = 0; koutaCalYear++; } renderKoutaCalendar(koutaCalYear, koutaCalMonth); document.getElementById('kouta-quick-panel').style.display='none'; });
+
+        document.getElementById('cal-prev').addEventListener('click', () => { currentCalMonth--; if (currentCalMonth < 0) { currentCalMonth = 11; currentCalYear--; } renderBentoCalendar(currentCalYear, currentCalMonth); });
+        document.getElementById('cal-next').addEventListener('click', () => { currentCalMonth++; if (currentCalMonth > 11) { currentCalMonth = 0; currentCalYear++; } renderBentoCalendar(currentCalYear, currentCalMonth); });
+
+        async function toggleEdit(target) {
+            const displayEl = document.getElementById("display-" + target);
+            const inputEl = document.getElementById("input-" + target);
+            const btnEl = document.getElementById("edit-btn-" + target);
+            const dateKey = getTargetDateStr(selectedDayNum).replace(/-/g, "_");
+
+            if (btnEl.textContent === "修正") {
+                inputEl.value = displayEl.textContent;
+                displayEl.style.display = "none"; inputEl.style.display = "block";
+                btnEl.textContent = "保存"; btnEl.className = "edit-btn saving";
+            } else {
+                displayEl.textContent = inputEl.value;
+                await saveCloudData("custom_" + dateKey + "_" + target, inputEl.value);
+                inputEl.style.display = "none"; displayEl.style.display = "block";
+                btnEl.textContent = "修正"; btnEl.className = "edit-btn";
+            }
+        }
 
         let memoTimeout;
         document.getElementById('customMemo').addEventListener('input', (e) => { clearTimeout(memoTimeout); memoTimeout = setTimeout(() => { saveCloudData("memo", e.target.value); }, 1000); });
@@ -751,7 +759,8 @@
             await fetchCloudData();
             let currentDay = new Date().getDay();
             if (currentDay === 0 || currentDay === 6) currentDay = 1;
-            renderCalendar(currentCalYear, currentCalMonth);
+            renderKoutaCalendar(koutaCalYear, koutaCalMonth);
+            renderBentoCalendar(currentCalYear, currentCalMonth);
             selectDay(currentDay);
             document.getElementById('customMemo').value = globalCloudData["memo"] || "";
         });
