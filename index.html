@@ -152,24 +152,26 @@
         }
         .edit-btn.saving { background-color: #2b8a3e; }
 
+        /* 📸 分離・洗練させたアップロードゾーンのスタイル */
+        .upload-card {
+            border: 2px dashed #4a90e2;
+            background-color: #f8fafc;
+        }
         .upload-zone {
-            border: 2px dashed #1a73e8;
-            background-color: #f1f3f4;
-            padding: 15px;
-            border-radius: var(--border-radius);
             text-align: center;
-            margin-bottom: 15px;
+            padding: 5px 0;
         }
         .upload-input { display: none; }
         .upload-label {
-            background-color: #1a73e8;
+            background-color: #4a90e2;
             color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
+            padding: 10px 20px;
+            border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
             display: inline-block;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .bento-cal-container {
@@ -228,7 +230,7 @@
         .bento-link-btn {
             display: block;
             text-align: center;
-            background-color: #fb8c00;
+            background-color: #fb8000;
             color: white;
             text-decoration: none;
             font-weight: bold;
@@ -274,16 +276,18 @@
         <p style="margin: 5px 0 0 0; font-size: 0.85rem;">Google Cloud ＆ Gemini AI 連携版</p>
     </header>
 
-    <div class="card">
-        <h2>📄 学年だより自動スケジュール解析 (Gemini)</h2>
+    <!-- 📥 【指示反映】学年だよりアップロード専用独立カード（上部に配置） -->
+    <div class="card upload-card">
+        <h2 style="color: #4a90e2; border-bottom-color: #4a90e2;">📄 学年だより自動解析 (Geminiスキャン)</h2>
         <div class="upload-zone">
-            <p style="margin-top:0; font-size:0.9rem; color:#555;">学校から配布されたPDFやお便りの写真をアップロードすると、A/Bタイムと下校時刻をAIが自動計算して予定欄に埋め込みます。</p>
-            <label for="fileInput" class="upload-label">📁 お便りを選択（PDFまたは画像）</label>
+            <p style="margin-top:0; font-size:0.85rem; color:#555; text-align:left; margin-bottom:12px;">毎月のお便りPDFや写真をアップロードすると、A/Bタイムや変則的な下校時刻をAIが自動抽出し、下のスケジュール枠へ自動マッピングします。</p>
+            <label for="fileInput" class="upload-label">📁 お便りファイルを読み込む</label>
             <input type="file" id="fileInput" class="upload-input" accept="application/pdf,image/*">
             <div id="uploadStatus" style="margin-top:10px; font-weight:bold; color:#1a73e8; font-size:0.9rem;"></div>
         </div>
     </div>
 
+    <!-- 📅 スケジュール表示エリア -->
     <div class="schedule-box">
         <div class="schedule-title" id="schedule-box-title">📅 スケジュール選択</div>
         <div class="day-btn-container">
@@ -309,6 +313,7 @@
         </div>
     </div>
 
+    <!-- 🍱 お弁当カレンダー -->
     <details class="bento-details" open>
         <summary>🍱 またはるとお弁当カレンダー</summary>
         <div class="details-content">
@@ -325,12 +330,14 @@
         </div>
     </details>
 
+    <!-- ✍️ 突発メモ -->
     <div class="card" style="border: 2px solid #1a73e8;">
         <h2 style="color: #1a73e8; border-bottom-color: #1a73e8;">✍️ 突発メモ ＆ 一時TODOリスト</h2>
         <textarea id="customMemo" class="memo-textarea" placeholder="ここに書いた内容はご夫婦のスマホに自動共有されます"></textarea>
         <div id="saveStatus" class="save-status">同期完了</div>
     </div>
 
+    <!-- 👦 康太の持ち物リスト -->
     <div class="card kouta-card">
         <h2 class="kouta-header">👦 康太（こうた）持ち物リスト</h2>
         <div id="kouta-terakoya-alert" class="terakoya-alert">📖 本日は【寺子屋（宮崎小）Bチーム】の開講日です！宿題・ドリル・筆記用具を忘れずに！</div>
@@ -402,6 +409,7 @@
         </details>
     </div>
 
+    <!-- 👶 はるとの持ち物リスト -->
     <div class="card haruto-card">
         <h2 class="haruto-header">👶 はると 持ち物リスト</h2>
         <div id="haruto-bento-alert" class="bento-alert">🍱 本日は【お弁当の日】です！お弁当と食具を忘れずに。</div>
@@ -456,6 +464,7 @@
         </details>
     </div>
 
+    <!-- 🐛 コピペ文面 -->
     <div class="card">
         <h2>🐛 あおむし広場 予約用定型文（コピペ用）</h2>
         <textarea style="width:100%; height:110px; font-size:0.95rem; font-family:monospace; padding:8px;" readonly>月：スイミング
@@ -466,10 +475,8 @@
     </div>
 
     <script>
-        // 🚀 新しいGASウェブアプリURLを完全に同期させました
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWVudytK2lGzkVGFdmC-_rIqwj3tcIhoL7s7bhqU9izygL_-750oHnmLttaV2BqxCX/exec";
 
-        // 2026年 寺子屋Bチーム開講日カレンダー
         const terakoyaDates2026 = [
             "2026-05-20", "2026-06-03", "2026-06-17", "2026-07-08",
             "2026-09-02", "2026-09-16", "2026-10-07", "2026-10-21",
@@ -533,7 +540,6 @@
             const dateKey = parts[0] + "_" + parts[1] + "_" + parts[2];
             const isTerakoya = (dayNum === 3) && terakoyaDates2026.includes(targetDateStr);
             
-            // 🤖 Geminiが解析したスケジュールを最優先でセット
             const aiSchedule = globalCloudData["ai_schedule_" + dateKey];
             
             let koutaSched = globalCloudData["custom_" + dateKey + "_kouta"];
@@ -556,7 +562,6 @@
             }
             document.getElementById('display-haruto').textContent = harutoSched;
 
-            // アラートの表示制御
             document.getElementById('kouta-terakoya-alert').style.display = isTerakoya ? "block" : "none";
             document.getElementById('kouta-terakoya-details').style.display = isTerakoya ? "block" : "none";
             if (isTerakoya) document.getElementById('kouta-terakoya-details').open = true;
@@ -565,7 +570,6 @@
             document.getElementById('haruto-bento-badge').style.display = isBento ? "inline" : "none";
         }
 
-        // 📸 ファイル選択時のGeminiへの連動処理
         document.getElementById('fileInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -596,7 +600,6 @@
             reader.readAsDataURL(file);
         });
 
-        // 手動修正ボタンの処理
         async function toggleEdit(target) {
             const displayEl = document.getElementById("display-" + target);
             const inputEl = document.getElementById("input-" + target);
