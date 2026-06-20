@@ -173,11 +173,16 @@
         .res-row:last-child { border-bottom: none; }
         .res-label-box { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; font-weight: bold; }
         .res-checkbox { transform: scale(1.2); cursor: pointer; }
+        
+        .res-btn-group {
+            display: flex;
+            gap: 4px;
+        }
         .res-btn {
             background-color: #4a90e2;
             color: white;
             border: none;
-            padding: 5px 10px;
+            padding: 5px 8px;
             border-radius: 4px;
             font-size: 0.75rem;
             font-weight: bold;
@@ -186,6 +191,12 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         .res-btn:active { background-color: #357abd; }
+        
+        /* 📞 電話ボタン専用カラー */
+        .res-btn.phone-btn {
+            background-color: #10b981;
+        }
+        .res-btn.phone-btn:active { background-color: #059669; }
 
         .cal-container {
             display: grid;
@@ -358,21 +369,29 @@
             <button type="button" id="edit-btn-haruto" class="edit-btn">修正</button>
         </div>
 
-        <!-- 🤖 予約確認パネル（スマホOSを判別して最適なリンクを自動割り振り） -->
+        <!-- 🤖 予約確認パネル（アプリランチャー ＆ 📞電話発信リンク完全統合） -->
         <div class="reservation-panel">
             <div class="res-row">
                 <div class="res-label-box">
                     <input type="checkbox" id="chk-wakuwaku" class="res-checkbox">
                     <span>🎒 わくわくプラザ予約OK</span>
                 </div>
-                <button type="button" class="res-btn" onclick="launchApp('wakuwaku')">📱 アプリを開く ↗</button>
+                <div class="res-btn-group">
+                    <button type="button" class="res-btn" onclick="launchApp('wakuwaku')">📱 アプリ ↗</button>
+                    <!-- ワンクリック発信：わくわくプラザ -->
+                    <a href="tel:0448662355" class="res-btn phone-btn">📞 電話 ↗</a>
+                </div>
             </div>
             <div class="res-row">
                 <div class="res-label-box">
                     <input type="checkbox" id="chk-aomushi" class="res-checkbox">
                     <span>🐛 あおむし広場予約OK</span>
                 </div>
-                <button type="button" class="res-btn" onclick="launchApp('aomushi')">📱 アプリを開く ↗</button>
+                <div class="res-btn-group">
+                    <button type="button" class="res-btn" onclick="launchApp('aomushi')">📱 アプリ ↗</button>
+                    <!-- ワンクリック発信：あおむし広場 -->
+                    <a href="tel:08066685420" class="res-btn phone-btn">📞 電話 ↗</a>
+                </div>
             </div>
         </div>
     </div>
@@ -624,19 +643,16 @@
 
         let activePanelDateStr = null;
 
-        // 🆕 デバイスOS自動判定 ＆ 正しいアプリストアへの割り振りランチャーロジック
         function launchApp(type) {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
             const isiOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
 
             let url = "";
             if (type === 'wakuwaku') {
-                // 安心でんしょばと-グリーン
                 url = isiOS 
                     ? "https://apps.apple.com/jp/app/%E5%AE%85%E5%BF%83%E3%81%A7%E3%82%93%E3%82%BD%E3%81%B0%E3%81%A8-%E3%82%B0%E3%83%AA%E3%83%BC%E3%83%B3/id1497864021" 
                     : "https://play.google.com/store/apps/details?id=jp.denshobato.gakudo.denshobato_g&hl=ja";
             } else if (type === 'aomushi') {
-                // れんらくアプリ
                 url = isiOS 
                     ? "https://apps.apple.com/jp/app/%E3%82%8C%E3%82%93%E3%82%89%E3%81%8F%E3%82%A2%E3%83%96%E3%83%AA/id897021038" 
                     : "https://play.google.com/store/apps/details?id=jp.co.vish.bconnect&hl=ja";
@@ -760,7 +776,7 @@
             }
             document.getElementById('display-haruto').textContent = harutoSched;
 
-            const offFlag = isDayOff(targetDateStr);
+            const offFlag = isDayOff(dateStr);
             document.getElementById('kouta-terakoya-alert').style.display = (isTerakoya && !offFlag) ? "block" : "none";
             document.getElementById('kouta-terakoya-details').style.display = (isTerakoya && !offFlag) ? "block" : "none";
             if (isTerakoya && !offFlag) document.getElementById('kouta-terakoya-details').open = true;
