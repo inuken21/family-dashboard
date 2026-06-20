@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>【共働き応援】こども準備＆保育登録メモ</title>
     
-    <!-- 📱 スマホのホーム画面用アイコン画像の設定（icon.pngと連動） -->
     <link rel="apple-touch-icon" href="icon.png">
 
     <style>
@@ -71,11 +70,28 @@
             border-radius: var(--border-radius);
             margin-bottom: 15px;
         }
-        .schedule-title {
+        
+        /* 🆕 週ナビゲーション用のスタイル */
+        .week-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .week-nav-btn {
+            background-color: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #1a73e8;
+        }
+        .week-nav-title {
             font-weight: bold;
             color: #1a73e8;
-            font-size: 1.1rem;
-            margin-bottom: 12px;
+            font-size: 1.05rem;
         }
         
         .day-btn-container {
@@ -156,7 +172,6 @@
         }
         .edit-btn.saving { background-color: #2b8a3e; }
 
-        /* 🤖 予約確認パネル用リライトCSS（横幅を美しく制御） */
         .reservation-panel {
             background-color: #f8fafc;
             border: 2px solid #cbd5e1;
@@ -174,7 +189,6 @@
         }
         .res-row:last-child { border-bottom: none; }
         
-        /* タイトルエリアの幅固定 */
         .res-label-box {
             flex: 1;
             font-size: 0.85rem;
@@ -185,7 +199,6 @@
             text-overflow: ellipsis;
         }
         
-        /* 🎨 3色連動セレクトボックスのスタイル */
         .res-status-select {
             padding: 4px 6px;
             font-size: 0.8rem;
@@ -198,12 +211,10 @@
             width: 90px;
             text-align: center;
         }
-        /* セレクト状態別の配色 */
         .res-status-select.status-ok { background-color: #d1fae5; color: #065f46; border-color: #a7f3d0; }
         .res-status-select.status-no { background-color: #ffedd5; color: #9a3412; border-color: #fed7aa; }
         .res-status-select.status-yet { background-color: #f1f5f9; color: #64748b; border-color: #cbd5e1; }
 
-        /* ボタン群が絶対に改行しないように幅と余白を鉄壁ガード */
         .res-btn-group {
             display: flex;
             gap: 4px;
@@ -220,7 +231,7 @@
             text-decoration: none;
             cursor: pointer;
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            white-space: nowrap; /* ⚠️ 絶対に文字を改行させない */
+            white-space: nowrap;
             display: inline-block;
             text-align: center;
         }
@@ -374,9 +385,14 @@
         <h1>Family Dashboard</h1>
     </header>
 
-    <!-- 🟢 1番目：予定（スケジュール表示エリア） -->
     <div class="schedule-box">
-        <div class="schedule-title" id="schedule-box-title">📅 スケジュール選択</div>
+        
+        <div class="week-nav">
+            <button type="button" class="week-nav-btn" id="week-prev">◀ 前の週</button>
+            <span class="week-nav-title" id="week-title">📅 今週の予定</span>
+            <button type="button" class="week-nav-btn" id="week-next">次の週 ▶</button>
+        </div>
+
         <div class="day-btn-container">
             <button type="button" class="day-btn" id="btn-day-1">月</button>
             <button type="button" class="day-btn" id="btn-day-2">火</button>
@@ -399,9 +415,7 @@
             <button type="button" id="edit-btn-haruto" class="edit-btn">修正</button>
         </div>
 
-        <!-- 🤖 予約確認パネル（3ステータス選択・改行防止版） -->
         <div class="reservation-panel">
-            <!-- わくわくプラザ行 -->
             <div class="res-row">
                 <div class="res-label-box">🎒 わくわく</div>
                 <select id="sel-wakuwaku" class="res-status-select" onchange="changeResStatus('wakuwaku', this.value)">
@@ -415,7 +429,6 @@
                 </div>
             </div>
             
-            <!-- あおむし広場行 -->
             <div class="res-row">
                 <div class="res-label-box">🐛 あおむし</div>
                 <select id="sel-aomushi" class="res-status-select" onchange="changeResStatus('aomushi', this.value)">
@@ -431,7 +444,6 @@
         </div>
     </div>
 
-    <!-- 🟢 2番目：こうた宮崎小カレンダー -->
     <details class="kouta-details">
         <summary>🏫 こうた 宮崎小カレンダー</summary>
         <div class="details-content">
@@ -443,7 +455,6 @@
             </div>
             <div class="cal-container" id="kouta-calendar"></div>
             
-            <!-- クイック操作パネル -->
             <div class="quick-panel" id="kouta-quick-panel">
                 <div class="quick-panel-title" id="kouta-panel-date-title">設定</div>
                 <div class="panel-block">
@@ -475,7 +486,6 @@
         </div>
     </details>
 
-    <!-- 🟢 3番目：はるとお弁当カレンダー -->
     <details class="bento-details">
         <summary>🍱 はるとお弁当カレンダー</summary>
         <div class="details-content">
@@ -492,14 +502,12 @@
         </div>
     </details>
 
-    <!-- 🟢 4番目：メモ ＆ TODOリスト -->
     <div class="card" style="border: 2px solid #1a73e8;">
         <h2 style="color: #1a73e8; border-bottom-color: #1a73e8;">✍️ メモ ＆ TODOリスト</h2>
         <textarea id="customMemo" class="memo-textarea" placeholder="ここに書いた内容はご夫婦のスマホに自動共有されます"></textarea>
         <div id="saveStatus" class="save-status">同期完了</div>
     </div>
 
-    <!-- 👦 康太の持ち物リスト -->
     <div class="card kouta-card">
         <h2 class="kouta-header">👦 康太（こうた）持ち物リスト</h2>
         <div id="kouta-terakoya-alert" class="terakoya-alert">📖 本日は【寺子屋（宮崎小）Bチーム】の開講日です！宿題・ドリル・筆記用具を忘れずに！</div>
@@ -571,7 +579,6 @@
         </details>
     </div>
 
-    <!-- 👶 はるとの持ち物リスト -->
     <div class="card haruto-card">
         <h2 class="haruto-header">👶 はると 持ち物リスト</h2>
         <div id="haruto-bento-alert" class="bento-alert">🍱 本日は【お弁当の日】です！お弁当と食具を忘れずに。</div>
@@ -626,7 +633,6 @@
         </details>
     </div>
 
-    <!-- 🐛 コピペ文面 -->
     <div class="card">
         <h2>🐛 あおむし広場 予約用定型文（コピペ用）</h2>
         <textarea class="responsive-textarea" style="height:110px; font-family:monospace;" readonly>月：スイミング
@@ -671,6 +677,9 @@
         let globalCloudData = {};
         let selectedDayNum = 1;
         
+        // 🆕 スケジュール表示週をズラすための基準変数（0なら今週、1なら来週、-1なら先週）
+        let currentWeekOffset = 0;
+
         let currentCalYear = new Date().getFullYear();
         let currentCalMonth = new Date().getMonth();
         let koutaCalYear = new Date().getFullYear();
@@ -718,13 +727,19 @@
             } catch (e) { document.getElementById('saveStatus').textContent = "❌ 保存失敗"; }
         }
 
+        // 🆕 週オフセット（週めくり）に対応した正確な日付文字列算出ロジック
         function getTargetDateStr(dayNum) {
             const today = new Date();
             const currentDayIdx = today.getDay();
             let baseDate = new Date(today);
+            
+            // 土日の場合は来週月曜を当週の基準とする
             if (currentDayIdx === 0) baseDate.setDate(today.getDate() + 1);
             else if (currentDayIdx === 6) baseDate.setDate(today.getDate() + 2);
-            baseDate.setDate(baseDate.getDate() + (dayNum - baseDate.getDay()));
+            
+            // 現在選択されている週のオフセット分（7日 × オフセット数）を足し引きする
+            baseDate.setDate(baseDate.getDate() + (dayNum - baseDate.getDay()) + (currentWeekOffset * 7));
+            
             return `${baseDate.getFullYear()}-${String(baseDate.getMonth() + 1).padStart(2, '0')}-${String(baseDate.getDate()).padStart(2, '0')}`;
         }
 
@@ -744,7 +759,6 @@
             return miyazakiTimeTable[typeStr][config.period];
         }
 
-        // 🆕 セレクトボックスの色を状態に応じて動的変更するヘルパー
         function applySelectStyle(el, val) {
             el.className = 'res-status-select';
             if (val === 'ok') el.classList.add('status-ok');
@@ -752,12 +766,23 @@
             else el.classList.add('status-yet');
         }
 
-        // 🆕 予約ステータス変更時アクション（クラウド保存連動）
         async function changeResStatus(type, val) {
             const targetDateStr = getTargetDateStr(selectedDayNum);
             const el = document.getElementById('sel-' + type);
             applySelectStyle(el, val);
             await saveCloudData("res_" + type + "_status_" + targetDateStr, val);
+        }
+
+        // 🆕 週表示タイトル（「今週」「来週」などのバッジテキスト）を動的生成
+        function updateWeekTitle() {
+            const titleEl = document.getElementById('week-title');
+            if (currentWeekOffset === 0) titleEl.textContent = "📅 今週の予定";
+            else if (currentWeekOffset === 1) titleEl.textContent = "📅 来週の予定";
+            else if (currentWeekOffset === 2) titleEl.textContent = "📅 再来週の予定";
+            else if (currentWeekOffset === -1) titleEl.textContent = "📅 先週の予定";
+            else {
+                titleEl.textContent = `📅 ${currentWeekOffset > 0 ? currentWeekOffset + '週間後' : Math.abs(currentWeekOffset) + '週間前'}の予定`;
+            }
         }
 
         function selectDay(dayNum) {
@@ -768,7 +793,10 @@
             const targetDateStr = getTargetDateStr(dayNum);
             const parts = targetDateStr.split('-');
             const days = ["日", "月", "火", "水", "木", "金", "土"];
-            document.getElementById('schedule-box-title').textContent = `📅 予定: ${parts[1]}月${parts[2]}日 (${days[dayNum]})`;
+            
+            // ナビゲーションタイトルと日付を同期表示
+            updateWeekTitle();
+            document.getElementById('schedule-box-title').textContent = `予定: ${parts[1]}月${parts[2]}日 (${days[dayNum]})`;
 
             const dateKey = parts[0] + "_" + parts[1] + "_" + parts[2];
             const isTerakoya = (dayNum === 3) && terakoyaDates2026.includes(targetDateStr);
@@ -835,7 +863,7 @@
             document.getElementById('haruto-bento-alert').style.display = (isBento && !offFlag) ? "block" : "none";
             document.getElementById('haruto-bento-badge').style.display = (isBento && !offFlag) ? "inline" : "none";
 
-            // 🆕 3色予約ステータスをクラウドからロードして適用
+            // 3色予約ステータスをロード
             const wakuVal = globalCloudData["res_wakuwaku_status_" + targetDateStr] || "yet";
             const aomuVal = globalCloudData["res_aomushi_status_" + targetDateStr] || "yet";
             
@@ -848,6 +876,16 @@
             applySelectStyle(selWaku, wakuVal);
             applySelectStyle(selAomu, aomuVal);
         }
+
+        // 🆕 週ナビゲーション（週めくり）ボタンのクリックイベント
+        document.getElementById('week-prev').addEventListener('click', () => {
+            currentWeekOffset--;
+            selectDay(selectedDayNum);
+        });
+        document.getElementById('week-next').addEventListener('click', () => {
+            currentWeekOffset++;
+            selectDay(selectedDayNum);
+        });
 
         function renderKoutaCalendar(year, month) {
             const container = document.getElementById('kouta-calendar');
