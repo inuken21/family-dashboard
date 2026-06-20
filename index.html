@@ -152,6 +152,26 @@
         }
         .edit-btn.saving { background-color: #2b8a3e; }
 
+        .upload-zone {
+            border: 2px dashed #1a73e8;
+            background-color: #f1f3f4;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .upload-input { display: none; }
+        .upload-label {
+            background-color: #1a73e8;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
         .bento-cal-container {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -217,30 +237,9 @@
             font-size: 0.95rem;
             margin-bottom: 8px;
         }
-        .bento-login-info {
-            font-size: 0.85rem;
-            color: #555;
-            background: #fafafa;
-            padding: 6px 10px;
-            border-radius: 4px;
-            border: 1px dashed #ddd;
-            margin: 0;
-        }
-
-        .bento-details {
-            border: 2px solid #fb8c00;
-            background-color: #fff;
-            padding: 12px;
-            border-radius: var(--border-radius);
-            margin-bottom: 15px;
-        }
-        .bento-details summary {
-            color: #e65100;
-            font-size: 1.15rem;
-            font-weight: bold;
-            cursor: pointer;
-            outline: none;
-        }
+        .bento-login-info { font-size: 0.85rem; color: #555; background: #fafafa; padding: 6px 10px; border-radius: 4px; border: 1px dashed #ddd; margin: 0; }
+        .bento-details { border: 2px solid #fb8c00; background-color: #fff; padding: 12px; border-radius: var(--border-radius); margin-bottom: 15px; }
+        .bento-details summary { color: #e65100; font-size: 1.15rem; font-weight: bold; cursor: pointer; outline: none; }
 
         .todo-list { list-style: none; padding: 0; margin: 0; }
         .todo-item { display: flex; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid #eee; }
@@ -260,7 +259,6 @@
         .bento-alert { background-color: #fff3e0; border-left: 4px solid #fb8c00; color: #e65100; font-weight: bold; padding: 8px; margin-bottom: 10px; font-size: 0.9rem; display: none; }
         
         .badge { background-color: var(--accent-color); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 5px; }
-
         .memo-textarea { width: 100%; height: 120px; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; resize: vertical; background-color: #fafafa; line-height: 1.5; }
         .save-status { font-size: 0.8rem; color: #1a73e8; text-align: right; margin-top: 5px; font-weight: bold; }
         
@@ -273,10 +271,19 @@
 
     <header>
         <h1>Family Dashboard</h1>
-        <p style="margin: 5px 0 0 0; font-size: 0.85rem;">Google Cloud 同期・完全版</p>
+        <p style="margin: 5px 0 0 0; font-size: 0.85rem;">Google Cloud ＆ Gemini AI 連携版</p>
     </header>
 
-    <!-- 📅 スケジュールエリア -->
+    <div class="card">
+        <h2>📄 学年だより自動スケジュール解析 (Gemini)</h2>
+        <div class="upload-zone">
+            <p style="margin-top:0; font-size:0.9rem; color:#555;">学校から配布されたPDFやお便りの写真をアップロードすると、A/Bタイムと下校時刻をAIが自動計算して予定欄に埋め込みます。</p>
+            <label for="fileInput" class="upload-label">📁 お便りを選択（PDFまたは画像）</label>
+            <input type="file" id="fileInput" class="upload-input" accept="application/pdf,image/*">
+            <div id="uploadStatus" style="margin-top:10px; font-weight:bold; color:#1a73e8; font-size:0.9rem;"></div>
+        </div>
+    </div>
+
     <div class="schedule-box">
         <div class="schedule-title" id="schedule-box-title">📅 スケジュール選択</div>
         <div class="day-btn-container">
@@ -302,19 +309,13 @@
         </div>
     </div>
 
-    <!-- 🍱 お弁当カレンダー -->
     <details class="bento-details" open>
         <summary>🍱 またはるとお弁当カレンダー</summary>
         <div class="details-content">
             <div class="bento-link-box">
                 <a href="https://www.fl39.jp/" target="_blank" rel="noopener noreferrer" class="bento-link-btn">🌐 お弁当予約サイトを開く ↗</a>
-                <p class="bento-login-info">
-                    <strong>ログイン情報</strong><br>
-                    ID: <span style="user-select:all; font-weight:bold; color:#333;">inahata0208</span><br>
-                    PW: <span style="user-select:all; font-weight:bold; color:#333;">kentaina0118</span>
-                </p>
+                <p class="bento-login-info">ID: <strong>inahata0208</strong> / PW: <strong>kentaina0118</strong></p>
             </div>
-            
             <div class="cal-month-nav">
                 <button type="button" class="cal-nav-btn" id="cal-prev">◀ 前月</button>
                 <span id="cal-month-title" style="font-weight: bold; font-size: 1.1rem;"></span>
@@ -324,14 +325,12 @@
         </div>
     </details>
 
-    <!-- ✍️ 突発メモ -->
     <div class="card" style="border: 2px solid #1a73e8;">
         <h2 style="color: #1a73e8; border-bottom-color: #1a73e8;">✍️ 突発メモ ＆ 一時TODOリスト</h2>
         <textarea id="customMemo" class="memo-textarea" placeholder="ここに書いた内容はご夫婦のスマホに自動共有されます"></textarea>
         <div id="saveStatus" class="save-status">同期完了</div>
     </div>
 
-    <!-- 👦 康太の持ち物リスト -->
     <div class="card kouta-card">
         <h2 class="kouta-header">👦 康太（こうた）持ち物リスト</h2>
         <div id="kouta-terakoya-alert" class="terakoya-alert">📖 本日は【寺子屋（宮崎小）Bチーム】の開講日です！宿題・ドリル・筆記用具を忘れずに！</div>
@@ -403,7 +402,6 @@
         </details>
     </div>
 
-    <!-- 👶 はるとの持ち物リスト -->
     <div class="card haruto-card">
         <h2 class="haruto-header">👶 はると 持ち物リスト</h2>
         <div id="haruto-bento-alert" class="bento-alert">🍱 本日は【お弁当の日】です！お弁当と食具を忘れずに。</div>
@@ -458,7 +456,6 @@
         </details>
     </div>
 
-    <!-- 🐛 コピペ文面 -->
     <div class="card">
         <h2>🐛 あおむし広場 予約用定型文（コピペ用）</h2>
         <textarea style="width:100%; height:110px; font-size:0.95rem; font-family:monospace; padding:8px;" readonly>月：スイミング
@@ -469,7 +466,7 @@
     </div>
 
     <script>
-        // 🚀 ご提示いただいたGASのウェブアプリURLを埋め込み済みです
+        // 🚀 固定のGASウェブアプリURLを完全に埋め込み済みです
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxsKzxfHi_ZyfOeisBe_YDgBNnFifEFEzyyY-8X6Wh3vcg6mdZcOQx1f-ipczjxQAhs/exec";
 
         // 2026年 寺子屋Bチーム開講日カレンダー
@@ -498,9 +495,7 @@
                 const response = await fetch(GAS_WEB_APP_URL);
                 globalCloudData = await response.json();
                 document.getElementById('loading').style.display = 'none';
-            } catch (e) {
-                document.getElementById('loading').textContent = "⚠️ 読み込み失敗。URLを確認してください。";
-            }
+            } catch (e) { document.getElementById('loading').textContent = "⚠️ 読み込み失敗。"; }
         }
 
         async function saveCloudData(key, value) {
@@ -512,9 +507,7 @@
                 });
                 globalCloudData[key] = value;
                 document.getElementById('saveStatus').textContent = "同期完了";
-            } catch (e) {
-                document.getElementById('saveStatus').textContent = "❌ 保存失敗";
-            }
+            } catch (e) { document.getElementById('saveStatus').textContent = "❌ 保存失敗"; }
         }
 
         function getTargetDateStr(dayNum) {
@@ -523,8 +516,7 @@
             let baseDate = new Date(today);
             if (currentDayIdx === 0) baseDate.setDate(today.getDate() + 1);
             else if (currentDayIdx === 6) baseDate.setDate(today.getDate() + 2);
-            const baseDayIdx = baseDate.getDay();
-            baseDate.setDate(baseDate.getDate() + (dayNum - baseDayIdx));
+            baseDate.setDate(baseDate.getDate() + (dayNum - baseDate.getDay()));
             return `${baseDate.getFullYear()}-${String(baseDate.getMonth() + 1).padStart(2, '0')}-${String(baseDate.getDate()).padStart(2, '0')}`;
         }
 
@@ -541,23 +533,30 @@
             const dateKey = parts[0] + "_" + parts[1] + "_" + parts[2];
             const isTerakoya = (dayNum === 3) && terakoyaDates2026.includes(targetDateStr);
             
+            // 🤖 Geminiが解析したスケジュールを最優先でセット
+            const aiSchedule = globalCloudData["ai_schedule_" + dateKey];
+            
+            let koutaSched = globalCloudData["custom_" + dateKey + "_kouta"];
+            if (!koutaSched) {
+                if (aiSchedule) {
+                    koutaSched = `🎒 ${aiSchedule}`;
+                } else {
+                    koutaSched = isTerakoya ? "🔥 わくわく → 【寺子屋Bチーム 13:55〜14:55】" : defaultSchedules[dayNum].kouta;
+                }
+            }
+            document.getElementById('display-kouta').textContent = koutaSched;
+
             let bentoList = [];
             try { bentoList = JSON.parse(globalCloudData["haruto_bento_days"] || "[]"); } catch(e){}
             const isBento = bentoList.includes(targetDateStr);
 
-            let koutaSched = globalCloudData["custom_" + dateKey + "_kouta"];
-            if (!koutaSched) {
-                koutaSched = isTerakoya ? "🔥 わくわく → 【寺子屋Bチーム 13:55〜14:55】" : defaultSchedules[dayNum].kouta;
-            }
-            document.getElementById('display-kouta').textContent = koutaSched;
-
-            let harutoSched = globalCloudData["custom_" + dateKey + "_haruto"];
-            if (!harutoSched) {
-                harutoSched = defaultSchedules[dayNum].haruto;
-                if (isBento) harutoSched = harutoSched.split(" (")[0] + " 🍱【今日はお弁当の日！】";
+            let harutoSched = globalCloudData["custom_" + dateKey + "_haruto"] || defaultSchedules[dayNum].haruto;
+            if (isBento && !globalCloudData["custom_" + dateKey + "_haruto"]) {
+                harutoSched = harutoSched.split(" (")[0] + " 🍱【今日はお弁当の日！】";
             }
             document.getElementById('display-haruto').textContent = harutoSched;
 
+            // アラートの表示制御
             document.getElementById('kouta-terakoya-alert').style.display = isTerakoya ? "block" : "none";
             document.getElementById('kouta-terakoya-details').style.display = isTerakoya ? "block" : "none";
             if (isTerakoya) document.getElementById('kouta-terakoya-details').open = true;
@@ -566,54 +565,38 @@
             document.getElementById('haruto-bento-badge').style.display = isBento ? "inline" : "none";
         }
 
-        function renderCalendar(year, month) {
-            const container = document.getElementById('bento-calendar');
-            container.innerHTML = '';
-            document.getElementById('cal-month-title').textContent = `${year}年${month + 1}月`;
-            
-            ['日','月','火','水','木','金','土'].forEach(w => {
-                const h = document.createElement('div'); h.className = 'cal-header'; h.textContent = w; container.appendChild(h);
-            });
+        // 📸 ファイル選択時のGeminiへの連動処理
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
 
-            const firstDay = new Date(year, month, 1).getDay();
-            const lastDate = new Date(year, month + 1, 0).getDate();
-            let bentoList = [];
-            try { bentoList = JSON.parse(globalCloudData["haruto_bento_days"] || "[]"); } catch(e){}
+            const statusEl = document.getElementById('uploadStatus');
+            statusEl.textContent = "⌛ Gemini AIが学年だよりを解析中...(約15秒かかります)";
 
-            for (let i = 0; i < firstDay; i++) container.appendChild(document.createElement('div')).className = 'cal-day empty';
-
-            for (let date = 1; date <= lastDate; date++) {
-                const dayEl = document.createElement('div'); dayEl.className = 'cal-day'; dayEl.textContent = date;
-                const cStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
-                
-                if (bentoList.includes(cStr)) dayEl.classList.add('bento-active');
-
-                dayEl.addEventListener('click', async () => {
-                    if (bentoList.includes(cStr)) {
-                        bentoList = bentoList.filter(d => d !== cStr);
-                        dayEl.classList.remove('bento-active');
-                    } else {
-                        bentoList.push(cStr);
-                        dayEl.classList.add('bento-active');
-                    }
-                    await saveCloudData("haruto_bento_days", JSON.stringify(bentoList));
-                    selectDay(selectedDayNum);
-                });
-                container.appendChild(dayEl);
-            }
-        }
-
-        document.getElementById('cal-prev').addEventListener('click', () => {
-            currentCalMonth--;
-            if (currentCalMonth < 0) { currentCalMonth = 11; currentCalYear--; }
-            renderCalendar(currentCalYear, currentCalMonth);
-        });
-        document.getElementById('cal-next').addEventListener('click', () => {
-            currentCalMonth++;
-            if (currentCalMonth > 11) { currentCalMonth = 0; currentCalYear++; }
-            renderCalendar(currentCalYear, currentCalMonth);
+            const reader = new FileReader();
+            reader.onload = async function(evt) {
+                const base64Data = evt.target.result.split(',')[1];
+                try {
+                    const response = await fetch(GAS_WEB_APP_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            action: 'analyze_file',
+                            fileData: base64Data,
+                            mimeType: file.type
+                        })
+                    });
+                    const res = await response.json();
+                    if (res.status === 'success') {
+                        statusEl.textContent = "✅ 解析完了！予定表を自動更新しました。";
+                        await fetchCloudData();
+                        selectDay(selectedDayNum);
+                    } else { statusEl.textContent = "❌ 解析失敗: " + res.message; }
+                } catch(err) { statusEl.textContent = "❌ 通信エラーが発生しました。"; }
+            };
+            reader.readAsDataURL(file);
         });
 
+        // 手動修正ボタンの処理
         async function toggleEdit(target) {
             const displayEl = document.getElementById("display-" + target);
             const inputEl = document.getElementById("input-" + target);
@@ -632,11 +615,37 @@
             }
         }
 
+        function renderCalendar(year, month) {
+            const container = document.getElementById('bento-calendar');
+            container.innerHTML = '';
+            document.getElementById('cal-month-title').textContent = `${year}年${month + 1}月`;
+            ['日','月','火','水','木','金','土'].forEach(w => {
+                const h = document.createElement('div'); h.className = 'cal-header'; h.textContent = w; container.appendChild(h);
+            });
+            const firstDay = new Date(year, month, 1).getDay();
+            const lastDate = new Date(year, month + 1, 0).getDate();
+            let bentoList = [];
+            try { bentoList = JSON.parse(globalCloudData["haruto_bento_days"] || "[]"); } catch(e){}
+            for (let i = 0; i < firstDay; i++) container.appendChild(document.createElement('div')).className = 'cal-day empty';
+            for (let date = 1; date <= lastDate; date++) {
+                const dayEl = document.createElement('div'); dayEl.className = 'cal-day'; dayEl.textContent = date;
+                const cStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
+                if (bentoList.includes(cStr)) dayEl.classList.add('bento-active');
+                dayEl.addEventListener('click', async () => {
+                    if (bentoList.includes(cStr)) bentoList = bentoList.filter(d => d !== cStr);
+                    else bentoList.push(cStr);
+                    await saveCloudData("haruto_bento_days", JSON.stringify(bentoList));
+                    selectDay(selectedDayNum);
+                });
+                container.appendChild(dayEl);
+            }
+        }
+
+        document.getElementById('cal-prev').addEventListener('click', () => { currentCalMonth--; if (currentCalMonth < 0) { currentCalMonth = 11; currentCalYear--; } renderCalendar(currentCalYear, currentCalMonth); });
+        document.getElementById('cal-next').addEventListener('click', () => { currentCalMonth++; if (currentCalMonth > 11) { currentCalMonth = 0; currentCalYear++; } renderCalendar(currentCalYear, currentCalMonth); });
+
         let memoTimeout;
-        document.getElementById('customMemo').addEventListener('input', (e) => {
-            clearTimeout(memoTimeout);
-            memoTimeout = setTimeout(() => { saveCloudData("memo", e.target.value); }, 1000);
-        });
+        document.getElementById('customMemo').addEventListener('input', (e) => { clearTimeout(memoTimeout); memoTimeout = setTimeout(() => { saveCloudData("memo", e.target.value); }, 1000); });
 
         window.addEventListener('DOMContentLoaded', async () => {
             await fetchCloudData();
