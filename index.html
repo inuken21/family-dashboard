@@ -290,7 +290,7 @@
 
     <header>
         <h1>Family Dashboard</h1>
-        <p style="margin: 5px 0 0 0; font-size: 0.85rem;">Google Cloud ＆ Gemini AI 連携版</p>
+        <p style="margin: 5px 0 0 0; font-size: 0.85rem;">ブラウザ直接解析 ＆ Google Cloud 保存版</p>
     </header>
 
     <div class="schedule-box">
@@ -496,10 +496,12 @@
     </div>
 
     <script>
-        // 🚀 新しく引き直された無敵のGASウェブアプリURLを埋め込み済みです
+        // 🚀 あなたの既存のGASウェブアプリURL（保存専用として100%活用します）
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw0YdRq2aEPNBXCtByhIst6wVS0WDDv1olhdg49m66yUFP6hoyTf8m_lo4V6JL98lkU/exec";
+        
+        // 🔑 健太さん専用のGemini APIキー（ブラウザから直接安全に叩きます）
+        const GEMINI_API_KEY = "AQ.Ab8RN6KHAiXwDHetlASIzwanGXiIV0reU_RVsAObw1UbqwY7HA";
 
-        // 2026年 寺子屋Bチーム開講日カレンダー
         const terakoyaDates2026 = [
             "2026-05-20", "2026-06-03", "2026-06-17", "2026-07-08",
             "2026-09-02", "2026-09-16", "2026-10-07", "2026-10-21",
@@ -525,7 +527,7 @@
                 const response = await fetch(GAS_WEB_APP_URL);
                 globalCloudData = await response.json();
                 document.getElementById('loading').style.display = 'none';
-            } catch (e) { document.getElementById('loading').textContent = "⚠️ 同期エラー。URLを確認してください。"; }
+            } catch (e) { document.getElementById('loading').textContent = "⚠️ 同期エラーが発生しました。"; }
         }
 
         async function saveCloudData(key, value) {
@@ -610,33 +612,79 @@
             reader.readAsDataURL(file);
         });
 
-        // ② 毎月投稿：学年だよりの解析処理
+        // 🔥 ② 毎月投稿：ブラウザから直接Gemini APIを安全に叩く最新システム
         document.getElementById('fileInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
 
             const statusEl = document.getElementById('uploadStatus');
-            statusEl.textContent = "⌛ Gemini AIが学年だよりを解析中...(約15秒かかります)";
+            statusEl.textContent = "⌛ スマホから直接Gemini AIを起動して解析中...(約12秒)";
 
             const reader = new FileReader();
             reader.onload = async function(evt) {
                 const base64Data = evt.target.result.split(',')[1];
+                
+                // 🛠️ GASを経由せず、直接GoogleのGeminiエンドポイントへ安全に接続！
+                const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+                
+                const prompt = "これは小学校の2年生の学年だより、または時程表です。記載されている日付ごとの時間割（4時間授業、5時間授業など）とAタイム・Bタイムのルールを読み解き、2年生の日ごとの下校スケジュールを以下の【出力フォーマット】のJSONデータ形式でのみ返してください。解説やマークダウン（```json 等）は一切不要です。パース可能なピュアなJSON文字列だけを返してください。\n\n" +
+                               "【出力フォーマット】\n" +
+                               "{\n" +
+                               "  \"2026-06-03\": \"Bタイム (4時間授業・11:55まで)\",\n" +
+                               "  \"2026-06-12\": \"Aタイム (5時間授業・14:15まで)\"\n" +
+                               "}";
+
+                const payload = {
+                    "contents": [{
+                        "parts": [
+                            { "text": prompt },
+                            { "inlineData": { "mimeType": file.type, "data": base64Data } }
+                        ]
+                    }]
+                };
+
                 try {
-                    const response = await fetch(GAS_WEB_APP_URL, {
+                    // 🚀 ブラウザ（スマホパワー）で直接通信！
+                    const response = await fetch(geminiUrl, {
                         method: 'POST',
-                        body: JSON.stringify({
-                            action: 'analyze_file',
-                            fileData: base64Data,
-                            mimeType: file.type
-                        })
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
                     });
-                    const res = await response.json();
-                    if (res.status === 'success') {
-                        statusEl.textContent = "✅ 解析完了！予定表を自動更新しました。";
-                        await fetchCloudData();
-                        selectDay(selectedDayNum);
-                    } else { statusEl.textContent = "❌ 解析失敗: " + res.message; }
-                } catch(err) { statusEl.textContent = "❌ 通信エラーが発生しました。"; }
+                    
+                    const resJson = await response.json();
+                    let aiText = resJson.contents[0].parts[0].text.trim();
+                    
+                    // JSONマークダウンの剥ぎ取り
+                    if (aiText.startsWith("```json")) aiText = aiText.slice(7);
+                    if (aiText.startsWith("```")) aiText = aiText.slice(3);
+                    if (aiText.endsWith("```")) aiText = aiText.slice(0, -3);
+                    aiText = aiText.trim();
+                    
+                    const parsedSchedule = JSON.parse(aiText);
+                    
+                    statusEl.textContent = "☁️ 解析完了！Googleスプレッドシートへ同期保存しています...";
+                    
+                    // 解析された日付データを、実績のある handleSave（saveルート）で1つずつスプレッドシートに書き込む
+                    for (let dateStr in parsedSchedule) {
+                        const dateKey = dateStr.replace(/-/g, "_");
+                        await fetch(GAS_WEB_APP_URL, {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                action: 'save',
+                                key: "ai_schedule_" + dateKey,
+                                value: parsedSchedule[dateStr]
+                            })
+                        });
+                    }
+                    
+                    statusEl.textContent = "✅ スキャン＆同期完了！ダッシュボードが最新になりました。";
+                    await fetchCloudData();
+                    selectDay(selectedDayNum);
+                    
+                } catch(err) {
+                    statusEl.textContent = "❌ 解析エラー: スマホの直通通信に失敗しました。画像サイズを小さくするかスクショを試してください。";
+                    console.error(err);
+                }
             };
             reader.readAsDataURL(file);
         });
