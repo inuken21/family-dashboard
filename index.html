@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>【共働き応援】こども準備＆保育登録メモ</title>
     
+    <!-- 📱 スマホのホーム画面用アイコン画像の設定（icon.pngと連動） -->
     <link rel="apple-touch-icon" href="icon.png">
 
     <style>
@@ -384,6 +385,7 @@
         <h1>Family Dashboard</h1>
     </header>
 
+    <!-- 🟢 1番目：予定（スケジュール表示エリア） -->
     <div class="schedule-box">
         
         <div class="week-nav">
@@ -414,6 +416,7 @@
             <button type="button" id="edit-btn-haruto" class="edit-btn">修正</button>
         </div>
 
+        <!-- 🤖 予約確認パネル -->
         <div class="reservation-panel">
             <div class="res-row">
                 <div class="res-label-box">🎒 わくわく</div>
@@ -443,6 +446,7 @@
         </div>
     </div>
 
+    <!-- 🟢 2番目：こうた宮崎小カレンダー -->
     <details class="kouta-details">
         <summary>🏫 こうた 宮崎小カレンダー</summary>
         <div class="details-content">
@@ -454,6 +458,7 @@
             </div>
             <div class="cal-container" id="kouta-calendar"></div>
             
+            <!-- クイック操作パネル -->
             <div class="quick-panel" id="kouta-quick-panel">
                 <div class="quick-panel-title" id="kouta-panel-date-title">設定</div>
                 <div class="panel-block">
@@ -473,7 +478,7 @@
                     
                     <div class="panel-row" id="panel-b4-lunch-row" style="display:none; background:#ffe0b2; padding:4px; border-radius:4px; width:100%; justify-content:center;">
                         <label class="panel-checkbox-label" style="color:#e65100;">
-                            <input type="checkbox" id="panel-lunch-checkbox"> 🥢 給食・清掃まで実施する
+                            <input type="checkbox" id="panel-lunch-checkbox"> 🥢 給食・清補まで実施する
                         </label>
                     </div>
                     
@@ -485,6 +490,7 @@
         </div>
     </details>
 
+    <!-- 🟢 3番目：はるとお弁当カレンダー -->
     <details class="bento-details">
         <summary>🍱 はるとお弁当カレンダー</summary>
         <div class="details-content">
@@ -501,12 +507,14 @@
         </div>
     </details>
 
+    <!-- 🟢 4番目：メモ ＆ TODOリスト -->
     <div class="card" style="border: 2px solid #1a73e8;">
         <h2 style="color: #1a73e8; border-bottom-color: #1a73e8;">✍️ メモ ＆ TODOリスト</h2>
         <textarea id="customMemo" class="memo-textarea" placeholder="ここに書いた内容はご夫婦のスマホに自動共有されます"></textarea>
         <div id="saveStatus" class="save-status">同期完了</div>
     </div>
 
+    <!-- 👦 康太の持ち物リスト -->
     <div class="card kouta-card">
         <h2 class="kouta-header">👦 康太（こうた）持ち物リスト</h2>
         <div id="kouta-terakoya-alert" class="terakoya-alert">📖 本日は【寺子屋（宮崎小）Bチーム】の開講日です！宿題・ドリル・筆記用具を忘れずに！</div>
@@ -578,6 +586,7 @@
         </details>
     </div>
 
+    <!-- 👶 はるとの持ち物リスト -->
     <div class="card haruto-card">
         <h2 class="haruto-header">👶 はると 持ち物リスト</h2>
         <div id="haruto-bento-alert" class="bento-alert">🍱 本日は【お弁当の日】です！お弁当と食具を忘れずに。</div>
@@ -632,6 +641,7 @@
         </details>
     </div>
 
+    <!-- 🐛 コピペ文面 -->
     <div class="card">
         <h2>🐛 あおむし広場 予約用定型文（コピペ用）</h2>
         <textarea class="responsive-textarea" style="height:110px; font-family:monospace;" readonly>月：スイミング
@@ -754,6 +764,7 @@
         }
 
         function applySelectStyle(el, val) {
+            if (!el) return;
             el.className = 'res-status-select';
             if (val === 'ok') el.classList.add('status-ok');
             else if (val === 'no') el.classList.add('status-no');
@@ -769,6 +780,7 @@
 
         function updateWeekTitle() {
             const titleEl = document.getElementById('week-title');
+            if (!titleEl) return;
             if (currentWeekOffset === 0) titleEl.textContent = "📅 今週の予定";
             else if (currentWeekOffset === 1) titleEl.textContent = "📅 来週の予定";
             else if (currentWeekOffset === 2) titleEl.textContent = "📅 再来週の予定";
@@ -780,21 +792,17 @@
 
         function selectDay(dayNum) {
             selectedDayNum = dayNum;
-            for(let i=1; i<=5; i++) document.getElementById('btn-day-' + i).className = 'day-btn';
-            document.getElementById('btn-day-' + dayNum).className = 'day-btn active';
+            for(let i=1; i<=5; i++) {
+                const btn = document.getElementById('btn-day-' + i);
+                if (btn) btn.className = 'day-btn';
+            }
+            const activeBtn = document.getElementById('btn-day-' + dayNum);
+            if (activeBtn) activeBtn.className = 'day-btn active';
 
             const targetDateStr = getTargetDateStr(dayNum);
-            const days = ["日", "月", "火", "水", "木", "金", "土"];
-            
             updateWeekTitle();
             
-            // 🛠️ バグ修正箇所：日付キーを「年-月-日（ハイフン繋ぎ）」に完全統一
-            const parts = targetDateStr.split('-');
-            document.getElementById('schedule-box-title').textContent = `予定: ${parts[1]}月${parts[2]}日 (${days[dayNum]})`;
-
             const isTerakoya = (dayNum === 3) && terakoyaDates2026.includes(targetDateStr);
-            
-            // 🛠️ バグ修正箇所：クラウド連携用のキーをカレンダーと完全に同一のハイフン型に統一
             let koutaSched = globalCloudData["custom_" + targetDateStr + "_kouta"];
             let isDuty = false;
             
@@ -832,43 +840,62 @@
                     }
                 } catch(e){}
             }
-            document.getElementById('display-kouta').textContent = koutaSched;
+            
+            const dispKouta = document.getElementById('display-kouta');
+            if (dispKouta) dispKouta.textContent = koutaSched;
 
-            document.getElementById('kouta-lunch-badge').style.display = isDuty ? "inline-block" : "none";
-            if (isDuty) document.getElementById('kouta-lunch-details').open = true;
+            const lunchBadge = document.getElementById('kouta-lunch-badge');
+            if (lunchBadge) lunchBadge.style.display = isDuty ? "inline-block" : "none";
+            
+            const lunchDetails = document.getElementById('kouta-lunch-details');
+            if (isDuty && lunchDetails) lunchDetails.open = true;
 
             let bentoList = [];
             try { bentoList = JSON.parse(globalCloudData["haruto_bento_days"] || "[]"); } catch(e){}
             const isBento = bentoList.includes(targetDateStr);
 
-            // 🛠️ バグ修正箇所：はると側の読み込み用日付キーもハイフン型に統一
             let harutoSched = globalCloudData["custom_" + targetDateStr + "_haruto"] || defaultSchedules[dayNum].haruto;
             if (isDayOff(targetDateStr) && !globalCloudData["custom_" + targetDateStr + "_haruto"]) {
                 harutoSched = "💤 保育園はお休みです";
             } else if (isBento && !globalCloudData["custom_" + targetDateStr + "_haruto"]) {
                 harutoSched = harutoSched.split(" (")[0] + " 🍱【今日はお弁当の日！】";
             }
-            document.getElementById('display-haruto').textContent = harutoSched;
+            
+            const dispHaruto = document.getElementById('display-haruto');
+            if (dispHaruto) dispHaruto.textContent = harutoSched;
 
             const offFlag = isDayOff(targetDateStr);
-            document.getElementById('kouta-terakoya-alert').style.display = (isTerakoya && !offFlag) ? "block" : "none";
-            document.getElementById('kouta-terakoya-details').style.display = (isTerakoya && !offFlag) ? "block" : "none";
-            if (isTerakoya && !offFlag) document.getElementById('kouta-terakoya-details').open = true;
+            
+            const tkAlert = document.getElementById('kouta-terakoya-alert');
+            if (tkAlert) tkAlert.style.display = (isTerakoya && !offFlag) ? "block" : "none";
+            
+            const tkDetails = document.getElementById('kouta-terakoya-details');
+            if (tkDetails) {
+                tkDetails.style.display = (isTerakoya && !offFlag) ? "block" : "none";
+                if (isTerakoya && !offFlag) tkDetails.open = true;
+            }
 
-            document.getElementById('haruto-bento-alert').style.display = (isBento && !offFlag) ? "block" : "none";
-            document.getElementById('haruto-bento-badge').style.display = (isBento && !offFlag) ? "inline" : "none";
+            const bentoAlert = document.getElementById('haruto-bento-alert');
+            if (bentoAlert) bentoAlert.style.display = (isBento && !offFlag) ? "block" : "none";
+            
+            const bentoBadge = document.getElementById('haruto-bento-badge');
+            if (bentoBadge) bentoBadge.style.display = (isBento && !offFlag) ? "inline" : "none";
 
+            // 🛠️ 安全ガードの追加：セレクトボックスが存在する場合のみ値をセットする
             const wakuVal = globalCloudData["res_wakuwaku_status_" + targetDateStr] || "yet";
             const aomuVal = globalCloudData["res_aomushi_status_" + targetDateStr] || "yet";
             
             const selWaku = document.getElementById('sel-wakuwaku');
             const selAomu = document.getElementById('sel-aomushi');
             
-            selWaku.value = wakuVal;
-            selAomu.value = aomuVal;
-            
-            applySelectStyle(selWaku, wakuVal);
-            applySelectStyle(selAomu, aomuVal);
+            if (selWaku) {
+                selWaku.value = wakuVal;
+                applySelectStyle(selWaku, wakuVal);
+            }
+            if (selAomu) {
+                selAomu.value = aomuVal;
+                applySelectStyle(selAomu, aomuVal);
+            }
         }
 
         document.getElementById('week-prev').addEventListener('click', () => { currentWeekOffset--; selectDay(selectedDayNum); });
@@ -876,8 +903,11 @@
 
         function renderKoutaCalendar(year, month) {
             const container = document.getElementById('kouta-calendar');
+            if (!container) return;
             container.innerHTML = '';
-            document.getElementById('kouta-cal-month-title').textContent = `${year}年${month + 1}月`;
+            
+            const mTitle = document.getElementById('kouta-cal-month-title');
+            if (mTitle) mTitle.textContent = `${year}年${month + 1}月`;
             
             ['日','月','火','水','木','金','土'].forEach(w => {
                 const h = document.createElement('div'); h.className = 'cal-header'; h.textContent = w; container.appendChild(h);
@@ -934,14 +964,24 @@
 
                 dayEl.addEventListener('click', () => {
                     activePanelDateStr = cStr;
-                    document.getElementById('kouta-panel-date-title').textContent = `${month + 1}月${date}日の下校時程設定`;
-                    document.getElementById('panel-period-select').value = config.period;
-                    document.getElementById('panel-btime-checkbox').checked = config.isBTime;
-                    document.getElementById('panel-lunch-checkbox').checked = config.hasLunch !== false;
-                    document.getElementById('panel-duty-checkbox').checked = !!config.isDuty;
+                    const pTitle = document.getElementById('kouta-panel-date-title');
+                    if (pTitle) pTitle.textContent = `${month + 1}月${date}日の下校時程設定`;
+                    
+                    const pSel = document.getElementById('panel-period-select');
+                    if (pSel) pSel.value = config.period;
+                    
+                    const pBtime = document.getElementById('panel-btime-checkbox');
+                    if (pBtime) pBtime.checked = config.isBTime;
+                    
+                    const pLunch = document.getElementById('panel-lunch-checkbox');
+                    if (pLunch) pLunch.checked = config.hasLunch !== false;
+                    
+                    const pDuty = document.getElementById('panel-duty-checkbox');
+                    if (pDuty) pDuty.checked = !!config.isDuty;
                     
                     updatePanelLivePreview();
-                    document.getElementById('kouta-quick-panel').style.display = 'block';
+                    const qPanel = document.getElementById('quick-panel');
+                    if (qPanel) qPanel.style.display = 'block';
                 });
 
                 container.appendChild(dayEl);
@@ -949,20 +989,24 @@
         }
 
         function updatePanelLivePreview() {
-            const period = document.getElementById('panel-period-select').value;
-            const isBTime = document.getElementById('panel-btime-checkbox').checked;
-            const hasLunch = document.getElementById('panel-lunch-checkbox').checked;
+            const periodEl = document.getElementById('panel-period-select');
+            const btimeEl = document.getElementById('panel-btime-checkbox');
+            const lunchEl = document.getElementById('panel-lunch-checkbox');
+            if (!periodEl) return;
+
+            const period = periodEl.value;
+            const isBTime = btimeEl ? btimeEl.checked : false;
+            const hasLunch = lunchEl ? lunchEl.checked : true;
             
             const lunchRow = document.getElementById('panel-b4-lunch-row');
-            if (isBTime && period === "4") {
-                lunchRow.style.display = 'flex';
-            } else {
-                lunchRow.style.display = 'none';
+            if (lunchRow) {
+                lunchRow.style.display = (isBTime && period === "4") ? 'flex' : 'none';
             }
 
             const mockConfig = { period: period, isBTime: isBTime, hasLunch: hasLunch };
             const timePreview = calculateKoutaTime(mockConfig);
-            document.getElementById('panel-time-preview').textContent = timePreview;
+            const previewEl = document.getElementById('panel-time-preview');
+            if (previewEl) previewEl.textContent = timePreview;
         }
 
         async function saveKoutaPanelConfig() {
@@ -986,15 +1030,19 @@
             selectDay(selectedDayNum);
         }
 
-        document.getElementById('panel-period-select').addEventListener('change', saveKoutaPanelConfig);
-        document.getElementById('panel-btime-checkbox').addEventListener('change', saveKoutaPanelConfig);
-        document.getElementById('panel-lunch-checkbox').addEventListener('change', saveKoutaPanelConfig);
-        document.getElementById('panel-duty-checkbox').addEventListener('change', saveKoutaPanelConfig);
+        if(document.getElementById('panel-period-select')) document.getElementById('panel-period-select').addEventListener('change', saveKoutaPanelConfig);
+        if(document.getElementById('panel-btime-checkbox')) document.getElementById('panel-btime-checkbox').addEventListener('change', saveKoutaPanelConfig);
+        if(document.getElementById('panel-lunch-checkbox')) document.getElementById('panel-lunch-checkbox').addEventListener('change', saveKoutaPanelConfig);
+        if(document.getElementById('panel-duty-checkbox')) document.getElementById('panel-duty-checkbox').addEventListener('change', saveKoutaPanelConfig);
 
         function renderBentoCalendar(year, month) {
             const container = document.getElementById('bento-calendar');
+            if (!container) return;
             container.innerHTML = '';
-            document.getElementById('cal-month-title').textContent = `${year}年${month + 1}月`;
+            
+            const mTitle = document.getElementById('cal-month-title');
+            if (mTitle) mTitle.textContent = `${year}年${month + 1}月`;
+            
             ['日','月','火','水','木','金','土'].forEach(w => {
                 const h = document.createElement('div'); h.className = 'cal-header'; h.textContent = w; container.appendChild(h);
             });
@@ -1028,13 +1076,12 @@
             }
         }
 
-        document.getElementById('kouta-cal-prev').addEventListener('click', () => { koutaCalMonth--; if (koutaCalMonth < 0) { koutaCalMonth = 11; koutaCalYear--; } renderKoutaCalendar(koutaCalYear, koutaCalMonth); document.getElementById('kouta-quick-panel').style.display='none'; });
-        document.getElementById('kouta-cal-next').addEventListener('click', () => { koutaCalMonth++; if (koutaCalMonth > 11) { koutaCalMonth = 0; koutaCalYear++; } renderKoutaCalendar(koutaCalYear, koutaCalMonth); document.getElementById('kouta-quick-panel').style.display='none'; });
+        if(document.getElementById('kouta-cal-prev')) document.getElementById('kouta-cal-prev').addEventListener('click', () => { koutaCalMonth--; if (koutaCalMonth < 0) { koutaCalMonth = 11; koutaCalYear--; } renderKoutaCalendar(koutaCalYear, koutaCalMonth); if(document.getElementById('quick-panel')) document.getElementById('quick-panel').style.display='none'; });
+        if(document.getElementById('kouta-cal-next')) document.getElementById('kouta-cal-next').addEventListener('click', () => { koutaCalMonth++; if (koutaCalMonth > 11) { koutaCalMonth = 0; koutaCalYear++; } renderKoutaCalendar(koutaCalYear, koutaCalMonth); if(document.getElementById('quick-panel')) document.getElementById('quick-panel').style.display='none'; });
 
-        document.getElementById('cal-prev').addEventListener('click', () => { currentCalMonth--; if (currentCalMonth < 0) { currentCalMonth = 11; currentCalYear--; } renderBentoCalendar(currentCalYear, currentCalMonth); });
-        document.getElementById('cal-next').addEventListener('click', () => { currentCalMonth++; if (currentCalMonth > 11) { currentCalMonth = 0; currentCalYear++; } renderBentoCalendar(currentCalYear, currentCalMonth); });
+        if(document.getElementById('cal-prev')) document.getElementById('cal-prev').addEventListener('click', () => { currentCalMonth--; if (currentCalMonth < 0) { currentCalMonth = 11; currentCalYear--; } renderBentoCalendar(currentCalYear, currentCalMonth); });
+        if(document.getElementById('cal-next')) document.getElementById('cal-next').addEventListener('click', () => { currentCalMonth++; if (currentCalMonth > 11) { currentCalMonth = 0; currentCalYear++; } renderBentoCalendar(currentCalYear, currentCalMonth); });
 
-        // 🛠️ バグ修正箇所：手動修正時の保存用日付キーもハイフン型に統一
         async function toggleEdit(target) {
             const displayEl = document.getElementById("display-" + target);
             const inputEl = document.getElementById("input-" + target);
@@ -1054,7 +1101,9 @@
         }
 
         let memoTimeout;
-        document.getElementById('customMemo').addEventListener('input', (e) => { clearTimeout(memoTimeout); memoTimeout = setTimeout(() => { saveCloudData("memo", e.target.value); }, 1000); });
+        if(document.getElementById('customMemo')) {
+            document.getElementById('customMemo').addEventListener('input', (e) => { clearTimeout(memoTimeout); memoTimeout = setTimeout(() => { saveCloudData("memo", e.target.value); }, 1000); });
+        }
 
         window.addEventListener('DOMContentLoaded', async () => {
             await fetchCloudData();
@@ -1063,12 +1112,14 @@
             renderKoutaCalendar(koutaCalYear, koutaCalMonth);
             renderBentoCalendar(currentCalYear, currentCalMonth);
             selectDay(currentDay);
-            document.getElementById('customMemo').value = globalCloudData["memo"] || "";
+            if(document.getElementById('customMemo')) document.getElementById('customMemo').value = globalCloudData["memo"] || "";
         });
 
-        for (let i = 1; i <= 5; i++) document.getElementById('btn-day-' + i).addEventListener('click', () => selectDay(i));
-        document.getElementById('edit-btn-kouta').addEventListener('click', () => toggleEdit('kouta'));
-        document.getElementById('edit-btn-haruto').addEventListener('click', () => toggleEdit('haruto'));
+        for (let i = 1; i <= 5; i++) {
+            if(document.getElementById('btn-day-' + i)) document.getElementById('btn-day-' + i).addEventListener('click', () => selectDay(i));
+        }
+        if(document.getElementById('edit-btn-kouta')) document.getElementById('edit-btn-kouta').addEventListener('click', () => toggleEdit('kouta'));
+        if(document.getElementById('edit-btn-haruto')) document.getElementById('edit-btn-haruto').addEventListener('click', () => toggleEdit('haruto'));
     </script>
 </body>
 </html>
