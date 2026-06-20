@@ -306,9 +306,10 @@
 
     <header>
         <h1>Family Dashboard</h1>
-        <p style="margin: 5px 0 0 0; font-size: 0.85rem;">爆速テキストコピペ ＆ Gemini 直通版</p>
+        <p style="margin: 5px 0 0 0; font-size: 0.85rem;">鉄壁パースガード ＆ Gemini 直通版</p>
     </header>
 
+    <!-- 🟢 1番目：予定（スケジュール表示エリア） -->
     <div class="schedule-box">
         <div class="schedule-title" id="schedule-box-title">📅 スケジュール選択</div>
         <div class="day-btn-container">
@@ -334,9 +335,11 @@
         </div>
     </div>
 
+    <!-- 🟢 2番目：学年だより解析（Geminiスキャン）※初期状態で閉じたアコーディオン -->
     <details class="gemini-details">
         <summary>📄 学年だより解析（Geminiスキャン）</summary>
         <div class="details-content">
+            <!-- ①初回のみ登録枠 -->
             <div class="upload-section">
                 <p style="margin:0; font-size:0.85rem; font-weight:bold; color:#333;">①初回のみ登録：A/Bタイムの定義ルール（テキスト）</p>
                 <p style="margin:2px 0 4px 0; font-size:0.75rem; color:#666;">時程ルール（Aタイム・Bタイムの各校時ごとの詳細な下校時刻）の文字をここに貼り付けます。</p>
@@ -345,6 +348,7 @@
                 <div id="defUploadStatus" style="margin-top:5px; font-weight:bold; color:#10b981; font-size:0.8rem;"></div>
             </div>
 
+            <!-- ②毎月投稿枠 -->
             <div class="upload-section" style="margin-top:12px;">
                 <p style="margin:0; font-size:0.85rem; font-weight:bold; color:#333;">②毎月投稿：今月の予定テキスト</p>
                 <p style="margin:2px 0 4px 0; font-size:0.75rem; color:#666;">お便りPDFやWEBの日付・行事部分のテキストをまるごとコピーしてここに貼り付けます。</p>
@@ -355,6 +359,7 @@
         </div>
     </details>
 
+    <!-- 🟢 3番目：はるとお弁当カレンダー ※初期状態で閉じたアコーディオン -->
     <details class="bento-details">
         <summary>🍱 はるとお弁当カレンダー</summary>
         <div class="details-content">
@@ -371,12 +376,14 @@
         </div>
     </details>
 
+    <!-- 🟢 4番目：メモ ＆ TODOリスト -->
     <div class="card" style="border: 2px solid #1a73e8;">
         <h2 style="color: #1a73e8; border-bottom-color: #1a73e8;">✍️ メモ ＆ TODOリスト</h2>
         <textarea id="customMemo" class="memo-textarea" placeholder="ここに書いた内容はご夫婦のスマホに自動共有されます"></textarea>
         <div id="saveStatus" class="save-status">同期完了</div>
     </div>
 
+    <!-- 👦 康太の持ち物リスト -->
     <div class="card kouta-card">
         <h2 class="kouta-header">👦 康太（こうた）持ち物リスト</h2>
         <div id="kouta-terakoya-alert" class="terakoya-alert">📖 本日は【寺子屋（宮崎小）Bチーム】の開講日です！宿題・ドリル・筆記用具を忘れずに！</div>
@@ -448,6 +455,7 @@
         </details>
     </div>
 
+    <!-- 👶 はるとの持ち物リスト -->
     <div class="card haruto-card">
         <h2 class="haruto-header">👶 はると 持ち物リスト</h2>
         <div id="haruto-bento-alert" class="bento-alert">🍱 本日は【お弁当の日】です！お弁当と食具を忘れずに。</div>
@@ -502,6 +510,7 @@
         </details>
     </div>
 
+    <!-- 🐛 コピペ文面 -->
     <div class="card">
         <h2>🐛 あおむし広場 予約用定型文（コピペ用）</h2>
         <textarea style="width:100%; height:110px; font-size:0.95rem; font-family:monospace; padding:8px;" readonly>月：スイミング
@@ -608,7 +617,7 @@
             document.getElementById('haruto-bento-badge').style.display = isBento ? "inline" : "none";
         }
 
-        // ① 初回のみ登録：定義ルールの保存（テキスト形式でそのままスプレッドシートへ）
+        // ① 初回のみ登録：定義ルールの保存
         document.getElementById('btnSaveDef').addEventListener('click', async function() {
             const textData = document.getElementById('defTextInput').value.trim();
             if (!textData) { alert("テキストを入力してください。"); return; }
@@ -620,7 +629,7 @@
             } catch(err) { statusEl.textContent = "❌ 登録失敗。"; }
         });
 
-        // 🔥 ② 毎月投稿：爆速テキスト解析 ＆ Gemini直通システム（超高精度）
+        // 🔥 ② 毎月投稿：鉄壁のJSON抽出ガード付き解析ロジック
         document.getElementById('btnAnalyzeText').addEventListener('click', async function() {
             const rawText = document.getElementById('fileTextInput').value.trim();
             if (!rawText) { alert("お便りのテキストを貼り付けてください。"); return; }
@@ -628,16 +637,14 @@
             const statusEl = document.getElementById('uploadStatus');
             statusEl.textContent = "⌛ Gemini AIがテキスト解析を起動中...(約2秒)";
 
-            // 事前に登録された時程ルールがあれば、それも一緒にGeminiに渡して精度を100%にする
             const savedDefText = globalCloudData["time_definition_text"] || "なし";
-
             const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
             
             const prompt = `あなたは小学校2年生の学年だよりを解析する優秀なアシスタントです。\n` +
-                           `以下の【時程ルール】と【お便りテキスト】を注意深く読み解き、2年生の日ごとの正確な下校予定（Aタイム・Bタイムの適用や下校時刻）を導き出してください。\n\n` +
+                           `以下の【時程ルール】と【お便りテキスト】を読み解き、2年生の日ごとの正確な下校予定（Aタイム・Bタイムの適用や下校時刻）を導き出してください。\n\n` +
                            `【時程ルール】:\n${savedDefText}\n\n` +
                            `【お便りテキスト】:\n${rawText}\n\n` +
-                           `解析結果は、必ず以下の【出力フォーマット】の純粋なJSON形式でのみ返してください。解説やマークダウン（\`\`\`json 等）は一切不要です。\n\n` +
+                           `解析結果は、必ず以下の【出力フォーマット】の純粋なJSON形式でのみ返してください。前後の解説や挨拶、マークダウン表記などは一切不要です。\n\n` +
                            `【出力フォーマット】\n` +
                            `{\n` +
                            `  "2026-06-03": "Bタイム (4時間授業・11:55まで)",\n` +
@@ -647,7 +654,6 @@
             const payload = { "contents": [{ "parts": [{ "text": prompt }] }] };
 
             try {
-                // 文字列のみの軽量リクエストなので瞬時に通信完了！
                 const response = await fetch(geminiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -657,12 +663,14 @@
                 const resJson = await response.json();
                 let aiText = resJson.contents[0].parts[0].text.trim();
                 
-                if (aiText.startsWith("```json")) aiText = aiText.slice(7);
-                if (aiText.startsWith("```")) aiText = aiText.slice(3);
-                if (aiText.endsWith("```")) aiText = aiText.slice(0, -3);
-                aiText = aiText.trim();
+                // 🛠️ 【鉄壁ガード】AIが余計なお喋りテキストを混ぜてきても、{ } に囲まれたJSON部分だけを強制抽出する
+                const jsonMatch = aiText.match(/\{[\s\S]*\}/);
+                if (!jsonMatch) {
+                    throw new Error("AIの返答から有効なJSON構造が見つかりませんでした。");
+                }
+                const cleanJsonText = jsonMatch[0];
                 
-                const parsedSchedule = JSON.parse(aiText);
+                const parsedSchedule = JSON.parse(cleanJsonText);
                 
                 statusEl.textContent = "☁️ 解析成功！カレンダーの予定枠へ同期保存しています...";
                 
@@ -679,12 +687,12 @@
                 }
                 
                 statusEl.textContent = "✅ テキスト解析＆同期完了！すべての予定が最新になりました。";
-                document.getElementById('fileTextInput').value = ""; // 入力欄をクリア
+                document.getElementById('fileTextInput').value = "";
                 await fetchCloudData();
                 selectDay(selectedDayNum);
                 
             } catch(err) {
-                statusEl.textContent = "❌ 解析エラー: 通信またはJSONパースに失敗しました。";
+                statusEl.textContent = "❌ 解析エラー: AIの出力テキストが異常、または通信に失敗しました。";
                 console.error(err);
             }
         });
