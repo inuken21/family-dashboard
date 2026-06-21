@@ -137,7 +137,6 @@
         .btn-zukan { background: linear-gradient(180deg, #06b6d4, #0891b2); color: white; }
         .btn-calendar { background: linear-gradient(180deg, #a855f7, #7e22ce); color: white; }
 
-        /* 🗺️ 巨大冒険ボタンの配色見直し＆本物ボール画像対応 */
         .big-adventure-trigger { 
             width: 100%; 
             height: 64px; 
@@ -511,50 +510,56 @@
             master: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png"
         };
 
-        const masterQuests = {
-            kouta: ["学校の音読 📖", "自宅用の計算ドリル ➕", "自宅用の漢字ドリル ✍️"],
-            haruto: ["えいごの れっすん 🔤", "しょうがっこうの じゅんび どりる ✏️", "しゅくだい ぺーぱー 📋"]
-        };
-        const masterHelps = {
-            kouta: ["おふろ洗い 🛁", "お部屋の片付け ✨", "お皿の片付け 🍽️"],
-            haruto: ["おふろあらい 🛁", "おへやの かたづけ ✨", "おさらの かたづけ 🍽️"]
+        // 🌟 GASの生データを安全に引き出すためのローカルマスタ構造
+        let cloudData = {
+            "study_user_pokemon": { "kouta": "0025", "haruto": "0004" },
+            "study_balance": { "kouta": { "pokeen": 300, "gachaCount": 0 }, "haruto": { "pokeen": 300, "gachaCount": 0 } },
+            "study_level": { "kouta": { "exp": 0 }, "haruto": { "exp": 0 } },
+            "study_zukan_normal": { "kouta": ["0025"], "haruto": ["0004"] },
+            "study_zukan_mega": { "kouta": [], "haruto": [] },
+            "study_fixed_encounters": { "kouta": null, "haruto": null },
+            "study_v2_calendar": { "kouta": [], "haruto": [] },
+            "study_v2_bag_candy": { "kouta": 0, "haruto": 0 },
+            "study_v2_bag_balls": { "kouta": { normal: 5, super: 1, hyper: 0, master: 0 }, "haruto": { normal: 5, super: 1, hyper: 0, master: 0 } },
+            "study_v3_challenge_pool": parentChallengePool,
+            "study_v3_chosen_challenge": { "kouta": null, "haruto": null }
         };
 
-        let parentChallengePool = [
-            "うわばきをあらう", "くつをそろえる", "おさらをはこぶ", "どくしょ10ぷん", "ラジオたいそう", "おてつだい1かい"
-        ];
-
-        function createInitialUserData() {
-            return {
-                partner: null, partnerLevel: 1, pokeen: 300,
-                bag: { ball_normal: 5, ball_super: 1, ball_hyper: 0, ball_master: 0, candy: 0, ticket: 1 },
-                zukan_normal: [], zukan_mega: [], fixed_encounters: null,
-                stamp_days: [],
-                chosen_challenge_mission: null
-            };
+        function getImgUrl(id) {
+            if (!id) return "";
+            const isMega = id.includes('_');
+            const base = isMega ? id.split('_')[0] : id;
+            const num3 = String(parseInt(base)).padStart(3, '0');
+            const suffix = isMega ? "_" + id.split('_')[1] : "";
+            return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${num3}${suffix}.png`;
         }
 
-        let cloudData = {
-            "study_v2_kouta": createInitialUserData(),
-            "study_v2_haruto": createInitialUserData(),
-            "study_v2_progress_": {},
-            "study_v3_challenge_pool": parentChallengePool
-        };
+        function calculateLevel(exp) { return Math.floor(exp / 3) + 1; }
 
-        function translateToHarutoLanuage() {
-            const isHaruto = (currentUser === 'haruto');
-            document.getElementById('mainTitleHeader').textContent = isHaruto ? "⚔️ フレンダぼうけん＆ロトムぼーど 究極版 🛡️" : "⚔️ フレンダ冒険＆ロトムボード 究極版 🛡️";
-            document.getElementById('lblStatusLevel').textContent = isHaruto ? "🏅 あいぼう れべる" : "🏅 相棒レベル";
-            document.getElementById('lblStatusWallet').textContent = isHaruto ? "👛 さいふ" : "👛 さいふ";
-            document.getElementById('lblStatusTicket').textContent = isHaruto ? "🎫 ぼうけんけん" : "🎫 ぼうけん券";
-            document.getElementById('lblPartnerIntro').textContent = isHaruto ? "いっしょに ぼうけんする あいぼう" : "いっしょに ぼうけんする あいぼう";
-            document.getElementById('lblPartnerChangeBtn').textContent = isHaruto ? "かえる 🔄" : "かえる 🔄";
-            document.getElementById('lblMissionTitle').textContent = isHaruto ? "⚔️ ほんじつの ミッション！" : "⚔️ 本日のミッション！";
-            document.getElementById('lblMenuBag').textContent = isHaruto ? "どうぐ" : "どうぐ";
-            document.getElementById('lblMenuZukan').textContent = isHaruto ? "ずかん" : "ずかん";
-            document.getElementById('lblMenuRecord').textContent = isHaruto ? "きろく" : "きろく";
-            document.getElementById('lblBigAdventureBtnText').textContent = isHaruto ? "ぼうけんに でかける！！" : "ぼうけんに でかける！！";
-            document.getElementById('lblShopTitle').textContent = isHaruto ? "🛍️ ぽけえん こうかん しょっぷ" : "🛍️ ぽけえん交換ショップ";
+        function getEvolvedId(baseId, level) {
+            if (!baseId || baseId === "0025") return "0025";
+            let offset = 0;
+            if (level >= 36) offset = 2;
+            else if (level >= 16) offset = 1;
+            return String(parseInt(baseId) + offset).padStart(4, '0');
+        }
+
+        function getPokemonAttackMove(id, pkmName) {
+            if (id === "0025" || pkmName.includes("ピカチュウ") || pkmName.includes("ライチュウ")) return moves.electric[Math.floor(Math.random() * moves.electric.length)];
+            if (id.includes('_') || pkmName.includes("メガ") || pkmName.includes("レックウザ") || pkmName.includes("ミュウツー")) return moves.mega[Math.floor(Math.random() * moves.mega.length)];
+            const num = parseInt(id.split('_')[0]);
+            if ([1,2,3,152,153,154,252,253,254,387,388,389,650,651,652,906,907,908].includes(num)) return moves.grass[Math.floor(Math.random() * moves.grass.length)];
+            if ([4,5,6,155,156,157,255,256,257,390,391,392,653,654,655,909,910,911].includes(num)) return moves.fire[Math.floor(Math.random() * moves.fire.length)];
+            if ([7,8,9,158,159,160,258,259,260,393,394,395,656,657,658,912,913,914].includes(num)) return moves.water[Math.floor(Math.random() * moves.water.length)];
+            return moves.normal[Math.floor(Math.random() * moves.normal.length)];
+        }
+
+        function getPokemonNameFromPool(id) {
+            for (let g of regionalStarters) {
+                const found = g.starters.find(x => x.id === id); if (found) return found.name;
+            }
+            const m = megaList.find(x => x.id === id); if (m) return m.name;
+            return "ポケモン";
         }
 
         function changeUser(user) {
@@ -565,66 +570,58 @@
             
             translateToHarutoLanuage(); 
 
-            const uData = cloudData[`study_v2_${currentUser}`];
-            if (!uData || !uData.partner) { 
+            // 🌟 GAS側の相棒のセーブ状態を安全にチェック
+            if (!cloudData["study_user_pokemon"] || !cloudData["study_user_pokemon"][currentUser]) { 
                 openPartnerSelectionModal(); 
             } else { 
                 renderUI(); 
             }
         }
 
-        function spinChallengeSlot() {
-            const btn = document.getElementById('challengeSlotBtn');
-            const windowEl = document.getElementById('challengeSlotWindow');
-            btn.disabled = true;
-
-            const pool = cloudData["study_v3_challenge_pool"] || parentChallengePool;
-            let counter = 0;
-            
-            const interval = setInterval(() => {
-                windowEl.textContent = "🎰 " + pool[Math.floor(Math.random() * pool.length)];
-                counter++;
-                if (counter > 15) {
-                    clearInterval(interval);
-                    const finalChoice = pool[Math.floor(Math.random() * pool.length)];
-                    windowEl.textContent = "🎯 チャレンジ: " + finalChoice;
-                    
-                    cloudData[`study_v2_${currentUser}`].chosen_challenge_mission = finalChoice;
-                    renderUI();
-                    saveAllToCloud();
-                }
-            }, 100);
-        }
-
         function renderUI() {
-            const uData = cloudData[`study_v2_${currentUser}`] || createInitialUserData();
-            if (!uData.bag) uData.bag = { ball_normal: 5, ball_super: 1, ball_hyper: 0, ball_master: 0, candy: 0, ticket: 1 };
-            if (uData.bag.ticket === undefined) uData.bag.ticket = 0;
-            if (!uData.stamp_days) uData.stamp_days = [];
+            // 安全第一：データが万が一破損していた場合のフォールバック（初期化）
+            if (!cloudData["study_balance"][currentUser]) cloudData["study_balance"][currentUser] = { "pokeen": 300, "gachaCount": 1 };
+            if (!cloudData["study_level"][currentUser]) cloudData["study_level"][currentUser] = { "exp": 0 };
+            if (!cloudData["study_zukan_normal"][currentUser]) cloudData["study_zukan_normal"][currentUser] = [];
+            if (!cloudData["study_zukan_mega"][currentUser]) cloudData["study_zukan_mega"][currentUser] = [];
+            if (!cloudData["study_v2_bag_balls"] || !cloudData["study_v2_bag_balls"][currentUser]) {
+                if(!cloudData["study_v2_bag_balls"]) cloudData["study_v2_bag_balls"] = {};
+                cloudData["study_v2_bag_balls"][currentUser] = { normal: 5, super: 1, hyper: 0, master: 0 };
+            }
+            if (!cloudData["study_v2_bag_candy"]) cloudData["study_v2_bag_candy"] = {};
+            if (cloudData["study_v2_bag_candy"][currentUser] === undefined) cloudData["study_v2_bag_candy"][currentUser] = 0;
+            if (!cloudData["study_v2_calendar"]) cloudData["study_v2_calendar"] = {};
+            if (!cloudData["study_v2_calendar"][currentUser]) cloudData["study_v2_calendar"][currentUser] = [];
+            if (!cloudData["study_v3_chosen_challenge"]) cloudData["study_v3_chosen_challenge"] = {};
 
-            document.getElementById('userLevel').textContent = uData.partnerLevel;
-            document.getElementById('pokeenBalance').textContent = uData.pokeen + " 💰";
-            document.getElementById('ticketCountDisplay').textContent = uData.bag.ticket + " まい";
+            const balance = cloudData["study_balance"][currentUser];
+            const exp = cloudData["study_level"][currentUser].exp;
+            const level = calculateLevel(exp);
 
-            // 🎫 チケット枚数による冒険ボタンの活性化完全制御
-            document.getElementById('bigAdventureTriggerBtn').disabled = (uData.bag.ticket <= 0);
+            document.getElementById('userLevel').textContent = level;
+            document.getElementById('pokeenBalance').textContent = balance.pokeen + " 💰";
+            document.getElementById('ticketCountDisplay').textContent = (balance.gachaCount || 0) + " まい";
 
-            // 🤝 相棒未選択時の画像割れフリーズ防止安全ガード
-            if (uData.partner) {
-                const currentId = getEvolvedId(uData.partner, uData.partnerLevel);
+            document.getElementById('bigAdventureTriggerBtn').disabled = (!balance.gachaCount || balance.gachaCount <= 0);
+
+            // 相棒表示
+            const baseId = cloudData["study_user_pokemon"][currentUser];
+            if (baseId) {
+                const currentEvolvedId = getEvolvedId(baseId, level);
                 document.getElementById('statusBarPartnerImg').style.display = "block";
-                document.getElementById('statusBarPartnerImg').src = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${String(parseInt(currentId.split('_')[0])).padStart(3, '0')}.png`;
-                document.getElementById('statusBarPartnerName').textContent = getPokemonNameFromPool(uData.partner) + ` (Lv.${uData.partnerLevel})`;
+                document.getElementById('statusBarPartnerImg').src = getImgUrl(currentEvolvedId);
+                document.getElementById('statusBarPartnerName').textContent = getPokemonNameFromPool(baseId) + ` (Lv.${level})`;
             } else {
                 document.getElementById('statusBarPartnerImg').style.display = "none";
-                document.getElementById('statusBarPartnerImg').src = "";
                 document.getElementById('statusBarPartnerName').textContent = "---";
             }
 
+            // チャレンジ枠
             const winEl = document.getElementById('challengeSlotWindow');
             const slotBtn = document.getElementById('challengeSlotBtn');
-            if (uData.chosen_challenge_mission) {
-                winEl.textContent = "🎯 チャレンジ: " + uData.chosen_challenge_mission;
+            const chosenChallenge = cloudData["study_v3_chosen_challenge"][currentUser];
+            if (chosenChallenge) {
+                winEl.textContent = "🎯 チャレンジ: " + chosenChallenge;
                 slotBtn.style.display = "none";
             } else {
                 winEl.textContent = "🎰 ボタンをおして チャレンジを きめよう！";
@@ -632,16 +629,13 @@
                 slotBtn.disabled = false;
             }
 
-            // 📋 ミッション再構築（エラー落ちを完全回避）
+            // ミッション構築（ここで絶対フリーズをガード）
             const listEl = document.getElementById('questList'); listEl.innerHTML = '';
-            if (!cloudData["study_v2_progress_"]) cloudData["study_v2_progress_"] = {};
-            if (!cloudData["study_v2_progress_"][todayStr]) cloudData["study_v2_progress_"][todayStr] = { "kouta": { "done": [] }, "haruto": { "done": [] } };
-            
-            const doneList = cloudData["study_v2_progress_"][todayStr][currentUser]?.done || [];
+            if (!cloudData["study_progress_" + todayStr]) cloudData["study_progress_" + todayStr] = { "kouta": { "done": [] }, "haruto": { "done": [] } };
+            const doneList = cloudData["study_progress_" + todayStr][currentUser]?.done || [];
             
             const dayIdx = now.getDay(); 
             const lessonQuests = [];
-            
             if (currentUser === 'kouta') {
                 if (dayIdx === 1 || dayIdx === 4) lessonQuests.push("プール（スイミング） 🏊‍♂️");
                 if (dayIdx === 5) lessonQuests.push("おおつかたいそう 🤸");
@@ -653,8 +647,8 @@
             }
 
             const baseTasks = [...masterQuests[currentUser], ...masterHelps[currentUser], ...lessonQuests];
-            if (uData.chosen_challenge_mission) {
-                baseTasks.push("🔥 " + uData.chosen_challenge_mission);
+            if (chosenChallenge) {
+                baseTasks.push("🔥 " + chosenChallenge);
             }
 
             let requiredStudyCount = masterQuests[currentUser].length;
@@ -669,7 +663,7 @@
                 li.querySelector('.quest-cb').addEventListener('change', (e) => {
                     const t = e.target.getAttribute('data-task');
                     if (e.target.checked) { if(!doneList.includes(t)) doneList.push(t); }
-                    else { cloudData["study_v2_progress_"][todayStr][currentUser].done = doneList.filter(x => x !== t); }
+                    else { cloudData["study_progress_" + todayStr][currentUser].done = doneList.filter(x => x !== t); }
                     checkAllClearBonus(); saveAllToCloud();
                 });
                 listEl.appendChild(li);
@@ -680,30 +674,29 @@
         }
 
         function checkAllClearBonus() {
-            const doneList = cloudData["study_v2_progress_"][todayStr][currentUser].done;
+            const doneList = cloudData["study_progress_" + todayStr][currentUser].done;
             const studyCleared = masterQuests[currentUser].every(q => doneList.includes(q));
-            if (studyCleared && !cloudData["study_v2_progress_"][todayStr][currentUser].gachaClaimed) {
-                cloudData["study_v2_progress_"][todayStr][currentUser].gachaClaimed = true;
-                const uData = cloudData[`study_v2_${currentUser}`];
+            if (studyCleared && !cloudData["study_progress_" + todayStr][currentUser].gachaClaimed) {
+                cloudData["study_progress_" + todayStr][currentUser].gachaClaimed = true;
                 
                 const dayOfWeek = now.getDay();
                 let ticketReward = 1;
                 let bonusMsg = "ぼうけん券を 1枚ゲット！";
-                
                 if (dayOfWeek === 5) {
                     ticketReward = 2;
                     bonusMsg = "🔥 金曜日早撃ちスーパーボーナス！ぼうけん券を【2枚】ゲットしたぞ！！";
                 }
 
-                uData.partnerLevel += 1;
-                uData.bag.ticket = (uData.bag.ticket || 0) + ticketReward;
-                uData.bag.ball_normal = (uData.bag.ball_normal || 0) + 5;
+                cloudData["study_level"][currentUser].exp += 3; // レベルアップ（EXP+3）
+                cloudData["study_balance"][currentUser].gachaCount = (cloudData["study_balance"][currentUser].gachaCount || 0) + ticketReward;
+                cloudData["study_v2_bag_balls"][currentUser].normal += 5; // 無料ボール
                 bonusMsg += "\n🔴 さらに冒険用のモンスターボールを5こプレゼント！";
 
-                if (!uData.stamp_days.includes(todayStr)) {
-                    uData.stamp_days.push(todayStr);
-                    if (uData.stamp_days.length % 5 === 0) {
-                        uData.bag.candy = (uData.bag.candy || 0) + 1;
+                const calendarList = cloudData["study_v2_calendar"][currentUser];
+                if (!calendarList.includes(todayStr)) {
+                    calendarList.push(todayStr);
+                    if (calendarList.length % 5 === 0) {
+                        cloudData["study_v2_bag_candy"][currentUser]++;
                         bonusMsg += "\n🏅 スタンプが5マス貯まったので『ふしぎなあめ』が届いたぞ！";
                     }
                 }
@@ -720,7 +713,7 @@
                 group.starters.forEach(p => {
                     const box = document.createElement('div'); box.className = 'partner-choice-box'; box.innerHTML = `<img src="https://assets.pokemon.com/assets/cms2/img/pokedex/full/${String(parseInt(p.id)).padStart(3, '0')}.png" alt="${p.name}"><div>${p.name}</div>`;
                     box.addEventListener('click', () => {
-                        cloudData[`study_v2_${currentUser}`].partner = p.id; 
+                        cloudData["study_user_pokemon"][currentUser] = p.id; 
                         closePartnerSelectModal(); 
                         renderUI(); 
                         saveAllToCloud();
@@ -733,23 +726,25 @@
         }
         function closePartnerSelectModal() { document.getElementById('partnerSelectModal').style.display = 'none'; }
 
-        // 🛠️ どうぐ：不要な「🔴」などの文字記号を完全に削除
         function openBagModal() {
             const container = document.getElementById('bagItemsContainer'); container.innerHTML = '';
-            const uData = cloudData[`study_v2_${currentUser}`] || createInitialUserData();
+            const b = cloudData["study_balance"][currentUser];
+            const balls = cloudData["study_v2_bag_balls"][currentUser];
+            const candyCount = cloudData["study_v2_bag_candy"][currentUser] || 0;
+
             const items = [
-                { k: 'ticket', t: 'ぼうけん券', c: true, act: "useTicketFromBag()", img: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/subway-ticket.png" },
-                { k: 'ball_normal', t: 'モンスターボール', c: false, img: ballAssets.normal }, 
-                { k: 'ball_super', t: 'スーパーボール', c: false, img: ballAssets.super }, 
-                { k: 'ball_hyper', t: 'ハイパーボール', c: false, img: ballAssets.hyper }, 
-                { k: 'ball_master', t: 'マスターボール', c: false, img: ballAssets.master }, 
-                { k: 'candy', t: 'ふしぎなあめ', c: true, act: "useCandyFromBag()", img: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rare-candy.png" }
+                { k: 'ticket', t: 'ぼうけん券', count: b.gachaCount, c: true, act: "useTicketFromBag()", img: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/subway-ticket.png" },
+                { k: 'normal', t: 'モンスターボール', count: balls.normal, c: false, img: ballAssets.normal }, 
+                { k: 'super', t: 'スーパーボール', count: balls.super, c: false, img: ballAssets.super }, 
+                { k: 'hyper', t: 'ハイパーボール', count: balls.hyper, c: false, img: ballAssets.hyper }, 
+                { k: 'master', t: 'マスターボール', count: balls.master, c: false, img: ballAssets.master }, 
+                { k: 'candy', t: 'ふしぎなあめ', count: candyCount, c: true, act: "useCandyFromBag()", img: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rare-candy.png" }
             ];
             items.forEach(item => {
-                const count = uData.bag[item.k] || 0; const row = document.createElement('div'); row.className = 'bag-item-row';
+                const row = document.createElement('div'); row.className = 'bag-item-row';
                 const iconHtml = item.img ? `<img src="${item.img}">` : '<div style="width:28px;"></div>';
-                row.innerHTML = `<div class="bag-item-info">${iconHtml}<span class="bag-item-title">${item.t}</span><span class="bag-item-count">x${count}</span></div>
-                    <button class="use-item-btn" ${(!count || !item.c)?'disabled':''} onclick="${item.act}">つかう</button>`;
+                row.innerHTML = `<div class="bag-item-info">${iconHtml}<span class="bag-item-title">${item.t}</span><span class="bag-item-count">x${item.count}</span></div>
+                    <button class="use-item-btn" ${(!item.count || !item.c)?'disabled':''} onclick="${item.act}">つかう</button>`;
                 container.appendChild(row);
             });
             document.getElementById('bagModal').style.display = 'flex';
@@ -757,24 +752,24 @@
         function closeBagModal() { document.getElementById('bagModal').style.display = 'none'; }
         function useTicketFromBag() { closeBagModal(); openAdventureSelectionModal(); }
         function useCandyFromBag() {
-            const uData = cloudData[`study_v2_${currentUser}`];
-            if (uData.bag.candy > 0) {
-                uData.bag.candy--; uData.partnerLevel++;
-                alert(`🍬 あめをつかった！レベルが ${uData.partnerLevel} にあがった！ ✨`);
+            if (cloudData["study_v2_bag_candy"][currentUser] > 0) {
+                cloudData["study_v2_bag_candy"][currentUser]--;
+                cloudData["study_level"][currentUser].exp += 3; // アメでレベル即1アップ相当
+                alert(`🍬 あめをつかった！レベルが あがったぞ！ ✨`);
                 openBagModal(); renderUI(); saveAllToCloud();
             }
         }
 
         function buyItem(name, price) {
-            const uData = cloudData[`study_v2_${currentUser}`];
-            if (uData.pokeen < price) { alert("ぽけえんが たりないよ！ 👛"); return; }
+            const b = cloudData["study_balance"][currentUser];
+            if (b.pokeen < price) { alert("ぽけえんが たりないよ！ 👛"); return; }
             if (confirm(`【${name}】と こうかんする？`)) {
-                uData.pokeen -= price;
-                if (name.includes('ふしぎなあめ')) uData.bag.candy = (uData.bag.candy || 0) + 1;
-                if (name.includes('ぼうけん券')) uData.bag.ticket = (uData.bag.ticket || 0) + 1;
-                if (name.includes('モンスターボール')) uData.bag.ball_normal = (uData.bag.ball_normal || 0) + 1;
-                if (name.includes('スーパーボール')) uData.bag.ball_super = (uData.bag.ball_super || 0) + 1;
-                if (name.includes('ハイパーボール')) uData.bag.ball_hyper = (uData.bag.ball_hyper || 0) + 1;
+                b.pokeen -= price;
+                if (name.includes('ふしぎなあめ')) cloudData["study_v2_bag_candy"][currentUser]++;
+                if (name.includes('ぼうけん券')) b.gachaCount++;
+                if (name.includes('モンスターボール')) cloudData["study_v2_bag_balls"][currentUser].normal++;
+                if (name.includes('スーパーボール')) cloudData["study_v2_bag_balls"][currentUser].super++;
+                if (name.includes('ハイパーボール')) cloudData["study_v2_bag_balls"][currentUser].hyper++;
                 renderUI(); saveAllToCloud(); alert(`バッグに保存したよ！ 👜`);
             }
         }
@@ -792,8 +787,8 @@
         function renderZukanGrid() {
             const grid = document.getElementById('zukanGridDisplay'); if (!grid) return; grid.innerHTML = '';
             const mode = document.getElementById('regionSelector').value;
-            const uData = cloudData[`study_v2_${currentUser}`] || createInitialUserData();
-            const ownedNormal = uData.zukan_normal || []; const ownedMega = uData.zukan_mega || [];
+            const ownedNormal = cloudData["study_zukan_normal"][currentUser] || [];
+            const ownedMega = cloudData["study_zukan_mega"][currentUser] || [];
             let totalCount = 0, ownedCount = 0;
 
             if (zukanTab === 'mega') {
@@ -829,20 +824,16 @@
             grid.appendChild(box);
         }
 
-        // 📅 カレンダー：現在時刻を動的に全自動反映（文字表記バグも完全修正）
         function openCalendarModal() {
-            const uData = cloudData[`study_v2_${currentUser}`] || createInitialUserData();
-            if (!uData.stamp_days) uData.stamp_days = [];
-            document.getElementById('totalStampLabel').textContent = `これまでのぼうけん日数: ${uData.stamp_days.length} 日`;
+            const calendarList = cloudData["study_v2_calendar"][currentUser] || [];
+            document.getElementById('totalStampLabel').textContent = `これまでのぼうけん日数: ${calendarList.length} 日`;
             
             const grid = document.getElementById('calendarGridDisplay'); grid.innerHTML = '';
             ["日","月","火","水","木","金","土"].forEach(w => {
                 const h = document.createElement('div'); h.className = 'calendar-day-head'; h.textContent = w; grid.appendChild(h);
             });
             
-            const cYear = now.getFullYear();
-            const cMonth = now.getMonth(); 
-            
+            const cYear = now.getFullYear(); const cMonth = now.getMonth(); 
             document.getElementById('calendarMonthTitle').textContent = `${cYear}年 ${cMonth + 1}月`;
             
             const firstDay = new Date(cYear, cMonth, 1);
@@ -854,7 +845,7 @@
             }
             for (let d = 1; d <= daysInMonth; d++) {
                 const cell = document.createElement('div'); const dateKey = `${cYear}-${String(cMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                const isStamped = uData.stamp_days.includes(dateKey);
+                const isStamped = calendarList.includes(dateKey);
                 cell.className = isStamped ? 'calendar-cell current-month stamped' : 'calendar-cell current-month';
                 cell.textContent = d; grid.appendChild(cell);
             }
@@ -863,12 +854,11 @@
         function closeCalendarModal() { document.getElementById('calendarModal').style.display = 'none'; }
 
         function getOrRollFixedEncounters() {
-            const uData = cloudData[`study_v2_${currentUser}`];
-            if (uData.fixed_encounters) return uData.fixed_encounters;
+            if (!cloudData["study_fixed_encounters"]) cloudData["study_fixed_encounters"] = { "kouta": null, "haruto": null };
+            if (cloudData["study_fixed_encounters"][currentUser]) return cloudData["study_fixed_encounters"][currentUser];
 
-            const rKeys = Object.keys(regions);
-            const rolled = {};
-            const ownedNormal = uData.zukan_normal || [];
+            const rKeys = Object.keys(regions); const rolled = {};
+            const ownedNormal = cloudData["study_zukan_normal"][currentUser] || [];
 
             let unownedId = "0001";
             for (let attempt = 0; attempt < 100; attempt++) {
@@ -890,13 +880,12 @@
                     rolled[zone] = { id: String(rId).padStart(4, '0'), name: `No.${rId}` };
                 }
             });
-
-            uData.fixed_encounters = rolled; saveAllToCloud(); return rolled;
+            cloudData["study_fixed_encounters"][currentUser] = rolled; saveAllToCloud(); return rolled;
         }
 
         function openAdventureSelectionModal() {
-            const uData = cloudData[`study_v2_${currentUser}`];
-            if (!uData.bag.ticket || uData.bag.ticket <= 0) { alert("🎫 ぼうけん券がありません！"); return; }
+            const b = cloudData["study_balance"][currentUser];
+            if (!b.gachaCount || b.gachaCount <= 0) { alert("🎫 ぼうけん券がありません！"); return; }
             const encounters = getOrRollFixedEncounters();
             Object.keys(encounters).forEach(zone => {
                 const img = document.getElementById(`shadow-${zone}`); if (img) img.src = getImgUrl(encounters[zone].id);
@@ -907,8 +896,8 @@
 
         function startBattle(zone) {
             closeAdventureModal();
-            const uData = cloudData[`study_v2_${currentUser}`];
-            if (uData.bag.ticket > 0) uData.bag.ticket--; else return;
+            const b = cloudData["study_balance"][currentUser];
+            if (b.gachaCount > 0) b.gachaCount--; else return;
 
             const encounters = getOrRollFixedEncounters(); const enemy = encounters[zone];
             let finalEnemy = enemy;
@@ -920,9 +909,10 @@
             document.getElementById('enemyHpBar').style.width = "100%";
             document.getElementById('enemyHpBar').style.background = "#22c55e";
             
-            const currentMyId = getEvolvedId(uData.partner, uData.partnerLevel);
+            const exp = cloudData["study_level"][currentUser].exp;
+            const currentMyId = getEvolvedId(cloudData["study_user_pokemon"][currentUser], calculateLevel(exp));
             document.getElementById('battlePartnerImg').src = getImgUrl(currentMyId);
-            document.getElementById('battlePartnerName').textContent = getPokemonNameFromPool(uData.partner);
+            document.getElementById('battlePartnerName').textContent = getPokemonNameFromPool(cloudData["study_user_pokemon"][currentUser]);
             document.getElementById('battleEnemyImg').src = getImgUrl(finalEnemy.id);
             document.getElementById('battleEnemyName').textContent = finalEnemy.name;
             document.getElementById('battleLogBox').textContent = `あ！ 野生の 【${finalEnemy.name}】が あらわれた！`;
@@ -940,10 +930,10 @@
             const log = document.getElementById('battleLogBox');
             const myName = document.getElementById('battlePartnerName').textContent;
             const enemy = battleState.enemy;
-            const uData = cloudData[`study_v2_${currentUser}`];
+            const myId = cloudData["study_user_pokemon"][currentUser];
 
             if (battleState.step === 0) {
-                const myMove = getPokemonAttackMove(uData.partner, myName);
+                const myMove = getPokemonAttackMove(myId, myName);
                 log.textContent = `いけっ！ 【${myName}】の 【${myMove}】！\nこうかは ばつぐんだ！ 💥`;
                 battleState.enemyHp = 35;
                 document.getElementById('enemyHpBar').style.width = "35%";
@@ -958,27 +948,27 @@
                 document.getElementById('enemyHpBar').style.background = "#ef4444";
                 document.getElementById('battleActionBtn').style.display = "none";
                 
-                document.getElementById('countP').textContent = uData.bag.ball_normal || 0;
-                document.getElementById('countS').textContent = uData.bag.ball_super || 0;
-                document.getElementById('countH').textContent = uData.bag.ball_hyper || 0;
-                document.getElementById('countM').textContent = uData.bag.ball_master || 0;
+                const balls = cloudData["study_v2_bag_balls"][currentUser];
+                document.getElementById('countP').textContent = balls.normal || 0;
+                document.getElementById('countS').textContent = balls.super || 0;
+                document.getElementById('countH').textContent = balls.hyper || 0;
+                document.getElementById('countM').textContent = balls.master || 0;
                 
-                document.getElementById('btnN').className = (uData.bag.ball_normal > 0) ? "ball-choice-item" : "ball-choice-item disabled";
-                document.getElementById('btnS').className = (uData.bag.ball_super > 0) ? "ball-choice-item" : "ball-choice-item disabled";
-                document.getElementById('btnH').className = (uData.bag.ball_hyper > 0) ? "ball-choice-item" : "ball-choice-item disabled";
-                document.getElementById('btnM').className = (uData.bag.ball_master > 0) ? "ball-choice-item" : "ball-choice-item disabled";
+                document.getElementById('btnN').className = (balls.normal > 0) ? "ball-choice-item" : "ball-choice-item disabled";
+                document.getElementById('btnS').className = (balls.super > 0) ? "ball-choice-item" : "ball-choice-item disabled";
+                document.getElementById('btnH').className = (balls.hyper > 0) ? "ball-choice-item" : "ball-choice-item disabled";
+                document.getElementById('btnM').className = (balls.master > 0) ? "ball-choice-item" : "ball-choice-item disabled";
                 
                 document.getElementById('ballSelectSection').style.display = "block";
             }
         }
 
-        // 🛠️ 確率計算部分（SyntaxErrorの原因）を100%きれいに修正
         function throwBall(ballType) {
-            const uData = cloudData[`study_v2_${currentUser}`];
-            if (ballType === 'normal' && !(uData.bag.ball_normal > 0)) return;
-            if (ballType === 'super' && !(uData.bag.ball_super > 0)) return;
-            if (ballType === 'hyper' && !(uData.bag.ball_hyper > 0)) return;
-            if (ballType === 'master' && !(uData.bag.ball_master > 0)) return;
+            const balls = cloudData["study_v2_bag_balls"][currentUser];
+            if (ballType === 'normal' && !(balls.normal > 0)) return;
+            if (ballType === 'super' && !(balls.super > 0)) return;
+            if (ballType === 'hyper' && !(balls.hyper > 0)) return;
+            if (ballType === 'master' && !(balls.master > 0)) return;
 
             document.getElementById('ballSelectSection').style.display = "none";
             const log = document.getElementById('battleLogBox');
@@ -987,10 +977,10 @@
 
             bIcon.src = ballAssets[ballType]; bIcon.style.display = "block";
 
-            if (ballType === 'normal') uData.bag.ball_normal--;
-            if (ballType === 'super') uData.bag.ball_super--;
-            if (ballType === 'hyper') uData.bag.ball_hyper--;
-            if (ballType === 'master') uData.bag.ball_master--;
+            if (ballType === 'normal') balls.normal--;
+            if (ballType === 'super') balls.super--;
+            if (ballType === 'hyper') balls.hyper--;
+            if (ballType === 'master') balls.master--;
 
             bIcon.className = "ball-shake active";
             log.textContent = `ボールを なげた！\nゆれている......`;
@@ -1004,21 +994,33 @@
                 if (roll <= catchRate) {
                     log.innerHTML = `やったぜ！ 【${enemy.name}】を つかまえた！ 🎉`;
                     if (battleState.isMega) {
-                        if (!uData.zukan_mega.includes(enemy.id)) uData.zukan_mega.push(enemy.id);
+                        if (!cloudData["study_zukan_mega"][currentUser].includes(enemy.id)) cloudData["study_zukan_mega"][currentUser].push(enemy.id);
                     } else {
-                        if (!uData.zukan_normal.includes(enemy.id)) uData.zukan_normal.push(enemy.id);
+                        if (!cloudData["study_zukan_normal"][currentUser].includes(enemy.id)) cloudData["study_zukan_normal"][currentUser].push(enemy.id);
                     }
                     const rewardCoins = [100, 150, 200, 300, 500][Math.floor(Math.random() * 5)];
-                    uData.pokeen += rewardCoins;
+                    cloudData["study_balance"][currentUser].pokeen += rewardCoins;
                     log.innerHTML += `<br>💰 <strong>+${rewardCoins} ぽけえん</strong> をてにいれた！`;
                 } else {
                     log.innerHTML = `あ！ ボールから とびだしてしまった！\n【${enemy.name}】は にげていった！ 💨`;
                 }
-                uData.fixed_encounters = null;
-                uData.chosen_challenge_mission = null; 
+                cloudData["study_fixed_encounters"][currentUser] = null;
+                cloudData["study_v3_chosen_challenge"][currentUser] = null; 
                 document.getElementById('battleCloseBtn').style.display = "block";
                 saveAllToCloud();
             }, 1400);
         }
 
-        function closeBattleModal() { document.getElementById('battleModal').style.display =
+        function closeBattleModal() { document.getElementById('battleModal').style.display = 'none'; renderUI(); }
+        function openSecretParentMenu() {
+            const pw = prompt("パパ・ママ専用パスワード：");
+            if (pw === "1022") { document.getElementById('secretParentPanel').style.display = 'block'; window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }
+        }
+        function closeSecretParentMenu() { document.getElementById('secretParentPanel').style.display = 'none'; }
+
+        function saveChallengePoolFromParent() {
+            const txt = document.getElementById('parentChallengePoolInput').value;
+            if (txt) {
+                const arr = txt.split(',').map(x => x.trim()).filter(x => x.length > 0);
+                cloudData["study_v3_challenge_pool"] = arr;
+                alert("🎰 チャレンジミッションの候補リストを保存しました
