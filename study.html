@@ -1144,6 +1144,7 @@
             alert("データを調整しました");
         }
 
+        // 🔥 ここが完全リセット対応の関数
         function resetCurrentUserData() {
             if(confirm("本当にセーブデータをリセットしますか？")) {
                 cloudData.study_balance[currentUser] = { "pokeen": 300, "gachaCount": 0 };
@@ -1154,9 +1155,15 @@
                 cloudData.study_v2_bag_candy[currentUser] = 0;
                 cloudData.study_v2_calendar[currentUser] = [];
                 cloudData.study_v3_chosen_challenge[currentUser] = null;
-                renderUI();
+                
+                // 相棒データも空にする
+                cloudData.study_user_pokemon[currentUser] = null;
+                
                 saveAllToCloud();
                 alert("リセットしました");
+                
+                // 初期画面（相棒選択）へ戻す
+                changeUser(currentUser);
             }
         }
 
