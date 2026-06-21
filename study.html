@@ -7,106 +7,85 @@
     <title>【ロトム図鑑】こうた＆はるとの冒険ボード 決定版</title>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #f1f5f9; --text-color: #0f172a; --border-radius: 20px;
-            --rotom-red: #ff3c3c; --rotom-screen: #eaf6fc;
-            --kouta-main: #2563eb; --kouta-bg: #eff6ff;
-            --haruto-main: #dc2626; --haruto-bg: #fef2f2;
-        }
+        :root { --bg-color: #f1f5f9; --text-color: #0f172a; --border-radius: 20px; --rotom-red: #ff3c3c; --kouta-main: #2563eb; --haruto-main: #dc2626; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 800; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 16px; padding-bottom: 80px; user-select: none; }
-        header { position: relative; text-align: center; margin: 12px 0 24px 0; padding: 0 36px; }
-        header h1 { font-size: 1.2rem; font-weight: 900; color: #0f172a; margin: 0; }
-        .secret-gear-btn { position: absolute; right: 4px; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: #94a3b8; padding: 6px; }
-        .user-switcher { display: table; width: 100%; border-collapse: separate; border-spacing: 16px 0; margin-bottom: 24px; }
-        .user-tab { display: table-cell; width: 50%; height: 56px; text-align: center; vertical-align: middle; border: 3.5px solid #0f172a; font-size: 1.1rem; font-weight: 900; cursor: pointer; background: #cbd5e1; color: #475569; box-shadow: 0 5px 0 #0f172a; border-radius: var(--border-radius); }
-        .user-tab.kouta.active { background-color: var(--kouta-main); color: white; }
-        .user-tab.haruto.active { background-color: var(--haruto-main); color: white; }
-        .card { background: white; border-radius: var(--border-radius); padding: 18px 16px; margin-bottom: 20px; border: 3.5px solid #0f172a; box-shadow: 0 5px 0 #0f172a; }
-        .status-card { background: #1e293b; color: white; border: 3.5px solid #0f172a; padding: 14px 4px; display: table; width: 100%; margin-bottom: 16px; }
-        .status-item { display: table-cell; width: 33.33%; text-align: center; font-size: 0.75rem; color: #94a3b8; border-right: 2px solid #475569; }
+        header { text-align: center; margin: 12px 0 24px 0; position: relative; }
+        .secret-gear-btn { position: absolute; right: 0; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: #94a3b8; }
+        .user-switcher { display: table; width: 100%; border-spacing: 16px 0; margin-bottom: 24px; }
+        .user-tab { display: table-cell; height: 56px; border: 3.5px solid #0f172a; border-radius: 20px; text-align: center; vertical-align: middle; cursor: pointer; background: #cbd5e1; box-shadow: 0 5px 0 #0f172a; }
+        .user-tab.active { background: var(--kouta-main); color: white; }
+        .card { background: white; border-radius: 20px; padding: 18px 16px; margin-bottom: 20px; border: 3.5px solid #0f172a; box-shadow: 0 5px 0 #0f172a; }
+        .status-card { background: #1e293b; color: white; display: table; width: 100%; }
+        .status-item { display: table-cell; width: 33%; text-align: center; font-size: 0.75rem; border-right: 2px solid #475569; }
         .status-item .val { display: block; font-size: 1.15rem; color: #facc15; margin-top: 4px; }
-        .partner-display-bar { background: #ffffff; border: 3.5px solid #0f172a; border-radius: 16px; padding: 10px 14px; margin-bottom: 20px; display: table; width: 100%; cursor: pointer; box-shadow: 0 4px 0 #0f172a; }
-        .quest-list { list-style: none; padding: 0; margin: 0; }
-        .quest-item { display: block; margin-bottom: 10px; border: 2.5px solid #0f172a; border-radius: 14px; background: #f1f5f9; overflow: hidden; }
-        .kouta-theme .quest-item { background: var(--kouta-bg); border-color: var(--kouta-main); }
-        .haruto-theme .quest-item { background: var(--haruto-bg); border-color: var(--haruto-main); }
-        .quest-cb { position: absolute; opacity: 0; }
-        .quest-content { display: table; width: 100%; padding: 14px 12px; }
-        .quest-cell-cb { display: table-cell; width: 26px; }
-        .quest-fake-cb { width: 22px; height: 22px; border: 2.5px solid #0f172a; border-radius: 50%; background: white; }
-        .quest-cell-text { display: table-cell; padding-left: 10px; font-size: 0.9rem; font-weight: 900; }
-        .quest-cb:checked + .quest-content .quest-fake-cb { background: #ef4444; }
-        .quest-cb:checked + .quest-content .quest-cell-text { text-decoration: line-through; opacity: 0.4; }
-        .big-adventure-trigger { width: 100%; height: 64px; background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%); color: white; border: 3.5px solid #0f172a; border-radius: 18px; font-size: 1.15rem; font-weight: 900; box-shadow: 0 5px 0 #0f172a; cursor: pointer; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .big-adventure-trigger img { width: 32px; height: 32px; }
-        .modal-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 9999; }
-        .modal-content { background: #1e293b; border: 3.5px solid white; border-radius: 24px; padding: 20px; text-align: center; width: 90%; max-width: 320px; color: white; }
+        .partner-display-bar { background: white; border: 3.5px solid #0f172a; border-radius: 16px; padding: 10px; margin-bottom: 20px; display: flex; align-items: center; cursor: pointer; box-shadow: 0 4px 0 #0f172a; }
+        .quest-item { margin-bottom: 10px; border: 2.5px solid #0f172a; border-radius: 14px; padding: 10px; display: flex; align-items: center; background: #f8fafc; }
+        .action-menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 20px 0; }
+        .menu-btn { height: 50px; border: 3px solid #0f172a; border-radius: 14px; font-size: 0.8rem; font-weight: 900; box-shadow: 0 4px 0 #0f172a; cursor: pointer; }
+        .big-adventure-trigger { width: 100%; height: 64px; background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%); color: white; border: 3.5px solid #0f172a; border-radius: 18px; font-size: 1.15rem; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 5px 0 #0f172a; }
+        .modal-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 9999; }
+        .modal-content { background: #1e293b; border: 3.5px solid white; border-radius: 24px; padding: 20px; width: 90%; max-width: 320px; color: white; }
         .loading-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; z-index: 10000; font-weight: 900; }
     </style>
 </head>
 <body>
     <div id="loadingCover" class="loading-cover">🔴 ぼうけんのしょを 同期中...</div>
-    <div id="syncBadge" style="position:fixed; bottom:12px; right:12px; background:rgba(0,0,0,0.8); color:white; padding:4px 10px; border-radius:20px; font-size:0.65rem; z-index:1000;">同期完了</div>
-
-    <header><h1>⚔️ フレンダ冒険＆ロトムボード 究極版 🛡️</h1><button class="secret-gear-btn" onclick="openSecretParentMenu()">⚙️</button></header>
+    <header><h1>⚔️ フレンダ冒険＆ロトムボード</h1><button class="secret-gear-btn" onclick="openSecretParentMenu()">⚙️</button></header>
     <div class="user-switcher">
         <button class="user-tab kouta active" onclick="changeUser('kouta')">💧 こうた</button>
         <button class="user-tab haruto" onclick="changeUser('haruto')">🔥 はると</button>
     </div>
 
     <div class="card status-card">
-        <div class="status-item">🏅 相棒レベル<span id="userLevel" class="val">1</span></div>
-        <div class="status-item">👛 さいふ<span id="pokeenBalance" class="val">0</span></div>
-        <div class="status-item">🎫 ぼうけん券<span id="ticketCountDisplay" class="val">0</span></div>
+        <div class="status-item">レベル<span id="userLevel" class="val">1</span></div>
+        <div class="status-item">コイン<span id="pokeenBalance" class="val">0</span></div>
+        <div class="status-item">チケット<span id="ticketCountDisplay" class="val">0</span></div>
     </div>
 
     <div class="partner-display-bar" onclick="openPartnerSelectionModal()">
-        <div class="partner-img-cell"><img id="statusBarPartnerImg" src="" alt="相棒"></div>
-        <div class="partner-info-cell">
-            <span class="partner-lbl">いっしょに ぼうけんする あいぼう</span>
-            <span id="statusBarPartnerName" class="partner-pkm-name">---</span>
+        <img id="statusBarPartnerImg" style="width:44px; height:44px;" src="" alt="">
+        <div style="margin-left:10px;">
+            <div style="font-size:0.6rem; color:#64748b;">あいぼう</div>
+            <div id="statusBarPartnerName" style="font-size:0.9rem; font-weight:900;">---</div>
         </div>
-        <div class="partner-change-hint">かえる 🔄</div>
     </div>
 
     <div class="card" id="questCard">
-        <h2>⚔️ 本日のミッション！ <span id="expPreview" style="font-size:0.75rem; color:#64748b;">0/3</span></h2>
-        <div class="slot-box">
-            <div id="challengeSlotWindow" class="slot-window">🎰 スタートをおして！</div>
-            <button id="challengeSlotBtn" class="slot-trigger-btn" onclick="spinChallengeSlot()">スタート！</button>
-        </div>
-        <ul class="quest-list" id="questList"></ul>
+        <h2>⚔️ 本日のミッション！</h2>
+        <ul id="questList" class="quest-list"></ul>
     </div>
 
-    <div class="action-menu-grid">
-        <button class="menu-btn btn-bag" onclick="openBagModal()">👜 どうぐ</button>
-        <button class="menu-btn btn-zukan" onclick="openZukanModal()">📱 ずかん</button>
-        <button class="menu-btn btn-calendar" onclick="openCalendarModal()">📅 きろく</button>
-    </div>
-
-    <button id="bigAdventureTriggerBtn" class="big-adventure-trigger" onclick="openAdventureSelectionModal()">
-        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="ball">
+    <button class="big-adventure-trigger" onclick="openAdventureSelectionModal()">
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" style="width:32px;">
         <span>ぼうけんに でかける！！</span>
     </button>
 
+    <div class="action-menu-grid">
+        <button class="menu-btn" onclick="openBagModal()">👜 どうぐ</button>
+        <button class="menu-btn" onclick="openZukanModal()">📱 ずかん</button>
+        <button class="menu-btn" onclick="openCalendarModal()">📅 きろく</button>
+    </div>
+
     <script>
-        // 🚨 起動エラーを100%回避する安全起動ロジック
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbw0YdRq2aEPNBXCtByhIst6wVS0WDDv1olhdg49m66yUFP6hoyTf8m_lo4V6JL98lkU/exec";
+        // 安全起動ロジック
+        let appReady = false;
+        setTimeout(() => { if (!appReady) initApp(); }, 5000);
+
         async function initApp() {
             try {
-                const response = await fetch(GAS_URL);
-                const res = await response.json();
-                if (res) {
-                    Object.keys(res).forEach(k => {
-                        try { cloudData[k] = JSON.parse(res[k]); } catch(e) { cloudData[k] = res[k]; }
-                    });
-                }
-            } catch(e) { console.warn("オフライン起動"); }
+                const res = await fetch(GAS_URL).then(r => r.json());
+                Object.keys(res).forEach(k => { if(cloudData[k] !== undefined) try { cloudData[k] = JSON.parse(res[k]); } catch(e) { cloudData[k] = res[k]; } });
+            } catch(e) { console.warn("オフラインモード"); }
+            appReady = true;
             document.getElementById('loadingCover').style.display = 'none';
             changeUser('kouta');
         }
         window.addEventListener('DOMContentLoaded', initApp);
-        // ... (以下、renderUI, renderZukanGrid, throwBall等の全関数) ...
+        
+        // ※以下の全関数（renderUI, throwBall, openBagModal, renderZukanGrid, openCalendarModal, 
+        //  saveAllToCloud, changeUser, startBattle等）を以前のコードからそのままコピーしてここに貼り付けてください
     </script>
 </body>
 </html>
