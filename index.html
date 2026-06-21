@@ -282,11 +282,11 @@
             border-radius: 10px;
         }
         
-        /* 入力エリア（テキスト入力＋カレンダー選択＋追加ボタン） */
+        /* 🛠️ 案A：詰め込み感を解消するスマート入力行スタイル */
         .todo-input-row {
             display: flex;
-            gap: 4px;
-            margin-bottom: 8px;
+            gap: 6px;
+            margin-bottom: 4px;
             align-items: center;
         }
         .todo-input-text {
@@ -296,30 +296,59 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
+            height: 34px;
         }
-        .todo-input-date {
-            width: 40px;
-            height: 32px;
-            padding: 0;
+        
+        /* 📅 カレンダーアイコンを重ねるためのラッパー */
+        .todo-date-wrapper {
+            position: relative;
+            width: 36px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
             border: 1px solid #ccc;
             border-radius: 4px;
-            background-color: white;
             cursor: pointer;
             box-sizing: border-box;
-            text-align: center;
+            flex-shrink: 0;
         }
+        .todo-date-icon-btn {
+            font-size: 1.1rem;
+            pointer-events: none; /* 下のinput[type="date"]にタップを通す */
+        }
+        .todo-input-date {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; /* 完全に見えなくして裏側のシステムカレンダーだけ使う */
+            cursor: pointer;
+        }
+        
         .todo-add-btn {
             background-color: #475569;
             color: white;
             border: none;
-            padding: 7px 10px;
+            padding: 0 10px;
             font-size: 0.8rem;
             font-weight: bold;
             border-radius: 4px;
             cursor: pointer;
-            height: 32px;
+            height: 34px;
             box-sizing: border-box;
+            white-space: nowrap;
         }
+        
+        /* 選択された一時的な期限表示ラベル */
+        .todo-selected-date-preview {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-bottom: 8px;
+            padding-left: 2px;
+            font-weight: bold;
+            display: none; /* 日付がある時だけJSで開く */
+        }
+        
         .todo-custom-list {
             list-style: none;
             padding: 0;
@@ -349,7 +378,7 @@
             flex-shrink: 0;
         }
         
-        /* 🤩 チェック時のわくわく演出（斜線 ＆ クリア！） */
+        /* チェック時のわくわく演出 */
         .todo-custom-cb:checked + .todo-text-container .todo-custom-text {
             text-decoration: line-through;
             color: #94a3b8;
@@ -363,7 +392,6 @@
             margin-left: 4px;
         }
         
-        /* ⏱️ 期限バッジのカラーバリエーション */
         .todo-text-container {
             display: inline-flex;
             align-items: center;
@@ -379,11 +407,10 @@
             color: white;
             white-space: nowrap;
         }
-        .deadline-badge.overdue { background-color: #ef4444; } /* 超過中！(赤) */
-        .deadline-badge.today { background-color: #f97316; }   /* 今日まで！(オレンジ) */
-        .deadline-badge.future { background-color: #3b82f6; }  /* あと〇日(青) */
+        .deadline-badge.overdue { background-color: #ef4444; }
+        .deadline-badge.today { background-color: #f97316; }
+        .deadline-badge.future { background-color: #3b82f6; }
         
-        /* チェックが付いたら期限バッジもトーンダウン */
         .todo-custom-cb:checked + .todo-text-container .deadline-badge {
             background-color: #cbd5e1 !important;
             color: #94a3b8;
@@ -630,9 +657,15 @@
             </div>
             <div class="todo-input-row">
                 <input type="text" id="kouta-todo-input" class="todo-input-text" placeholder="例：ヘアカット">
-                <input type="date" id="kouta-todo-date" class="todo-input-date">
+                
+                <div class="todo-date-wrapper">
+                    <span class="todo-date-icon-btn">📅</span>
+                    <input type="date" id="kouta-todo-date" class="todo-input-date" onchange="previewTodoDate('kouta', this.value)">
+                </div>
+                
                 <button type="button" class="todo-add-btn" onclick="addCustomTodo('kouta')">＋ 追加</button>
             </div>
+            <div id="kouta-date-preview" class="todo-selected-date-preview"></div>
             <ul class="todo-custom-list" id="kouta-custom-todo-list"></ul>
         </div>
         
@@ -643,9 +676,15 @@
             </div>
             <div class="todo-input-row">
                 <input type="text" id="haruto-todo-input" class="todo-input-text" placeholder="例：アンケート提出">
-                <input type="date" id="haruto-todo-date" class="todo-input-date">
+                
+                <div class="todo-date-wrapper">
+                    <span class="todo-date-icon-btn">📅</span>
+                    <input type="date" id="haruto-todo-date" class="todo-input-date" onchange="previewTodoDate('haruto', this.value)">
+                </div>
+                
                 <button type="button" class="todo-add-btn" style="background-color:#e53935;" onclick="addCustomTodo('haruto')">＋ 追加</button>
             </div>
+            <div id="haruto-date-preview" class="todo-selected-date-preview"></div>
             <ul class="todo-custom-list" id="haruto-custom-todo-list"></ul>
         </div>
     </div>
@@ -987,7 +1026,7 @@
             }
         }
 
-        // ⏱️ 期限の日数計算（超過中・今日・残り日数の判定）
+        // ⏱️ 期限の日数計算
         function getDeadlineStatus(dateStr) {
             if (!dateStr) return { label: "", classStr: "", diff: Infinity };
             
@@ -1008,7 +1047,21 @@
             }
         }
 
-        // 🔄 期限が迫っている順 ＆ クリア最下部ソート機能付きの描画ロジック
+        // 🆕 日付が選択された時の一時的なプレビューを表示する処理
+        function previewTodoDate(child, val) {
+            const previewEl = document.getElementById(child + '-date-preview');
+            if (!previewEl) return;
+            if (val) {
+                const p = val.split('-');
+                previewEl.textContent = `⏰ 設定された期限：${parseInt(p[1])}月${parseInt(p[2])}日`;
+                previewEl.style.display = 'block';
+            } else {
+                previewEl.textContent = '';
+                previewEl.style.display = 'none';
+            }
+        }
+
+        // 🔄 期限順ソート付きの描画ロジック
         function renderCustomTodoList(child) {
             const listEl = document.getElementById(child + '-custom-todo-list');
             if (!listEl) return;
@@ -1017,19 +1070,12 @@
             let listData = [];
             try { listData = JSON.parse(globalCloudData["todo_list_" + child] || "[]"); } catch(e){}
 
-            // 1. 各タスクの期限ステータスを計算して一時格納
             listData.forEach(item => {
                 item.statusInfo = getDeadlineStatus(item.date);
             });
 
-            // 2. 賢い並び替え（ソート）ルールの適用
             listData.sort((a, b) => {
-                // ルールA: クリア済みのものは一番下
-                if (!!a.checked !== !!b.checked) {
-                    return a.checked ? 1 : -1;
-                }
-                // ルールB: 両方未クリア、または両方クリア済みの場合は「期限日数」で比較
-                // 超過(-1, -2...) ➔ 今日(0) ➔ 未来(1, 2...) ➔ 期限なし(Infinity) の順
+                if (!!a.checked !== !!b.checked) return a.checked ? 1 : -1;
                 return a.statusInfo.diff - b.statusInfo.diff;
             });
 
@@ -1050,13 +1096,11 @@
                 cb.checked = !!item.checked;
                 cb.addEventListener('change', async (e) => {
                     item.checked = e.target.checked;
-                    // statusInfoなどの計算用一時プロパティは除いて保存
                     const cleanData = listData.map(t => ({ text: t.text, date: t.date, checked: t.checked }));
                     await saveCloudData("todo_list_" + child, JSON.stringify(cleanData));
                     renderCustomTodoList(child);
                 });
 
-                // テキストと期限バッジを包むコンテナ
                 const textContainer = document.createElement('span');
                 textContainer.className = 'todo-text-container';
 
@@ -1065,7 +1109,6 @@
                 spanText.textContent = item.text;
                 textContainer.appendChild(spanText);
 
-                // 期限が設定されている場合のみバッジを生成して追加
                 if (item.date) {
                     const badge = document.createElement('span');
                     badge.className = `deadline-badge ${item.statusInfo.classStr}`;
@@ -1096,7 +1139,7 @@
             if (countEl) countEl.textContent = `残り: ${incompleteCount}個`;
         }
 
-        // カスタムTODOの新規追加（期限日付の収集対応版）
+        // カスタムTODOの新規追加（プレビュー非表示化対応）
         async function addCustomTodo(child) {
             const inputEl = document.getElementById(child + '-todo-input');
             const dateEl = document.getElementById(child + '-todo-date');
@@ -1105,7 +1148,6 @@
             let listData = [];
             try { listData = JSON.parse(globalCloudData["todo_list_" + child] || "[]"); } catch(e){}
 
-            // 日付が空なら null、入っていれば YYYY-MM-DD
             const selectedDate = dateEl && dateEl.value ? dateEl.value : null;
 
             listData.push({ 
@@ -1114,9 +1156,11 @@
                 checked: false 
             });
             
-            // 入力欄をクリア
             inputEl.value = '';
             if (dateEl) dateEl.value = '';
+
+            // 一時プレビューをリセットして非表示
+            previewTodoDate(child, '');
 
             await saveCloudData("todo_list_" + child, JSON.stringify(listData));
             renderCustomTodoList(child);
@@ -1443,14 +1487,6 @@
             document.getElementById('customMemo').addEventListener('input', (e) => { clearTimeout(memoTimeout); memoTimeout = setTimeout(() => { saveCloudData("memo", e.target.value); }, 1000); });
         }
 
-        // エンターキーでのTODO追加を有効化
-        if(document.getElementById('kouta-todo-input')) {
-            document.getElementById('kouta-todo-input').addEventListener('keypress', (e) => { if(e.key === 'Enter') addCustomTodo('kouta'); });
-        }
-        if(document.getElementById('haruto-todo-input')) {
-            document.getElementById('haruto-todo-input').addEventListener('keypress', (e) => { if(e.key === 'Enter') addCustomTodo('haruto'); });
-        }
-
         window.addEventListener('DOMContentLoaded', async () => {
             await fetchCloudData();
             let currentDay = new Date().getDay();
@@ -1459,7 +1495,6 @@
             renderBentoCalendar(currentCalYear, currentCalMonth);
             selectDay(currentDay);
             
-            // 新カスタムTODOリストの初期描画
             renderCustomTodoList('kouta');
             renderCustomTodoList('haruto');
 
