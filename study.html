@@ -16,7 +16,9 @@
             --rotom-red: #ff3c3c;
             --rotom-screen: #eaf6fc;
             --kouta-main: #2563eb;
+            --kouta-bg: #eff6ff;
             --haruto-main: #dc2626;
+            --haruto-bg: #fef2f2;
         }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -31,46 +33,92 @@
             user-select: none;
         }
 
-        header { position: relative; text-align: center; margin: 12px 0 24px 0; padding: 0 36px; }
+        header { 
+            position: relative;
+            text-align: center; 
+            margin: 12px 0 24px 0;
+            padding: 0 36px;
+        }
         header h1 { font-size: 1.2rem; font-weight: 900; color: #0f172a; margin: 0; letter-spacing: -0.5px; }
-        .secret-gear-btn { position: absolute; right: 4px; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: #94a3b8; padding: 6px; }
+        
+        .secret-gear-btn {
+            position: absolute;
+            right: 4px;
+            top: -2px;
+            font-size: 1.3rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #94a3b8;
+            padding: 6px;
+        }
 
-        .user-switcher { display: table; width: 100%; border-collapse: separate; border-spacing: 16px 0; margin-bottom: 24px; }
-        .user-tab { display: table-cell; width: 50%; height: 56px; text-align: center; vertical-align: middle; border: 3.5px solid #0f172a; font-size: 1.1rem; font-weight: 900; cursor: pointer; background: #cbd5e1; color: #475569; box-shadow: 0 5px 0 #0f172a; border-radius: var(--border-radius); }
+        .user-switcher {
+            display: table;
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 16px 0;
+            margin-bottom: 24px;
+        }
+        .user-tab {
+            display: table-cell;
+            width: 50%;
+            height: 56px;
+            text-align: center;
+            vertical-align: middle;
+            border: 3.5px solid #0f172a;
+            font-size: 1.1rem;
+            font-weight: 900;
+            cursor: pointer;
+            background: #cbd5e1;
+            color: #475569;
+            box-shadow: 0 5px 0 #0f172a;
+            border-radius: var(--border-radius);
+        }
         .user-tab.kouta.active { background-color: var(--kouta-main); color: white; }
         .user-tab.haruto.active { background-color: var(--haruto-main); color: white; }
         .user-tab:active { transform: translateY(2px); box-shadow: 0 3px 0 #0f172a; }
 
-        .card { background: white; border-radius: var(--border-radius); padding: 18px 16px; margin-bottom: 20px; border: 3.5px solid #0f172a; box-shadow: 0 5px 0 #0f172a; }
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 18px 16px;
+            margin-bottom: 20px;
+            border: 3.5px solid #0f172a;
+            box-shadow: 0 5px 0 #0f172a;
+        }
         .card h2 { font-size: 1.05rem; margin: 0 0 14px 0; font-weight: 900; display: flex; justify-content: space-between; align-items: center; }
 
-        .status-card { background: #1e293b; color: white; border-color: #0f172a; padding: 14px 4px; display: table; width: 100%; margin-bottom: 16px; }
-        .status-item { display: table-cell; width: 33.33%; text-align: center; font-size: 0.75rem; font-weight: 900; color: #94a3b8; border-right: 2px solid #475569; vertical-align: middle; }
+        .status-card {
+            background: #1e293b; color: white; border-color: #0f172a; padding: 14px 4px; display: table; width: 100%; margin-bottom: 16px;
+        }
+        .status-item {
+            display: table-cell; width: 33.33%; text-align: center; font-size: 0.75rem; font-weight: 900; color: #94a3b8; border-right: 2px solid #475569; vertical-align: middle;
+        }
         .status-item:last-child { border-right: none; }
         .status-item .val { display: block; font-size: 1.15rem; font-weight: 900; color: #facc15; margin-top: 4px; }
 
-        .partner-display-bar { background: #ffffff; border: 3.5px solid #0f172a; border-radius: 16px; padding: 10px 14px; margin-bottom: 20px; display: table; width: 100%; cursor: pointer; box-shadow: 0 4px 0 #0f172a; }
+        .partner-display-bar {
+            background: #ffffff; border: 3.5px solid #0f172a; border-radius: 16px; padding: 10px 14px; margin-bottom: 20px; display: table; width: 100%; cursor: pointer; box-shadow: 0 4px 0 #0f172a;
+        }
         .partner-display-bar:active { transform: translateY(2px); box-shadow: 0 2px 0 #0f172a; }
         .partner-img-cell { display: table-cell; width: 50px; vertical-align: middle; }
-        .partner-img-cell img { width: 44px; height: 44px; object-fit: contain; display: block; }
+        .partner-img-cell img { width: 44px; height: 44px; object-fit: contain; display: block; margin: 0 auto; }
         .partner-info-cell { display: table-cell; vertical-align: middle; padding-left: 10px; }
         .partner-lbl { font-size: 0.65rem; color: #64748b; font-weight: 900; display: block; margin-bottom: 1px; }
         .partner-pkm-name { font-size: 0.95rem; font-weight: 900; color: #0f172a; }
         .partner-change-hint { display: table-cell; vertical-align: middle; text-align: right; font-size: 0.75rem; color: #2563eb; font-weight: 900; }
 
-        /* 🔥 進捗バー（HPゲージ風） */
         .mission-hp-bg { width: 100%; height: 12px; background: #cbd5e1; border-radius: 6px; border: 2.5px solid #0f172a; margin-bottom: 20px; overflow: hidden; }
         .mission-hp-fill { height: 100%; background: #10b981; width: 0%; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 
-        /* 🔥 ゲーム風ゾーンUI */
         .zone-header { font-size: 0.85rem; font-weight: 900; color: white; padding: 6px 14px; border-radius: 12px 12px 0 0; margin-top: 10px; border: 3px solid #0f172a; border-bottom: none; display: inline-block; box-shadow: 0 4px 0 #0f172a; transform: translateY(4px); position: relative; z-index: 2; }
-        .hw-zone { background-color: #f59e0b; } /* オレンジ */
-        .self-zone { background-color: #10b981; } /* 緑 */
-        .lesson-zone { background-color: #3b82f6; } /* 青 */
-        .challenge-zone { background-color: #ef4444; } /* 赤 */
+        .hw-zone { background-color: #f59e0b; }
+        .self-zone { background-color: #10b981; }
+        .lesson-zone { background-color: #3b82f6; }
+        .challenge-zone { background-color: #ef4444; }
         .zone-container { border: 3px solid #0f172a; border-radius: 0 12px 12px 12px; padding: 12px; background: #f8fafc; box-shadow: 0 4px 0 #0f172a; margin-bottom: 16px; position: relative; z-index: 1; display: flex; flex-direction: column; gap: 8px; }
 
-        /* 🔥 ミッションアイテム（ボタン化して確実に押せるように） */
         .quest-item { display: flex; align-items: center; background: white; border: 2.5px solid #0f172a; border-radius: 10px; padding: 12px 10px; cursor: pointer; transition: all 0.1s; box-shadow: 0 3px 0 #0f172a; }
         .quest-item:active { transform: scale(0.98); box-shadow: 0 1px 0 #0f172a; }
         .quest-item.done { background: #e2e8f0; opacity: 0.7; }
@@ -423,16 +471,9 @@
         const now = new Date();
         const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
-        // 🔥 タスク設定のゾーン分け完全定義
         const masterTasks = {
-            kouta: {
-                homework: ["音読", "計算ドリル", "漢字ドリル"],
-                selfStudy: ["5分漢字ドリル", "ポケモン計算ドリル"]
-            },
-            haruto: {
-                homework: [], // はるとくんは宿題ゾーン非表示
-                selfStudy: ["えいご", "ポケモンドリル", "プリント"]
-            }
+            kouta: { homework: ["音読", "計算ドリル", "漢字ドリル"], selfStudy: ["5分漢字ドリル", "ポケモン計算ドリル"] },
+            haruto: { homework: [], selfStudy: ["えいご", "ポケモンドリル", "プリント"] }
         };
 
         const defaultPools = {
@@ -457,7 +498,6 @@
             "study_v2_calendar": { "kouta": [], "haruto": [] },
             "study_v2_bag_candy": { "kouta": 0, "haruto": 0 },
             "study_v2_bag_balls": { "kouta": { normal: 5, super: 1, hyper: 0, master: 0 }, "haruto": { normal: 5, super: 1, hyper: 0, master: 0 } },
-            // 🔥 チャレンジプールも兄弟で完全に分離
             "study_v3_challenge_pool": { "kouta": [...defaultPools.kouta], "haruto": [...defaultPools.haruto] },
             "study_v3_chosen_challenge": { "kouta": null, "haruto": null }
         };
@@ -465,7 +505,6 @@
         let currentUser = 'kouta';
         let battleState = {};
 
-        // 🔥 本物の名前をAPIから引っ張ってくる「最強の図鑑ロジック」
         const pkmNameCache = {}; 
         async function getPokemonNameAsync(idStr) {
             const baseId = parseInt(idStr.split('_')[0]);
@@ -479,6 +518,28 @@
                 if (jp) { pkmNameCache[baseId] = jp.name; return jp.name; }
             } catch(e) {}
             return `No.${baseId}`;
+        }
+
+        // 🔥 🟢 検討結果から生まれた「音声再生用共通ヘルパー関数」
+        function playSound(url) {
+            if (!url) return;
+            const audio = new Audio(url);
+            audio.play().catch(e => console.log("音声再生がブラウザにブロックされました（一度画面をどこかタップすると直ります）:", e));
+        }
+
+        // 🔥 公式APIからポケモンの鳴き声URLを引っ張ってきて再生する関数
+        async function playPokemonCry(idStr) {
+            const baseId = parseInt(idStr.split('_')[0]);
+            try {
+                const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${baseId}`);
+                const data = await res.json();
+                // 公式API(PokeAPI)内にある最新の鳴き声データ(mp3)のURLを取得
+                if (data.cries && data.cries.latest) {
+                    playSound(data.cries.latest);
+                }
+            } catch(e) {
+                console.error("鳴き声の取得に失敗しました", e);
+            }
         }
 
         async function saveAllToCloud() {
@@ -513,7 +574,6 @@
                             try { cloudData[k] = JSON.parse(res[k]); } catch(e) { cloudData[k] = res[k]; }
                         }
                     });
-                    // 古い配列形式からオブジェクト形式へのマイグレーション
                     if (Array.isArray(cloudData["study_v3_challenge_pool"])) {
                         cloudData["study_v3_challenge_pool"] = { kouta: [...cloudData["study_v3_challenge_pool"]], haruto: [...cloudData["study_v3_challenge_pool"]] };
                     }
@@ -569,7 +629,6 @@
             }
         }
 
-        // 🔥 指定曜日の習い事リストを取得
         function getLessons(user, dayIdx) {
             let lessons = [];
             if (user === 'kouta') {
@@ -584,7 +643,6 @@
             return lessons;
         }
 
-        // 🔥 ミッションの確実なトグル処理（チェックボックスのバグ解消）
         function toggleTask(task) {
             let doneList = cloudData["study_progress_" + todayStr][currentUser].done;
             if (doneList.includes(task)) {
@@ -592,8 +650,8 @@
             } else {
                 cloudData["study_progress_" + todayStr][currentUser].done.push(task);
             }
-            renderUI(); // カウンターと表示を即座に更新
-            saveAllToCloud(); // 押すたびに保存
+            renderUI();
+            saveAllToCloud();
         }
 
         function renderUI() {
@@ -634,14 +692,13 @@
                 document.getElementById('statusBarPartnerName').textContent = "---";
             }
 
-            // チャレンジ枠表示
             const winEl = document.getElementById('challengeSlotWindow');
             const slotBtn = document.getElementById('challengeSlotBtn');
             const slotArea = document.getElementById('slotBoxArea');
             const chosenChallenge = cloudData["study_v3_chosen_challenge"][currentUser];
             
             if (chosenChallenge) {
-                slotArea.style.display = "none"; // 決まったらスロット枠は消す
+                slotArea.style.display = "none";
             } else {
                 slotArea.style.display = "flex";
                 winEl.textContent = "🎰 ボタンをおして チャレンジを きめよう！";
@@ -649,7 +706,6 @@
                 slotBtn.disabled = false;
             }
 
-            // 🔥 ゾーン分けリストの構築とカウンター（HPゲージ）の計算
             const listEl = document.getElementById('questList'); 
             listEl.innerHTML = '';
             
@@ -659,14 +715,11 @@
 
             function renderZone(title, icon, colorClass, tasks) {
                 if (tasks.length === 0) return;
-                
-                // ゾーンの看板（見出し）
                 const header = document.createElement('div');
                 header.className = `zone-header ${colorClass}`;
                 header.innerHTML = `${icon} ${title}`;
                 listEl.appendChild(header);
 
-                // ゾーンの枠
                 const container = document.createElement('div');
                 container.className = 'zone-container';
 
@@ -677,7 +730,6 @@
 
                     const item = document.createElement('div');
                     item.className = `quest-item ${isDone ? 'done' : ''}`;
-                    // ここで直接クリックイベントを付けることで絶対に反応する
                     item.onclick = () => toggleTask(task);
                     
                     item.innerHTML = `
@@ -689,7 +741,6 @@
                 listEl.appendChild(container);
             }
 
-            // 順番に各ゾーンを描画
             renderZone("しゅくだい", "🎒", "hw-zone", masterTasks[currentUser].homework);
             renderZone("じしゅう", "📖", "self-zone", masterTasks[currentUser].selfStudy);
             renderZone("ならいごと", "🏃", "lesson-zone", getLessons(currentUser, now.getDay()));
@@ -698,14 +749,11 @@
                 renderZone("チャレンジ", "🔥", "challenge-zone", [chosenChallenge]);
             }
 
-            // カウンターとHPゲージの更新
             document.getElementById('expPreview').textContent = `${completedTasks}/${totalTasks}`;
             document.getElementById('missionProgressBar').style.width = totalTasks === 0 ? "0%" : `${(completedTasks/totalTasks)*100}%`;
 
-            // 全部クリアしているかのチェック
             checkAllClearBonus(totalTasks, completedTasks);
 
-            // パパ用メニューの更新（現在のユーザーの名前と設定リスト）
             document.getElementById('parentCurrentTargetName').textContent = currentUser === 'kouta' ? 'こうた' : 'はると';
             const currentPool = cloudData["study_v3_challenge_pool"][currentUser] || defaultPools[currentUser];
             document.getElementById('parentChallengePoolInput').value = currentPool.join(',');
@@ -852,6 +900,10 @@
             const box = document.createElement('div'); box.className = hasIt ? 'grid-pokemon-box' : 'grid-pokemon-box unowned';
             const nameId = `zukan-name-${id}-${Date.now()}`;
             box.innerHTML = `<div class="zukan-number-badge">#${String(displayNum).padStart(3, '0')}</div><img src="${getImgUrl(id)}" alt="?"><span id="${nameId}">...</span>`;
+            
+            // 🔥 ずかんの各マスをタップしたときにも鳴き声を再生
+            box.onclick = () => { if (hasIt) playPokemonCry(id); };
+            
             grid.appendChild(box);
 
             if (hasIt) {
@@ -962,6 +1014,9 @@
             document.getElementById('battleEnemyName').textContent = enemyName;
             document.getElementById('battleLogBox').textContent = `あ！ 野生の 【${enemyName}】が あらわれた！`;
             
+            // 🔥 🟢 出現した野生ポケモンの公式鳴き声を再生！！
+            playPokemonCry(finalEnemy.id);
+
             const bIcon = document.getElementById('ballIcon'); bIcon.className = ""; bIcon.style.display = "none"; 
             document.getElementById('battleActionBtn').style.display = "block";
             document.getElementById('battleActionBtn').textContent = "わざをくりだす！ ⚔️";
@@ -1048,6 +1103,9 @@
                     const rewardCoins = [100, 150, 200, 300, 500][Math.floor(Math.random() * 5)];
                     cloudData["study_balance"][currentUser].pokeen += rewardCoins;
                     log.innerHTML += `<br>💰 <strong>+${rewardCoins} ぽけえん</strong> をてにいれた！`;
+                    
+                    // 🔥 ゲット成功時、捕まえたポケモンの鳴き声をもう一度再生！
+                    playPokemonCry(enemy.id);
                 } else {
                     log.innerHTML = `あ！ ボールから とびだしてしまった！\n【${enemyName}】は にげていった！ 💨`;
                 }
@@ -1065,7 +1123,6 @@
         }
         function closeSecretParentMenu() { document.getElementById('secretParentPanel').style.display = 'none'; }
 
-        // 🔥 子どもごとに独立したプールを保存
         function saveChallengePoolFromParent() {
             const txt = document.getElementById('parentChallengePoolInput').value;
             if (txt) {
@@ -1100,12 +1157,9 @@
                 cloudData.study_v2_bag_candy[currentUser] = 0;
                 cloudData.study_v2_calendar[currentUser] = [];
                 cloudData.study_v3_chosen_challenge[currentUser] = null;
-                
                 cloudData.study_user_pokemon[currentUser] = null;
-                
                 saveAllToCloud();
                 alert("リセットしました");
-                
                 changeUser(currentUser);
             }
         }
