@@ -9,30 +9,39 @@
 
     <style>
         :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #f5f7fa;
-            --text-color: #333;
-            --accent-color: #ff6b6b;
-            --border-radius: 8px;
-            --kouta-color: #e3f2fd;
-            --kouta-border: #1e88e5;
-            --haruto-color: #fff3e0;
-            --haruto-border: #fb8c00;
-            --terakoya-color: #e8f5e9;
-            --terakoya-border: #2e7d32;
+            /* 全体共通 */
+            --bg-color: #f4f6f8;
+            --text-color: #333333;
+            --muted-text: #64748b;
+            --border-radius: 10px;
             
-            /* カスタムTODO用マイルドカラー */
-            --kouta-todo-bg: #f0f7ff;
-            --kouta-todo-border: #bae6fd;
-            --haruto-todo-bg: #fff5f5;
-            --haruto-todo-border: #fecaca;
+            /* 👦 こうた君カラー（マイルドブルー＆ネイビー） */
+            --kouta-bg: #e6f0fa;
+            --kouta-border: #4a7ab5;
+            --kouta-text: #2b4c7e;
+            
+            /* 👶 はると君カラー（マイルドアプリコット＆ディープオレンジ） */
+            --haruto-bg: #fdf0e6;
+            --haruto-border: #e69d5e;
+            --haruto-text: #8c532b;
+            
+            /* 🛠️ アクション・ニュートラルカラー */
+            --btn-neutral-bg: #e2e8f0;
+            --btn-neutral-text: #475569;
+            --btn-neutral-active: #cbd5e1;
+            
+            --btn-phone-bg: #d1fae5;
+            --btn-phone-text: #065f46;
+            
+            --terakoya-bg: #e8f5e9;
+            --terakoya-text: #2e7d32;
         }
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
-            background-color: #eef2f5;
+            background-color: var(--bg-color);
             margin: 0;
             padding: 15px;
             padding-bottom: 60px;
@@ -40,99 +49,98 @@
 
         header {
             text-align: center;
-            background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%);
-            color: white;
-            padding: 20px 15px;
-            border-radius: var(--border-radius);
-            margin-bottom: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            color: #1e293b;
+            padding: 10px 0;
+            margin-bottom: 10px;
         }
-
-        header h1 { margin: 0; font-size: 1.4rem; }
+        header h1 { margin: 0; font-size: 1.3rem; font-weight: 800; letter-spacing: 0.05em; }
 
         .card {
             background: white;
             padding: 15px;
             border-radius: var(--border-radius);
             margin-bottom: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
         }
 
         h2 {
-            font-size: 1.2rem;
-            color: var(--text-color);
+            font-size: 1.1rem;
+            color: #1e293b;
             margin-top: 0;
-            padding-bottom: 5px;
-            border-bottom: 2px solid #ccc;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #e2e8f0;
+            font-weight: 700;
         }
-
-        .kouta-header { color: var(--kouta-border); border-bottom-color: var(--kouta-border); }
-        .haruto-header { color: var(--haruto-border); border-bottom-color: var(--haruto-border); }
 
         .schedule-box {
             background-color: #ffffff;
-            border: 2px solid #1a73e8;
+            border: 1px solid #e2e8f0;
             padding: 15px;
             border-radius: var(--border-radius);
             margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         
         .week-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
         .week-nav-btn {
-            background-color: #f1f5f9;
-            border: 1px solid #cbd5e1;
-            padding: 4px 12px;
-            border-radius: 4px;
+            background-color: var(--btn-neutral-bg);
+            border: none;
+            padding: 5px 12px;
+            border-radius: 6px;
             font-size: 0.8rem;
             font-weight: bold;
             cursor: pointer;
-            color: #1a73e8;
+            color: var(--btn-neutral-text);
         }
+        .week-nav-btn:active { background-color: var(--btn-neutral-active); }
         .week-nav-title {
             font-weight: bold;
-            color: #1a73e8;
-            font-size: 1.05rem;
+            color: #1e293b;
+            font-size: 1rem;
         }
         
         .day-btn-container {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 12px;
-            gap: 4px;
+            margin-bottom: 15px;
+            gap: 5px;
         }
         .day-btn {
             flex: 1;
             padding: 10px 0;
-            border: 1px solid #1a73e8;
+            border: 1px solid #cbd5e1;
             background-color: white;
-            color: #1a73e8;
-            border-radius: 4px;
+            color: #64748b;
+            border-radius: 6px;
             font-weight: bold;
             font-size: 0.9rem;
             cursor: pointer;
             text-align: center;
             -webkit-appearance: none;
+            transition: all 0.2s;
         }
         .day-btn.active {
-            background-color: #1a73e8;
+            background-color: #475569;
             color: white;
+            border-color: #475569;
         }
 
         .selected-date-display {
             text-align: center;
             font-weight: bold;
-            font-size: 1.05rem;
-            color: #1a73e8;
-            background-color: #f0f7ff;
+            font-size: 1rem;
+            color: #475569;
+            background-color: #f1f5f9;
             padding: 6px;
-            border-radius: 4px;
+            border-radius: 6px;
             margin-bottom: 15px;
-            border: 1px dashed #4a90e2;
+            border: 1px dashed #cbd5e1;
         }
 
         .schedule-row {
@@ -140,7 +148,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 10px 0;
-            border-bottom: 1px dashed #eee;
+            border-bottom: 1px dashed #e2e8f0;
         }
         .schedule-row:last-child { border-bottom: none; }
         
@@ -150,48 +158,48 @@
             padding: 4px 0;
             border-radius: 4px;
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             flex-shrink: 0;
         }
-        .kouta-label { background-color: var(--kouta-color); color: var(--kouta-border); }
-        .haruto-label { background-color: var(--haruto-color); color: var(--haruto-border); }
+        .kouta-label { background-color: var(--kouta-bg); color: var(--kouta-text); }
+        .haruto-label { background-color: var(--haruto-bg); color: var(--haruto-text); }
         
         .schedule-text-display {
             flex: 1;
             margin: 0 10px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: bold;
-            color: #333;
+            color: #334155;
         }
         
         .schedule-edit-input {
             display: none;
             flex: 1;
             margin: 0 10px;
-            border: 2px solid #1a73e8;
+            border: 1px solid #cbd5e1;
             border-radius: 4px;
             padding: 6px 8px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             box-sizing: border-box;
         }
 
         .edit-btn {
-            background-color: #1a73e8;
-            color: white;
+            background-color: var(--btn-neutral-bg);
+            color: var(--btn-neutral-text);
             border: none;
             padding: 6px 12px;
             border-radius: 4px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: bold;
             cursor: pointer;
             flex-shrink: 0;
             -webkit-appearance: none;
         }
-        .edit-btn.saving { background-color: #2b8a3e; }
+        .edit-btn.saving { background-color: #bbf7d0; color: #15803d; }
 
         .reservation-panel {
             background-color: #f8fafc;
-            border: 2px solid #cbd5e1;
+            border: 1px solid #e2e8f0;
             border-radius: 6px;
             padding: 10px;
             margin-top: 12px;
@@ -210,10 +218,7 @@
             flex: 1;
             font-size: 0.85rem;
             font-weight: bold;
-            color: #334155;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            color: #475569;
         }
         
         .res-status-select {
@@ -229,8 +234,8 @@
             text-align: center;
         }
         .res-status-select.status-ok { background-color: #d1fae5; color: #065f46; border-color: #a7f3d0; }
-        .res-status-select.status-no { background-color: #ffedd5; color: #9a3412; border-color: #fed7aa; }
-        .res-status-select.status-yet { background-color: #f1f5f9; color: #64748b; border-color: #cbd5e1; }
+        .res-status-select.status-no { background-color: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; text-decoration: line-through; }
+        .res-status-select.status-yet { background-color: #fef3c7; color: #92400e; border-color: #fde68a; }
 
         .res-btn-group {
             display: flex;
@@ -238,33 +243,26 @@
             flex-shrink: 0;
         }
         .res-btn {
-            background-color: #4a90e2;
-            color: white;
+            background-color: var(--btn-neutral-bg);
+            color: var(--btn-neutral-text);
             border: none;
             padding: 5px 8px;
             border-radius: 4px;
             font-size: 0.75rem;
             font-weight: bold;
-            text-decoration: none;
             cursor: pointer;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            white-space: nowrap;
-            display: inline-block;
-            text-align: center;
         }
-        .res-btn:active { background-color: #357abd; }
-        .res-btn.phone-btn { background-color: #10b981; }
-        .res-btn.phone-btn:active { background-color: #059669; }
+        .res-btn.phone-btn { background-color: var(--btn-phone-bg); color: var(--btn-phone-text); }
 
-        /* 📋 カスタムTODOパネル用スタイル */
+        /* 📋 子供別自由TODOパネルスタイル（カラーパレット統合） */
         .todo-panel-child {
             border-radius: 6px;
-            padding: 10px;
+            padding: 12px;
             margin-bottom: 12px;
             border: 1px solid transparent;
         }
-        .todo-panel-child.kouta-theme { background-color: var(--kouta-todo-bg); border-color: var(--kouta-todo-border); }
-        .todo-panel-child.haruto-theme { background-color: var(--haruto-todo-bg); border-color: var(--haruto-todo-border); }
+        .todo-panel-child.kouta-theme { background-color: var(--kouta-bg); border-color: var(--kouta-border); }
+        .todo-panel-child.haruto-theme { background-color: var(--haruto-bg); border-color: var(--haruto-border); }
         
         .todo-panel-header {
             display: flex;
@@ -272,17 +270,20 @@
             align-items: center;
             margin-bottom: 8px;
             font-weight: bold;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
+        .todo-panel-child.kouta-theme .todo-panel-header { color: var(--kouta-text); }
+        .todo-panel-child.haruto-theme .todo-panel-header { color: var(--haruto-text); }
+
         .todo-count-badge {
-            font-size: 0.75rem;
-            background: #475569;
-            color: white;
-            padding: 1px 6px;
+            font-size: 0.7rem;
+            background: rgba(0,0,0,0.06);
+            padding: 2px 8px;
             border-radius: 10px;
         }
+        .todo-panel-child.kouta-theme .todo-count-badge { color: var(--kouta-text); }
+        .todo-panel-child.haruto-theme .todo-count-badge { color: var(--haruto-text); }
         
-        /* 🛠️ 案A：詰め込み感を解消するスマート入力行スタイル */
         .todo-input-row {
             display: flex;
             gap: 6px;
@@ -293,13 +294,12 @@
             flex: 1;
             padding: 7px;
             font-size: 0.85rem;
-            border: 1px solid #ccc;
+            border: 1px solid #cbd5e1;
             border-radius: 4px;
             box-sizing: border-box;
             height: 34px;
         }
         
-        /* 📅 カレンダーアイコンを重ねるためのラッパー */
         .todo-date-wrapper {
             position: relative;
             width: 36px;
@@ -308,27 +308,24 @@
             align-items: center;
             justify-content: center;
             background: white;
-            border: 1px solid #ccc;
+            border: 1px solid #cbd5e1;
             border-radius: 4px;
             cursor: pointer;
             box-sizing: border-box;
             flex-shrink: 0;
         }
-        .todo-date-icon-btn {
-            font-size: 1.1rem;
-            pointer-events: none; /* 下のinput[type="date"]にタップを通す */
-        }
+        .todo-date-icon-btn { font-size: 1rem; opacity: 0.7; }
         .todo-input-date {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0; /* 完全に見えなくして裏側のシステムカレンダーだけ使う */
+            opacity: 0;
             cursor: pointer;
         }
         
         .todo-add-btn {
-            background-color: #475569;
-            color: white;
-            border: none;
+            background-color: white;
+            border: 1px solid #cbd5e1;
+            color: #475569;
             padding: 0 10px;
             font-size: 0.8rem;
             font-weight: bold;
@@ -336,30 +333,25 @@
             cursor: pointer;
             height: 34px;
             box-sizing: border-box;
-            white-space: nowrap;
         }
         
-        /* 選択された一時的な期限表示ラベル */
         .todo-selected-date-preview {
             font-size: 0.75rem;
-            color: #64748b;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             padding-left: 2px;
             font-weight: bold;
-            display: none; /* 日付がある時だけJSで開く */
+            display: none;
         }
+        .todo-panel-child.kouta-theme .todo-selected-date-preview { color: var(--kouta-text); }
+        .todo-panel-child.haruto-theme .todo-selected-date-preview { color: var(--haruto-text); }
         
-        .todo-custom-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
+        .todo-custom-list { list-style: none; padding: 0; margin: 0; }
         .todo-custom-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 6px 0;
-            border-bottom: 1px dashed rgba(0,0,0,0.08);
+            border-bottom: 1px dashed rgba(0,0,0,0.05);
             gap: 8px;
         }
         .todo-custom-item:last-child { border-bottom: none; }
@@ -372,24 +364,18 @@
             flex: 1;
             word-break: break-all;
         }
-        .todo-custom-cb {
-            transform: scale(1.15);
-            cursor: pointer;
-            flex-shrink: 0;
-        }
+        .todo-panel-child.kouta-theme .todo-custom-label { color: var(--kouta-text); }
+        .todo-panel-child.haruto-theme .todo-custom-label { color: var(--haruto-text); }
+
+        .todo-custom-cb { transform: scale(1.1); cursor: pointer; flex-shrink: 0; }
         
-        /* チェック時のわくわく演出 */
         .todo-custom-cb:checked + .todo-text-container .todo-custom-text {
             text-decoration: line-through;
-            color: #94a3b8;
+            opacity: 0.5;
         }
         .todo-custom-cb:checked + .todo-text-container .todo-custom-text::after {
-            content: " 🎉 クリア！";
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: #10b981;
-            display: inline-block;
-            margin-left: 4px;
+            content: " 🎉";
+            font-size: 0.8rem;
         }
         
         .todo-text-container {
@@ -400,46 +386,42 @@
             flex: 1;
         }
         .deadline-badge {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: bold;
-            padding: 1px 5px;
+            padding: 1px 4px;
             border-radius: 4px;
             color: white;
             white-space: nowrap;
         }
         .deadline-badge.overdue { background-color: #ef4444; }
         .deadline-badge.today { background-color: #f97316; }
-        .deadline-badge.future { background-color: #3b82f6; }
+        .deadline-badge.future { background-color: #4a7ab5; }
         
         .todo-custom-cb:checked + .todo-text-container .deadline-badge {
             background-color: #cbd5e1 !important;
             color: #94a3b8;
             text-decoration: line-through;
+            opacity: 0.5;
         }
 
-        .todo-del-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 0.9rem;
-            padding: 2px 4px;
-            flex-shrink: 0;
-        }
+        .todo-del-btn { background: none; border: none; cursor: pointer; font-size: 0.85rem; opacity: 0.6; }
 
+        /* カレンダー共通構造 */
         .cal-container {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
+            gap: 4px;
             text-align: center;
             margin-top: 10px;
         }
-        .cal-header { font-weight: bold; font-size: 0.8rem; color: #666; }
+        .cal-header { font-weight: bold; font-size: 0.75rem; color: #64748b; padding-bottom: 4px; }
+        
         .cal-day {
             padding: 6px 0;
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 0.9rem;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.85rem;
             cursor: pointer;
             position: relative;
             min-height: 44px;
@@ -450,101 +432,90 @@
             box-sizing: border-box;
         }
         .cal-day.empty { background-color: transparent; border: none; cursor: default; min-height: auto; }
+        .cal-day.day-off { background-color: #e2e8f0; color: #94a3b8; border-color: #cbd5e1; cursor: not-allowed; }
         
-        .cal-day.day-off {
-            background-color: #e2e8f0;
-            color: #94a3b8;
-            border-color: #cbd5e1;
-            cursor: not-allowed;
-        }
-        
-        .cal-day.kouta-active-b { background-color: #ffebee; border-color: #e53935; }
-        
-        .cal-day .kouta-badge-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1px;
-            align-items: center;
-            margin-top: 2px;
-        }
+        /* 🏫 こうたカレンダー専用（ネイビートーンに完全流用） */
+        .cal-day.kouta-active-b { background-color: #cbd5e1; border-color: var(--kouta-border); }
+        .cal-day .kouta-badge-container { display: flex; flex-direction: column; gap: 1px; align-items: center; margin-top: 2px; }
         .cal-day .kouta-badge {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             font-weight: bold;
             padding: 1px 3px;
             border-radius: 3px;
             color: white;
-            background-color: #1e88e5;
+            background-color: var(--kouta-border);
         }
-        .cal-day.kouta-active-b .kouta-badge { background-color: #e53935; }
-        
         .cal-day .kouta-duty-badge {
             font-size: 0.55rem;
-            background-color: #9c27b0;
+            background-color: #475569;
             color: white;
             padding: 0px 2px;
             border-radius: 2px;
             font-weight: bold;
         }
 
-        .cal-day.bento-active { background-color: #ffe0b2; border-color: #fb8c00; color: #e65100; font-weight: bold; }
-        .cal-day.bento-active::after { content: "🍱"; position: absolute; top: -2px; right: -2px; font-size: 0.65rem; }
+        /* 🍱 はるとカレンダー専用（オレンジトーンに完全流用） */
+        .cal-day.bento-active { background-color: var(--haruto-bg); border-color: var(--haruto-border); color: var(--haruto-text); font-weight: bold; }
+        .cal-day.bento-active::after { content: "🍱"; position: absolute; top: -1px; right: 1px; font-size: 0.6rem; }
 
-        .cal-month-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; margin-top: 10px; }
-        .cal-nav-btn { background-color: #fff; border: 1px solid #ccc; padding: 4px 10px; border-radius: 4px; cursor: pointer; }
+        .cal-month-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; margin-top: 5px; }
+        .cal-nav-btn { background-color: var(--btn-neutral-bg); color: var(--btn-neutral-text); border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
 
         .quick-panel {
-            background-color: #f0f4f8;
-            border: 2px solid #cbd5e1;
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
             border-radius: 6px;
             padding: 12px;
             margin-top: 10px;
             display: none;
         }
-        .quick-panel-title { font-weight: bold; font-size: 0.9rem; color: #1e88e5; margin-bottom: 10px; text-align: center; }
+        .quick-panel-title { font-weight: bold; font-size: 0.85rem; color: #334155; margin-bottom: 8px; text-align: center; }
         .panel-block { display: flex; flex-direction: column; gap: 8px; }
         .panel-row { display: flex; justify-content: space-around; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .panel-select { padding: 4px 8px; font-size: 0.85rem; border-radius: 4px; border: 1px solid #ccc; background: white; }
-        .panel-checkbox-label { font-size: 0.85rem; font-weight: bold; display: flex; align-items: center; gap: 4px; cursor: pointer; }
+        .panel-select { padding: 4px 6px; font-size: 0.8rem; border-radius: 4px; border: 1px solid #cbd5e1; background: white; }
+        .panel-checkbox-label { font-size: 0.8rem; font-weight: bold; display: flex; align-items: center; gap: 4px; cursor: pointer; color: #475569; }
         .panel-preview-box {
             background-color: #fff;
-            border: 1px solid #94a3b8;
+            border: 1px solid #cbd5e1;
             padding: 6px;
             border-radius: 4px;
             text-align: center;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: bold;
-            color: #334155;
-            margin-top: 4px;
+            color: #475569;
+            margin-top: 2px;
         }
 
-        .bento-link-box { background-color: #fff; border: 1px solid #fb8c00; border-radius: 6px; padding: 10px; margin-bottom: 12px; }
-        .bento-link-btn { display: block; text-align: center; background-color: #fb8c00; color: white; text-decoration: none; font-weight: bold; padding: 10px; border-radius: 4px; font-size: 0.95rem; margin-bottom: 8px; }
-        .bento-login-info { font-size: 0.85rem; color: #555; background: #fafafa; padding: 6px 10px; border-radius: 4px; border: 1px dashed #ddd; margin: 0; }
+        .bento-link-box { background-color: #fff; border: 1px solid var(--haruto-border); border-radius: 6px; padding: 10px; margin-bottom: 12px; }
+        .bento-link-btn { display: block; text-align: center; background-color: var(--haruto-border); color: white; text-decoration: none; font-weight: bold; padding: 8px; border-radius: 4px; font-size: 0.85rem; margin-bottom: 6px; }
+        .bento-login-info { font-size: 0.8rem; color: var(--haruto-text); background: var(--haruto-bg); padding: 6px 10px; border-radius: 4px; border: 1px dashed var(--haruto-border); margin: 0; }
         
-        .kouta-details { border: 2px solid #1e88e5; background-color: #fff; padding: 12px; border-radius: var(--border-radius); margin-bottom: 15px; }
-        .kouta-details summary { color: #1e88e5; font-size: 1.15rem; font-weight: bold; cursor: pointer; outline: none; }
+        .kouta-details { border: 1px solid var(--kouta-border); background-color: #fff; padding: 12px; border-radius: var(--border-radius); margin-bottom: 15px; }
+        .kouta-details summary { color: var(--kouta-text); font-size: 1rem; font-weight: bold; cursor: pointer; outline: none; }
         
-        .bento-details { border: 2px solid #fb8c00; background-color: #fff; padding: 12px; border-radius: var(--border-radius); margin-bottom: 15px; }
-        .bento-details summary { color: #e65100; font-size: 1.15rem; font-weight: bold; cursor: pointer; outline: none; }
+        .bento-details { border: 1px solid var(--haruto-border); background-color: #fff; padding: 12px; border-radius: var(--border-radius); margin-bottom: 15px; }
+        .bento-details summary { color: var(--haruto-text); font-size: 1rem; font-weight: bold; cursor: pointer; outline: none; }
 
         .todo-list { list-style: none; padding: 0; margin: 0; }
-        .todo-item { display: flex; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .todo-item { display: flex; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #e2e8f0; }
         .todo-item:last-child { border-bottom: none; }
-        .todo-item input[type="checkbox"] { margin-top: 5px; margin-right: 10px; transform: scale(1.3); }
-        .todo-item label { font-size: 0.95rem; cursor: pointer; width: 100%; }
-        .sub-list { padding-left: 25px; color: #666; font-size: 0.85rem; margin-top: 2px; margin-bottom: 0; }
+        .todo-item input[type="checkbox"] { margin-top: 4px; margin-right: 10px; transform: scale(1.2); }
+        .todo-item label { font-size: 0.9rem; cursor: pointer; width: 100%; color: #334155; }
+        .sub-list { padding-left: 20px; color: #64748b; font-size: 0.8rem; margin-top: 2px; margin-bottom: 0; }
 
-        details { background: var(--secondary-color); padding: 12px; border-radius: var(--border-radius); margin-bottom: 12px; border: 1px solid #e0e0e0; }
-        .kouta-card details { background: var(--kouta-color); border-color: #bbdefb; }
-        .haruto-card details { background: var(--haruto-color); border-color: #ffe0b2; }
-        summary { font-weight: bold; cursor: pointer; outline: none; font-size: 1rem; }
-        .details-content { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.1); }
+        details { background: white; padding: 12px; border-radius: var(--border-radius); margin-bottom: 12px; border: 1px solid #e2e8f0; }
+        .kouta-card details { background: var(--kouta-bg); border-color: var(--kouta-border); }
+        .kouta-card details summary { color: var(--kouta-text); }
+        .haruto-card details { background: var(--haruto-bg); border-color: var(--haruto-border); }
+        .haruto-card details summary { color: var(--haruto-text); }
+        summary { font-weight: bold; cursor: pointer; outline: none; font-size: 0.95rem; }
+        .details-content { margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.05); }
 
-        .rule-box { background-color: #fff9db; border-left: 4px solid #f59f00; padding: 10px; font-size: 0.9rem; margin-bottom: 10px; border-radius: 0 var(--border-radius) var(--border-radius) 0; }
-        .terakoya-alert { background-color: var(--terakoya-color); border-left: 4px solid var(--terakoya-border); color: var(--terakoya-border); font-weight: bold; padding: 8px; margin-bottom: 10px; font-size: 0.9rem; display: none; }
-        .bento-alert { background-color: #fff3e0; border-left: 4px solid #fb8c00; color: #e65100; font-weight: bold; padding: 8px; margin-bottom: 10px; font-size: 0.9rem; display: none; }
+        .rule-box { background-color: #fffbeb; border-left: 4px solid #f59f00; padding: 10px; font-size: 0.85rem; margin-bottom: 10px; border-radius: 0 var(--border-radius) var(--border-radius) 0; }
+        .terakoya-alert { background-color: var(--terakoya-bg); border-left: 4px solid var(--terakoya-text); color: var(--terakoya-text); font-weight: bold; padding: 8px; margin-bottom: 10px; font-size: 0.85rem; display: none; border-radius: 0 4px 4px 0; }
+        .bento-alert { background-color: var(--haruto-bg); border-left: 4px solid var(--haruto-border); color: var(--haruto-text); font-weight: bold; padding: 8px; margin-bottom: 10px; font-size: 0.85rem; display: none; border-radius: 0 4px 4px 0; }
         
-        .badge { background-color: var(--accent-color); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 5px; }
+        .badge { background-color: #64748b; color: white; padding: 1px 5px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; margin-left: 5px; }
         
         /* メモ欄省スペース型 */
         .memo-textarea { 
@@ -552,9 +523,9 @@
             height: 60px; 
             padding: 8px; 
             box-sizing: border-box; 
-            border: 1px solid #ccc; 
+            border: 1px solid #cbd5e1; 
             border-radius: 6px; 
-            font-size: 0.95rem; 
+            font-size: 0.9rem; 
             resize: vertical; 
             background-color: #fafafa; 
             line-height: 1.4; 
@@ -565,17 +536,17 @@
             height: 120px;
             padding: 10px;
             box-sizing: border-box;
-            border: 1px solid #ccc;
+            border: 1px solid #cbd5e1;
             border-radius: 6px;
-            font-size: 1rem;
+            font-size: 0.9rem;
             resize: vertical;
             background-color: #fafafa;
             line-height: 1.5;
         }
         
-        .save-status { font-size: 0.8rem; color: #1a73e8; text-align: right; margin-top: 5px; font-weight: bold; }
+        .save-status { font-size: 0.75rem; color: var(--muted-text); text-align: right; margin-top: 4px; font-weight: bold; }
         
-        .loading-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); display: flex; justify-content: center; align-items: center; z-index: 9999; font-weight: bold; color: #1a73e8; font-size: 1.2rem; }
+        .loading-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); display: flex; justify-content: center; align-items: center; z-index: 9999; font-weight: bold; color: #475569; font-size: 1.1rem; }
     </style>
 </head>
 <body>
@@ -647,12 +618,12 @@
         </div>
     </div>
 
-    <div class="card" style="border: 2px solid #475569;">
-        <h2 style="color: #475569; border-bottom-color: #475569;">📋 子供別自由TODOリスト</h2>
+    <div class="card" style="border: 1px solid #e2e8f0;">
+        <h2>📋 子供別自由TODOリスト</h2>
         
         <div class="todo-panel-child kouta-theme">
             <div class="todo-panel-header">
-                <span style="color:var(--kouta-border);">👦 〈こうた〉タスク</span>
+                <span>👦 〈こうた〉タスク</span>
                 <span class="todo-count-badge" id="kouta-todo-count">残り: 0個</span>
             </div>
             <div class="todo-input-row">
@@ -671,8 +642,8 @@
         
         <div class="todo-panel-child haruto-theme">
             <div class="todo-panel-header">
-                <span style="color:#e53935;">👶 〈はると〉タスク</span>
-                <span class="todo-count-badge" id="haruto-todo-count" style="background:#e53935;">残り: 0個</span>
+                <span>👶 〈はると〉タスク</span>
+                <span class="todo-count-badge" id="haruto-todo-count">残り: 0個</span>
             </div>
             <div class="todo-input-row">
                 <input type="text" id="haruto-todo-input" class="todo-input-text" placeholder="例：アンケート提出">
@@ -682,15 +653,15 @@
                     <input type="date" id="haruto-todo-date" class="todo-input-date" onchange="previewTodoDate('haruto', this.value)">
                 </div>
                 
-                <button type="button" class="todo-add-btn" style="background-color:#e53935;" onclick="addCustomTodo('haruto')">＋ 追加</button>
+                <button type="button" class="todo-add-btn" onclick="addCustomTodo('haruto')">＋ 追加</button>
             </div>
             <div id="haruto-date-preview" class="todo-selected-date-preview"></div>
             <ul class="todo-custom-list" id="haruto-custom-todo-list"></ul>
         </div>
     </div>
 
-    <div class="card" style="border: 1px solid #1a73e8; padding: 10px;">
-        <h2 style="color: #1a73e8; border-bottom-color: #1a73e8; font-size: 1.05rem; margin-bottom: 6px;">✍️ メモ欄</h2>
+    <div class="card" style="border: 1px solid #e2e8f0; padding: 10px;">
+        <h2 style="font-size: 1rem; margin-bottom: 6px;">✍ ... メモ欄</h2>
         <textarea id="customMemo" class="memo-textarea" placeholder="自由なメモ書きに（ご夫婦でリアルタイム共有されます）"></textarea>
         <div id="saveStatus" class="save-status">同期完了</div>
     </div>
@@ -698,10 +669,10 @@
     <details class="kouta-details">
         <summary>🏫 こうた 宮崎小カレンダー</summary>
         <div class="details-content">
-            <p style="margin:0 0 8px 0; font-size:0.8rem; color:#666; text-align:center;">日付をタップして、校時(4〜6)・Bタイム・給食当番を設定</p>
+            <p style="margin:0 0 8px 0; font-size:0.8rem; color:var(--muted-text); text-align:center;">日付をタップして、校時(4〜6)・Bタイム・給食当番を設定</p>
             <div class="cal-month-nav">
                 <button type="button" class="cal-nav-btn" id="kouta-cal-prev">◀ 前月</button>
-                <span id="kouta-cal-month-title" style="font-weight: bold; font-size: 1.1rem;"></span>
+                <span id="kouta-cal-month-title" style="font-weight: bold; font-size: 1rem; color: var(--kouta-text);"></span>
                 <button type="button" class="cal-nav-btn" id="kouta-cal-next">次月 ▶</button>
             </div>
             <div class="cal-container" id="kouta-calendar"></div>
@@ -718,19 +689,19 @@
                         <label class="panel-checkbox-label">
                             <input type="checkbox" id="panel-btime-checkbox"> 🅱️ Bタイム
                         </label>
-                        <label class="panel-checkbox-label" style="color:#9c27b0;">
+                        <label class="panel-checkbox-label">
                             <input type="checkbox" id="panel-duty-checkbox"> 🧺 給食当番
                         </label>
                     </div>
                     
-                    <div class="panel-row" id="panel-b4-lunch-row" style="display:none; background:#ffe0b2; padding:4px; border-radius:4px; width:100%; justify-content:center;">
-                        <label class="panel-checkbox-label" style="color:#e65100;">
+                    <div class="panel-row" id="panel-b4-lunch-row" style="display:none; background:#f1f5f9; padding:4px; border-radius:4px; width:100%; justify-content:center;">
+                        <label class="panel-checkbox-label">
                             <input type="checkbox" id="panel-lunch-checkbox"> 🥢 給食・清掃まで実施する
                         </label>
                     </div>
                     
                     <div class="panel-preview-box">
-                        🕒 下校想定時刻: <span id="panel-time-preview" style="color:#e53935; font-size:0.95rem;">--:--</span> 頃
+                        🕒 下校想定時刻: <span id="panel-time-preview" style="color:var(--kouta-text); font-size:0.9rem;">--:--</span> 頃
                     </div>
                 </div>
             </div>
@@ -746,7 +717,7 @@
             </div>
             <div class="cal-month-nav">
                 <button type="button" class="cal-nav-btn" id="cal-prev">◀ 前月</button>
-                <span id="cal-month-title" style="font-weight: bold; font-size: 1.1rem;"></span>
+                <span id="cal-month-title" style="font-weight: bold; font-size: 1rem; color: var(--haruto-text);"></span>
                 <button type="button" class="cal-nav-btn" id="cal-next">次月 ▶</button>
             </div>
             <div class="cal-container" id="bento-calendar"></div>
@@ -786,7 +757,7 @@
             </div>
         </details>
         <details id="kouta-lunch-details">
-            <summary>🧺 給食当番の時 <span id="kouta-lunch-badge" class="badge" style="background-color:#9c27b0; display:none;">本日当番！</span></summary>
+            <summary>🧺 給食当番の時 <span id="kouta-lunch-badge" class="badge" style="display:none;">本日当番！</span></summary>
             <div class="details-content">
                 <ul class="todo-list">
                     <li class="todo-item"><input type="checkbox" id="k-lunch1"><label for="k-lunch1"><strong>マスク</strong>（給食袋の中にイン！）</label></li>
@@ -844,7 +815,7 @@
         <details>
             <summary>あおむし広場</summary>
             <div class="details-content">
-                <div class="rule-box" style="border-left-color: #e67e22; background-color: #fdf2e9; margin-bottom: 12px;">⚠️ スイミングの日は、朝事務所の前のかごに入れること！</div>
+                <div class="rule-box">⚠️ スイミングの日は、朝事務所の前のかごに入れること！</div>
                 <ul class="todo-list">
                     <li class="todo-item"><input type="checkbox" id="y-ao1"><label for="y-ao1">あおむしバック</label></li>
                     <li class="todo-item"><input type="checkbox" id="y-ao2"><label for="y-ao2">おやつ（※スイミング以外の日）</label></li>
@@ -878,8 +849,8 @@
         </details>
     </div>
 
-    <div class="card">
-        <h2>🐛 あおむし広場 予約用定型文（コピペ用）</h2>
+    <div class="card" style="border: 1px solid #e2e8f0;">
+        <h2 style="font-size: 1rem; color: #475569;">🐛 あおむし広場 予約用定型文（コピペ用）</h2>
         <textarea class="responsive-textarea" style="height:110px; font-family:monospace;" readonly>月：スイミング
 火：なし
 水：なし
@@ -923,10 +894,10 @@
         let selectedDayNum = 1;
         let currentWeekOffset = 0;
 
-        let currentCalYear = new Date().getFullYear();
-        let currentCalMonth = new Date().getMonth();
-        let koutaCalYear = new Date().getFullYear();
-        let koutaCalMonth = new Date().getMonth();
+        let currentCalYear = 2026;
+        let currentCalMonth = 5; // 6月 (0始まり)
+        let koutaCalYear = 2026;
+        let koutaCalMonth = 5;
 
         let activePanelDateStr = null;
 
@@ -971,7 +942,7 @@
         }
 
         function getTargetDateStr(dayNum) {
-            const today = new Date();
+            const today = new Date(2026, 5, 21); // 固定日基準
             const currentDayIdx = today.getDay();
             let baseDate = new Date(today);
             
@@ -1026,11 +997,10 @@
             }
         }
 
-        // ⏱️ 期限の日数計算
         function getDeadlineStatus(dateStr) {
             if (!dateStr) return { label: "", classStr: "", diff: Infinity };
             
-            const today = new Date();
+            const today = new Date(2026, 5, 21); // 固定日基準
             today.setHours(0,0,0,0);
             const target = new Date(dateStr);
             target.setHours(0,0,0,0);
@@ -1047,13 +1017,12 @@
             }
         }
 
-        // 🆕 日付が選択された時の一時的なプレビューを表示する処理
         function previewTodoDate(child, val) {
             const previewEl = document.getElementById(child + '-date-preview');
             if (!previewEl) return;
             if (val) {
                 const p = val.split('-');
-                previewEl.textContent = `⏰ 設定された期限：${parseInt(p[1])}月${parseInt(p[2])}日`;
+                previewEl.textContent = `⏰ 期限設定：${parseInt(p[1])}月${parseInt(p[2])}日`;
                 previewEl.style.display = 'block';
             } else {
                 previewEl.textContent = '';
@@ -1061,7 +1030,6 @@
             }
         }
 
-        // 🔄 期限順ソート付きの描画ロジック
         function renderCustomTodoList(child) {
             const listEl = document.getElementById(child + '-custom-todo-list');
             if (!listEl) return;
@@ -1139,7 +1107,6 @@
             if (countEl) countEl.textContent = `残り: ${incompleteCount}個`;
         }
 
-        // カスタムTODOの新規追加（プレビュー非表示化対応）
         async function addCustomTodo(child) {
             const inputEl = document.getElementById(child + '-todo-input');
             const dateEl = document.getElementById(child + '-todo-date');
@@ -1159,7 +1126,6 @@
             inputEl.value = '';
             if (dateEl) dateEl.value = '';
 
-            // 一時プレビューをリセットして非表示
             previewTodoDate(child, '');
 
             await saveCloudData("todo_list_" + child, JSON.stringify(listData));
@@ -1211,7 +1177,7 @@
                     detailLabel += `・${limitTime}頃下校)`;
 
                     const baseText = isTerakoya ? "🔥 わくわく → 【寺子屋Bチーム 13:55〜14:55】" : defaultSchedules[dayNum].kouta;
-                    const dutyLabel = isDuty ? " 🧺[今週は給食当番！]" : "";
+                    const dutyLabel = isDuty ? " 🧺[給食当番]" : "";
                     
                     koutaSched = `🎒 ${detailLabel}${dutyLabel} / ${baseText}`;
                 }
@@ -1489,7 +1455,7 @@
 
         window.addEventListener('DOMContentLoaded', async () => {
             await fetchCloudData();
-            let currentDay = new Date().getDay();
+            let currentDay = new Date(2026, 5, 21).getDay(); // 固定日基準
             if (currentDay === 0 || currentDay === 6) currentDay = 1;
             renderKoutaCalendar(koutaCalYear, koutaCalMonth);
             renderBentoCalendar(currentCalYear, currentCalMonth);
