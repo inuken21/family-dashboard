@@ -85,7 +85,8 @@
             border-radius: var(--border-radius);
             margin-bottom: 15px;
             box-shadow: var(--card-shadow);
-            box-sizing: border-box; /* 全体の幅を正しく保つ */
+            box-sizing: border-box; /* 枠線を道連れに外側に広がらせないための絶対設定 */
+            width: 100%;
         }
         
         .week-nav {
@@ -112,14 +113,17 @@
             font-size: 1rem;
         }
         
+        /* 🛠️ ボタンの合計幅が親幅を壊さないようにフレックス制御を厳格化 */
         .day-btn-container {
             display: flex;
             justify-content: space-between;
             margin-bottom: 15px;
-            gap: 4px;
+            gap: 3px;                 /* 隙間を僅かに詰めてスマホ幅に配慮 */
+            width: 100%;
+            box-sizing: border-box;
         }
         .day-btn {
-            flex: 1;
+            flex: 1;                  /* 5つのボタンを均等に綺麗に割る */
             padding: 10px 0;
             border: 1px solid #cbd5e1;
             background-color: white;
@@ -131,7 +135,8 @@
             text-align: center;
             -webkit-appearance: none;
             box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-            min-width: 0; /* スマホ縮小を許可 */
+            min-width: 0;             /* 幅の限界を突破して縮むことを許可 */
+            box-sizing: border-box;
         }
         .day-btn.active {
             background-color: #475569;
@@ -140,22 +145,22 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
-        /* 🛠️ 絶対にはみ出さないよう width: auto、親のインサイドに制限 */
+        /* 🛠️ 親要素の幅と完全に同期し、絶対にはみ出さない100%指定へ修正 */
         .selected-date-display {
             text-align: center;
             font-weight: bold;
             font-size: 0.95rem;
             color: #1e293b;
             background-color: #ffffff;
-            padding: 8px 12px;
+            padding: 8px 6px;
             border-radius: 6px;
-            margin-bottom: 15px;
             box-shadow: var(--inner-shadow);
-            border-top: 2px solid #64748b;
-            border-bottom: 2px solid #64748b;
-            width: auto;             /* 100%を撤廃し、親のパディングに身を委ねる */
-            display: block;          /* ブロック要素として自然に引き伸ばす */
-            box-sizing: border-box;
+            border-top: 2px solid var(--kouta-border); /* 初期化時に青系の線でパキッと */
+            border-bottom: 2px solid var(--kouta-border);
+            width: 100%;             /* 親の計算された内幅と完全一致させる */
+            margin: 0 0 15px 0;      /* 外側マージンを100%計算の内側へ */
+            display: block;
+            box-sizing: border-box;  /* パディングのせいで外にはみ出すのを完全防止 */
         }
 
         .schedule-row {
@@ -417,7 +422,6 @@
             flex: 1;
         }
         
-        /* 🆕 締切予定日のテキストスタイル */
         .todo-date-label {
             font-size: 0.75rem;
             font-weight: bold;
@@ -427,7 +431,6 @@
             border-radius: 4px;
             white-space: nowrap;
         }
-        /* チェックが付いたら締切日もトーンダウン */
         .todo-custom-cb:checked + .todo-text-container .todo-date-label {
             color: #cbd5e1;
             background-color: #f8fafc;
@@ -826,7 +829,7 @@
             </div>
         </details>
         <details id="kouta-lunch-details">
-            <summary>🧺 給食当番の時 <span id="kouta-lunch-badge" class="badge" style="display:none;">本日当番！</span></summary>
+            <summary>🧺給食当番の時 <span id="kouta-lunch-badge" class="badge" style="display:none;">本日当番！</span></summary>
             <div class="details-content">
                 <ul class="todo-list">
                     <li class="todo-item"><input type="checkbox" id="k-lunch1"><label for="k-lunch1"><strong>マスク</strong>（給食袋の中にイン！）</label></li>
@@ -1101,7 +1104,6 @@
             }
         }
 
-        // 🔄 TODO描画処理（「📅 期限日」のテキスト表示を追加）
         function renderCustomTodoList(child) {
             const listEl = document.getElementById(child + '-custom-todo-list');
             if (!listEl) return;
@@ -1149,7 +1151,6 @@
                 spanText.textContent = item.text;
                 textContainer.appendChild(spanText);
 
-                // 🆕 日付が入っている場合は「期限日」と「日数カウントバッジ」を小さく並べて表示
                 if (item.date) {
                     const p = item.date.split('-');
                     
