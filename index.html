@@ -69,6 +69,7 @@
             font-weight: 700;
         }
 
+        /* 📅 今週の予定エリア */
         .week-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .week-nav-btn {
             background-color: var(--btn-neutral-bg); border: none; padding: 5px 12px; border-radius: 6px;
@@ -80,37 +81,19 @@
         
         .selected-date-display {
             text-align: center; font-weight: 800; font-size: 1.1rem; color: #0f172a;
-            padding: 2px 0; margin: 0 0 12px 0; width: 100%; display: block;
-            letter-spacing: 0.02em;
+            padding: 2px 0; margin: 0 0 12px 0; width: 100%; display: block; letter-spacing: 0.02em;
         }
 
-        /* 🛠️ iOSでの見えないフレックス判定バーストを完全矯正 */
-        .day-btn-container { 
-            display: flex; 
-            justify-content: space-between; 
-            margin-bottom: 15px; 
-            gap: 4px;
-            width: 100%;
-        }
+        .day-btn-container { display: flex; justify-content: space-between; margin-bottom: 15px; gap: 4px; width: 100%; }
         .day-btn {
-            flex: 1; 
-            height: 42px; /* 高さを絶対固定し、上下の「見えない判定」を消滅させる */
-            padding: 0;   /* 内側パディングによるiOS判定の狂いを排除 */
-            border: 1px solid #cbd5e1; 
-            background-color: white;
-            color: #64748b; 
-            border-radius: 6px; 
-            font-weight: bold; 
-            font-size: 0.9rem; 
-            cursor: pointer; 
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            flex: 1; padding: 10px 0; border: 1px solid #cbd5e1; background-color: white;
+            color: #64748b; border-radius: 6px; font-weight: bold; font-size: 0.9rem; cursor: pointer; text-align: center;
+            user-select: none; -webkit-user-select: none; overflow: hidden;
         }
         .day-btn.active { background-color: #475569; color: white; border-color: #475569; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
 
         .schedule-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #e2e8f0; }
+        .schedule-row:last-child { border-bottom: none; }
         
         .name-label {
             font-weight: bold; width: 65px; padding: 4px 0; border-radius: 4px; text-align: center;
@@ -125,6 +108,7 @@
         .edit-btn { background-color: var(--btn-neutral-bg); color: var(--btn-neutral-text); border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; cursor: pointer; flex-shrink: 0; }
         .edit-btn.saving { background-color: #bbf7d0; color: #15803d; }
 
+        /* 予約確認パネル */
         .reservation-panel { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-top: 15px; box-shadow: var(--inner-shadow); }
         .res-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #e2e8f0; gap: 8px; }
         .res-row:last-child { border-bottom: none; }
@@ -153,9 +137,33 @@
         .todo-input-row { display: flex; gap: 6px; margin-bottom: 4px; align-items: center; }
         .todo-input-text { flex: 1; padding: 7px; font-size: 0.85rem; border: 1px solid #cbd5e1; border-radius: 4px; height: 34px; background-color: #ffffff; box-shadow: var(--inner-shadow); }
         
-        .todo-date-wrapper { position: relative; width: 36px; height: 34px; display: flex; align-items: center; justify-content: center; background: white; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer; flex-shrink: 0; }
-        .todo-date-icon-btn { font-size: 1rem; opacity: 0.7; }
-        .todo-input-date { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        /* 🛠️ カレンダーアイコンの判定が周囲へ暴発するのを防ぐ鉄壁ガード指定 */
+        .todo-date-wrapper { 
+            position: relative; 
+            width: 36px; 
+            height: 34px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: white; 
+            border: 1px solid #cbd5e1; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            flex-shrink: 0;
+            overflow: hidden; /* 内部の透明なカレンダー要素をこの四角の中に完全強制幽閉 */
+        }
+        .todo-date-icon-btn { font-size: 1rem; opacity: 0.7; pointer-events: none; } /* タッチ判定の邪魔をさせない */
+        
+        /* 🛠️ 透明カレンダー自体のサイズをWrapperと完全一致させ、はみ出しを1px未満に制限 */
+        .todo-input-date { 
+            position: absolute; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%; 
+            opacity: 0; 
+            cursor: pointer; 
+            margin: 0; padding: 0;
+        }
+        
         .todo-add-btn { background-color: white; border: 1px solid #cbd5e1; color: #475569; padding: 0 10px; font-size: 0.8rem; font-weight: bold; border-radius: 4px; cursor: pointer; height: 34px; }
         .todo-selected-date-preview { font-size: 0.75rem; margin-bottom: 6px; padding-left: 2px; font-weight: bold; display: none; }
         
@@ -165,15 +173,13 @@
         .todo-custom-label { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; cursor: pointer; flex: 1; min-width: 0; position: relative; }
         .todo-custom-cb { transform: scale(1.1); cursor: pointer; flex-shrink: 0; }
         
+        /* 1行死守レイアウト ＆ ツールチップ設定 */
         .todo-text-container { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; white-space: nowrap; position: relative; }
+        .todo-custom-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; cursor: help; }
         
-        /* 1行死守 ＆ 吹き出しポップアップ */
-        .todo-custom-text { 
-            flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; cursor: help;
-        }
-        
+        /* ツールチップの吹き出し */
         .todo-custom-text::before {
-            content: attr(data-fulltext); 
+            content: attr(data-fulltext);
             position: absolute; bottom: 125%; left: 0;
             background-color: #1e293b; color: #ffffff;
             padding: 6px 10px; border-radius: 6px;
@@ -187,8 +193,14 @@
         .todo-custom-text:active::before,
         .todo-custom-text:hover::before { opacity: 1; pointer-events: auto; }
 
-        /* 🛠️ 完了チェック時にテキスト側をトーンダウンさせる装飾 */
+        /* 完了お祝いエフェクト（🎉）の復活 */
         .todo-custom-cb:checked + .todo-text-container .todo-custom-text { text-decoration: line-through; opacity: 0.4; }
+        .todo-custom-cb:checked + .todo-text-container::after { content: " 🎉"; font-size: 0.85rem; margin-left: 2px; animation: pop 0.3s ease; flex-shrink: 0; }
+        
+        @keyframes pop {
+            0% { transform: scale(0.6); }
+            100% { transform: scale(1); }
+        }
         
         .todo-date-label { font-size: 0.75rem; font-weight: bold; color: #64748b; background-color: #f1f5f9; padding: 1px 5px; border-radius: 4px; flex-shrink: 0; }
         .todo-custom-cb:checked + .todo-text-container .todo-date-label { color: #cbd5e1; background-color: #f8fafc; text-decoration: line-through; opacity: 0.4; }
@@ -197,7 +209,7 @@
         .deadline-badge.overdue { background-color: #ef4444; }
         .deadline-badge.today { background-color: #f97316; }
         .deadline-badge.future { background-color: var(--kouta-border); }
-        .todo-custom-cb:checked + .todo-text-container .deadline-badge { background-color: #cbd5e1 !important; color: #94a3b8; text-decoration: line-through; opacity: 0.4; box-shadow: none; }
+        .todo-custom-cb:checked + .todo-text-container .deadline-badge { background-color: #cbd5e1 !important; color: #94a3b8; text-decoration: line-through; opacity: 0.4; }
         
         .todo-del-btn { background: none; border: none; cursor: pointer; font-size: 0.85rem; opacity: 0.5; flex-shrink: 0; }
 
@@ -303,11 +315,11 @@
         <div class="selected-date-display" id="selected-date-label"></div>
 
         <div class="day-btn-container">
-            <button type="button" class="day-btn" id="btn-day-1">月</button>
-            <button type="button" class="day-btn" id="btn-day-2">火</button>
-            <button type="button" class="day-btn" id="btn-day-3">水</button>
-            <button type="button" class="day-btn" id="btn-day-4">木</button>
-            <button type="button" class="day-btn" id="btn-day-5">金</button>
+            <div class="day-btn" id="btn-day-1">月</div>
+            <div class="day-btn" id="btn-day-2">火</div>
+            <div class="day-btn" id="btn-day-3">水</div>
+            <div class="day-btn" id="btn-day-4">木</div>
+            <div class="day-btn" id="btn-day-5">金</div>
         </div>
         
         <div class="schedule-row">
@@ -363,10 +375,12 @@
             </div>
             <div class="todo-input-row">
                 <input type="text" id="kouta-todo-input" class="todo-input-text" placeholder="例：ヘアカット">
+                
                 <div class="todo-date-wrapper">
                     <span class="todo-date-icon-btn">📅</span>
                     <input type="date" id="kouta-todo-date" class="todo-input-date" onchange="previewTodoDate('kouta', this.value)">
                 </div>
+                
                 <button type="button" class="todo-add-btn" onclick="addCustomTodo('kouta')">＋ 追加</button>
             </div>
             <div id="kouta-date-preview" class="todo-selected-date-preview"></div>
@@ -380,10 +394,12 @@
             </div>
             <div class="todo-input-row">
                 <input type="text" id="haruto-todo-input" class="todo-input-text" placeholder="例：アンケート提出">
+                
                 <div class="todo-date-wrapper">
                     <span class="todo-date-icon-btn">📅</span>
                     <input type="date" id="haruto-todo-date" class="todo-input-date" onchange="previewTodoDate('haruto', this.value)">
                 </div>
+                
                 <button type="button" class="todo-add-btn" onclick="addCustomTodo('haruto')">＋ 追加</button>
             </div>
             <div id="haruto-date-preview" class="todo-selected-date-preview"></div>
@@ -635,20 +651,21 @@
                 if (!item.checked) incompleteCount++;
                 const li = document.createElement('li'); li.className = 'todo-custom-item';
                 const label = document.createElement('label'); label.className = 'todo-custom-label';
+
                 const cb = document.createElement('input'); cb.type = 'checkbox'; cb.className = 'todo-custom-cb'; cb.checked = !!item.checked;
                 
-                cb.addEventListener('change', async (e) => {
+                // 楽観的UI更新：1ミリ秒で画面を更新して「🎉」を出す
+                cb.addEventListener('change', (e) => {
                     item.checked = e.target.checked;
-                    await saveCloudData("todo_list_" + child, JSON.stringify(listData.map(t => ({ text: t.text, date: t.date, checked: t.checked }))));
                     renderCustomTodoList(child);
+                    saveCloudData("todo_list_" + child, JSON.stringify(listData.map(t => ({ text: t.text, date: t.date, checked: t.checked }))));
                 });
 
                 const textContainer = document.createElement('span'); textContainer.className = 'todo-text-container';
                 
-                // 🛠️ 1行死守 ＋ 完了チェック時はJSで直接末尾にお祝いマーク「 🎉」を出し入れする設計
                 const spanText = document.createElement('span'); 
                 spanText.className = 'todo-custom-text'; 
-                spanText.textContent = item.checked ? item.text + " 🎉" : item.text;
+                spanText.textContent = item.text;
                 spanText.setAttribute('data-fulltext', item.text); 
                 textContainer.appendChild(spanText);
 
@@ -664,8 +681,8 @@
                 const delBtn = document.createElement('button'); delBtn.type = 'button'; delBtn.className = 'todo-del-btn'; delBtn.innerHTML = '🗑️';
                 delBtn.addEventListener('click', async () => {
                     listData.splice(index, 1);
-                    await saveCloudData("todo_list_" + child, JSON.stringify(listData.map(t => ({ text: t.text, date: t.date, checked: t.checked }))));
                     renderCustomTodoList(child);
+                    await saveCloudData("todo_list_" + child, JSON.stringify(listData.map(t => ({ text: t.text, date: t.date, checked: t.checked }))));
                 });
                 li.appendChild(label); li.appendChild(delBtn); listEl.appendChild(li);
             });
@@ -679,14 +696,15 @@
             let listData = []; try { listData = JSON.parse(globalCloudData["todo_list_" + child] || "[]"); } catch(e){}
             listData.push({ text: inputEl.value.trim(), date: dateEl.value || null, checked: false });
             inputEl.value = ''; dateEl.value = ''; previewTodoDate(child, '');
-            await saveCloudData("todo_list_" + child, JSON.stringify(listData));
             renderCustomTodoList(child);
+            await saveCloudData("todo_list_" + child, JSON.stringify(listData));
         }
 
         function selectDay(dayNum) {
             selectedDayNum = dayNum;
-            for(let i=1; i<=5; i++) document.getElementById('btn-day-' + i).className = 'day-btn';
-            document.getElementById('btn-day-' + dayNum).className = 'day-btn active';
+            document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-day-' + dayNum).classList.add('active');
+
             const targetDateStr = getTargetDateStr(dayNum); updateWeekTitle();
             const parts = targetDateStr.split('-'); const days = ["日", "月", "火", "水", "木", "金", "土"];
             
@@ -792,7 +810,8 @@
                 if (bentoList.includes(cStr)) dayEl.classList.add('bento-active');
                 dayEl.addEventListener('click', async () => {
                     bentoList = bentoList.includes(cStr) ? bentoList.filter(d => d !== cStr) : [...bentoList, cStr];
-                    await saveCloudData("haruto_bento_days", JSON.stringify(bentoList)); renderBentoCalendar(currentCalYear, currentCalMonth); selectDay(selectedDayNum);
+                    renderBentoCalendar(currentCalYear, currentCalMonth); selectDay(selectedDayNum); // 楽観更新
+                    await saveCloudData("haruto_bento_days", JSON.stringify(bentoList)); 
                 });
                 container.appendChild(dayEl);
             }
@@ -806,7 +825,7 @@
         async function toggleEdit(target) {
             const displayEl = document.getElementById("display-" + target); const inputEl = document.getElementById("input-" + target); const btnEl = document.getElementById("edit-btn-" + target);
             if (btnEl.textContent === "修正") { inputEl.value = displayEl.textContent; displayEl.style.display = "none"; inputEl.style.display = "block"; btnEl.textContent = "保存"; btnEl.className = "edit-btn saving"; }
-            else { displayEl.textContent = inputEl.value; await saveCloudData("custom_" + getTargetDateStr(selectedDayNum) + "_" + target, inputEl.value); inputEl.style.display = "none"; displayEl.style.display = "block"; btnEl.textContent = "修正"; btnEl.className = "edit-btn"; }
+            else { displayEl.textContent = inputEl.value; inputEl.style.display = "none"; displayEl.style.display = "block"; btnEl.textContent = "修正"; btnEl.className = "edit-btn"; await saveCloudData("custom_" + getTargetDateStr(selectedDayNum) + "_" + target, inputEl.value); }
         }
 
         let memoTimeout; document.getElementById('customMemo').addEventListener('input', (e) => { clearTimeout(memoTimeout); memoTimeout = setTimeout(() => { saveCloudData("memo", e.target.value); }, 1000); });
@@ -815,9 +834,14 @@
             await fetchCloudData(); let currentDay = new Date(2026, 5, 21).getDay(); if (currentDay === 0 || currentDay === 6) currentDay = 1;
             renderKoutaCalendar(koutaCalYear, koutaCalMonth); renderBentoCalendar(currentCalYear, currentCalMonth); selectDay(currentDay);
             renderCustomTodoList('kouta'); renderCustomTodoList('haruto'); document.getElementById('customMemo').value = globalCloudData["memo"] || "";
+            
+            // 曜日ボタンクリック紐付け
+            for (let i = 1; i <= 5; i++) {
+                const btn = document.getElementById('btn-day-' + i);
+                if (btn) btn.addEventListener('click', () => selectDay(i));
+            }
         });
 
-        for (let i = 1; i <= 5; i++) document.getElementById('btn-day-' + i).addEventListener('click', () => selectDay(i));
         document.getElementById('edit-btn-kouta').addEventListener('click', () => toggleEdit('kouta')); document.getElementById('edit-btn-haruto').addEventListener('click', () => toggleEdit('haruto'));
     </script>
 </body>
