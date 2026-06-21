@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>【共働き応援】こども準備＆保育登録メモ</title>
     
-    <!-- 📱 スマホのホーム画面用アイコン画像の設定（icon.pngと連動） -->
     <link rel="apple-touch-icon" href="icon.png">
 
     <style>
@@ -139,19 +138,21 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
-        /* 🆕 埋もれていた日付エリアを内位の凹みシャドウでパキッと浮き立たせ */
+        /* 🛠️ スマホではみ出さないよう横幅を自動計算（box-sizing）に修正 */
         .selected-date-display {
             text-align: center;
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 0.95rem; /* 1行で収まりやすいよう僅かに調整 */
             color: #1e293b;
-            background-color: #ffffff; /* 白に引き上げ */
+            background-color: #ffffff;
             padding: 8px;
             border-radius: 6px;
             margin-bottom: 15px;
-            box-shadow: var(--inner-shadow); /* 内側の影で凹凸を演出 */
+            box-shadow: var(--inner-shadow);
             border-top: 2px solid #64748b;
             border-bottom: 2px solid #64748b;
+            width: 100%;            /* 横幅を親要素に合わせる */
+            box-sizing: border-box; /* パディングを含めて100%に計算 */
         }
 
         .schedule-row {
@@ -270,18 +271,17 @@
         }
         .res-btn.phone-btn { background-color: var(--btn-phone-bg); color: var(--btn-phone-text); }
 
-        /* 📋 案Bベース：子供別自由TODOエリアの立体シャドウ ＆ パキッとしたテーマ太縦線の融合 */
+        /* 📋 子供別自由TODOエリアの立体シャドウ */
         .todo-panel-child {
             border-radius: 8px;
-            padding: 12px 12px 12px 16px; /* 左側に太線が来るので余白を調整 */
+            padding: 12px 12px 12px 16px;
             margin-bottom: 12px;
-            background-color: #f8fafc; /* 背景をごく薄いグレーに1段落とす */
+            background-color: #f8fafc;
             border: 1px solid #e2e8f0;
-            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03); /* 優しい立体シャドウ */
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
             position: relative;
             overflow: hidden;
         }
-        /* 左側にパキッと色分け縦太線を配置 */
         .todo-panel-child::before {
             content: "";
             position: absolute;
@@ -491,7 +491,7 @@
             font-weight: bold;
         }
 
-        /* 🍱 はるとカレンダー専用（立体化） */
+        /* 🍱 はるとお弁当カレンダー専用（立体化） */
         .cal-day.bento-active { background-color: var(--haruto-bg); border-color: var(--haruto-border); color: var(--haruto-text); font-weight: bold; }
         .cal-day.bento-active::after { content: "🍱"; position: absolute; top: -1px; right: 1px; font-size: 0.6rem; }
 
@@ -600,7 +600,6 @@
         <h1>Family Dashboard</h1>
     </header>
 
-    <!-- 🟢 1番目：予定（スケジュール表示エリア） -->
     <div class="schedule-box">
         
         <div class="week-nav">
@@ -617,7 +616,6 @@
             <button type="button" class="day-btn" id="btn-day-5">金</button>
         </div>
         
-        <!-- 🆕 凹みシャドウと上下線でパキッと存在感を出した日付エリア -->
         <div class="selected-date-display" id="selected-date-label"></div>
         
         <div class="schedule-row">
@@ -634,7 +632,6 @@
             <button type="button" id="edit-btn-haruto" class="edit-btn">修正</button>
         </div>
 
-        <!-- 🤖 予約確認パネル -->
         <div class="reservation-panel">
             <div class="res-row">
                 <div class="res-label-box">🎒 わくわく</div>
@@ -664,11 +661,9 @@
         </div>
     </div>
 
-    <!-- 🟢 2番目：カスタムTODOパネル（案B：1段落とした立体背景 ＋ 横のカラー太線） -->
     <div class="card">
         <h2>📋 子供別自由TODOリスト</h2>
         
-        <!-- 🟦 こうた（青系アクセント） -->
         <div class="todo-panel-child kouta-theme">
             <div class="todo-panel-header">
                 <span>👦 〈こうた〉タスク</span>
@@ -688,7 +683,6 @@
             <ul class="todo-custom-list" id="kouta-custom-todo-list"></ul>
         </div>
         
-        <!-- 🟥 はると（オレンジ系アクセント） -->
         <div class="todo-panel-child haruto-theme">
             <div class="todo-panel-header">
                 <span>👶 〈はると〉タスク</span>
@@ -709,14 +703,12 @@
         </div>
     </div>
 
-    <!-- 🟢 3番目：自由記述メモ欄 -->
     <div class="card" style="padding: 10px;">
         <h2 style="font-size: 1rem; margin-bottom: 6px;">✍ ... メモ欄</h2>
         <textarea id="customMemo" class="memo-textarea" placeholder="自由なメモ書きに（ご夫婦でリアルタイム共有されます）"></textarea>
         <div id="saveStatus" class="save-status">同期完了</div>
     </div>
 
-    <!-- 🟢 4番目：こうた宮崎小カレンダー -->
     <details class="kouta-details">
         <summary>🏫 こうた 宮崎小カレンダー</summary>
         <div class="details-content">
@@ -728,7 +720,6 @@
             </div>
             <div class="cal-container" id="kouta-calendar"></div>
             
-            <!-- クイック操作パネル -->
             <div class="quick-panel" id="kouta-quick-panel">
                 <div class="quick-panel-title" id="kouta-panel-date-title">設定</div>
                 <div class="panel-block">
@@ -760,7 +751,6 @@
         </div>
     </details>
 
-    <!-- 🟢 5番目：はるとお弁当カレンダー -->
     <details class="bento-details">
         <summary>🍱 はるとお弁当カレンダー</summary>
         <div class="details-content">
@@ -777,7 +767,6 @@
         </div>
     </details>
 
-    <!-- 👦 康太の持ち物リスト -->
     <div class="card kouta-card">
         <h2 class="kouta-header">👦 康太（こうた）持ち物リスト</h2>
         <div id="kouta-terakoya-alert" class="terakoya-alert">📖 本日は【寺子屋（宮崎小）Bチーム】の開講日です！宿題・ドリル・筆記用具を忘れずに！</div>
@@ -849,7 +838,6 @@
         </details>
     </div>
 
-    <!-- 👶 はるとの持ち物リスト -->
     <div class="card haruto-card">
         <h2 class="haruto-header">👶 はると 持ち物リスト</h2>
         <div id="haruto-bento-alert" class="bento-alert">🍱 本日は【お弁当の日】です！お弁当と食具を忘れずに。</div>
@@ -904,7 +892,6 @@
         </details>
     </div>
 
-    <!-- 🐛 コピペ文面 -->
     <div class="card">
         <h2 style="font-size: 1rem; color: #475569;">🐛 あおむし広場 予約用定型文（コピペ用）</h2>
         <textarea class="responsive-textarea" style="height:110px; font-family:monospace;" readonly>月：スイミング
@@ -1205,8 +1192,6 @@
             const dateLabelEl = document.getElementById('selected-date-label');
             if (dateLabelEl) {
                 dateLabelEl.textContent = `📅 ${parts[0]}年${parseInt(parts[1])}月${parseInt(parts[2])}日 (${days[dayNum]})`;
-                
-                // 🆕 日付エリアの枠線を、現在選択中の曜日のテーマ色（こうたの青系）に連動させてパキッと引き締め
                 dateLabelEl.style.borderColor = "var(--kouta-border)";
             }
 
