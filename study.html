@@ -15,6 +15,8 @@
         header { position: relative; text-align: center; margin: 12px 0 24px 0; padding: 0 36px; }
         header h1 { font-size: 1.2rem; font-weight: 900; color: #0f172a; margin: 0; letter-spacing: -0.5px; }
         .secret-gear-btn { position: absolute; right: 4px; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: #94a3b8; padding: 6px; }
+        
+        /* 🔥 BGMボタン */
         .bgm-toggle-btn { position: absolute; left: 4px; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: #0f172a; padding: 6px; }
         
         .user-switcher { display: table; width: 100%; border-collapse: separate; border-spacing: 16px 0; margin-bottom: 24px; }
@@ -99,10 +101,12 @@
         .progress-text-label { position: absolute; width: 100%; text-align: center; font-size: 0.75rem; font-weight: 900; color: #0f172a; }
 
         .zukan-display-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; max-height: 240px; overflow-y: auto; }
-        .grid-pokemon-box { background: white; border: 2px solid #0f172a; border-radius: 8px; padding: 6px 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 68px; position: relative; }
+        .grid-pokemon-box { background: white; border: 2px solid #0f172a; border-radius: 8px; padding: 6px 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 68px; position: relative; cursor: pointer; }
+        .grid-pokemon-box:active { transform: scale(0.95); }
         .grid-pokemon-box img { width: 34px; height: 34px; object-fit: contain; }
         .grid-pokemon-box span { font-size: 0.5rem; font-weight: 900; text-align: center; margin-top: 3px; display: block; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .grid-pokemon-box.unowned img { filter: brightness(0); opacity: 0.12; }
+        .grid-pokemon-box.unowned:active { transform: none; cursor: default; }
         .zukan-number-badge { position: absolute; top: 1px; left: 2px; font-size: 0.45rem; font-weight: 900; color: #64748b; }
 
         .bag-item-row { display: flex; justify-content: space-between; align-items: center; background: white; border: 2.5px solid #0f172a; border-radius: 12px; padding: 8px 12px; margin-bottom: 8px; color: #0f172a; }
@@ -166,6 +170,9 @@
 
     <div id="loadingCover" class="loading-cover">🔴 ぼうけんのしょを 同期中...</div>
     <div id="syncBadge" class="sync-badge">同期完了</div>
+
+    <audio id="bgmMain" src="https://opengameart.org/sites/default/files/TownTheme.mp3" loop></audio>
+    <audio id="bgmBattle" src="https://opengameart.org/sites/default/files/Battle%20Theme%201.mp3" loop></audio>
 
     <header>
         <button id="bgmToggleBtn" class="bgm-toggle-btn" onclick="toggleBGM()">🔇</button>
@@ -318,6 +325,17 @@
         </div>
     </div>
 
+    <div id="zukanDetailModal" class="modal-cover" style="z-index: 10000;">
+        <div class="modal-content" style="background: #f8fafc; border-color: #0f172a; color: #0f172a;">
+            <img id="zukanDetailImg" src="" style="width: 120px; height: 120px; display: block; margin: 0 auto; filter: drop-shadow(0 4px 0 rgba(0,0,0,0.1));">
+            <h3 id="zukanDetailName" style="margin: 10px 0; font-size: 1.4rem; color: #ea580c;">...</h3>
+            <div style="background: #e2e8f0; border: 3px solid #cbd5e1; border-radius: 12px; padding: 12px; text-align: left; font-size: 0.95rem; font-weight: 900; line-height: 1.5; min-height: 80px;" id="zukanDetailText">
+                データを よみこみちゅう...
+            </div>
+            <button type="button" class="battle-btn" style="margin-top:16px;" onclick="closeZukanDetailModal()">とじる</button>
+        </div>
+    </div>
+
     <div id="calendarModal" class="modal-cover">
         <div class="modal-content" style="background: linear-gradient(135deg, #4c1d95 0%, #1e1b4b 100%); width: 100%; max-width:340px;">
             <h3 style="margin:0; color:#facc15;">📅 ぼうけんのきろく</h3>
@@ -380,22 +398,10 @@
             <div id="ballSelectSection" style="display:none;">
                 <p id="lblWhichBallThrow" style="font-size:0.7rem; color:#cbd5e1; margin: 4px 0;">どのボールを なげる？</p>
                 <div class="ball-select-row">
-                    <div class="ball-choice-item" id="btnN" onclick="throwBall('normal')">
-                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png">
-                        <span>モンスター(<span id="countP">0</span>)</span>
-                    </div>
-                    <div class="ball-choice-item" id="btnS" onclick="throwBall('super')">
-                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png">
-                        <span>スーパー(<span id="countS">0</span>)</span>
-                    </div>
-                    <div class="ball-choice-item" id="btnH" onclick="throwBall('hyper')">
-                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png">
-                        <span>ハイパー(<span id="countH">0</span>)</span>
-                    </div>
-                    <div class="ball-choice-item" id="btnM" onclick="throwBall('master')">
-                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png">
-                        <span>マスター(<span id="countM">0</span>)</span>
-                    </div>
+                    <div class="ball-choice-item" id="btnN" onclick="throwBall('normal')"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png"><span>モンスター(<span id="countP">0</span>)</span></div>
+                    <div class="ball-choice-item" id="btnS" onclick="throwBall('super')"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png"><span>スーパー(<span id="countS">0</span>)</span></div>
+                    <div class="ball-choice-item" id="btnH" onclick="throwBall('hyper')"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png"><span>ハイパー(<span id="countH">0</span>)</span></div>
+                    <div class="ball-choice-item" id="btnM" onclick="throwBall('master')"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png"><span>マスター(<span id="countM">0</span>)</span></div>
                 </div>
             </div>
 
@@ -442,58 +448,39 @@
         let currentUser = 'kouta';
         let battleState = {};
 
-        // 🔥 🎵 Web Audio API：魔法の8ビットBGMジェネレーター
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        let bgmInterval = null;
-        let bgmStep = 0;
+        // 🔥 新BGMシステム（ストリーミング再生）
         let isBgmOn = false;
         let currentBgmMode = 'main';
+        const mainBgm = document.getElementById('bgmMain');
+        const battleBgm = document.getElementById('bgmBattle');
+        mainBgm.volume = 0.25;
+        battleBgm.volume = 0.3;
 
         function toggleBGM() {
             isBgmOn = !isBgmOn;
             document.getElementById('bgmToggleBtn').textContent = isBgmOn ? "🔊" : "🔇";
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-            if(isBgmOn) { startBGM(); } else { stopBGM(); }
+            if(isBgmOn) {
+                if(currentBgmMode === 'main') mainBgm.play().catch(e=>{});
+                else battleBgm.play().catch(e=>{});
+            } else {
+                mainBgm.pause(); battleBgm.pause();
+            }
         }
 
         function switchBgmMode(mode) {
             currentBgmMode = mode;
-            if(isBgmOn) { stopBGM(); startBGM(); }
+            if(!isBgmOn) return;
+            if(mode === 'main') {
+                battleBgm.pause(); battleBgm.currentTime = 0;
+                mainBgm.play().catch(e=>{});
+            } else {
+                mainBgm.pause(); mainBgm.currentTime = 0;
+                battleBgm.play().catch(e=>{});
+            }
         }
 
-        function playTone(freq, dur, type, vol) {
-            if (!isBgmOn || audioCtx.state !== 'running') return;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = type;
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.start(audioCtx.currentTime); osc.stop(audioCtx.currentTime + dur);
-        }
-
-        function startBGM() {
-            if(bgmInterval) return;
-            bgmStep = 0;
-            bgmInterval = setInterval(() => {
-                if(currentBgmMode === 'main') {
-                    const melody = [523.25, 0, 659.25, 0, 783.99, 0, 1046.50, 783.99]; // 冒険の始まり風
-                    const bass = [130.81, 130.81, 174.61, 174.61, 196.00, 196.00, 130.81, 130.81];
-                    if(melody[bgmStep % 8]) playTone(melody[bgmStep % 8], 0.15, 'square', 0.015);
-                    playTone(bass[bgmStep % 8], 0.2, 'triangle', 0.02);
-                } else if(currentBgmMode === 'battle') {
-                    const melody = [880.00, 987.77, 1046.50, 1318.51, 880.00, 1046.50, 1567.98, 1318.51]; // 戦闘用
-                    const bass = [110.00, 110.00, 110.00, 123.47, 110.00, 110.00, 98.00, 123.47];
-                    playTone(melody[bgmStep % 8], 0.1, 'square', 0.02);
-                    playTone(bass[bgmStep % 8], 0.15, 'sawtooth', 0.03);
-                }
-                bgmStep++;
-            }, 180);
-        }
-
-        function stopBGM() { clearInterval(bgmInterval); bgmInterval = null; }
-
+        // ピコピコ効果音（Web Audio API）はそのまま残す
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playRetroSound(type) {
             if(audioCtx.state === 'suspended') audioCtx.resume();
             const t = audioCtx.currentTime;
@@ -501,28 +488,19 @@
                 const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
                 osc.type = 'square'; osc.frequency.setValueAtTime(880, t);
                 gain.gain.setValueAtTime(0.05, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(t); osc.stop(t + 0.1);
+                osc.connect(gain); gain.connect(audioCtx.destination); osc.start(t); osc.stop(t + 0.1);
             } else if (type === 'clear') {
                 [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
                     const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
                     o.type = 'square'; o.frequency.setValueAtTime(f, t + i*0.1);
                     g.gain.setValueAtTime(0.05, t + i*0.1); g.gain.exponentialRampToValueAtTime(0.001, t + i*0.1 + 0.15);
-                    o.connect(g); g.connect(audioCtx.destination);
-                    o.start(t + i*0.1); o.stop(t + i*0.1 + 0.15);
+                    o.connect(g); g.connect(audioCtx.destination); o.start(t + i*0.1); o.stop(t + i*0.1 + 0.15);
                 });
             } else if (type === 'coin') {
                 const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
                 osc.type = 'square'; osc.frequency.setValueAtTime(987.77, t);
                 gain.gain.setValueAtTime(0.05, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(t); osc.stop(t + 0.1);
-                
-                const osc2 = audioCtx.createOscillator(); const gain2 = audioCtx.createGain();
-                osc2.type = 'square'; osc2.frequency.setValueAtTime(1318.51, t + 0.1);
-                gain2.gain.setValueAtTime(0.05, t + 0.1); gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
-                osc2.connect(gain2); gain2.connect(audioCtx.destination);
-                osc2.start(t + 0.1); osc2.stop(t + 0.3);
+                osc.connect(gain); gain.connect(audioCtx.destination); osc.start(t); osc.stop(t + 0.1);
             }
         }
 
@@ -773,7 +751,6 @@
             document.getElementById('parentChallengePoolInput').value = currentPool.join(',');
         }
 
-        // 🔥 ゾーンごとのクリア判定＆ぼうけん券プレゼントロジック
         function checkZoneClear() {
             const prog = cloudData["study_progress_" + todayStr][currentUser];
             const doneList = prog.done || [];
@@ -910,13 +887,13 @@
             zukanTab = tab;
             document.getElementById('tabNormalBtn').className = tab === 'normal' ? 'zukan-tab-btn active' : 'zukan-tab-btn';
             document.getElementById('tabMegaBtn').className = tab === 'mega' ? 'zukan-tab-btn active' : 'zukan-tab-btn';
+            document.getElementById('regionSelectWrapper').style.display = tab === 'normal' ? 'block' : 'none';
             renderZukanGrid();
         }
 
         function renderZukanGrid() {
             const grid = document.getElementById('zukanGridDisplay'); if (!grid) return; grid.innerHTML = '';
             const mode = document.getElementById('regionSelector').value;
-            // 🔥 「もってる」トグルの状態を取得
             const showCaughtOnly = document.getElementById('caughtOnlyToggle') ? document.getElementById('caughtOnlyToggle').checked : false;
             
             const ownedNormal = cloudData["study_zukan_normal"][currentUser] || [];
@@ -926,7 +903,6 @@
             if (zukanTab === 'mega') {
                 megaList.forEach((p, i) => {
                     const hasIt = ownedMega.includes(p.id); if (hasIt) ownedCount++; totalCount++;
-                    // 未所持で、トグルONならスキップ
                     if (showCaughtOnly && !hasIt) return;
                     createPkmBox(grid, p.id, i+1, hasIt);
                 });
@@ -937,7 +913,7 @@
                     for (let i = range.start; i <= range.end; i++) {
                         const idStr = String(i).padStart(4, '0');
                         const hasIt = ownedNormal.includes(idStr); if (hasIt) ownedCount++; totalCount++;
-                        if (showCaughtOnly && !hasIt) continue;
+                        if (showCaughtOnly && !hasIt) return;
                         createPkmBox(grid, idStr, i, hasIt);
                     }
                 });
@@ -947,12 +923,52 @@
             document.getElementById('zukanProgressText').textContent = `${ownedCount} / ${totalCount} 匹 (${percent}%)`;
         }
 
+        // 🔥 図鑑の「解説」ポップアップ機能！
+        async function showZukanDetail(idStr) {
+            playRetroSound('click');
+            const baseId = parseInt(idStr.split('_')[0]);
+            
+            document.getElementById('zukanDetailImg').src = getImgUrl(idStr);
+            document.getElementById('zukanDetailName').textContent = "...";
+            document.getElementById('zukanDetailText').textContent = "データ を よみこみちゅう...";
+            document.getElementById('zukanDetailModal').style.display = 'flex';
+            
+            try {
+                // まず名前を取得して表示
+                const name = await getPokemonNameAsync(idStr);
+                document.getElementById('zukanDetailName').textContent = name;
+                
+                // 次に解説文（ひらがな）を公式APIから取得
+                if (!idStr.includes('_')) {
+                    const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${baseId}`);
+                    const data = await res.json();
+                    const flavor = data.flavor_text_entries.find(f => f.language.name === "ja-Hrkt"); // 子ども向けのひらがな版
+                    if (flavor) {
+                        const cleanText = flavor.flavor_text.replace(/\n|\f|\r/g, ' '); // 途中の変な改行をキレイにする
+                        document.getElementById('zukanDetailText').textContent = cleanText;
+                    } else {
+                        document.getElementById('zukanDetailText').textContent = "せつめいぶん が ありません。";
+                    }
+                } else {
+                    document.getElementById('zukanDetailText').textContent = "メガシンカ した すごい ポケモン だ！";
+                }
+
+                // 鳴き声も再生！
+                playPokemonCry(idStr);
+
+            } catch (e) {
+                document.getElementById('zukanDetailText').textContent = "つうしん エラー です。";
+            }
+        }
+        function closeZukanDetailModal() { playRetroSound('click'); document.getElementById('zukanDetailModal').style.display = 'none'; }
+
         function createPkmBox(grid, id, displayNum, hasIt) {
             const box = document.createElement('div'); box.className = hasIt ? 'grid-pokemon-box' : 'grid-pokemon-box unowned';
             const nameId = `zukan-name-${id}-${Date.now()}`;
             box.innerHTML = `<div class="zukan-number-badge">#${String(displayNum).padStart(3, '0')}</div><img src="${getImgUrl(id)}" alt="?"><span id="${nameId}">...</span>`;
             
-            box.onclick = () => { if (hasIt) { playRetroSound('click'); playPokemonCry(id); } };
+            // タップしたら解説ポップアップを開く！
+            box.onclick = () => { if (hasIt) showZukanDetail(id); };
             
             grid.appendChild(box);
 
@@ -1175,8 +1191,7 @@
 
         function closeBattleModal() { 
             playRetroSound('click'); 
-            // 🔥 メインBGMに戻す
-            switchBgmMode('main');
+            switchBgmMode('main'); // 🔥 冒険メインBGMに戻す
             document.getElementById('battleModal').style.display = 'none'; 
             renderUI(); 
         }
