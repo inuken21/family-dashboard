@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>【ポケモン】こうた＆はるとの冒険ボード</title>
+    <style>
+        :root {
+            --bg-color: #f1f5f9;
+            --text-color: #1e293b;
+            --border-radius: 20px;
+            
+            /* 👦 こうた：みず・でんきテーマ */
+            --kouta-main: #2563eb;
+            --kouta-accent: #facc15;
+            --kouta-bg: #eff6ff;
+            
+            /* 👶 はると：ほのお・くさテーマ */
+            --haruto-main: #dc2626;
+            --haruto-accent: #22c55e;
+            --haruto-bg: #fef2f2;
+        }
+        
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 16px;
+            padding-bottom: 80px;
+            user-select: none;
+        }
+
+        header { text-align: center; margin-bottom: 15px; }
+        header h1 { font-size: 1.3rem; font-weight: 900; color: #0f172a; margin: 0; letter-spacing: 0.05em; }
+
+        .user-switcher {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            width: 100%;
+            height: 68px;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+        }
+        .user-tab {
+            flex: 1;
+            height: 100%;
+            border: 4px solid #334155;
+            font-size: 1.15rem;
+            font-weight: 900;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: #cbd5e1;
+            color: #475569;
+            box-shadow: 0 4px 0 #334155;
+            border-radius: var(--border-radius);
+        }
+        .user-tab.kouta.active { background-color: var(--kouta-main); color: white; border-color: #0f172a; box-shadow: 0 4px 0 #0f172a; }
+        .user-tab.haruto.active { background-color: var(--haruto-main); color: white; border-color: #0f172a; box-shadow: 0 4px 0 #0f172a; }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 4px solid #334155;
+            box-shadow: 0 6px 0 #334155;
+        }
+
+        .partner-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #ffffff;
+            padding: 12px 20px;
+        }
+        .partner-info { display: flex; align-items: center; gap: 16px; }
+        .partner-img-wrapper {
+            width: 80px; height: 80px; background: #f8fafc; border: 3px solid #cbd5e1; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+        }
+        .partner-img { width: 90%; height: 90%; object-fit: contain; }
+        .partner-name-box { font-size: 1.2rem; font-weight: 900; }
+        .change-partner-btn {
+            background: #e2e8f0; border: 2px solid #475569; padding: 6px 12px; border-radius: 12px;
+            font-size: 0.8rem; font-weight: bold; cursor: pointer; height: 36px;
+        }
+
+        .gacha-card {
+            background: linear-gradient(180deg, #ef4444 45%, #334155 45%, #334155 55%, #ffffff 55%);
+            color: white;
+        }
+        .gacha-container-inner {
+            background: rgba(0,0,0,0.75); padding: 12px; border-radius: 12px; border: 2px solid white; text-align: center;
+        }
+        .gacha-status-row { display: flex; justify-content: space-around; align-items: center; margin-bottom: 10px; }
+        .status-display-item { font-size: 1.05rem; font-weight: 900; }
+        .status-display-item span { font-size: 1.6rem; color: #facc15; text-shadow: 0 2px 0 #000; }
+        .gacha-btn {
+            width: 100%; height: 46px; background: #facc15; color: #0f172a; border: 3px solid #0f172a;
+            border-radius: 23px; font-size: 1.1rem; font-weight: 900; box-shadow: 0 4px 0 #0f172a; cursor: pointer;
+        }
+        .gacha-btn:disabled { background: #94a3b8; color: #cbd5e1; border-color: #64748b; box-shadow: none; cursor: not-allowed; }
+
+        h2 { font-size: 1.05rem; margin: 0 0 12px 0; font-weight: 900; border-bottom: 3px dashed #cbd5e1; padding-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+        .quest-item {
+            display: flex; align-items: center; padding: 0 14px; background: #f1f5f9; border: 3px solid #334155;
+            border-radius: 12px; margin-bottom: 8px; cursor: pointer; position: relative; overflow: hidden; height: 52px;
+        }
+        .kouta-theme .quest-item { background: var(--kouta-bg); border-color: var(--kouta-main); }
+        .haruto-theme .quest-item { background: var(--haruto-bg); border-color: var(--haruto-main); }
+        .quest-cb { position: absolute; opacity: 0; width: 100%; height: 100%; top: 0; left: 0; margin: 0; cursor: pointer; z-index: 2; }
+        .quest-content { display: flex; align-items: center; gap: 10px; width: 100%; font-weight: 900; font-size: 0.95rem; pointer-events: none; z-index: 1; }
+        .quest-fake-cb { width: 22px; height: 22px; border: 2px solid #475569; border-radius: 50%; background: white; flex-shrink: 0; position: relative; }
+        .quest-fake-cb::before { content: ""; position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: #475569; }
+        .quest-fake-cb::after { content: ""; position: absolute; top: 50%; left: 50%; width: 6px; height: 6px; background: white; border: 1px solid #475569; border-radius: 50%; transform: translate(-50%, -50%); }
+
+        .quest-cb:checked + .quest-content .quest-fake-cb { background: #ef4444; border-color: #0f172a; }
+        .quest-cb:checked + .quest-content .quest-text { text-decoration: line-through; opacity: 0.4; }
+        .quest-cb:checked + .quest-content::after { content: " ⚡こうげき！"; font-size: 0.8rem; color: #16a34a; position: absolute; right: 10px; animation: pop 0.2s ease forwards; }
+
+        .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .shop-item-btn {
+            background: #ffffff; border: 3px solid #334155; border-radius: 12px; padding: 10px; cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+            box-shadow: 0 4px 0 #334155; height: 85px; text-align: center;
+        }
+        .shop-item-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #334155; }
+        .shop-title { font-weight: 900; font-size: 0.85rem; color: #0f172a; }
+        .shop-price { font-weight: 900; font-size: 0.95rem; color: #dc2626; }
+
+        .parent-panel { background: #f8fafc; border: 2px solid #64748b; margin-top: 24px; padding: 12px; border-radius: 12px; }
+        .parent-row { display: flex; gap: 8px; align-items: center; justify-content: center; margin-top: 6px; }
+        .parent-input { width: 80px; padding: 6px; font-weight: bold; text-align: center; border: 2px solid #cbd5e1; border-radius: 6px; }
+        .parent-btn { background: #475569; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+
+        .modal-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px; }
+        .modal-content { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 4px solid white; border-radius: 24px; padding: 24px; text-align: center; width: 100%; max-width: 320px; color: white; }
+        
+        .ball-shake { font-size: 5.5rem; margin: 24px 0; display: inline-block; animation: ballWobble 0.6s ease infinite; transform-origin: bottom center; }
+        @keyframes ballWobble { 0% { transform: rotate(0deg); } 25% { transform: rotate(-15deg); } 50% { transform: rotate(15deg); } 75% { transform: rotate(-5deg); } 100% { transform: rotate(0deg); } }
+        .ball-open { animation: ballFlash 0.3s ease-out forwards; }
+        @keyframes ballFlash { 0% { transform: scale(1); } 50% { transform: scale(1.3); filter: brightness(3); } 100% { transform: scale(0); opacity: 0; } }
+        .prize-display { font-size: 1.3rem; font-weight: 900; color: #facc15; margin: 20px 0; line-height: 1.5; text-shadow: 0 2px 4px rgba(0,0,0,0.5); display: none; }
+        .modal-close-btn { background: #22c55e; color: white; border: 3px solid #0f172a; padding: 12px; border-radius: 24px; font-weight: bold; font-size: 1.1rem; cursor: pointer; display: none; width: 100%; box-shadow: 0 4px 0 #0f172a; }
+
+        .zukan-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-height: 300px; overflow-y: auto; padding: 5px; }
+        .zukan-item { background: white; border: 2px solid #334155; border-radius: 12px; padding: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
+        .zukan-item img { width: 50px; height: 50px; object-fit: contain; }
+        .zukan-item span { color: #0f172a; font-size: 0.75rem; font-weight: bold; margin-top: 4px; }
+
+        .sync-badge { position: fixed; bottom: 12px; right: 12px; background: rgba(0,0,0,0.8); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; z-index: 1000; }
+        .loading-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; z-index: 10000; font-weight: bold; font-size: 1.2rem; }
+        @keyframes pop { 0% { transform: scale(0.6); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div id="loadingCover" class="loading-cover">🔴 ぼうけんのしょを 同期中...</div>
+    <div id="syncBadge" class="sync-badge">同期完了</div>
+
+    <header>
+        <h1>⚔️ クエスト＆ぽけえん交換所 🛡️</h1>
+    </header>
+
+    <div class="user-switcher">
+        <button type="button" class="user-tab kouta active" onclick="changeUser('kouta')">💧 こうた</button>
+        <button type="button" class="user-tab haruto" onclick="changeUser('haruto')">🔥 はると</button>
+    </div>
+
+    <div class="card partner-card">
+        <div class="partner-info">
+            <div class="partner-img-wrapper">
+                <img id="partnerImg" class="partner-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="pokemon">
+            </div>
+            <div class="partner-name-box">🏆 あいぼう: <span id="partnerName" style="font-weight:900; color:var(--kouta-main);">---</span></div>
+        </div>
+        <button type="button" class="change-partner-btn" onclick="openZukan()">えらびなおす</button>
+    </div>
+
+    <div class="card gacha-card">
+        <div class="gacha-container-inner">
+            <div class="gacha-status-row">
+                <div class="status-display-item">👛 じぶんの: <span id="pokeenBalance">0</span> ぽけえん</div>
+                <div class="status-display-item">🔴 ボール: <span id="gachaCount">0</span> こ</div>
+            </div>
+            <button type="button" id="gachaBtn" class="gacha-btn" onclick="pullGacha()">モンスターボールを投げる！ 🔴</button>
+        </div>
+    </div>
+
+    <div class="card" id="questCard">
+        <h2>⚔️ 本日のミッションバトル！</h2>
+        <ul class="quest-list" id="questList"></ul>
+    </div>
+
+    <div class="card">
+        <h2>🛍️ ぽけえん交換所（ごほうびショップ）</h2>
+        <div class="shop-grid">
+            <button class="shop-item-btn" onclick="buyItem('🃏 ポケカ 1パック', 2000)">
+                <span class="shop-title">🃏 ポケカ 1パック</span>
+                <span class="shop-price">2000 ぽけえん</span>
+            </button>
+            <button class="shop-item-btn" onclick="buyItem('🎡 ガチャガチャ 1回', 3000)">
+                <span class="shop-title">🎡 ガチャガチャ 1回</span>
+                <span class="shop-price">3000 ぽけえん</span>
+            </button>
+            <button class="shop-item-btn" onclick="buyItem('🎮 ゲーム15分 延長', 500)">
+                <span class="shop-title">🎮 ゲーム15分 延長</span>
+                <span class="shop-price">500 ぽけえん</span>
+            </button>
+            <button class="shop-item-btn" onclick="buyItem('⚡ とっととゲーム券', 700)">
+                <span class="shop-title">⚡ とっととゲーム券</span>
+                <span class="shop-price">700 ぽけえん</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="parent-panel">
+        <span style="font-size:0.8rem; font-weight:bold; color:#475569;">⚙️ パパ・ママ専用 ぽけえん調整</span>
+        <div class="parent-row">
+            <input type="number" id="parentAmount" class="parent-input" placeholder="100">
+            <button class="parent-btn" onclick="adjustPokeen(true)">➕ ふやす</button>
+            <button class="parent-btn" style="background:#dc2626;" onclick="adjustPokeen(false)">➖ へらす</button>
+        </div>
+    </div>
+
+    <div id="gachaModal" class="modal-cover">
+        <div class="modal-content">
+            <h3 id="modalTitle" style="margin:0; font-size:1.1rem;">おや？ ボールが ゆれている...</h3>
+            <div id="ballIcon" class="ball-shake">🔴</div>
+            <div id="prize" class="prize-display"></div>
+            <button type="button" id="modalCloseBtn" class="modal-close-btn" onclick="closeGachaModal()">よしっ！ 🤝</button>
+        </div>
+    </div>
+
+    <div id="zukanModal" class="modal-cover">
+        <div class="modal-content" style="max-width:360px;">
+            <h3 style="margin:0 0 12px 0;">🦖 あいぼうポケモンを 選ぼう！</h3>
+            <div class="zukan-grid" id="zukanGrid"></div>
+            <button type="button" class="modal-close-btn" style="display:block; margin-top:12px; background:#475569;" onclick="closeZukan()">とじる</button>
+        </div>
+    </div>
+
+    <script>
+        // 【要対応】ご自身の既存のファミリーダッシュボードのGASのWebアプリURLに書き換えてください。
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbw0YdRq2aEPNBXCtByhIst6wVS0WDDv1olhdg49m66yUFP6hoyTf8m_lo4V6JL98lkU/exec";
+        
+        const now = new Date();
+        const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+        const pokemonList = [
+            { id: "0025", name: "ピカチュウ" }, { id: "0001", name: "フシギダネ" }, { id: "0004", name: "ヒトカゲ" },
+            { id: "0007", name: "ゼニガメ" }, { id: "0152", name: "チコリータ" }, { id: "0155", name: "ヒノアラシ" },
+            { id: "0158", name: "ワニノコ" }, { id: "0252", name: "キモリ" }, { id: "0255", name: "アチャモ" },
+            { id: "0258", name: "ミズゴロウ" }, { id: "0387", name: "ナエトル" }, { id: "0390", name: "ヒコザル" },
+            { id: "0393", name: "ポッチャマ" }, { id: "0495", name: "ツタージャ" }, { id: "0498", name: "ポカブ" },
+            { id: "0501", name: "ミジュマル" }, { id: "0650", name: "ハリマロン" }, { id: "0653", name: "フォッコ" },
+            { id: "0656", name: "ケロマツ" }, { id: "0722", name: "モクロー" }, { id: "0725", name: "ニャビー" },
+            { id: "0728", name: "アシマリ" }, { id: "0810", name: "サルノリ" }, { id: "0813", name: "ヒバニー" },
+            { id: "0816", name: "メッソン" }, { id: "0906", name: "ニャオハ" }, { id: "0909", name: "ホゲータ" },
+            { id: "0912", name: "クワッス" }
+        ];
+
+        let cloudData = {
+            "study_user_pokemon": { "kouta": "0025", "haruto": "0004" },
+            "study_balance": { "kouta": { "pokeen": 500, "gachaCount": 1 }, "haruto": { "pokeen": 1500, "gachaCount": 0 } }
+        };
+        cloudData["study_progress_" + todayStr] = { "kouta": { "done": [] }, "haruto": { "done": [] } };
+
+        let currentUser = 'kouta';
+
+        const masterQuests = {
+            kouta: ["学校の音読 📖", "自宅用の計算ドリル ➕", "自宅用の漢字ドリル ✍️"],
+            haruto: ["英語のレッスン 🔤", "小学校のじゅんびドリル ✏️", "宿題ペーパー 📋"]
+        };
+        const masterHelps = ["おふろ洗い（すいとる） 🛁", "お部屋の片付け（せいとん） ✨", "お皿の片付け（はこぶ） 🍽️"];
+
+        function getImgUrl(id) {
+            return `https://zukan.pokemon.co.jp/zukan-api/img/pkm/labels/${id}_00_00.png`;
+        }
+
+        function changeUser(user) {
+            currentUser = user;
+            document.querySelectorAll('.user-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.user-tab.${user}`).classList.add('active');
+            const card = document.getElementById('questCard');
+            card.className = user === 'kouta' ? 'card kouta-theme' : 'card haruto-theme';
+            const pColor = user === 'kouta' ? 'var(--kouta-main)' : 'var(--haruto-main)';
+            document.getElementById('partnerName').style.color = pColor;
+            renderUI();
+        }
+
+        function renderUI() {
+            const currentPokeId = cloudData["study_user_pokemon"]?.[currentUser] || "0025";
+            const pInfo = pokemonList.find(p => p.id === currentPokeId) || pokemonList[0];
+            document.getElementById('partnerName').textContent = pInfo.name;
+            document.getElementById('partnerImg').src = getImgUrl(pInfo.id);
+
+            const balance = cloudData["study_balance"]?.[currentUser] || { "pokeen": 0, "gachaCount": 0 };
+            document.getElementById('pokeenBalance').textContent = balance.pokeen;
+            document.getElementById('gachaCount').textContent = balance.gachaCount;
+            document.getElementById('gachaBtn').disabled = (balance.gachaCount <= 0);
+
+            const listEl = document.getElementById('questList');
+            listEl.innerHTML = '';
+
+            const pData = cloudData["study_progress_" + todayStr] || { "kouta": { "done": [] }, "haruto": { "done": [] } };
+            const doneList = pData[currentUser]?.done || [];
+            const finalTasks = [...masterQuests[currentUser], ...masterHelps];
+
+            finalTasks.forEach((task) => {
+                const li = document.createElement('li');
+                li.className = 'quest-item';
+                const isChecked = doneList.includes(task);
+
+                li.innerHTML = `
+                    <input type="checkbox" class="quest-cb" data-task="${task}" ${isChecked ? 'checked' : ''}>
+                    <div class="quest-content">
+                        <div class="quest-fake-cb"></div>
+                        <span class="quest-text">${task}</span>
+                    </div>
+                `;
+
+                li.querySelector('.quest-cb').addEventListener('change', (e) => {
+                    const tName = e.target.getAttribute('data-task');
+                    if (e.target.checked) {
+                        if (!doneList.includes(tName)) doneList.push(tName);
+                    } else {
+                        pData[currentUser].done = doneList.filter(x => x !== tName);
+                    }
+                    checkAllClearBonus();
+                    saveToCloud("study_progress_" + todayStr, JSON.stringify(cloudData["study_progress_" + todayStr]));
+                });
+                listEl.appendChild(li);
+            });
+        }
+
+        function checkAllClearBonus() {
+            const pData = cloudData["study_progress_" + todayStr];
+            const doneList = pData[currentUser].done;
+            const studyCleared = masterQuests[currentUser].every(q => doneList.includes(q));
+            
+            if (studyCleared && !pData[currentUser].gachaClaimed) {
+                pData[currentUser].gachaClaimed = true;
+                if (!cloudData["study_balance"]) cloudData["study_balance"] = { "kouta": { "pokeen": 0, "gachaCount": 0 }, "haruto": { "pokeen": 0, "gachaCount": 0 } };
+                cloudData["study_balance"][currentUser].gachaCount += 1;
+                alert("ミッションクリア！\nモンスターボールを1こ ゲットしたぞ！ 🔴✨");
+                renderUI();
+                saveToCloud("study_balance", JSON.stringify(cloudData["study_balance"]));
+            }
+        }
+
+        function pullGacha() {
+            const balance = cloudData["study_balance"]?.[currentUser];
+            if (!balance || balance.gachaCount <= 0) return;
+
+            balance.gachaCount--;
+            document.getElementById('gachaCount').textContent = balance.gachaCount;
+            document.getElementById('gachaBtn').disabled = (balance.gachaCount <= 0);
+
+            const ball = document.getElementById('ballIcon');
+            ball.className = 'ball-shake';
+            document.getElementById('modalTitle').textContent = "おや？ ボールが ゆれている...";
+            document.getElementById('prize').style.display = 'none';
+            document.getElementById('modalCloseBtn').style.display = 'none';
+            document.getElementById('gachaModal').style.display = 'flex';
+
+            const prizes = [50, 50, 100, 100, 150, 200, 300];
+            const earned = prizes[Math.floor(Math.random() * prizes.length)];
+
+            setTimeout(() => {
+                ball.className = 'ball-open';
+                setTimeout(() => {
+                    balance.pokeen += earned;
+                    document.getElementById('modalTitle').textContent = "ゲットだぜ！";
+                    const prizeEl = document.getElementById('prize');
+                    prizeEl.innerHTML = `中から ぽけえんが とびだした！<br><br>💰 <span>+${earned}</span> ぽけえん`;
+                    prizeEl.style.display = 'block';
+                    document.getElementById('modalCloseBtn').style.display = 'block';
+                    saveToCloud("study_balance", JSON.stringify(cloudData["study_balance"]));
+                }, 300);
+            }, 1800);
+        }
+
+        function closeGachaModal() {
+            document.getElementById('gachaModal').style.display = 'none';
+            renderUI();
+        }
+
+        function buyItem(itemName, price) {
+            const balance = cloudData["study_balance"]?.[currentUser];
+            if (!balance || balance.pokeen < price) {
+                alert("ぽけえんが たりないよ！クエストをクリアしてためよう！ 👛");
+                return;
+            }
+            if (confirm(`【${itemName}】を ${price}ぽけえんで 交換する？`)) {
+                balance.pokeen -= price;
+                renderUI();
+                alert(`パパ・ママに【${itemName}】をオーダーしたよ！ ぽけえんを つかいました。 👍`);
+                saveToCloud("study_balance", JSON.stringify(cloudData["study_balance"]));
+            }
+        }
+
+        function adjustPokeen(isPlus) {
+            const amtEl = document.getElementById('parentAmount');
+            const amount = parseInt(amtEl.value);
+            if (isNaN(amount) || amount <= 0) return;
+            if (!cloudData["study_balance"]) cloudData["study_balance"] = { "kouta": { "pokeen": 0, "gachaCount": 0 }, "haruto": { "pokeen": 0, "gachaCount": 0 } };
+            if (isPlus) cloudData["study_balance"][currentUser].pokeen += amount;
+            else cloudData["study_balance"][currentUser].pokeen = Math.max(0, cloudData["study_balance"][currentUser].pokeen - amount);
+            amtEl.value = '';
+            renderUI();
+            saveToCloud("study_balance", JSON.stringify(cloudData["study_balance"]));
+        }
+
+        function openZukan() {
+            const grid = document.getElementById('zukanGrid');
+            grid.innerHTML = '';
+            pokemonList.forEach(p => {
+                const item = document.createElement('div');
+                item.className = 'zukan-item';
+                item.innerHTML = `<img src="${getImgUrl(p.id)}" alt="${p.name}"><span>${p.name}</span>`;
+                item.addEventListener('click', () => {
+                    if (!cloudData["study_user_pokemon"]) cloudData["study_user_pokemon"] = {};
+                    cloudData["study_user_pokemon"][currentUser] = p.id;
+                    renderUI();
+                    closeZukan();
+                    saveToCloud("study_user_pokemon", JSON.stringify(cloudData["study_user_pokemon"]));
+                });
+                grid.appendChild(item);
+            });
+            document.getElementById('zukanModal').style.display = 'flex';
+        }
+        function closeZukan() { document.getElementById('zukanModal').style.display = 'none'; }
+
+        async function saveToCloud(key, value) {
+            document.getElementById('syncBadge').textContent = "☁️ セーブ中...";
+            try {
+                await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'save', key: key, value: value }) });
+                document.getElementById('syncBadge').textContent = "同期完了";
+            } catch (e) {
+                document.getElementById('syncBadge').textContent = "⚠️ おふらいん保存中";
+            }
+        }
+
+        async function initApp() {
+            const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 2000, "timeout"));
+            const fetchPromise = (async () => {
+                try { const res = await fetch(GAS_URL); return await res.json(); } catch(e) { return null; }
+            })();
+            const result = await Promise.race([fetchPromise, timeoutPromise]);
+            if (result && result !== "timeout") {
+                Object.keys(result).forEach(k => {
+                    if (k.startsWith('study_')) {
+                        try { cloudData[k] = JSON.parse(result[k]); } catch(e) { cloudData[k] = result[k]; }
+                    }
+                });
+                document.getElementById('syncBadge').textContent = "同期完了";
+            } else {
+                document.getElementById('syncBadge').textContent = "⚠️ ローカルテスト起動";
+            }
+            document.getElementById('loadingCover').style.display = 'none';
+            changeUser('kouta');
+        }
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
