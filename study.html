@@ -247,7 +247,7 @@
     </div>
 
     <script>
-        // 【要対応】ご自身の既存のファミリーダッシュボードのGASのWebアプリURLに書き換えてください。
+        // 【重要】ご自身のファミリーダッシュボードのGASのWebアプリURLに書き換えてください。
         const GAS_URL = "https://script.google.com/macros/s/AKfycbw0YdRq2aEPNBXCtByhIst6wVS0WDDv1olhdg49m66yUFP6hoyTf8m_lo4V6JL98lkU/exec";
         
         const now = new Date();
@@ -280,8 +280,10 @@
         };
         const masterHelps = ["おふろ洗い（すいとる） 🛁", "お部屋の片付け（せいとん） ✨", "お皿の片付け（はこぶ） 🍽️"];
 
+        // 🛠️ 外部ブロックを回避する画像URL生成ロジック（3桁化処理内蔵）
         function getImgUrl(id) {
-            return `https://zukan.pokemon.co.jp/zukan-api/img/pkm/labels/${id}_00_00.png`;
+            const num3 = id.substring(1); // "0025" -> "025"
+            return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${num3}.png`;
         }
 
         function changeUser(user) {
