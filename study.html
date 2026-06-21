@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="referrer" content="no-referrer">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>【ロトム図鑑】こうた＆はるとの冒険ボード 決定版</title>
+    <title>ポケットモンスター こうた&はると</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800;900&display=swap" rel="stylesheet">
@@ -15,8 +15,6 @@
         header { position: relative; text-align: center; margin: 12px 0 24px 0; padding: 0 36px; }
         header h1 { font-size: 1.2rem; font-weight: 900; color: #0f172a; margin: 0; letter-spacing: -0.5px; }
         .secret-gear-btn { position: absolute; right: 4px; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: #94a3b8; padding: 6px; }
-        
-        /* 🔥 BGMボタン */
         .bgm-toggle-btn { position: absolute; left: 4px; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: #0f172a; padding: 6px; }
         
         .user-switcher { display: table; width: 100%; border-collapse: separate; border-spacing: 16px 0; margin-bottom: 24px; }
@@ -171,12 +169,20 @@
     <div id="loadingCover" class="loading-cover">🔴 ぼうけんのしょを 同期中...</div>
     <div id="syncBadge" class="sync-badge">同期完了</div>
 
-    <audio id="bgmMain" src="https://opengameart.org/sites/default/files/TownTheme.mp3" loop></audio>
-    <audio id="bgmBattle" src="https://opengameart.org/sites/default/files/Battle%20Theme%201.mp3" loop></audio>
+    <audio id="bgmMain" loop>
+        <source src="https://play.pokemonshowdown.com/audio/dpp-route-201.mp3" type="audio/mpeg">
+        <source src="https://play.pokemonshowdown.com/audio/bw-route-1.mp3" type="audio/mpeg">
+        <source src="https://opengameart.org/sites/default/files/Rolemusic_-_plasto.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="bgmBattle" loop>
+        <source src="https://play.pokemonshowdown.com/audio/dpp-wild-pokemon.mp3" type="audio/mpeg">
+        <source src="https://play.pokemonshowdown.com/audio/bw-wild-pokemon.mp3" type="audio/mpeg">
+        <source src="https://opengameart.org/sites/default/files/Battle%20Theme%201.mp3" type="audio/mpeg">
+    </audio>
 
     <header>
         <button id="bgmToggleBtn" class="bgm-toggle-btn" onclick="toggleBGM()">🔇</button>
-        <h1 id="mainTitleHeader">⚔️ フレンダ冒険＆ロトムボード</h1>
+        <h1 id="mainTitleHeader">⚔️ ポケットモンスター こうた&はると</h1>
         <button type="button" class="secret-gear-btn" onclick="openSecretParentMenu()">⚙️</button>
     </header>
 
@@ -448,7 +454,7 @@
         let currentUser = 'kouta';
         let battleState = {};
 
-        // 🔥 新BGMシステム（ストリーミング再生）
+        // 🔥 新BGMシステム
         let isBgmOn = false;
         let currentBgmMode = 'main';
         const mainBgm = document.getElementById('bgmMain');
@@ -479,7 +485,7 @@
             }
         }
 
-        // ピコピコ効果音（Web Audio API）はそのまま残す
+        // ピコピコ効果音
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playRetroSound(type) {
             if(audioCtx.state === 'suspended') audioCtx.resume();
@@ -903,7 +909,7 @@
             if (zukanTab === 'mega') {
                 megaList.forEach((p, i) => {
                     const hasIt = ownedMega.includes(p.id); if (hasIt) ownedCount++; totalCount++;
-                    if (showCaughtOnly && !hasIt) return;
+                    if (showCaughtOnly && !hasIt) continue; // 🔥 バグ修正: return -> continue
                     createPkmBox(grid, p.id, i+1, hasIt);
                 });
             } else {
@@ -913,7 +919,7 @@
                     for (let i = range.start; i <= range.end; i++) {
                         const idStr = String(i).padStart(4, '0');
                         const hasIt = ownedNormal.includes(idStr); if (hasIt) ownedCount++; totalCount++;
-                        if (showCaughtOnly && !hasIt) return;
+                        if (showCaughtOnly && !hasIt) continue; // 🔥 バグ修正: return -> continue
                         createPkmBox(grid, idStr, i, hasIt);
                     }
                 });
@@ -923,7 +929,6 @@
             document.getElementById('zukanProgressText').textContent = `${ownedCount} / ${totalCount} 匹 (${percent}%)`;
         }
 
-        // 🔥 図鑑の「解説」ポップアップ機能！
         async function showZukanDetail(idStr) {
             playRetroSound('click');
             const baseId = parseInt(idStr.split('_')[0]);
@@ -934,17 +939,15 @@
             document.getElementById('zukanDetailModal').style.display = 'flex';
             
             try {
-                // まず名前を取得して表示
                 const name = await getPokemonNameAsync(idStr);
                 document.getElementById('zukanDetailName').textContent = name;
                 
-                // 次に解説文（ひらがな）を公式APIから取得
                 if (!idStr.includes('_')) {
                     const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${baseId}`);
                     const data = await res.json();
-                    const flavor = data.flavor_text_entries.find(f => f.language.name === "ja-Hrkt"); // 子ども向けのひらがな版
+                    const flavor = data.flavor_text_entries.find(f => f.language.name === "ja-Hrkt");
                     if (flavor) {
-                        const cleanText = flavor.flavor_text.replace(/\n|\f|\r/g, ' '); // 途中の変な改行をキレイにする
+                        const cleanText = flavor.flavor_text.replace(/\n|\f|\r/g, ' ');
                         document.getElementById('zukanDetailText').textContent = cleanText;
                     } else {
                         document.getElementById('zukanDetailText').textContent = "せつめいぶん が ありません。";
@@ -952,10 +955,7 @@
                 } else {
                     document.getElementById('zukanDetailText').textContent = "メガシンカ した すごい ポケモン だ！";
                 }
-
-                // 鳴き声も再生！
                 playPokemonCry(idStr);
-
             } catch (e) {
                 document.getElementById('zukanDetailText').textContent = "つうしん エラー です。";
             }
@@ -967,7 +967,6 @@
             const nameId = `zukan-name-${id}-${Date.now()}`;
             box.innerHTML = `<div class="zukan-number-badge">#${String(displayNum).padStart(3, '0')}</div><img src="${getImgUrl(id)}" alt="?"><span id="${nameId}">...</span>`;
             
-            // タップしたら解説ポップアップを開く！
             box.onclick = () => { if (hasIt) showZukanDetail(id); };
             
             grid.appendChild(box);
@@ -1060,7 +1059,6 @@
             const b = cloudData["study_balance"][currentUser];
             if (b.gachaCount > 0) b.gachaCount--; else return;
 
-            // 🔥 バトルBGMに切り替え
             switchBgmMode('battle');
 
             const encounters = getOrRollFixedEncounters(); const enemy = encounters[zone];
@@ -1191,7 +1189,7 @@
 
         function closeBattleModal() { 
             playRetroSound('click'); 
-            switchBgmMode('main'); // 🔥 冒険メインBGMに戻す
+            switchBgmMode('main'); 
             document.getElementById('battleModal').style.display = 'none'; 
             renderUI(); 
         }
