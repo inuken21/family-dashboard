@@ -4,13 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>【共働き応援】こども準備＆保育登録メモ</title>
-    
-    <!-- 📱 スマホのホーム画面用アイコン画像の設定（icon.pngと連動） -->
     <link rel="apple-touch-icon" href="icon.png">
 
     <style>
         :root {
-            /* 全体共通 */
             --bg-color: #f1f5f9; 
             --text-color: #333333;
             --muted-text: #64748b;
@@ -18,30 +15,32 @@
             --card-shadow: 0 4px 12px rgba(15, 23, 42, 0.05); 
             --inner-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04); 
             
-            /* 👦 こうた君カラー（マイルドブルー＆ネイビー） */
+            /* 👦 こうたカラー */
             --kouta-bg: #e6f0fa;
             --kouta-border: #4a7ab5;
             --kouta-text: #2b4c7e;
             
-            /* 👶 はると君カラー（マイルドアプリコット＆ディープオレンジ） */
+            /* 👶 はるとカラー */
             --haruto-bg: #fdf0e6;
             --haruto-border: #e69d5e;
             --haruto-text: #8c532b;
             
-            /* 🛠️ アクション・ニュートラルカラー */
+            /* アクションカラー */
             --btn-neutral-bg: #e2e8f0;
             --btn-neutral-text: #475569;
             --btn-neutral-active: #cbd5e1;
-            
             --btn-phone-bg: #d1fae5;
             --btn-phone-text: #065f46;
-            
             --terakoya-bg: #e8f5e9;
             --terakoya-text: #2e7d32;
         }
         
+        * {
+            box-sizing: border-box; /* すべての要素の幅計算を安全化 */
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
             background-color: var(--bg-color);
@@ -52,45 +51,31 @@
 
         header {
             text-align: center;
-            color: #1e293b;
             padding: 10px 0;
-            margin-bottom: 10px;
         }
-        header h1 { margin: 0; font-size: 1.3rem; font-weight: 800; letter-spacing: 0.05em; }
+        header h1 { margin: 0; font-size: 1.3rem; font-weight: 800; color: #1e293b; }
 
-        /* 🛠️ はみ出しの原因を根本排除するため、カード類のwidthをすべてauto(安全自動幅)に変更 */
-        .card {
+        /* 🟢 すべてのメインカードの幅ロジックを共通化（はみ出しを物理的にリセット） */
+        .card, .schedule-box {
             background: white;
             padding: 15px;
             border-radius: var(--border-radius);
             margin-bottom: 15px;
             box-shadow: var(--card-shadow);
             border: 1px solid rgba(226, 232, 240, 0.8);
-            width: auto;              /* 固定幅や100%指定を破壊して安全幅に */
-            box-sizing: border-box;
+            width: 100%;
         }
 
         h2 {
             font-size: 1.05rem;
             color: #1e293b;
-            margin-top: 0;
+            margin: 0 0 10px 0;
             padding-bottom: 8px;
             border-bottom: 2px solid #e2e8f0;
             font-weight: 700;
         }
 
-        /* 🛠️ ここがはみ出しの主犯。width: 100%を撤廃し、画面内にキュッと収まる設定へ */
-        .schedule-box {
-            background-color: #ffffff;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            padding: 15px;
-            border-radius: var(--border-radius);
-            margin-bottom: 15px;
-            box-shadow: var(--card-shadow);
-            width: auto;              /* 100%幅によるはみ出しを完全防止 */
-            box-sizing: border-box;  /* パディング込みで幅を安全計算 */
-        }
-        
+        /* 📅 今週の予定エリア */
         .week-nav {
             display: flex;
             justify-content: space-between;
@@ -104,24 +89,17 @@
             border-radius: 6px;
             font-size: 0.8rem;
             font-weight: bold;
-            cursor: pointer;
             color: var(--btn-neutral-text);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            cursor: pointer;
         }
         .week-nav-btn:active { background-color: var(--btn-neutral-active); }
-        .week-nav-title {
-            font-weight: bold;
-            color: #1e293b;
-            font-size: 1rem;
-        }
+        .week-nav-title { font-weight: bold; color: #1e293b; font-size: 1rem; }
         
         .day-btn-container {
             display: flex;
             justify-content: space-between;
             margin-bottom: 15px;
-            gap: 3px;
-            width: 100%;
-            box-sizing: border-box;
+            gap: 4px;
         }
         .day-btn {
             flex: 1;
@@ -134,10 +112,6 @@
             font-size: 0.9rem;
             cursor: pointer;
             text-align: center;
-            -webkit-appearance: none;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-            min-width: 0;
-            box-sizing: border-box;
         }
         .day-btn.active {
             background-color: #475569;
@@ -146,22 +120,20 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
-        /* 🛠️ 親が安全幅(auto)になったため、100%計算バグから解放 */
+        /* 🔴 徹底クリーンアップ：ゴースト命令を排除し、親の幅（100%）にピタッと合わせる */
         .selected-date-display {
             text-align: center;
             font-weight: bold;
             font-size: 0.95rem;
             color: #1e293b;
             background-color: #ffffff;
-            padding: 8px 6px;
+            padding: 8px;
             border-radius: 6px;
             box-shadow: var(--inner-shadow);
             border-top: 2px solid var(--kouta-border);
             border-bottom: 2px solid var(--kouta-border);
-            width: auto;             /* 100%ではなく、親カードのパディング内で最大に広げる */
+            width: 100%;
             margin: 0 0 15px 0;
-            display: block;
-            box-sizing: border-box;
         }
 
         .schedule-row {
@@ -186,24 +158,8 @@
         .kouta-label { background-color: var(--kouta-bg); color: var(--kouta-text); }
         .haruto-label { background-color: var(--haruto-bg); color: var(--haruto-text); }
         
-        .schedule-text-display {
-            flex: 1;
-            margin: 0 10px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: #334155;
-        }
-        
-        .schedule-edit-input {
-            display: none;
-            flex: 1;
-            margin: 0 10px;
-            border: 1px solid #cbd5e1;
-            border-radius: 4px;
-            padding: 6px 8px;
-            font-size: 0.9rem;
-            box-sizing: border-box;
-        }
+        .schedule-text-display { flex: 1; margin: 0 10px; font-size: 0.9rem; font-weight: bold; color: #334155; }
+        .schedule-edit-input { display: none; flex: 1; margin: 0 10px; border: 1px solid #cbd5e1; border-radius: 4px; padding: 6px 8px; font-size: 0.9rem; }
 
         .edit-btn {
             background-color: var(--btn-neutral-bg);
@@ -215,11 +171,10 @@
             font-weight: bold;
             cursor: pointer;
             flex-shrink: 0;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            -webkit-appearance: none;
         }
         .edit-btn.saving { background-color: #bbf7d0; color: #15803d; }
 
+        /* 🤖 予約確認パネル */
         .reservation-panel {
             background-color: #f8fafc;
             border: 1px solid #e2e8f0;
@@ -237,13 +192,7 @@
             gap: 8px;
         }
         .res-row:last-child { border-bottom: none; }
-        
-        .res-label-box {
-            flex: 1;
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: #475569;
-        }
+        .res-label-box { flex: 1; font-size: 0.85rem; font-weight: bold; color: #475569; }
         
         .res-status-select {
             padding: 4px 6px;
@@ -256,17 +205,12 @@
             cursor: pointer;
             width: 90px;
             text-align: center;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
         }
         .res-status-select.status-ok { background-color: #d1fae5; color: #065f46; border-color: #a7f3d0; }
         .res-status-select.status-no { background-color: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; text-decoration: line-through; }
         .res-status-select.status-yet { background-color: #fef3c7; color: #92400e; border-color: #fde68a; }
 
-        .res-btn-group {
-            display: flex;
-            gap: 4px;
-            flex-shrink: 0;
-        }
+        .res-btn-group { display: flex; gap: 4px; flex-shrink: 0; }
         .res-btn {
             background-color: var(--btn-neutral-bg);
             color: var(--btn-neutral-text);
@@ -276,7 +220,6 @@
             font-size: 0.75rem;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
         .res-btn.phone-btn { background-color: var(--btn-phone-bg); color: var(--btn-phone-text); }
 
@@ -287,55 +230,20 @@
             margin-bottom: 12px;
             background-color: #f8fafc;
             border: 1px solid #e2e8f0;
-            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
             position: relative;
             overflow: hidden;
-            box-sizing: border-box;
         }
-        .todo-panel-child::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 6px; height: 100%;
-        }
+        .todo-panel-child::before { content: ""; position: absolute; top: 0; left: 0; width: 6px; height: 100%; }
         .todo-panel-child.kouta-theme::before { background-color: var(--kouta-border); }
         .todo-panel-child.haruto-theme::before { background-color: var(--haruto-border); }
         
-        .todo-panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
+        .todo-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-weight: bold; font-size: 0.9rem; }
         .todo-panel-child.kouta-theme .todo-panel-header { color: var(--kouta-text); }
         .todo-panel-child.haruto-theme .todo-panel-header { color: var(--haruto-text); }
 
-        .todo-count-badge {
-            font-size: 0.7rem;
-            background: rgba(0,0,0,0.05);
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-weight: bold;
-        }
-        
-        .todo-input-row {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 4px;
-            align-items: center;
-        }
-        .todo-input-text {
-            flex: 1;
-            padding: 7px;
-            font-size: 0.85rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 4px;
-            box-sizing: border-box;
-            height: 34px;
-            background-color: #ffffff;
-            box-shadow: var(--inner-shadow);
-        }
+        .todo-count-badge { font-size: 0.7rem; background: rgba(0,0,0,0.05); padding: 2px 8px; border-radius: 10px; font-weight: bold; }
+        .todo-input-row { display: flex; gap: 6px; margin-bottom: 4px; align-items: center; }
+        .todo-input-text { flex: 1; padding: 7px; font-size: 0.85rem; border: 1px solid #cbd5e1; border-radius: 4px; height: 34px; background-color: #ffffff; box-shadow: var(--inner-shadow); }
         
         .todo-date-wrapper {
             position: relative;
@@ -348,81 +256,26 @@
             border: 1px solid #cbd5e1;
             border-radius: 4px;
             cursor: pointer;
-            box-sizing: border-box;
             flex-shrink: 0;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
         }
         .todo-date-icon-btn { font-size: 1rem; opacity: 0.7; }
-        .todo-input-date {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-        
-        .todo-add-btn {
-            background-color: white;
-            border: 1px solid #cbd5e1;
-            color: #475569;
-            padding: 0 10px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-            height: 34px;
-            box-sizing: border-box;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-        }
-        
-        .todo-selected-date-preview {
-            font-size: 0.75rem;
-            margin-bottom: 6px;
-            padding-left: 2px;
-            font-weight: bold;
-            display: none;
-        }
+        .todo-input-date { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        .todo-add-btn { background-color: white; border: 1px solid #cbd5e1; color: #475569; padding: 0 10px; font-size: 0.8rem; font-weight: bold; border-radius: 4px; cursor: pointer; height: 34px; }
+        .todo-selected-date-preview { font-size: 0.75rem; margin-bottom: 6px; padding-left: 2px; font-weight: bold; display: none; }
         .todo-panel-child.kouta-theme .todo-selected-date-preview { color: var(--kouta-text); }
         .todo-panel-child.haruto-theme .todo-selected-date-preview { color: var(--haruto-text); }
         
         .todo-custom-list { list-style: none; padding: 0; margin: 0; }
-        .todo-custom-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 7px 0;
-            border-bottom: 1px dashed rgba(0,0,0,0.05);
-            gap: 8px;
-        }
+        .todo-custom-item { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px dashed rgba(0,0,0,0.05); gap: 8px; }
         .todo-custom-item:last-child { border-bottom: none; }
-        .todo-custom-label {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            flex: 1;
-            word-break: break-all;
-        }
-
+        .todo-custom-label { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; cursor: pointer; flex: 1; word-break: break-all; }
         .todo-custom-cb { transform: scale(1.1); cursor: pointer; flex-shrink: 0; }
         
-        .todo-custom-cb:checked + .todo-text-container .todo-custom-text {
-            text-decoration: line-through;
-            opacity: 0.4;
-        }
-        .todo-custom-cb:checked + .todo-text-container .todo-custom-text::after {
-            content: " 🎉";
-            font-size: 0.8rem;
-        }
+        .todo-custom-cb:checked + .todo-text-container .todo-custom-text { text-decoration: line-through; opacity: 0.4; }
+        .todo-custom-cb:checked + .todo-text-container .todo-custom-text::after { content: " 🎉"; font-size: 0.8rem; }
+        .todo-text-container { display: inline-flex; align-items: center; gap: 4px; flex-wrap: wrap; flex: 1; }
         
-        .todo-text-container {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            flex-wrap: wrap;
-            flex: 1;
-        }
-        
+        /* 📅 TODO内日付のスタイリングを統合・最適化 */
         .todo-date-label {
             font-size: 0.75rem;
             font-weight: bold;
@@ -432,44 +285,17 @@
             border-radius: 4px;
             white-space: nowrap;
         }
-        .todo-custom-cb:checked + .todo-text-container .todo-date-label {
-            color: #cbd5e1;
-            background-color: #f8fafc;
-            text-decoration: line-through;
-            opacity: 0.4;
-        }
+        .todo-custom-cb:checked + .todo-text-container .todo-date-label { color: #cbd5e1; background-color: #f8fafc; text-decoration: line-through; opacity: 0.4; }
 
-        .deadline-badge {
-            font-size: 0.65rem;
-            font-weight: bold;
-            padding: 1px 4px;
-            border-radius: 4px;
-            color: white;
-            white-space: nowrap;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
+        .deadline-badge { font-size: 0.65rem; font-weight: bold; padding: 1px 4px; border-radius: 4px; color: white; white-space: nowrap; }
         .deadline-badge.overdue { background-color: #ef4444; }
         .deadline-badge.today { background-color: #f97316; }
         .deadline-badge.future { background-color: var(--kouta-border); }
-        
-        .todo-custom-cb:checked + .todo-text-container .deadline-badge {
-            background-color: #cbd5e1 !important;
-            color: #94a3b8;
-            text-decoration: line-through;
-            opacity: 0.4;
-            box-shadow: none;
-        }
-
+        .todo-custom-cb:checked + .todo-text-container .deadline-badge { background-color: #cbd5e1 !important; color: #94a3b8; text-decoration: line-through; opacity: 0.4; }
         .todo-del-btn { background: none; border: none; cursor: pointer; font-size: 0.85rem; opacity: 0.5; }
 
-        /* カレンダー共通構造 */
-        .cal-container {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-            text-align: center;
-            margin-top: 10px;
-        }
+        /* カレンダー共通構造（集約して軽量化） */
+        .cal-container { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; margin-top: 10px; }
         .cal-header { font-weight: bold; font-size: 0.75rem; color: #64748b; padding-bottom: 4px; }
         
         .cal-day {
@@ -485,85 +311,53 @@
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            box-sizing: border-box;
             box-shadow: 0 1px 2px rgba(0,0,0,0.02);
         }
         .cal-day.empty { background-color: transparent; border: none; cursor: default; min-height: auto; box-shadow: none; }
         .cal-day.day-off { background-color: #e2e8f0; color: #94a3b8; border-color: #cbd5e1; cursor: not-allowed; box-shadow: none; }
         
-        /* 🏫 こうたカレンダー専用 */
+        /* 🏫 こうたカレンダー装飾 */
         .cal-day.kouta-active-b { background-color: #e2e8f0; border-color: var(--kouta-border); box-shadow: var(--inner-shadow); }
-        .cal-day .kouta-badge-container { display: flex; flex-direction: column; gap: 1px; align-items: center; margin-top: 2px; }
-        .cal-day .kouta-badge {
-            font-size: 0.55rem;
-            font-weight: bold;
-            padding: 1px 3px;
-            border-radius: 3px;
-            color: white;
-            background-color: var(--kouta-border);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-        .cal-day .kouta-duty-badge {
-            font-size: 0.55rem;
-            background-color: #475569;
-            color: white;
-            padding: 0px 2px;
-            border-radius: 2px;
-            font-weight: bold;
-        }
+        .kouta-badge-container { display: flex; flex-direction: column; gap: 1px; align-items: center; margin-top: 2px; }
+        .kouta-badge { font-size: 0.55rem; font-weight: bold; padding: 1px 3px; border-radius: 3px; color: white; background-color: var(--kouta-border); }
+        .kouta-duty-badge { font-size: 0.55rem; background-color: #475569; color: white; padding: 0px 2px; border-radius: 2px; font-weight: bold; }
 
-        /* 🍱 はるとお弁当カレンダー専用 */
+        /* 🍱 はるとお弁当カレンダー装飾 */
         .cal-day.bento-active { background-color: var(--haruto-bg); border-color: var(--haruto-border); color: var(--haruto-text); font-weight: bold; }
         .cal-day.bento-active::after { content: "🍱"; position: absolute; top: -1px; right: 1px; font-size: 0.6rem; }
 
         .cal-month-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; margin-top: 5px; }
-        .cal-nav-btn { background-color: var(--btn-neutral-bg); color: var(--btn-neutral-text); border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: bold; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .cal-nav-btn { background-color: var(--btn-neutral-bg); color: var(--btn-neutral-text); border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
 
-        .quick-panel {
-            background-color: #f8fafc;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            padding: 12px;
-            margin-top: 10px;
-            display: none;
-            box-shadow: var(--inner-shadow);
-        }
+        /* クイック操作パネル */
+        .quick-panel { background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; margin-top: 10px; display: none; box-shadow: var(--inner-shadow); }
         .quick-panel-title { font-weight: bold; font-size: 0.85rem; color: #334155; margin-bottom: 8px; text-align: center; }
         .panel-block { display: flex; flex-direction: column; gap: 8px; }
         .panel-row { display: flex; justify-content: space-around; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .panel-select { padding: 4px 6px; font-size: 0.8rem; border-radius: 4px; border: 1px solid #cbd5e1; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+        .panel-select { padding: 4px 6px; font-size: 0.8rem; border-radius: 4px; border: 1px solid #cbd5e1; background: white; }
         .panel-checkbox-label { font-size: 0.8rem; font-weight: bold; display: flex; align-items: center; gap: 4px; cursor: pointer; color: #475569; }
-        .panel-preview-box {
-            background-color: #fff;
-            border: 1px solid #cbd5e1;
-            padding: 6px;
-            border-radius: 4px;
-            text-align: center;
-            font-size: 0.8rem;
-            font-weight: bold;
-            color: #475569;
-            margin-top: 2px;
-            box-shadow: var(--inner-shadow);
-        }
+        .panel-preview-box { background-color: #fff; border: 1px solid #cbd5e1; padding: 6px; border-radius: 4px; text-align: center; font-size: 0.8rem; font-weight: bold; color: #475569; margin-top: 2px; box-shadow: var(--inner-shadow); }
 
+        /* お弁当・学校詳細パネル */
         .bento-link-box { background-color: #fff; border: 1px solid var(--haruto-border); border-radius: 6px; padding: 10px; margin-bottom: 12px; box-shadow: var(--inner-shadow); }
-        .bento-link-btn { display: block; text-align: center; background-color: var(--haruto-border); color: white; text-decoration: none; font-weight: bold; padding: 8px; border-radius: 4px; font-size: 0.85rem; margin-bottom: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .bento-link-btn { display: block; text-align: center; background-color: var(--haruto-border); color: white; text-decoration: none; font-weight: bold; padding: 8px; border-radius: 4px; font-size: 0.85rem; margin-bottom: 6px; }
         .bento-login-info { font-size: 0.8rem; color: var(--haruto-text); background: var(--haruto-bg); padding: 6px 10px; border-radius: 4px; border: 1px dashed var(--haruto-border); margin: 0; }
         
-        .kouta-details { border: 1px solid var(--kouta-border); border-left: 5px solid var(--kouta-border); background-color: #fff; padding: 12px; border-radius: var(--border-radius); margin-bottom: 15px; box-shadow: var(--card-shadow); }
-        .kouta-details summary { color: var(--kouta-text); font-size: 1rem; font-weight: bold; cursor: pointer; outline: none; }
-        
-        .bento-details { border: 1px solid var(--haruto-border); border-left: 5px solid var(--haruto-border); background-color: #fff; padding: 12px; border-radius: var(--border-radius); margin-bottom: 15px; box-shadow: var(--card-shadow); }
-        .bento-details summary { color: var(--haruto-text); font-size: 1rem; font-weight: bold; cursor: pointer; outline: none; }
+        .kouta-details { border: 1px solid var(--kouta-border); border-left: 5px solid var(--kouta-border); }
+        .kouta-details summary { color: var(--kouta-text); }
+        .bento-details { border: 1px solid var(--haruto-border); border-left: 5px solid var(--haruto-border); }
+        .bento-details summary { color: var(--haruto-text); }
+        .kouta-details, .bento-details { background-color: #fff; padding: 12px; border-radius: var(--border-radius); margin-bottom: 15px; box-shadow: var(--card-shadow); }
+        .kouta-details summary, .bento-details summary { font-size: 1rem; font-weight: bold; cursor: pointer; outline: none; }
 
         .todo-list { list-style: none; padding: 0; margin: 0; }
         .todo-item { display: flex; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #e2e8f0; }
         .todo-item:last-child { border-bottom: none; }
         .todo-item input[type="checkbox"] { margin-top: 4px; margin-right: 10px; transform: scale(1.2); }
         .todo-item label { font-size: 0.9rem; cursor: pointer; width: 100%; color: #334155; }
-        .sub-list { padding-left: 20px; color: #64748b; font-size: 0.8rem; margin-top: 2px; margin-bottom: 0; }
+        .sub-list { padding-left: 20px; color: #64748b; font-size: 0.8rem; margin-top: 2px; margin-bottom: 0; list-style: none; }
 
-        details { background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        details { background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #e2e8f0; }
         .kouta-card details { border-left: 4px solid var(--kouta-border); }
         .kouta-card details summary { color: var(--kouta-text); }
         .haruto-card details { border-left: 4px solid var(--haruto-border); }
@@ -572,42 +366,15 @@
         .details-content { margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.05); }
 
         .rule-box { background-color: #fffbeb; border-left: 4px solid #f59f00; padding: 10px; font-size: 0.85rem; margin-bottom: 10px; border-radius: 0 var(--border-radius) var(--border-radius) 0; }
-        .terakoya-alert { background-color: var(--terakoya-bg); border-left: 4px solid var(--terakoya-text); color: var(--terakoya-text); font-weight: bold; padding: 8px; margin-bottom: 10px; font-size: 0.85rem; display: none; border-radius: 0 4px 4px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .bento-alert { background-color: var(--haruto-bg); border-left: 4px solid var(--haruto-border); color: var(--haruto-text); font-weight: bold; padding: 8px; margin-bottom: 10px; font-size: 0.85rem; display: none; border-radius: 0 4px 4px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .terakoya-alert { background-color: var(--terakoya-bg); border-left: 4px solid var(--terakoya-text); color: var(--terakoya-text); }
+        .bento-alert { background-color: var(--haruto-bg); border-left: 4px solid var(--haruto-border); color: var(--haruto-text); }
+        .terakoya-alert, .bento-alert { font-weight: bold; padding: 8px; margin-bottom: 10px; font-size: 0.85rem; display: none; border-radius: 0 4px 4px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         
         .badge { background-color: #64748b; color: white; padding: 1px 5px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; margin-left: 5px; }
         
-        /* メモ欄省スペース型 */
-        .memo-textarea { 
-            width: 100%; 
-            height: 60px; 
-            padding: 8px; 
-            box-sizing: border-box; 
-            border: 1px solid #cbd5e1; 
-            border-radius: 6px; 
-            font-size: 0.9rem; 
-            resize: vertical; 
-            background-color: #ffffff; 
-            line-height: 1.4; 
-            box-shadow: var(--inner-shadow);
-        }
-        
-        .responsive-textarea {
-            width: 100%;
-            height: 120px;
-            padding: 10px;
-            box-sizing: border-box;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            resize: vertical;
-            background-color: #ffffff;
-            line-height: 1.5;
-            box-shadow: var(--inner-shadow);
-        }
-        
+        .memo-textarea { width: 100%; height: 60px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; resize: vertical; line-height: 1.4; box-shadow: var(--inner-shadow); }
+        .responsive-textarea { width: 100%; height: 120px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; resize: vertical; line-height: 1.5; box-shadow: var(--inner-shadow); }
         .save-status { font-size: 0.75rem; color: var(--muted-text); text-align: right; margin-top: 4px; font-weight: bold; }
-        
         .loading-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(241, 245, 249, 0.9); display: flex; justify-content: center; align-items: center; z-index: 9999; font-weight: bold; color: #475569; font-size: 1.1rem; }
     </style>
 </head>
@@ -619,9 +386,7 @@
         <h1>Family Dashboard</h1>
     </header>
 
-    <!-- 🟢 1番目：予定（スケジュール表示エリア） -->
     <div class="schedule-box">
-        
         <div class="week-nav">
             <button type="button" class="week-nav-btn" id="week-prev">◀ 前の週</button>
             <span class="week-nav-title" id="week-title">📅 今週の予定</span>
@@ -636,7 +401,6 @@
             <button type="button" class="day-btn" id="btn-day-5">金</button>
         </div>
         
-        <!-- 📅 日付表示エリア -->
         <div class="selected-date-display" id="selected-date-label"></div>
         
         <div class="schedule-row">
@@ -653,7 +417,6 @@
             <button type="button" id="edit-btn-haruto" class="edit-btn">修正</button>
         </div>
 
-        <!-- 🤖 予約確認パネル -->
         <div class="reservation-panel">
             <div class="res-row">
                 <div class="res-label-box">🎒 わくわく</div>
@@ -683,11 +446,9 @@
         </div>
     </div>
 
-    <!-- 🟢 2番目：カスタムTODOパネル -->
     <div class="card">
         <h2>📋 子供別自由TODOリスト</h2>
         
-        <!-- 🟦 こうた -->
         <div class="todo-panel-child kouta-theme">
             <div class="todo-panel-header">
                 <span>👦 〈こうた〉タスク</span>
@@ -695,19 +456,16 @@
             </div>
             <div class="todo-input-row">
                 <input type="text" id="kouta-todo-input" class="todo-input-text" placeholder="例：ヘアカット">
-                
                 <div class="todo-date-wrapper">
                     <span class="todo-date-icon-btn">📅</span>
                     <input type="date" id="kouta-todo-date" class="todo-input-date" onchange="previewTodoDate('kouta', this.value)">
                 </div>
-                
                 <button type="button" class="todo-add-btn" onclick="addCustomTodo('kouta')">＋ 追加</button>
             </div>
             <div id="kouta-date-preview" class="todo-selected-date-preview"></div>
             <ul class="todo-custom-list" id="kouta-custom-todo-list"></ul>
         </div>
         
-        <!-- 🟥 はると -->
         <div class="todo-panel-child haruto-theme">
             <div class="todo-panel-header">
                 <span>👶 〈はると〉タスク</span>
@@ -715,12 +473,10 @@
             </div>
             <div class="todo-input-row">
                 <input type="text" id="haruto-todo-input" class="todo-input-text" placeholder="例：アンケート提出">
-                
                 <div class="todo-date-wrapper">
                     <span class="todo-date-icon-btn">📅</span>
                     <input type="date" id="haruto-todo-date" class="todo-input-date" onchange="previewTodoDate('haruto', this.value)">
                 </div>
-                
                 <button type="button" class="todo-add-btn" onclick="addCustomTodo('haruto')">＋ 追加</button>
             </div>
             <div id="haruto-date-preview" class="todo-selected-date-preview"></div>
@@ -728,14 +484,12 @@
         </div>
     </div>
 
-    <!-- 🟢 3番目：自由記述メモ欄 -->
     <div class="card" style="padding: 10px;">
         <h2 style="font-size: 1rem; margin-bottom: 6px;">✍ ... メモ欄</h2>
         <textarea id="customMemo" class="memo-textarea" placeholder="自由なメモ書きに（ご夫婦でリアルタイム共有されます）"></textarea>
         <div id="saveStatus" class="save-status">同期完了</div>
     </div>
 
-    <!-- 🟢 4番目：こうた宮崎小カレンダー -->
     <details class="kouta-details">
         <summary>🏫 こうた 宮崎小カレンダー</summary>
         <div class="details-content">
@@ -747,7 +501,6 @@
             </div>
             <div class="cal-container" id="kouta-calendar"></div>
             
-            <!-- クイック操作パネル -->
             <div class="quick-panel" id="kouta-quick-panel">
                 <div class="quick-panel-title" id="kouta-panel-date-title">設定</div>
                 <div class="panel-block">
@@ -757,29 +510,18 @@
                             <option value="5">5時間授業</option>
                             <option value="6">6時間授業</option>
                         </select>
-                        <label class="panel-checkbox-label">
-                            <input type="checkbox" id="panel-btime-checkbox"> 🅱️ Bタイム
-                        </label>
-                        <label class="panel-checkbox-label">
-                            <input type="checkbox" id="panel-duty-checkbox"> 🧺 給食当番
-                        </label>
+                        <label class="panel-checkbox-label"><input type="checkbox" id="panel-btime-checkbox"> 🅱️ Bタイム</label>
+                        <label class="panel-checkbox-label"><input type="checkbox" id="panel-duty-checkbox"> 🧺 給食当番</label>
                     </div>
-                    
                     <div class="panel-row" id="panel-b4-lunch-row" style="display:none; background:#f1f5f9; padding:4px; border-radius:4px; width:100%; justify-content:center;">
-                        <label class="panel-checkbox-label">
-                            <input type="checkbox" id="panel-lunch-checkbox"> 🥢 給食・清掃まで実施する
-                        </label>
+                        <label class="panel-checkbox-label"><input type="checkbox" id="panel-lunch-checkbox"> 🥢 給食・清掃まで実施する</label>
                     </div>
-                    
-                    <div class="panel-preview-box">
-                        🕒 下校想定時刻: <span id="panel-time-preview" style="color:var(--kouta-text); font-size:0.9rem;">--:--</span> 頃
-                    </div>
+                    <div class="panel-preview-box">🕒 下校想定時刻: <span id="panel-time-preview" style="color:var(--kouta-text); font-size:0.9rem;">--:--</span> 頃</div>
                 </div>
             </div>
         </div>
     </details>
 
-    <!-- 🟢 5番目：はるとお弁当カレンダー -->
     <details class="bento-details">
         <summary>🍱 はるとお弁当カレンダー</summary>
         <div class="details-content">
@@ -796,9 +538,8 @@
         </div>
     </details>
 
-    <!-- 👦 康太の持ち物リスト -->
     <div class="card kouta-card">
-        <h2 class="kouta-header">👦 康太（こうた）持ち物リスト</h2>
+        <h2>👦 康太（こうた）持ち物リスト</h2>
         <div id="kouta-terakoya-alert" class="terakoya-alert">📖 本日は【寺子屋（宮崎小）Bチーム】の開講日です！宿題・ドリル・筆記用具を忘れずに！</div>
         
         <details>
@@ -868,9 +609,8 @@
         </details>
     </div>
 
-    <!-- 👶 はるとの持ち物リスト -->
     <div class="card haruto-card">
-        <h2 class="haruto-header">👶 はると 持ち物リスト</h2>
+        <h2>👶 はると 持ち物リスト</h2>
         <div id="haruto-bento-alert" class="bento-alert">🍱 本日は【お弁当の日】です！お弁当と食具を忘れずに。</div>
         
         <details>
@@ -923,7 +663,6 @@
         </details>
     </div>
 
-    <!-- 🐛 コピペ文面 -->
     <div class="card">
         <h2 style="font-size: 1rem; color: #475569;">🐛 あおむし広場 予約用定型文（コピペ用）</h2>
         <textarea class="responsive-textarea" style="height:110px; font-family:monospace;" readonly>月：スイミング
@@ -948,8 +687,7 @@
             "2026-04-29", "2026-05-03", "2026-05-04", "2026-05-05", "2026-05-06",
             "2026-07-20", "2026-08-11", "2026-09-21", "2026-09-22", "2026-09-23",
             "2026-10-12", "2026-11-03", "2026-11-23",
-            "2027-01-01", "2027-01-11", "2027-02-11", "2027-02-23", "2027-03-21", "2027-03-22",
-            "2027-04-29", "2027-05-03", "2027-05-04", "2027-05-05", "2027-05-06"
+            "2027-01-01", "2027-01-11", "2027-02-11", "2027-02-23", "2027-03-21", "2027-03-22"
         ];
 
         const defaultSchedules = {
@@ -968,32 +706,19 @@
         let globalCloudData = {};
         let selectedDayNum = 1;
         let currentWeekOffset = 0;
-
-        let currentCalYear = 2026;
-        let currentCalMonth = 5;
-        let koutaCalYear = 2026;
-        let koutaCalMonth = 5;
-
+        let currentCalYear = 2026, currentCalMonth = 5;
+        let koutaCalYear = 2026, koutaCalMonth = 5;
         let activePanelDateStr = null;
 
         function launchApp(type) {
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            const isiOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
-
+            const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
             let url = "";
             if (type === 'wakuwaku') {
-                url = isiOS 
-                    ? "https://apps.apple.com/jp/app/%E5%AE%85%E5%BF%83%E3%81%A7%E3%82%93%E3%82%BD%E3%81%B0%E3%81%A8-%E3%82%B0%E3%83%AA%E3%83%BC%E3%83%B3/id1497864021" 
-                    : "https://play.google.com/store/apps/details?id=jp.denshobato.gakudo.denshobato_g&hl=ja";
+                url = isiOS ? "https://apps.apple.com/jp/app/id1497864021" : "https://play.google.com/store/apps/details?id=jp.denshobato.gakudo.denshobato_g";
             } else if (type === 'aomushi') {
-                url = isiOS 
-                    ? "https://apps.apple.com/jp/app/%E3%82%8C%E3%82%93%E3%82%89%E3%81%8F%E3%82%A2%E3%83%96%E3%83%AA/id897021038" 
-                    : "https://play.google.com/store/apps/details?id=jp.co.vish.bconnect&hl=ja";
+                url = isiOS ? "https://apps.apple.com/jp/app/id897021038" : "https://play.google.com/store/apps/details?id=jp.co.vish.bconnect";
             }
-
-            if (url) {
-                window.open(url, '_blank', 'noopener,noreferrer');
-            }
+            if (url) window.open(url, '_blank', 'noopener,noreferrer');
         }
 
         async function fetchCloudData() {
@@ -1020,33 +745,24 @@
             const today = new Date(2026, 5, 21);
             const currentDayIdx = today.getDay();
             let baseDate = new Date(today);
-            
             if (currentDayIdx === 0) baseDate.setDate(today.getDate() + 1);
             else if (currentDayIdx === 6) baseDate.setDate(today.getDate() + 2);
-            
             baseDate.setDate(baseDate.getDate() + (dayNum - baseDate.getDay()) + (currentWeekOffset * 7));
-            
             return `${baseDate.getFullYear()}-${String(baseDate.getMonth() + 1).padStart(2, '0')}-${String(baseDate.getDate()).padStart(2, '0')}`;
         }
 
         function isDayOff(dateStr) {
             const d = new Date(dateStr);
-            const dayIdx = d.getDay();
-            if (dayIdx === 0 || dayIdx === 6) return true;
-            if (japaneseHolidays.includes(dateStr)) return true;
+            if (d.getDay() === 0 || d.getDay() === 6 || japaneseHolidays.includes(dateStr)) return true;
             return false;
         }
 
         function calculateKoutaTime(config) {
-            if (config.isBTime && config.period === "4") {
-                return config.hasLunch ? "12:55" : "11:55"; 
-            }
-            const typeStr = config.isBTime ? "B" : "A";
-            return miyazakiTimeTable[typeStr][config.period];
+            if (config.isBTime && config.period === "4") return config.hasLunch ? "12:55" : "11:55"; 
+            return miyazakiTimeTable[config.isBTime ? "B" : "A"][config.period];
         }
 
         function applySelectStyle(el, val) {
-            if (!el) return;
             el.className = 'res-status-select';
             if (val === 'ok') el.classList.add('status-ok');
             else if (val === 'no') el.classList.add('status-no');
@@ -1055,52 +771,36 @@
 
         async function changeResStatus(type, val) {
             const targetDateStr = getTargetDateStr(selectedDayNum);
-            const el = document.getElementById('sel-' + type);
-            applySelectStyle(el, val);
+            applySelectStyle(document.getElementById('sel-' + type), val);
             await saveCloudData("res_" + type + "_status_" + targetDateStr, val);
         }
 
         function updateWeekTitle() {
             const titleEl = document.getElementById('week-title');
-            if (!titleEl) return;
             if (currentWeekOffset === 0) titleEl.textContent = "📅 今週の予定";
             else if (currentWeekOffset === 1) titleEl.textContent = "📅 来週の予定";
             else if (currentWeekOffset === 2) titleEl.textContent = "📅 再来週の予定";
             else if (currentWeekOffset === -1) titleEl.textContent = "📅 先週の予定";
-            else {
-                titleEl.textContent = `📅 ${currentWeekOffset > 0 ? currentWeekOffset + '週間後' : Math.abs(currentWeekOffset) + '週間前'}の予定`;
-            }
+            else titleEl.textContent = `📅 ${currentWeekOffset > 0 ? currentWeekOffset + '週間後' : Math.abs(currentWeekOffset) + '週間前'}の予定`;
         }
 
         function getDeadlineStatus(dateStr) {
             if (!dateStr) return { label: "", classStr: "", diff: Infinity };
-            
-            const today = new Date(2026, 5, 21);
-            today.setHours(0,0,0,0);
-            const target = new Date(dateStr);
-            target.setHours(0,0,0,0);
-            
-            const diffTime = target.getTime() - today.getTime();
-            const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-            
-            if (diffDays < 0) {
-                return { label: "超過中！", classStr: "overdue", diff: diffDays };
-            } else if (diffDays === 0) {
-                return { label: "今日まで！", classStr: "today", diff: diffDays };
-            } else {
-                return { label: `あと${diffDays}日`, classStr: "future", diff: diffDays };
-            }
+            const today = new Date(2026, 5, 21); today.setHours(0,0,0,0);
+            const target = new Date(dateStr); target.setHours(0,0,0,0);
+            const diffDays = Math.round((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+            if (diffDays < 0) return { label: "超過中！", classStr: "overdue", diff: diffDays };
+            if (diffDays === 0) return { label: "今日まで！", classStr: "today", diff: diffDays };
+            return { label: `あと${diffDays}日`, classStr: "future", diff: diffDays };
         }
 
         function previewTodoDate(child, val) {
             const previewEl = document.getElementById(child + '-date-preview');
-            if (!previewEl) return;
             if (val) {
                 const p = val.split('-');
                 previewEl.textContent = `⏰ 期限設定：${parseInt(p[1])}月${parseInt(p[2])}日`;
                 previewEl.style.display = 'block';
             } else {
-                previewEl.textContent = '';
                 previewEl.style.display = 'none';
             }
         }
@@ -1113,10 +813,7 @@
             let listData = [];
             try { listData = JSON.parse(globalCloudData["todo_list_" + child] || "[]"); } catch(e){}
 
-            listData.forEach(item => {
-                item.statusInfo = getDeadlineStatus(item.date);
-            });
-
+            listData.forEach(item => item.statusInfo = getDeadlineStatus(item.date));
             listData.sort((a, b) => {
                 if (!!a.checked !== !!b.checked) return a.checked ? 1 : -1;
                 return a.statusInfo.diff - b.statusInfo.diff;
@@ -1127,66 +824,40 @@
             listData.forEach((item, index) => {
                 if (!item.checked) incompleteCount++;
 
-                const li = document.createElement('li');
-                li.className = 'todo-custom-item';
+                const li = document.createElement('li'); li.className = 'todo-custom-item';
+                const label = document.createElement('label'); label.className = 'todo-custom-label';
 
-                const label = document.createElement('label');
-                label.className = 'todo-custom-label';
-
-                const cb = document.createElement('input');
-                cb.type = 'checkbox';
-                cb.className = 'todo-custom-cb';
-                cb.checked = !!item.checked;
+                const cb = document.createElement('input'); cb.type = 'checkbox'; cb.className = 'todo-custom-cb'; cb.checked = !!item.checked;
                 cb.addEventListener('change', async (e) => {
                     item.checked = e.target.checked;
-                    const cleanData = listData.map(t => ({ text: t.text, date: t.date, checked: t.checked }));
-                    await saveCloudData("todo_list_" + child, JSON.stringify(cleanData));
+                    await saveCloudData("todo_list_" + child, JSON.stringify(listData.map(t => ({ text: t.text, date: t.date, checked: t.checked }))));
                     renderCustomTodoList(child);
                 });
 
-                const textContainer = document.createElement('span');
-                textContainer.className = 'todo-text-container';
-
-                const spanText = document.createElement('span');
-                spanText.className = 'todo-custom-text';
-                spanText.textContent = item.text;
+                const textContainer = document.createElement('span'); textContainer.className = 'todo-text-container';
+                const spanText = document.createElement('span'); spanText.className = 'todo-custom-text'; spanText.textContent = item.text;
                 textContainer.appendChild(spanText);
 
                 if (item.date) {
                     const p = item.date.split('-');
-                    
-                    const dateLabel = document.createElement('span');
-                    dateLabel.className = 'todo-date-label';
-                    dateLabel.textContent = `📅 ${parseInt(p[1])}/${parseInt(p[2])}`;
+                    const dateLabel = document.createElement('span'); dateLabel.className = 'todo-date-label'; dateLabel.textContent = `📅 ${parseInt(p[1])}/${parseInt(p[2])}`;
                     textContainer.appendChild(dateLabel);
 
-                    const badge = document.createElement('span');
-                    badge.className = `deadline-badge ${item.statusInfo.classStr}`;
-                    badge.textContent = item.statusInfo.label;
+                    const badge = document.createElement('span'); badge.className = `deadline-badge ${item.statusInfo.classStr}`; badge.textContent = item.statusInfo.label;
                     textContainer.appendChild(badge);
                 }
 
-                label.appendChild(cb);
-                label.appendChild(textContainer);
-
-                const delBtn = document.createElement('button');
-                delBtn.type = 'button';
-                delBtn.className = 'todo-del-btn';
-                delBtn.innerHTML = '🗑️';
+                label.appendChild(cb); label.appendChild(textContainer);
+                const delBtn = document.createElement('button'); delBtn.type = 'button'; delBtn.className = 'todo-del-btn'; delBtn.innerHTML = '🗑️';
                 delBtn.addEventListener('click', async () => {
                     listData.splice(index, 1);
-                    const cleanData = listData.map(t => ({ text: t.text, date: t.date, checked: t.checked }));
-                    await saveCloudData("todo_list_" + child, JSON.stringify(cleanData));
+                    await saveCloudData("todo_list_" + child, JSON.stringify(listData.map(t => ({ text: t.text, date: t.date, checked: t.checked }))));
                     renderCustomTodoList(child);
                 });
 
-                li.appendChild(label);
-                li.appendChild(delBtn);
-                listEl.appendChild(li);
+                li.appendChild(label); li.appendChild(delBtn); listEl.appendChild(li);
             });
-
-            const countEl = document.getElementById(child + '-todo-count');
-            if (countEl) countEl.textContent = `残り: ${incompleteCount}個`;
+            document.getElementById(child + '-todo-count').textContent = `残り: ${incompleteCount}個`;
         }
 
         async function addCustomTodo(child) {
@@ -1197,42 +868,24 @@
             let listData = [];
             try { listData = JSON.parse(globalCloudData["todo_list_" + child] || "[]"); } catch(e){}
 
-            const selectedDate = dateEl && dateEl.value ? dateEl.value : null;
-
-            listData.push({ 
-                text: inputEl.value.trim(), 
-                date: selectedDate, 
-                checked: false 
-            });
-            
-            inputEl.value = '';
-            if (dateEl) dateEl.value = '';
-
+            listData.push({ text: inputEl.value.trim(), date: dateEl.value || null, checked: false });
+            inputEl.value = ''; dateEl.value = '';
             previewTodoDate(child, '');
-
             await saveCloudData("todo_list_" + child, JSON.stringify(listData));
             renderCustomTodoList(child);
         }
 
         function selectDay(dayNum) {
             selectedDayNum = dayNum;
-            for(let i=1; i<=5; i++) {
-                const btn = document.getElementById('btn-day-' + i);
-                if (btn) btn.className = 'day-btn';
-            }
-            const activeBtn = document.getElementById('btn-day-' + dayNum);
-            if (activeBtn) activeBtn.className = 'day-btn active';
+            for(let i=1; i<=5; i++) document.getElementById('btn-day-' + i).className = 'day-btn';
+            document.getElementById('btn-day-' + dayNum).className = 'day-btn active';
 
             const targetDateStr = getTargetDateStr(dayNum);
             updateWeekTitle();
             
             const parts = targetDateStr.split('-');
             const days = ["日", "月", "火", "水", "木", "金", "土"];
-            const dateLabelEl = document.getElementById('selected-date-label');
-            if (dateLabelEl) {
-                dateLabelEl.textContent = `📅 ${parts[0]}年${parseInt(parts[1])}月${parseInt(parts[2])}日 (${days[dayNum]})`;
-                dateLabelEl.style.borderColor = "var(--kouta-border)";
-            }
+            document.getElementById('selected-date-label').textContent = `📅 ${parts[0]}年${parseInt(parts[1])}月${parseInt(parts[2])}日 (${days[dayNum]})`;
 
             const isTerakoya = (dayNum === 3) && terakoyaDates2026.includes(targetDateStr);
             let koutaSched = globalCloudData["custom_" + targetDateStr + "_kouta"];
@@ -1243,90 +896,44 @@
                     koutaSched = "💤 学校はお休みです";
                 } else {
                     let config = { period: "5", isBTime: false, hasLunch: true, isDuty: false };
-                    try {
-                        if (globalCloudData["kouta_config_" + targetDateStr]) {
-                            config = JSON.parse(globalCloudData["kouta_config_" + targetDateStr]);
-                        }
-                    } catch(e){}
-
+                    try { if (globalCloudData["kouta_config_" + targetDateStr]) config = JSON.parse(globalCloudData["kouta_config_" + targetDateStr]); } catch(e){}
                     isDuty = !!config.isDuty;
                     const typeStr = config.isBTime ? "B" : "A";
                     const limitTime = calculateKoutaTime(config);
-                    
-                    let detailLabel = `${typeStr}タイム (${config.period}時間授業`;
-                    if (config.isBTime && config.period === "4") {
-                        detailLabel += config.hasLunch ? "・給食清掃あり" : "・給食なし";
-                    }
-                    detailLabel += `・${limitTime}頃下校)`;
-
-                    const baseText = isTerakoya ? "🔥 わくわく → 【寺子屋Bチーム 13:55〜14:55】" : defaultSchedules[dayNum].kouta;
-                    const dutyLabel = isDuty ? " 🧺[給食当番]" : "";
-                    
-                    koutaSched = `🎒 ${detailLabel}${dutyLabel} / ${baseText}`;
+                    let detailLabel = `${typeStr}タイム (${config.period}時間授業${config.isBTime && config.period === "4" ? (config.hasLunch ? "・給食清掃あり" : "・給食なし") : ""}・${limitTime}頃下校)`;
+                    koutaSched = `🎒 ${detailLabel}${isDuty ? " 🧺[給食当番]" : ""} / ${isTerakoya ? "🔥 わくわく → 【寺子屋Bチーム 13:55〜14:55】" : defaultSchedules[dayNum].kouta}`;
                 }
             } else {
-                try {
-                    if (globalCloudData["kouta_config_" + targetDateStr]) {
-                        const config = JSON.parse(globalCloudData["kouta_config_" + targetDateStr]);
-                        isDuty = !!config.isDuty;
-                    }
-                } catch(e){}
+                try { if (globalCloudData["kouta_config_" + targetDateStr]) isDuty = JSON.parse(globalCloudData["kouta_config_" + targetDateStr]).isDuty; } catch(e){}
             }
             
-            const dispKouta = document.getElementById('display-kouta');
-            if (dispKouta) dispKouta.textContent = koutaSched;
-
-            const lunchBadge = document.getElementById('kouta-lunch-badge');
-            if (lunchBadge) lunchBadge.style.display = isDuty ? "inline-block" : "none";
-            
-            const lunchDetails = document.getElementById('kouta-lunch-details');
-            if (isDuty && lunchDetails) lunchDetails.open = true;
+            document.getElementById('display-kouta').textContent = koutaSched;
+            document.getElementById('kouta-lunch-badge').style.display = isDuty ? "inline-block" : "none";
+            if (isDuty) document.getElementById('kouta-lunch-details').open = true;
 
             let bentoList = [];
             try { bentoList = JSON.parse(globalCloudData["haruto_bento_days"] || "[]"); } catch(e){}
             const isBento = bentoList.includes(targetDateStr);
 
             let harutoSched = globalCloudData["custom_" + targetDateStr + "_haruto"] || defaultSchedules[dayNum].haruto;
-            if (isDayOff(targetDateStr) && !globalCloudData["custom_" + targetDateStr + "_haruto"]) {
-                harutoSched = "💤 保育園はお休みです";
-            } else if (isBento && !globalCloudData["custom_" + targetDateStr + "_haruto"]) {
-                harutoSched = harutoSched.split(" (")[0] + " 🍱【今日はお弁当の日！】";
-            }
+            if (isDayOff(targetDateStr) && !globalCloudData["custom_" + targetDateStr + "_haruto"]) harutoSched = "💤 保育園はお休みです";
+            else if (isBento && !globalCloudData["custom_" + targetDateStr + "_haruto"]) harutoSched = harutoSched.split(" (")[0] + " 🍱【今日はお弁当の日！】";
             
-            const dispHaruto = document.getElementById('display-haruto');
-            if (dispHaruto) dispHaruto.textContent = harutoSched;
+            document.getElementById('display-haruto').textContent = harutoSched;
 
             const offFlag = isDayOff(targetDateStr);
-            
-            const tkAlert = document.getElementById('kouta-terakoya-alert');
-            if (tkAlert) tkAlert.style.display = (isTerakoya && !offFlag) ? "block" : "none";
-            
-            const tkDetails = document.getElementById('kouta-terakoya-details');
-            if (tkDetails) {
-                tkDetails.style.display = (isTerakoya && !offFlag) ? "block" : "none";
-                if (isTerakoya && !offFlag) tkDetails.open = true;
-            }
+            document.getElementById('kouta-terakoya-alert').style.display = (isTerakoya && !offFlag) ? "block" : "none";
+            document.getElementById('kouta-terakoya-details').style.display = (isTerakoya && !offFlag) ? "block" : "none";
+            if (isTerakoya && !offFlag) document.getElementById('kouta-terakoya-details').open = true;
 
-            const bentoAlert = document.getElementById('haruto-bento-alert');
-            if (bentoAlert) bentoAlert.style.display = (isBento && !offFlag) ? "block" : "none";
-            
-            const bentoBadge = document.getElementById('haruto-bento-badge');
-            if (bentoBadge) bentoBadge.style.display = (isBento && !offFlag) ? "inline" : "none";
+            document.getElementById('haruto-bento-alert').style.display = (isBento && !offFlag) ? "block" : "none";
+            document.getElementById('haruto-bento-badge').style.display = (isBento && !offFlag) ? "inline" : "none";
 
             const wakuVal = globalCloudData["res_wakuwaku_status_" + targetDateStr] || "yet";
             const aomuVal = globalCloudData["res_aomushi_status_" + targetDateStr] || "yet";
             
-            const selWaku = document.getElementById('sel-wakuwaku');
-            const selAomu = document.getElementById('sel-aomushi');
-            
-            if (selWaku) {
-                selWaku.value = wakuVal;
-                applySelectStyle(selWaku, wakuVal);
-            }
-            if (selAomu) {
-                selAomu.value = aomuVal;
-                applySelectStyle(selAomu, aomuVal);
-            }
+            applySelectStyle(document.getElementById('sel-wakuwaku'), wakuVal); document.getElementById('sel-wakuwaku').value = wakuVal;
+            applySelectStyle(document.getElementById('sel-aomushi'), aomuVal); document.getElementById('sel-aomushi').value = aomuVal;
         }
 
         document.getElementById('week-prev').addEventListener('click', () => { currentWeekOffset--; selectDay(selectedDayNum); });
@@ -1334,11 +941,8 @@
 
         function renderKoutaCalendar(year, month) {
             const container = document.getElementById('kouta-calendar');
-            if (!container) return;
-            container.innerHTML = '';
-            
-            const mTitle = document.getElementById('kouta-cal-month-title');
-            if (mTitle) mTitle.textContent = `${year}年${month + 1}月`;
+            if (!container) return; container.innerHTML = '';
+            document.getElementById('kouta-cal-month-title').textContent = `${year}年${month + 1}月`;
             
             ['日','月','火','水','木','金','土'].forEach(w => {
                 const h = document.createElement('div'); h.className = 'cal-header'; h.textContent = w; container.appendChild(h);
@@ -1346,215 +950,130 @@
             
             const firstDay = new Date(year, month, 1).getDay();
             const lastDate = new Date(year, month + 1, 0).getDate();
-            
             for (let i = 0; i < firstDay; i++) container.appendChild(document.createElement('div')).className = 'cal-day empty';
             
             for (let date = 1; date <= lastDate; date++) {
                 const dayEl = document.createElement('div'); dayEl.className = 'cal-day';
-                const dateText = document.createElement('div'); dateText.textContent = date;
-                dayEl.appendChild(dateText);
-
+                const dateText = document.createElement('div'); dateText.textContent = date; dayEl.appendChild(dateText);
                 const cStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
                 
-                if (isDayOff(cStr)) {
-                    dayEl.classList.add('day-off');
-                    container.appendChild(dayEl);
-                    continue;
-                }
+                if (isDayOff(cStr)) { dayEl.classList.add('day-off'); container.appendChild(dayEl); continue; }
 
                 let config = { period: "5", isBTime: false, hasLunch: true, isDuty: false };
-                try {
-                    if (globalCloudData["kouta_config_" + cStr]) {
-                        config = JSON.parse(globalCloudData["kouta_config_" + cStr]);
-                    }
-                } catch(e){}
+                try { if (globalCloudData["kouta_config_" + cStr]) config = JSON.parse(globalCloudData["kouta_config_" + cStr]); } catch(e){}
 
                 if (config.isBTime) dayEl.classList.add('kouta-active-b');
                 
-                const badgeContainer = document.createElement('div');
-                badgeContainer.className = 'kouta-badge-container';
-
-                const badge = document.createElement('div');
-                badge.className = 'kouta-badge';
-                
-                let displayType = config.isBTime ? 'B' : 'A';
-                if (config.isBTime && config.period === "4" && !config.hasLunch) {
-                    displayType = 'B(無)';
-                }
-                badge.textContent = `${config.period}${displayType}`;
+                const badgeContainer = document.createElement('div'); badgeContainer.className = 'kouta-badge-container';
+                const badge = document.createElement('div'); badge.className = 'kouta-badge';
+                badge.textContent = `${config.period}${config.isBTime ? (config.period === "4" && !config.hasLunch ? 'B(無)' : 'B') : 'A'}`;
                 badgeContainer.appendChild(badge);
 
                 if (config.isDuty) {
-                    const dutyBadge = document.createElement('div');
-                    dutyBadge.className = 'kouta-duty-badge';
-                    dutyBadge.textContent = "当番";
+                    const dutyBadge = document.createElement('div'); dutyBadge.className = 'kouta-duty-badge'; dutyBadge.textContent = "当番";
                     badgeContainer.appendChild(dutyBadge);
                 }
-
                 dayEl.appendChild(badgeContainer);
 
                 dayEl.addEventListener('click', () => {
                     activePanelDateStr = cStr;
-                    const pTitle = document.getElementById('kouta-panel-date-title');
-                    if (pTitle) pTitle.textContent = `${month + 1}月${date}日の下校時程設定`;
-                    
-                    const pSel = document.getElementById('panel-period-select');
-                    if (pSel) pSel.value = config.period;
-                    
-                    const pBtime = document.getElementById('panel-btime-checkbox');
-                    if (pBtime) pBtime.checked = config.isBTime;
-                    
-                    const pLunch = document.getElementById('panel-lunch-checkbox');
-                    if (pLunch) pLunch.checked = config.hasLunch !== false;
-                    
-                    const pDuty = document.getElementById('panel-duty-checkbox');
-                    if (pDuty) pDuty.checked = !!config.isDuty;
-                    
+                    document.getElementById('kouta-panel-date-title').textContent = `${month + 1}月${date}日の下校時程設定`;
+                    document.getElementById('panel-period-select').value = config.period;
+                    document.getElementById('panel-btime-checkbox').checked = config.isBTime;
+                    document.getElementById('panel-lunch-checkbox').checked = config.hasLunch !== false;
+                    document.getElementById('panel-duty-checkbox').checked = !!config.isDuty;
                     updatePanelLivePreview();
-                    const qPanel = document.getElementById('kouta-quick-panel');
-                    if (qPanel) qPanel.style.display = 'block';
+                    document.getElementById('kouta-quick-panel').style.display = 'block';
                 });
-
                 container.appendChild(dayEl);
             }
         }
 
         function updatePanelLivePreview() {
-            const periodEl = document.getElementById('panel-period-select');
-            const btimeEl = document.getElementById('panel-btime-checkbox');
-            const lunchEl = document.getElementById('panel-lunch-checkbox');
-            if (!periodEl) return;
-
-            const period = periodEl.value;
-            const isBTime = btimeEl ? btimeEl.checked : false;
-            const hasLunch = lunchEl ? lunchEl.checked : true;
-            
-            const lunchRow = document.getElementById('panel-b4-lunch-row');
-            if (lunchRow) {
-                lunchRow.style.display = (isBTime && period === "4") ? 'flex' : 'none';
-            }
-
-            const mockConfig = { period: period, isBTime: isBTime, hasLunch: hasLunch };
-            const timePreview = calculateKoutaTime(mockConfig);
-            const previewEl = document.getElementById('panel-time-preview');
-            if (previewEl) previewEl.textContent = timePreview;
+            const period = document.getElementById('panel-period-select').value;
+            const isBTime = document.getElementById('panel-btime-checkbox').checked;
+            document.getElementById('panel-b4-lunch-row').style.display = (isBTime && period === "4") ? 'flex' : 'none';
+            document.getElementById('panel-time-preview').textContent = calculateKoutaTime({ period: period, isBTime: isBTime, hasLunch: document.getElementById('panel-lunch-checkbox').checked });
         }
 
         async function saveKoutaPanelConfig() {
             if (!activePanelDateStr) return;
-            const period = document.getElementById('panel-period-select').value;
-            const isBTime = document.getElementById('panel-btime-checkbox').checked;
-            const hasLunch = document.getElementById('panel-lunch-checkbox').checked;
-            const isDuty = document.getElementById('panel-duty-checkbox').checked;
-            
             updatePanelLivePreview();
-
-            const configValue = JSON.stringify({ 
-                period: period, 
-                isBTime: isBTime, 
-                hasLunch: hasLunch,
-                isDuty: isDuty
-            });
-            await saveCloudData("kouta_config_" + activePanelDateStr, configValue);
-            
-            renderKoutaCalendar(koutaCalYear, koutaCalMonth);
-            selectDay(selectedDayNum);
+            await saveCloudData("kouta_config_" + activePanelDateStr, JSON.stringify({ 
+                period: document.getElementById('panel-period-select').value, 
+                isBTime: document.getElementById('panel-btime-checkbox').checked, 
+                hasLunch: document.getElementById('panel-lunch-checkbox').checked,
+                isDuty: document.getElementById('panel-duty-checkbox').checked
+            }));
+            renderKoutaCalendar(koutaCalYear, koutaCalMonth); selectDay(selectedDayNum);
         }
 
-        if(document.getElementById('panel-period-select')) document.getElementById('panel-period-select').addEventListener('change', saveKoutaPanelConfig);
-        if(document.getElementById('panel-btime-checkbox')) document.getElementById('panel-btime-checkbox').addEventListener('change', saveKoutaPanelConfig);
-        if(document.getElementById('panel-lunch-checkbox')) document.getElementById('panel-lunch-checkbox').addEventListener('change', saveKoutaPanelConfig);
-        if(document.getElementById('panel-duty-checkbox')) document.getElementById('panel-duty-checkbox').addEventListener('change', saveKoutaPanelConfig);
+        ['panel-period-select', 'panel-btime-checkbox', 'panel-lunch-checkbox', 'panel-duty-checkbox'].forEach(id => document.getElementById(id).addEventListener('change', saveKoutaPanelConfig));
 
         function renderBentoCalendar(year, month) {
             const container = document.getElementById('bento-calendar');
-            if (!container) return;
-            container.innerHTML = '';
-            
-            const mTitle = document.getElementById('cal-month-title');
-            if (mTitle) mTitle.textContent = `${year}年${month + 1}月`;
+            if (!container) return; container.innerHTML = '';
+            document.getElementById('cal-month-title').textContent = `${year}年${month + 1}月`;
             
             ['日','月','火','水','木','金','土'].forEach(w => {
                 const h = document.createElement('div'); h.className = 'cal-header'; h.textContent = w; container.appendChild(h);
             });
             const firstDay = new Date(year, month, 1).getDay();
             const lastDate = new Date(year, month + 1, 0).getDate();
-            let bentoList = [];
-            try { bentoList = JSON.parse(globalCloudData["haruto_bento_days"] || "[]"); } catch(e){}
+            let bentoList = []; try { bentoList = JSON.parse(globalCloudData["haruto_bento_days"] || "[]"); } catch(e){}
             
             for (let i = 0; i < firstDay; i++) container.appendChild(document.createElement('div')).className = 'cal-day empty';
             
             for (let date = 1; date <= lastDate; date++) {
                 const dayEl = document.createElement('div'); dayEl.className = 'cal-day'; dayEl.textContent = date;
                 const cStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
-                
-                if (isDayOff(cStr)) {
-                    dayEl.classList.add('day-off');
-                    container.appendChild(dayEl);
-                    continue;
-                }
-
+                if (isDayOff(cStr)) { dayEl.classList.add('day-off'); container.appendChild(dayEl); continue; }
                 if (bentoList.includes(cStr)) dayEl.classList.add('bento-active');
                 
                 dayEl.addEventListener('click', async () => {
-                    if (bentoList.includes(cStr)) bentoList = bentoList.filter(d => d !== cStr);
-                    else bentoList.push(cStr);
+                    bentoList = bentoList.includes(cStr) ? bentoList.filter(d => d !== cStr) : [...bentoList, cStr];
                     await saveCloudData("haruto_bento_days", JSON.stringify(bentoList));
-                    renderBentoCalendar(currentCalYear, currentCalMonth);
-                    selectDay(selectedDayNum);
+                    renderBentoCalendar(currentCalYear, currentCalMonth); selectDay(selectedDayNum);
                 });
                 container.appendChild(dayEl);
             }
         }
 
-        if(document.getElementById('kouta-cal-prev')) document.getElementById('kouta-cal-prev').addEventListener('click', () => { koutaCalMonth--; if (koutaCalMonth < 0) { koutaCalMonth = 11; koutaCalYear--; } renderKoutaCalendar(koutaCalYear, koutaCalMonth); if(document.getElementById('kouta-quick-panel')) document.getElementById('kouta-quick-panel').style.display='none'; });
-        if(document.getElementById('kouta-cal-next')) document.getElementById('kouta-cal-next').addEventListener('click', () => { koutaCalMonth++; if (koutaCalMonth > 11) { koutaCalMonth = 0; koutaCalYear++; } renderKoutaCalendar(koutaCalYear, koutaCalMonth); if(document.getElementById('kouta-quick-panel')) document.getElementById('kouta-quick-panel').style.display='none'; });
-
-        if(document.getElementById('cal-prev')) document.getElementById('cal-prev').addEventListener('click', () => { currentCalMonth--; if (currentCalMonth < 0) { currentCalMonth = 11; currentCalYear--; } renderBentoCalendar(currentCalYear, currentCalMonth); });
-        if(document.getElementById('cal-next')) document.getElementById('cal-next').addEventListener('click', () => { currentCalMonth++; if (currentCalMonth > 11) { currentCalMonth = 0; currentCalYear++; } renderBentoCalendar(currentCalYear, currentCalMonth); });
+        document.getElementById('kouta-cal-prev').addEventListener('click', () => { koutaCalMonth--; if (koutaCalMonth < 0) { koutaCalMonth = 11; koutaCalYear--; } renderKoutaCalendar(koutaCalYear, koutaCalMonth); document.getElementById('kouta-quick-panel').style.display='none'; });
+        document.getElementById('kouta-cal-next').addEventListener('click', () => { koutaCalMonth++; if (koutaCalMonth > 11) { koutaCalMonth = 0; koutaCalYear++; } renderKoutaCalendar(koutaCalYear, koutaCalMonth); document.getElementById('kouta-quick-panel').style.display='none'; });
+        document.getElementById('cal-prev').addEventListener('click', () => { currentCalMonth--; if (currentCalMonth < 0) { currentCalMonth = 11; currentCalYear--; } renderBentoCalendar(currentCalYear, currentCalMonth); });
+        document.getElementById('cal-next').addEventListener('click', () => { currentCalMonth++; if (currentCalMonth > 11) { currentCalMonth = 0; currentCalYear++; } renderBentoCalendar(currentCalYear, currentCalMonth); });
 
         async function toggleEdit(target) {
             const displayEl = document.getElementById("display-" + target);
             const inputEl = document.getElementById("input-" + target);
             const btnEl = document.getElementById("edit-btn-" + target);
-            const targetDateStr = getTargetDateStr(selectedDayNum);
-
             if (btnEl.textContent === "修正") {
-                inputEl.value = displayEl.textContent;
-                displayEl.style.display = "none"; inputEl.style.display = "block";
+                inputEl.value = displayEl.textContent; displayEl.style.display = "none"; inputEl.style.display = "block";
                 btnEl.textContent = "保存"; btnEl.className = "edit-btn saving";
             } else {
                 displayEl.textContent = inputEl.value;
-                await saveCloudData("custom_" + targetDateStr + "_" + target, inputEl.value);
+                await saveCloudData("custom_" + getTargetDateStr(selectedDayNum) + "_" + target, inputEl.value);
                 inputEl.style.display = "none"; displayEl.style.display = "block";
                 btnEl.textContent = "修正"; btnEl.className = "edit-btn";
             }
         }
 
         let memoTimeout;
-        if(document.getElementById('customMemo')) {
-            document.getElementById('customMemo').addEventListener('input', (e) => { clearTimeout(memoTimeout); memoTimeout = setTimeout(() => { saveCloudData("memo", e.target.value); }, 1000); });
-        }
+        document.getElementById('customMemo').addEventListener('input', (e) => { clearTimeout(memoTimeout); memoTimeout = setTimeout(() => { saveCloudData("memo", e.target.value); }, 1000); });
 
         window.addEventListener('DOMContentLoaded', async () => {
             await fetchCloudData();
             let currentDay = new Date(2026, 5, 21).getDay();
             if (currentDay === 0 || currentDay === 6) currentDay = 1;
-            renderKoutaCalendar(koutaCalYear, koutaCalMonth);
-            renderBentoCalendar(currentCalYear, currentCalMonth);
-            selectDay(currentDay);
-            
-            renderCustomTodoList('kouta');
-            renderCustomTodoList('haruto');
-
-            if(document.getElementById('customMemo')) document.getElementById('customMemo').value = globalCloudData["memo"] || "";
+            renderKoutaCalendar(koutaCalYear, koutaCalMonth); renderBentoCalendar(currentCalYear, currentCalMonth); selectDay(currentDay);
+            renderCustomTodoList('kouta'); renderCustomTodoList('haruto');
+            document.getElementById('customMemo').value = globalCloudData["memo"] || "";
         });
 
-        for (let i = 1; i <= 5; i++) {
-            if(document.getElementById('btn-day-' + i)) document.getElementById('btn-day-' + i).addEventListener('click', () => selectDay(i));
-        }
-        if(document.getElementById('edit-btn-kouta')) document.getElementById('edit-btn-kouta').addEventListener('click', () => toggleEdit('kouta'));
-        if(document.getElementById('edit-btn-haruto')) document.getElementById('edit-btn-haruto').addEventListener('click', () => toggleEdit('haruto'));
+        for (let i = 1; i <= 5; i++) document.getElementById('btn-day-' + i).addEventListener('click', () => selectDay(i));
+        document.getElementById('edit-btn-kouta').addEventListener('click', () => toggleEdit('kouta'));
+        document.getElementById('edit-btn-haruto').addEventListener('click', () => toggleEdit('haruto'));
     </script>
 </body>
 </html>
