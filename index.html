@@ -8,7 +8,6 @@
 
     <style>
         :root {
-            /* 全体共通 */
             --bg-color: #f1f5f9; 
             --text-color: #333333;
             --muted-text: #64748b;
@@ -36,9 +35,7 @@
             --terakoya-text: #2e7d32;
         }
         
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -50,12 +47,10 @@
             padding-bottom: 60px;
         }
 
-        header {
-            text-align: center;
-            padding: 10px 0;
-        }
+        header { text-align: center; padding: 5px 0; }
         header h1 { margin: 0; font-size: 1.3rem; font-weight: 800; color: #1e293b; }
 
+        /* メインカード共通（幅100%均一化） */
         .card, .schedule-box {
             background: white;
             padding: 15px;
@@ -76,80 +71,33 @@
         }
 
         /* 📅 今週の予定エリア */
-        .week-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px; /* 引っ越し先の日付との間を微調整 */
-        }
+        .week-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .week-nav-btn {
-            background-color: var(--btn-neutral-bg);
-            border: none;
-            padding: 5px 12px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            color: var(--btn-neutral-text);
-            cursor: pointer;
+            background-color: var(--btn-neutral-bg); border: none; padding: 5px 12px; border-radius: 6px;
+            font-size: 0.8rem; font-weight: bold; color: var(--btn-neutral-text); cursor: pointer;
         }
         .week-nav-btn:active { background-color: var(--btn-neutral-active); }
         .week-nav-title { font-weight: bold; color: #1e293b; font-size: 1rem; }
         
-        /* 🆕 枠線を完全排除し、すっきり美しく文字だけ並べるスタイル */
+        /* 枠なしスッキリ日付 */
         .selected-date-display {
-            text-align: center;
-            font-weight: 800;
-            font-size: 1.05rem; /* 主役としてパッと見やすく */
-            color: var(--kouta-text); /* 締まりのあるタイポグラフィカラー */
-            padding: 4px 0;
-            margin: 0 0 12px 0;
-            width: 100%;
-            display: block;
+            text-align: center; font-weight: 800; font-size: 1.05rem; color: var(--kouta-text);
+            padding: 4px 0; margin: 0 0 12px 0; width: 100%; display: block;
         }
 
-        .day-btn-container {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            gap: 4px;
-        }
+        .day-btn-container { display: flex; justify-content: space-between; margin-bottom: 15px; gap: 4px; }
         .day-btn {
-            flex: 1;
-            padding: 10px 0;
-            border: 1px solid #cbd5e1;
-            background-color: white;
-            color: #64748b;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            cursor: pointer;
-            text-align: center;
+            flex: 1; padding: 10px 0; border: 1px solid #cbd5e1; background-color: white;
+            color: #64748b; border-radius: 6px; font-weight: bold; font-size: 0.9rem; cursor: pointer; text-align: center;
         }
-        .day-btn.active {
-            background-color: #475569;
-            color: white;
-            border-color: #475569;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-        }
+        .day-btn.active { background-color: #475569; color: white; border-color: #475569; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
 
-        .schedule-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px dashed #e2e8f0;
-        }
+        .schedule-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #e2e8f0; }
         .schedule-row:last-child { border-bottom: none; }
         
         .name-label {
-            font-weight: bold;
-            width: 65px;
-            padding: 4px 0;
-            border-radius: 4px;
-            text-align: center;
-            font-size: 0.85rem;
-            flex-shrink: 0;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            font-weight: bold; width: 65px; padding: 4px 0; border-radius: 4px; text-align: center;
+            font-size: 0.85rem; flex-shrink: 0; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
         .kouta-label { background-color: var(--kouta-bg); color: var(--kouta-text); }
         .haruto-label { background-color: var(--haruto-bg); color: var(--haruto-text); }
@@ -157,79 +105,26 @@
         .schedule-text-display { flex: 1; margin: 0 10px; font-size: 0.9rem; font-weight: bold; color: #334155; }
         .schedule-edit-input { display: none; flex: 1; margin: 0 10px; border: 1px solid #cbd5e1; border-radius: 4px; padding: 6px 8px; font-size: 0.9rem; }
 
-        .edit-btn {
-            background-color: var(--btn-neutral-bg);
-            color: var(--btn-neutral-text);
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
+        .edit-btn { background-color: var(--btn-neutral-bg); color: var(--btn-neutral-text); border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; cursor: pointer; flex-shrink: 0; }
         .edit-btn.saving { background-color: #bbf7d0; color: #15803d; }
 
         /* 🤖 予約確認パネル */
-        .reservation-panel {
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            padding: 10px;
-            margin-top: 12px;
-            box-shadow: var(--inner-shadow);
-        }
-        .res-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px dashed #e2e8f0;
-            gap: 8px;
-        }
+        .reservation-panel { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; box-shadow: var(--inner-shadow); }
+        .res-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #e2e8f0; gap: 8px; }
         .res-row:last-child { border-bottom: none; }
         .res-label-box { flex: 1; font-size: 0.85rem; font-weight: bold; color: #475569; }
         
-        .res-status-select {
-            padding: 4px 6px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            border-radius: 4px;
-            border: 1px solid #cbd5e1;
-            background-color: #e2e8f0;
-            color: #475569;
-            cursor: pointer;
-            width: 90px;
-            text-align: center;
-        }
+        .res-status-select { padding: 4px 6px; font-size: 0.8rem; font-weight: bold; border-radius: 4px; border: 1px solid #cbd5e1; background-color: #e2e8f0; color: #475569; cursor: pointer; width: 90px; text-align: center; }
         .res-status-select.status-ok { background-color: #d1fae5; color: #065f46; border-color: #a7f3d0; }
         .res-status-select.status-no { background-color: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; text-decoration: line-through; }
         .res-status-select.status-yet { background-color: #fef3c7; color: #92400e; border-color: #fde68a; }
 
         .res-btn-group { display: flex; gap: 4px; flex-shrink: 0; }
-        .res-btn {
-            background-color: var(--btn-neutral-bg);
-            color: var(--btn-neutral-text);
-            border: none;
-            padding: 5px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
+        .res-btn { background-color: var(--btn-neutral-bg); color: var(--btn-neutral-text); border: none; padding: 5px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .res-btn.phone-btn { background-color: var(--btn-phone-bg); color: var(--btn-phone-text); }
 
         /* 子供別自由TODOエリア */
-        .todo-panel-child {
-            border-radius: 8px;
-            padding: 12px 12px 12px 16px;
-            margin-bottom: 12px;
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            position: relative;
-            overflow: hidden;
-        }
+        .todo-panel-child { border-radius: 8px; padding: 12px 12px 12px 16px; margin-bottom: 12px; background-color: #f8fafc; border: 1px solid #e2e8f0; position: relative; overflow: hidden; }
         .todo-panel-child::before { content: ""; position: absolute; top: 0; left: 0; width: 6px; height: 100%; }
         .todo-panel-child.kouta-theme::before { background-color: var(--kouta-border); }
         .todo-panel-child.haruto-theme::before { background-color: var(--haruto-border); }
@@ -242,25 +137,11 @@
         .todo-input-row { display: flex; gap: 6px; margin-bottom: 4px; align-items: center; }
         .todo-input-text { flex: 1; padding: 7px; font-size: 0.85rem; border: 1px solid #cbd5e1; border-radius: 4px; height: 34px; background-color: #ffffff; box-shadow: var(--inner-shadow); }
         
-        .todo-date-wrapper {
-            position: relative;
-            width: 36px;
-            height: 34px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-            border: 1px solid #cbd5e1;
-            border-radius: 4px;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
+        .todo-date-wrapper { position: relative; width: 36px; height: 34px; display: flex; align-items: center; justify-content: center; background: white; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer; flex-shrink: 0; }
         .todo-date-icon-btn { font-size: 1rem; opacity: 0.7; }
         .todo-input-date { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
         .todo-add-btn { background-color: white; border: 1px solid #cbd5e1; color: #475569; padding: 0 10px; font-size: 0.8rem; font-weight: bold; border-radius: 4px; cursor: pointer; height: 34px; }
         .todo-selected-date-preview { font-size: 0.75rem; margin-bottom: 6px; padding-left: 2px; font-weight: bold; display: none; }
-        .todo-panel-child.kouta-theme .todo-selected-date-preview { color: var(--kouta-text); }
-        .todo-panel-child.haruto-theme .todo-selected-date-preview { color: var(--haruto-text); }
         
         .todo-custom-list { list-style: none; padding: 0; margin: 0; }
         .todo-custom-item { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px dashed rgba(0,0,0,0.05); gap: 8px; }
@@ -268,39 +149,17 @@
         .todo-custom-label { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; cursor: pointer; flex: 1; min-width: 0; }
         .todo-custom-cb { transform: scale(1.1); cursor: pointer; flex-shrink: 0; }
         
-        /* 🆕 要件・日付・残日数を一行で絶対に死守（ノーラップ制御） */
-        .todo-text-container { 
-            display: flex; 
-            align-items: center; 
-            gap: 6px; 
-            flex: 1; 
-            min-width: 0; /* フレックス子要素の縮小を有効化 */
-            white-space: nowrap; /* 1行を絶対に維持 */
-        }
-        
-        /* テキストが長すぎる場合のみ自動で綺麗に「…」にするガード */
-        .todo-custom-text {
-            flex: 1;
-            min-width: 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        /* 1行死守（ノーラップ制御） */
+        .todo-text-container { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; white-space: nowrap; }
+        .todo-custom-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
         
         .todo-custom-cb:checked + .todo-text-container .todo-custom-text { text-decoration: line-through; opacity: 0.4; }
         .todo-custom-cb:checked + .todo-text-container .todo-custom-text::after { content: " 🎉"; font-size: 0.8rem; }
         
-        .todo-date-label {
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: #64748b;
-            background-color: #f1f5f9;
-            padding: 1px 5px;
-            border-radius: 4px;
-            flex-shrink: 0; /* 日付を絶対に潰さない */
-        }
+        .todo-date-label { font-size: 0.75rem; font-weight: bold; color: #64748b; background-color: #f1f5f9; padding: 1px 5px; border-radius: 4px; flex-shrink: 0; }
         .todo-custom-cb:checked + .todo-text-container .todo-date-label { color: #cbd5e1; background-color: #f8fafc; text-decoration: line-through; opacity: 0.4; }
 
-        .deadline-badge { font-size: 0.65rem; font-weight: bold; padding: 1px 4px; border-radius: 4px; color: white; flex-shrink: 0; /* バッジを絶対に潰さない */ }
+        .deadline-badge { font-size: 0.65rem; font-weight: bold; padding: 1px 4px; border-radius: 4px; color: white; flex-shrink: 0; }
         .deadline-badge.overdue { background-color: #ef4444; }
         .deadline-badge.today { background-color: #f97316; }
         .deadline-badge.future { background-color: var(--kouta-border); }
@@ -308,42 +167,45 @@
         
         .todo-del-btn { background: none; border: none; cursor: pointer; font-size: 0.85rem; opacity: 0.5; flex-shrink: 0; }
 
+        /* 💻 🆕 タブシステム専用スタイル設定 */
+        .tab-button-container {
+            display: flex; gap: 6px; margin-bottom: 15px; width: 100%;
+        }
+        .tab-btn {
+            flex: 1; padding: 12px 0; background-color: #e2e8f0; color: #475569;
+            border: 1px solid #cbd5e1; border-radius: 8px; font-weight: bold; font-size: 0.9rem;
+            cursor: pointer; text-align: center; transition: all 0.2s;
+        }
+        .tab-btn.active {
+            background-color: white; color: var(--kouta-text);
+            border-bottom: 3px solid var(--kouta-border); box-shadow: var(--card-shadow);
+        }
+        .tab-content-panel { display: none; width: 100%; }
+        .tab-content-panel.active { display: block; }
+
         /* カレンダー共通構造 */
         .cal-container { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; margin-top: 10px; }
         .cal-header { font-weight: bold; font-size: 0.75rem; color: #64748b; padding-bottom: 4px; }
         
         .cal-day {
-            padding: 6px 0;
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            position: relative;
-            min-height: 44px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
+            padding: 6px 0; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;
+            font-size: 0.85rem; cursor: pointer; position: relative; min-height: 44px;
+            display: flex; flex-direction: column; justify-content: space-between; align-items: center;
             box-shadow: 0 1px 2px rgba(0,0,0,0.02);
         }
         .cal-day.empty { background-color: transparent; border: none; cursor: default; min-height: auto; box-shadow: none; }
         .cal-day.day-off { background-color: #e2e8f0; color: #94a3b8; border-color: #cbd5e1; cursor: not-allowed; box-shadow: none; }
         
-        /* 🏫 こうたカレンダー装飾 */
         .cal-day.kouta-active-b { background-color: #e2e8f0; border-color: var(--kouta-border); box-shadow: var(--inner-shadow); }
         .kouta-badge-container { display: flex; flex-direction: column; gap: 1px; align-items: center; margin-top: 2px; }
         .kouta-badge { font-size: 0.55rem; font-weight: bold; padding: 1px 3px; border-radius: 3px; color: white; background-color: var(--kouta-border); }
         .kouta-duty-badge { font-size: 0.55rem; background-color: #475569; color: white; padding: 0px 2px; border-radius: 2px; font-weight: bold; }
 
-        /* 🍱 はるとお弁当カレンダー装飾 */
         .cal-day.bento-active { background-color: var(--haruto-bg); border-color: var(--haruto-border); color: var(--haruto-text); font-weight: bold; }
         .cal-day.bento-active::after { content: "🍱"; position: absolute; top: -1px; right: 1px; font-size: 0.6rem; }
-
         .cal-month-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; margin-top: 5px; }
         .cal-nav-btn { background-color: var(--btn-neutral-bg); color: var(--btn-neutral-text); border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
 
-        /* クイック操作パネル */
         .quick-panel { background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; margin-top: 10px; display: none; box-shadow: var(--inner-shadow); }
         .quick-panel-title { font-weight: bold; font-size: 0.85rem; color: #334155; margin-bottom: 8px; text-align: center; }
         .panel-block { display: flex; flex-direction: column; gap: 8px; }
@@ -352,7 +214,6 @@
         .panel-checkbox-label { font-size: 0.8rem; font-weight: bold; display: flex; align-items: center; gap: 4px; cursor: pointer; color: #475569; }
         .panel-preview-box { background-color: #fff; border: 1px solid #cbd5e1; padding: 6px; border-radius: 4px; text-align: center; font-size: 0.8rem; font-weight: bold; color: #475569; margin-top: 2px; box-shadow: var(--inner-shadow); }
 
-        /* お弁当・学校詳細パネル */
         .bento-link-box { background-color: #fff; border: 1px solid var(--haruto-border); border-radius: 6px; padding: 10px; margin-bottom: 12px; box-shadow: var(--inner-shadow); }
         .bento-link-btn { display: block; text-align: center; background-color: var(--haruto-border); color: white; text-decoration: none; font-weight: bold; padding: 8px; border-radius: 4px; font-size: 0.85rem; margin-bottom: 6px; }
         .bento-login-info { font-size: 0.8rem; color: var(--haruto-text); background: var(--haruto-bg); padding: 6px 10px; border-radius: 4px; border: 1px dashed var(--haruto-border); margin: 0; }
@@ -400,7 +261,9 @@
         <h1>Family Dashboard</h1>
     </header>
 
-    <!-- 🟢 1番目：予定（スケジュール表示エリア） -->
+    <!-- ==================== 👑 常時固定表示エリア（並び順完全整理版） ==================== -->
+
+    <!-- ① 今週の予定 -->
     <div class="schedule-box">
         <div class="week-nav">
             <button type="button" class="week-nav-btn" id="week-prev">◀ 前の週</button>
@@ -408,7 +271,6 @@
             <button type="button" class="week-nav-btn" id="week-next">次の週 ▶</button>
         </div>
 
-        <!-- 🆕 枠線を完全排除し、タイトルと曜日ボタンの間にすっきり引っ越した日付エリア -->
         <div class="selected-date-display" id="selected-date-label"></div>
 
         <div class="day-btn-container">
@@ -432,7 +294,11 @@
             <input type="text" id="input-haruto" class="schedule-edit-input">
             <button type="button" id="edit-btn-haruto" class="edit-btn">修正</button>
         </div>
+    </div>
 
+    <!-- ② 予約確認パネル -->
+    <div class="card">
+        <h2>🤖 予約確認パネル</h2>
         <div class="reservation-panel">
             <div class="res-row">
                 <div class="res-label-box">🎒 わくわく</div>
@@ -462,11 +328,10 @@
         </div>
     </div>
 
-    <!-- 🟢 2番目：カスタムTODOパネル -->
+    <!-- ③ 子供別自由TODOリスト -->
     <div class="card">
         <h2>📋 子供別自由TODOリスト</h2>
         
-        <!-- 🟦 こうた -->
         <div class="todo-panel-child kouta-theme">
             <div class="todo-panel-header">
                 <span>👦 〈こうた〉タスク</span>
@@ -484,7 +349,6 @@
             <ul class="todo-custom-list" id="kouta-custom-todo-list"></ul>
         </div>
         
-        <!-- 🟥 はると -->
         <div class="todo-panel-child haruto-theme">
             <div class="todo-panel-header">
                 <span>👶 〈はると〉タスク</span>
@@ -503,198 +367,107 @@
         </div>
     </div>
 
-    <!-- 🟢 3番目：自由記述メモ欄 -->
+    <!-- ④ メモ欄（掲示板として最前面キープ） -->
     <div class="card" style="padding: 10px;">
         <h2 style="font-size: 1rem; margin-bottom: 6px;">✍ ... メモ欄</h2>
         <textarea id="customMemo" class="memo-textarea" placeholder="自由なメモ書きに（ご夫婦でリアルタイム共有されます）"></textarea>
         <div id="saveStatus" class="save-status">同期完了</div>
     </div>
 
-    <!-- 🟢 4番目：こうた宮崎小カレンダー -->
-    <details class="kouta-details">
-        <summary>🏫 こうた 宮崎小カレンダー</summary>
-        <div class="details-content">
-            <p style="margin:0 0 8px 0; font-size:0.8rem; color:var(--muted-text); text-align:center;">日付をタップして、校時(4〜6)・Bタイム・給食当番を設定</p>
-            <div class="cal-month-nav">
-                <button type="button" class="cal-nav-btn" id="kouta-cal-prev">◀ 前月</button>
-                <span id="kouta-cal-month-title" style="font-weight: bold; font-size: 1rem; color: var(--kouta-text);"></span>
-                <button type="button" class="cal-nav-btn" id="kouta-cal-next">次月 ▶</button>
-            </div>
-            <div class="cal-container" id="kouta-calendar"></div>
-            
-            <div class="quick-panel" id="kouta-quick-panel">
-                <div class="quick-panel-title" id="kouta-panel-date-title">設定</div>
-                <div class="panel-block">
-                    <div class="panel-row">
-                        <select id="panel-period-select" class="panel-select">
-                            <option value="4">4時間授業</option>
-                            <option value="5">5時間授業</option>
-                            <option value="6">6時間授業</option>
-                        </select>
-                        <label class="panel-checkbox-label"><input type="checkbox" id="panel-btime-checkbox"> 🅱️ Bタイム</label>
-                        <label class="panel-checkbox-label"><input type="checkbox" id="panel-duty-checkbox"> 🧺 給食当番</label>
+
+    <!-- ==================== 📂 下部：切り替えタブエリア ==================== -->
+
+    <div class="tab-button-container">
+        <button type="button" class="tab-btn active" onclick="switchTab('tab-calendar', this)">カレンダー 📅</button>
+        <button type="button" class="tab-btn" onclick="switchTab('tab-mochimono', this)">もちもの 🎒</button>
+        <button type="button" class="tab-btn" onclick="switchTab('tab-aomushi', this)">あおむしメモ 🐛</button>
+    </div>
+
+    <!-- タブ①：カレンダー -->
+    <div id="tab-calendar" class="tab-content-panel active">
+        <details class="kouta-details">
+            <summary>🏫 こうた 宮崎小カレンダー</summary>
+            <div class="details-content">
+                <p style="margin:0 0 8px 0; font-size:0.8rem; color:var(--muted-text); text-align:center;">日付をタップして設定</p>
+                <div class="cal-month-nav">
+                    <button type="button" class="cal-nav-btn" id="kouta-cal-prev">◀ 前月</button>
+                    <span id="kouta-cal-month-title" style="font-weight: bold; font-size: 1rem; color: var(--kouta-text);"></span>
+                    <button type="button" class="cal-nav-btn" id="kouta-cal-next">次月 ▶</button>
+                </div>
+                <div class="cal-container" id="kouta-calendar"></div>
+                
+                <div class="quick-panel" id="kouta-quick-panel">
+                    <div class="quick-panel-title" id="kouta-panel-date-title">設定</div>
+                    <div class="panel-block">
+                        <div class="panel-row">
+                            <select id="panel-period-select" class="panel-select">
+                                <option value="4">4時間授業</option>
+                                <option value="5">5時間授業</option>
+                                <option value="6">6時間授業</option>
+                            </select>
+                            <label class="panel-checkbox-label"><input type="checkbox" id="panel-btime-checkbox"> 🅱️ Bタイム</label>
+                            <label class="panel-checkbox-label"><input type="checkbox" id="panel-duty-checkbox"> 🧺 給食当番</label>
+                        </div>
+                        <div class="panel-row" id="panel-b4-lunch-row" style="display:none; background:#f1f5f9; padding:4px; border-radius:4px; width:100%; justify-content:center;">
+                            <label class="panel-checkbox-label"><input type="checkbox" id="panel-lunch-checkbox"> 🥢 給食・清掃まで実施する</label>
+                        </div>
+                        <div class="panel-preview-box">🕒 下校想定時刻: <span id="panel-time-preview" style="color:var(--kouta-text); font-size:0.9rem;">--:--</span> 頃</div>
                     </div>
-                    <div class="panel-row" id="panel-b4-lunch-row" style="display:none; background:#f1f5f9; padding:4px; border-radius:4px; width:100%; justify-content:center;">
-                        <label class="panel-checkbox-label"><input type="checkbox" id="panel-lunch-checkbox"> 🥢 給食・清掃まで実施する</label>
-                    </div>
-                    <div class="panel-preview-box">🕒 下校想定時刻: <span id="panel-time-preview" style="color:var(--kouta-text); font-size:0.9rem;">--:--</span> 頃</div>
                 </div>
             </div>
-        </div>
-    </details>
+        </details>
 
-    <!-- 🟢 5番目：はるとお弁当カレンダー -->
-    <details class="bento-details">
-        <summary>🍱 はるとお弁当カレンダー</summary>
-        <div class="details-content">
-            <div class="bento-link-box">
-                <a href="https://www.fl39.jp/" target="_blank" rel="noopener noreferrer" class="bento-link-btn">🌐 お弁当予約サイトを開く ↗</a>
-                <p class="bento-login-info">ID: <strong>inahata0208</strong> / PW: <strong>kentaina0118</strong></p>
-            </div>
-            <div class="cal-month-nav">
-                <button type="button" class="cal-nav-btn" id="cal-prev">◀ 前月</button>
-                <span id="cal-month-title" style="font-weight: bold; font-size: 1rem; color: var(--haruto-text);"></span>
-                <button type="button" class="cal-nav-btn" id="cal-next">次月 ▶</button>
-            </div>
-            <div class="cal-container" id="bento-calendar"></div>
-        </div>
-    </details>
-
-    <!-- 👦 康太の持ち物リスト -->
-    <div class="card kouta-card">
-        <h2>👦 康太（こうた）持ち物リスト</h2>
-        <div id="kouta-terakoya-alert" class="terakoya-alert">📖 本日は【寺子屋（宮崎小）Bチーム】の開講日です！宿題・ドリル・筆記用具を忘れずに！</div>
-        
-        <details>
-            <summary>毎日の基本セット</summary>
+        <details class="bento-details">
+            <summary>🍱 はるとお弁当カレンダー</summary>
             <div class="details-content">
-                <ul class="todo-list">
-                    <li class="todo-item">
-                        <input type="checkbox" id="k-base1">
-                        <label for="k-base1"><strong>給食袋セット</strong>
-                            <ul class="sub-list">
-                                <li>・ランチョンマット</li>
-                                <li>・お口ふき小さいタオル</li>
-                                <li>・ウェットティッシュ</li>
-                            </ul>
-                        </label>
-                    </li>
-                    <li class="todo-item"><input type="checkbox" id="k-base2"><label for="k-base2"><strong>水筒</strong></label></li>
-                </ul>
-            </div>
-        </details>
-        <details id="kouta-terakoya-details">
-            <summary>📖 寺子屋セット（水曜・隔週Bチーム）</summary>
-            <div class="details-content">
-                <ul class="todo-list">
-                    <li class="todo-item"><input type="checkbox" id="k-tk1"><label for="k-tk1"><strong>寺子屋参加カード</strong>（保護者印を確認）</label></li>
-                    <li class="todo-item"><input type="checkbox" id="k-tk2"><label for="k-tk2">宿題・自習用のドリルなど教材</label></li>
-                    <li class="todo-item"><input type="checkbox" id="k-tk3"><label for="k-tk3">筆記用具（筆箱）</label></li>
-                </ul>
-            </div>
-        </details>
-        <details id="kouta-lunch-details">
-            <summary>🧺給食当番の時 <span id="kouta-lunch-badge" class="badge" style="display:none;">本日当番！</span></summary>
-            <div class="details-content">
-                <ul class="todo-list">
-                    <li class="todo-item"><input type="checkbox" id="k-lunch1"><label for="k-lunch1"><strong>マスク</strong>（給食袋の中にイン！）</label></li>
-                </ul>
-            </div>
-        </details>
-        <details>
-            <summary>プール（学校）の時</summary>
-            <div class="details-content">
-                <ul class="todo-list">
-                    <li class="todo-item"><input type="checkbox" id="k-schoolp1"><label for="k-schoolp1">プールカード</label></li>
-                    <li class="todo-item"><input type="checkbox" id="k-schoolp2"><label for="k-schoolp2">帽子</label></li>
-                    <li class="todo-item"><input type="checkbox" id="k-schoolp3"><label for="k-schoolp3">水着（鷺沼スイミングのもの）</label></li>
-                    <li class="todo-item"><input type="checkbox" id="k-schoolp4"><label for="k-schoolp4">ゴーグル</label></li>
-                    <li class="todo-item"><input type="checkbox" id="k-schoolp5"><label for="k-schoolp5">ラッシュガード</label></li>
-                </ul>
-            </div>
-        </details>
-        <details>
-            <summary>プール（鷺沼スイミング）</summary>
-            <div class="details-content">
-                <ul class="todo-list">
-                    <li class="todo-item"><input type="checkbox" id="k-swimming1"><label for="k-swimming1">帽子・水着</label></li>
-                    <li class="todo-item"><input type="checkbox" id="k-swimming2"><label for="k-swimming2">タオル / タオル袋・会員証</label></li>
-                </ul>
-            </div>
-        </details>
-        <details>
-            <summary>大塚体操</summary>
-            <div class="details-content">
-                <ul class="todo-list">
-                    <li class="todo-item"><input type="checkbox" id="k-gym1"><label for="k-gym1"><strong>体操セット</strong>（ボール / なわとび）</label></li>
-                </ul>
+                <div class="bento-link-box">
+                    <a href="https://www.fl39.jp/" target="_blank" rel="noopener noreferrer" class="bento-link-btn">🌐 お弁当予約サイトを開く ↗</a>
+                    <p class="bento-login-info">ID: <strong>inahata0208</strong> / PW: <strong>kentaina0118</strong></p>
+                </div>
+                <div class="cal-month-nav">
+                    <button type="button" class="cal-nav-btn" id="cal-prev">◀ 前月</button>
+                    <span id="cal-month-title" style="font-weight: bold; font-size: 1rem; color: var(--haruto-text);"></span>
+                    <button type="button" class="cal-nav-btn" id="cal-next">次月 ▶</button>
+                </div>
+                <div class="cal-container" id="bento-calendar"></div>
             </div>
         </details>
     </div>
 
-    <!-- 👶 はるとの持ち物リスト -->
-    <div class="card haruto-card">
-        <h2>👶 はると 持ち物リスト</h2>
-        <div id="haruto-bento-alert" class="bento-alert">🍱 本日は【お弁当の日】です！お弁当と食具を忘れずに。</div>
-        
-        <details>
-            <summary>毎日の基本セット</summary>
-            <div class="details-content">
-                <ul class="todo-list">
-                    <li class="todo-item"><input type="checkbox" id="y-base1"><label for="y-base1">タオル</label></li>
-                    <li class="todo-item"><input type="checkbox" id="y-base2"><label for="y-base2">コップ袋（コップ / 歯ブラシ）</label></li>
-                    <li class="todo-item"><input type="checkbox" id="y-base3"><label for="y-base3">赤パン袋（赤パン）</label></li>
-                    <li class="todo-item"><input type="checkbox" id="y-base4"><label for="y-base4">お手紙バインダー</label></li>
-                    <li class="todo-item"><input type="checkbox" id="y-base5"><label for="y-base5">弁当 / 食具 <span id="haruto-bento-badge" class="badge" style="display:none;">本日必要！</span></label></li>
-                    <li class="todo-item"><input type="checkbox" id="y-base6"><label for="y-base6">水筒</label></li>
-                </ul>
-            </div>
-        </details>
-        <details>
-            <summary>あおむし広場</summary>
-            <div class="details-content">
-                <div class="rule-box">⚠️ スイミングの日は、朝事務所の前のかごに入れること！</div>
-                <ul class="todo-list">
-                    <li class="todo-item"><input type="checkbox" id="y-ao1"><label for="y-ao1">あおむしバック</label></li>
-                    <li class="todo-item"><input type="checkbox" id="y-ao2"><label for="y-ao2">おやつ（※スイミング以外の日）</label></li>
-                </ul>
-            </div>
-        </details>
-        <details>
-            <summary>プール（鷺沼スイミング）</summary>
-            <div class="details-content">
-                <ul class="todo-list">
-                    <li class="todo-item"><input type="checkbox" id="y-sw1"><label for="y-sw1">帽子・水着</label></li>
-                    <li class="todo-item"><input type="checkbox" id="y-sw2"><label for="y-sw2">タオル / タオル袋・会員証</label></li>
-                </ul>
-            </div>
-        </details>
-        <details>
-            <summary>サッカー</summary>
-            <div class="details-content">
-                <ul class="todo-list">
-                    <li class="todo-item"><input type="checkbox" id="y-sc1"><label for="y-sc1">サッカーボール</label></li>
-                </ul>
-            </div>
-        </details>
-        <details>
-            <summary>大塚体操</summary>
-            <div class="details-content">
-                <ul class="todo-list">
-                    <li class="todo-item"><input type="checkbox" id="y-gt1"><label for="y-gt1"><strong>体操セット</strong>（ボール / なわとび）</label></li>
-                </ul>
-            </div>
-        </details>
+    <!-- タブ②：もちもの -->
+    <div id="tab-mochimono" class="tab-content-panel">
+        <div class="card kouta-card">
+            <h2>👦 康太（こうた）持ち物リスト</h2>
+            <div id="kouta-terakoya-alert" class="terakoya-alert">📖 本日は【寺子屋（宮崎小）Bチーム】の開講日です！</div>
+            <details><summary>毎日の基本セット</summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="k-base1"><label for="k-base1"><strong>給食袋セット</strong>（マット/タオル/ティッシュ）</label></li><li class="todo-item"><input type="checkbox" id="k-base2"><label for="k-base2"><strong>水筒</strong></label></li></ul></div></details>
+            <details id="kouta-terakoya-details"><summary>📖 寺子屋セット（水曜・隔週Bチーム）</summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="k-tk1"><label for="k-tk1"><strong>寺子屋カード</strong></label></li><li class="todo-item"><input type="checkbox" id="k-tk2"><label for="k-tk2">宿題・自習用の教材</label></li><li class="todo-item"><input type="checkbox" id="k-tk3"><label for="k-tk3">筆記用具</label></li></ul></div></details>
+            <details id="kouta-lunch-details"><summary>🧺給食当番の時 <span id="kouta-lunch-badge" class="badge" style="display:none;">本日当番！</span></summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="k-lunch1"><label for="k-lunch1"><strong>マスク</strong></label></li></ul></div></details>
+            <details><summary>学校のプール</summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="k-schoolp1"><label for="k-schoolp1">カード/帽子/水着/ゴーグル/ラッシュガード</label></li></ul></div></details>
+            <details><summary>鷺沼スイミング</summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="k-swimming1"><label for="k-swimming1">帽子・水着/タオル・会員証</label></li></ul></div></details>
+            <details><summary>大塚体操</summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="k-gym1"><label for="k-gym1"><strong>体操セット</strong>（ボール/なわとび）</label></li></ul></div></details>
+        </div>
+
+        <div class="card haruto-card">
+            <h2>👶 はると 持ち物リスト</h2>
+            <div id="haruto-bento-alert" class="bento-alert">🍱 本日は【お弁当の日】です！</div>
+            <details><summary>毎日の基本セット</summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="y-base1"><label for="y-base1">タオル/コップ袋/赤パン袋/バインダー</label></li><li class="todo-item"><input type="checkbox" id="y-base5"><label for="y-base5">弁当 / 食具 <span id="haruto-bento-badge" class="badge" style="display:none;">本日必要！</span></label></li><li class="todo-item"><input type="checkbox" id="y-base6"><label for="y-base6">水筒</label></li></ul></div></details>
+            <details><summary>あおむし広場</summary><div class="details-content"><div class="rule-box">⚠️ スイミングの日は、朝事務所の前のかごに入れること！</div><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="y-ao1"><label for="y-ao1">あおむしバック/おやつ</label></li></ul></div></details>
+            <details><summary>鷺沼スイミング</summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="y-sw1"><label for="y-sw1">帽子・水着/タオル・会員証</label></li></ul></div></details>
+            <details><summary>サッカー</summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="y-sc1"><label for="y-sc1">サッカーボール</label></li></ul></div></details>
+            <details><summary>大塚体操</summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="y-gt1"><label for="y-gt1">体操セット（ボール/なわとび）</label></li></ul></div></details>
+        </div>
     </div>
 
-    <!-- 🐛 コピペ文面 -->
-    <div class="card">
-        <h2 style="font-size: 1rem; color: #475569;">🐛 あおむし広場 予約用定型文（コピペ用）</h2>
-        <textarea class="responsive-textarea" style="height:110px; font-family:monospace;" readonly>月：スイミング
+    <!-- タブ③：あおむしメモ -->
+    <div id="tab-aomushi" class="tab-content-panel">
+        <div class="card">
+            <h2>🐛 あおむし広場 予約用定型文（コピペ用）</h2>
+            <textarea class="responsive-textarea" style="height:110px; font-family:monospace;" readonly>月：スイミング
 火：なし
 水：なし
 木：サッカー15時30分まで
 金：大塚体操15時20分まで</textarea>
+        </div>
     </div>
 
     <script>
@@ -711,8 +484,7 @@
             "2026-01-01", "2026-01-12", "2026-02-11", "2026-02-23", "2026-03-20",
             "2026-04-29", "2026-05-03", "2026-05-04", "2026-05-05", "2026-05-06",
             "2026-07-20", "2026-08-11", "2026-09-21", "2026-09-22", "2026-09-23",
-            "2026-10-12", "2026-11-03", "2026-11-23",
-            "2027-01-01", "2027-01-11", "2027-02-11", "2027-02-23", "2027-03-21", "2027-03-22"
+            "2026-10-12", "2026-11-03", "2026-11-23"
         ];
 
         const defaultSchedules = {
@@ -734,6 +506,14 @@
         let currentCalYear = 2026, currentCalMonth = 5;
         let koutaCalYear = 2026, koutaCalMonth = 5;
         let activePanelDateStr = null;
+
+        // 🆕 下部タブ切り替え関数
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content-panel').forEach(panel => panel.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
 
         function launchApp(type) {
             const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -832,8 +612,7 @@
 
         function renderCustomTodoList(child) {
             const listEl = document.getElementById(child + '-custom-todo-list');
-            if (!listEl) return;
-            listEl.innerHTML = '';
+            if (!listEl) return; listEl.innerHTML = '';
 
             let listData = [];
             try { listData = JSON.parse(globalCloudData["todo_list_" + child] || "[]"); } catch(e){}
