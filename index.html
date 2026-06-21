@@ -50,7 +50,6 @@
         header { text-align: center; padding: 5px 0; }
         header h1 { margin: 0; font-size: 1.3rem; font-weight: 800; color: #1e293b; }
 
-        /* メインカード共通幅100%均一化 */
         .card, .schedule-box {
             background: white;
             padding: 15px;
@@ -70,7 +69,6 @@
             font-weight: 700;
         }
 
-        /* 📅 今週の予定エリア */
         .week-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .week-nav-btn {
             background-color: var(--btn-neutral-bg); border: none; padding: 5px 12px; border-radius: 6px;
@@ -80,23 +78,35 @@
         .week-nav-btn:active { background-color: var(--btn-neutral-active); }
         .week-nav-title { font-weight: bold; color: #1e293b; font-size: 1rem; }
         
-        /* 🆕 枠とカレンダーアイコンを完全排除し、引き締まったタイポグラフィにした日付表示 */
         .selected-date-display {
-            text-align: center;
-            font-weight: 800;
-            font-size: 1.1rem;
-            color: #0f172a;
-            padding: 2px 0;
-            margin: 0 0 12px 0;
-            width: 100%;
-            display: block;
+            text-align: center; font-weight: 800; font-size: 1.1rem; color: #0f172a;
+            padding: 2px 0; margin: 0 0 12px 0; width: 100%; display: block;
             letter-spacing: 0.02em;
         }
 
-        .day-btn-container { display: flex; justify-content: space-between; margin-bottom: 15px; gap: 4px; }
+        /* 🛠️ iOSでの見えないフレックス判定バーストを完全矯正 */
+        .day-btn-container { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 15px; 
+            gap: 4px;
+            width: 100%;
+        }
         .day-btn {
-            flex: 1; padding: 10px 0; border: 1px solid #cbd5e1; background-color: white;
-            color: #64748b; border-radius: 6px; font-weight: bold; font-size: 0.9rem; cursor: pointer; text-align: center;
+            flex: 1; 
+            height: 42px; /* 高さを絶対固定し、上下の「見えない判定」を消滅させる */
+            padding: 0;   /* 内側パディングによるiOS判定の狂いを排除 */
+            border: 1px solid #cbd5e1; 
+            background-color: white;
+            color: #64748b; 
+            border-radius: 6px; 
+            font-weight: bold; 
+            font-size: 0.9rem; 
+            cursor: pointer; 
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .day-btn.active { background-color: #475569; color: white; border-color: #475569; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
 
@@ -115,7 +125,6 @@
         .edit-btn { background-color: var(--btn-neutral-bg); color: var(--btn-neutral-text); border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; cursor: pointer; flex-shrink: 0; }
         .edit-btn.saving { background-color: #bbf7d0; color: #15803d; }
 
-        /* 🆕 予定カード内にドッキングした予約確認パネル（1番外の枠線を引いて自然に統合） */
         .reservation-panel { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-top: 15px; box-shadow: var(--inner-shadow); }
         .res-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #e2e8f0; gap: 8px; }
         .res-row:last-child { border-bottom: none; }
@@ -156,16 +165,15 @@
         .todo-custom-label { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; cursor: pointer; flex: 1; min-width: 0; position: relative; }
         .todo-custom-cb { transform: scale(1.1); cursor: pointer; flex-shrink: 0; }
         
-        /* 1行死守レイアウト ＆ 🆕 超軽量ポップアップ(ツールチップ)機能のCSS設計 */
         .todo-text-container { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; white-space: nowrap; position: relative; }
         
+        /* 1行死守 ＆ 吹き出しポップアップ */
         .todo-custom-text { 
             flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; cursor: help;
         }
         
-        /* 🆕 タップ（ホバー）した時に出現する吹き出しのスタイリング */
         .todo-custom-text::before {
-            content: attr(data-fulltext); /* JavaScriptで流し込んだ全文を読み込む */
+            content: attr(data-fulltext); 
             position: absolute; bottom: 125%; left: 0;
             background-color: #1e293b; color: #ffffff;
             padding: 6px 10px; border-radius: 6px;
@@ -176,12 +184,11 @@
             opacity: 0; pointer-events: none;
             transition: opacity 0.15s ease;
         }
-        /* 🆕 要素を触っている間だけポップアップを浮き上がらせる */
         .todo-custom-text:active::before,
         .todo-custom-text:hover::before { opacity: 1; pointer-events: auto; }
 
+        /* 🛠️ 完了チェック時にテキスト側をトーンダウンさせる装飾 */
         .todo-custom-cb:checked + .todo-text-container .todo-custom-text { text-decoration: line-through; opacity: 0.4; }
-        .todo-custom-cb:checked + .todo-text-container .todo-custom-text::after { content: " 🎉"; font-size: 0.8rem; }
         
         .todo-date-label { font-size: 0.75rem; font-weight: bold; color: #64748b; background-color: #f1f5f9; padding: 1px 5px; border-radius: 4px; flex-shrink: 0; }
         .todo-custom-cb:checked + .todo-text-container .todo-date-label { color: #cbd5e1; background-color: #f8fafc; text-decoration: line-through; opacity: 0.4; }
@@ -629,6 +636,7 @@
                 const li = document.createElement('li'); li.className = 'todo-custom-item';
                 const label = document.createElement('label'); label.className = 'todo-custom-label';
                 const cb = document.createElement('input'); cb.type = 'checkbox'; cb.className = 'todo-custom-cb'; cb.checked = !!item.checked;
+                
                 cb.addEventListener('change', async (e) => {
                     item.checked = e.target.checked;
                     await saveCloudData("todo_list_" + child, JSON.stringify(listData.map(t => ({ text: t.text, date: t.date, checked: t.checked }))));
@@ -637,10 +645,10 @@
 
                 const textContainer = document.createElement('span'); textContainer.className = 'todo-text-container';
                 
-                // 🆕 JSで属性「data-fulltext」にTODO内容の全文を設定するロジック
+                // 🛠️ 1行死守 ＋ 完了チェック時はJSで直接末尾にお祝いマーク「 🎉」を出し入れする設計
                 const spanText = document.createElement('span'); 
                 spanText.className = 'todo-custom-text'; 
-                spanText.textContent = item.text;
+                spanText.textContent = item.checked ? item.text + " 🎉" : item.text;
                 spanText.setAttribute('data-fulltext', item.text); 
                 textContainer.appendChild(spanText);
 
@@ -682,7 +690,6 @@
             const targetDateStr = getTargetDateStr(dayNum); updateWeekTitle();
             const parts = targetDateStr.split('-'); const days = ["日", "月", "火", "水", "木", "金", "土"];
             
-            // 🆕 📅カレンダーアイコンを削除した日付テキスト同期
             document.getElementById('selected-date-label').textContent = `${parts[0]}年${parseInt(parts[1])}月${parseInt(parts[2])}日 (${days[dayNum]})`;
 
             const isTerakoya = (dayNum === 3) && terakoyaDates2026.includes(targetDateStr);
