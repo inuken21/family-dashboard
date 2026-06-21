@@ -89,14 +89,15 @@
         }
         .card h2 { font-size: 1.05rem; margin: 0 0 14px 0; font-weight: 900; display: flex; justify-content: space-between; align-items: center; }
 
+        /* ステータスバーを3列（レベル・さいふ・チケット）に修正 */
         .status-card {
-            background: #1e293b; color: white; border-color: #0f172a; padding: 14px 8px; display: table; width: 100%; margin-bottom: 16px;
+            background: #1e293b; color: white; border-color: #0f172a; padding: 14px 4px; display: table; width: 100%; margin-bottom: 16px;
         }
         .status-item {
-            display: table-cell; width: 50%; text-align: center; font-size: 0.8rem; font-weight: 900; color: #94a3b8; border-right: 2px solid #475569; vertical-align: middle;
+            display: table-cell; width: 33.33%; text-align: center; font-size: 0.75rem; font-weight: 900; color: #94a3b8; border-right: 2px solid #475569; vertical-align: middle;
         }
         .status-item:last-child { border-right: none; }
-        .status-item .val { display: block; font-size: 1.25rem; font-weight: 900; color: #facc15; margin-top: 4px; }
+        .status-item .val { display: block; font-size: 1.15rem; font-weight: 900; color: #facc15; margin-top: 4px; }
 
         .partner-display-bar {
             background: #ffffff; border: 3.5px solid #0f172a; border-radius: 16px; padding: 10px 14px; margin-bottom: 20px; display: table; width: 100%; cursor: pointer; box-shadow: 0 4px 0 #0f172a;
@@ -129,6 +130,7 @@
 
         .big-adventure-trigger { width: 100%; height: 64px; background: linear-gradient(180deg, #ff4757, #e81a2d); color: white; border: 3.5px solid #0f172a; border-radius: 18px; font-size: 1.2rem; font-weight: 900; box-shadow: 0 5px 0 #0f172a; cursor: pointer; margin-bottom: 20px; }
         .big-adventure-trigger:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 2px 0 #0f172a; }
+        .big-adventure-trigger:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; box-shadow: 0 2px 0 #94a3b8 !important; transform: translateY(3px); cursor: not-allowed; opacity: 0.7; }
 
         .shop-grid { display: flex; flex-direction: column; gap: 8px; }
         .shop-item-btn { display: table; width: 100%; background: #f8fafc; border: 2.5px solid #0f172a; border-radius: 12px; padding: 12px; cursor: pointer; text-align: left; box-shadow: 0 3px 0 #0f172a; }
@@ -136,7 +138,7 @@
         .shop-title-cell { display: table-cell; font-weight: 900; font-size: 0.9rem; color: #1e293b; vertical-align: middle; }
         .shop-price-cell { display: table-cell; text-align: right; font-weight: 900; font-size: 0.95rem; color: #ea580c; width: 90px; vertical-align: middle; }
 
-        /* 📱 ロトム図鑑モーダル */
+        /* ロトム図鑑モーダル */
         .rotom-skin { background-color: var(--rotom-red); border: 4.5px solid #0f172a; border-radius: 28px; padding: 16px; box-shadow: 0 7px 0 #991b1b; position: relative; width: 100%; max-width: 340px; color: #0f172a; }
         .rotom-head-decoration { width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent; border-bottom: 24px solid var(--rotom-red); position: absolute; top: -23px; left: calc(50% - 18px); filter: drop-shadow(0px -4px 0px #0f172a); }
         .rotom-eyes { text-align: center; padding-bottom: 10px; font-size: 1.3rem; letter-spacing: 6px; }
@@ -173,14 +175,14 @@
         .zone-title { font-weight: 900; font-size: 0.75rem; margin-bottom: 4px; }
         .silhouette-preview { width: 48px; height: 48px; object-fit: contain; filter: brightness(0); opacity: 0.85; }
 
-        /* 🤝 相棒選択UI */
+        /* 相棒選択UI */
         .region-group-title { font-size: 0.85rem; color: #facc15; font-weight: 900; text-align: left; margin: 12px 0 6px 0; border-left: 4px solid #ea580c; padding-left: 6px; }
         .partner-select-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
         .partner-choice-box { background: white; border: 2.5px solid #0f172a; border-radius: 12px; padding: 6px; text-align: center; cursor: pointer; color: #0f172a; box-shadow: 0 3px 0 #0f172a; }
         .partner-choice-box img { width: 44px; height: 44px; object-fit: contain; }
         .partner-choice-box div { font-size: 0.7rem; font-weight: 900; margin-top: 2px; }
 
-        /* 🔮 ボール選択 */
+        /* ボール選択 */
         .ball-select-row { display: flex; gap: 6px; justify-content: center; margin-top: 10px; }
         .ball-choice-btn { flex: 1; padding: 8px 4px; border: 2px solid white; border-radius: 12px; font-family: inherit; font-size: 0.7rem; font-weight: 900; color: white; cursor: pointer; text-shadow: 0 1px 1px #000; }
         .btn-poke-ball { background: #ef4444; }
@@ -191,7 +193,6 @@
         .modal-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 16px; }
         .modal-content { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 3.5px solid white; border-radius: 24px; padding: 20px; text-align: center; width: 100%; max-width: 320px; color: white; }
         
-        /* ⚔️ バトル専用表示制御用CSS追加 */
         #ballIcon { display: none; font-size: 2.8rem; margin: 8px 0; height: 50px; }
         #ballIcon.visible { display: inline-block; }
 
@@ -228,10 +229,11 @@
         <button type="button" class="user-tab haruto" onclick="changeUser('haruto')">🔥 はると</button>
     </div>
 
-    <!-- 👛 ステータスバー -->
+    <!-- 👛 ステータスバー（チケット枠をここに戻しました） -->
     <div class="card status-card">
         <div class="status-item">🏅 相棒レベル<span id="userLevel" class="val">1</span></div>
         <div class="status-item">👛 さいふ<span id="pokeenBalance" class="val">0</span></div>
+        <div class="status-item">🎫 ぼうけん券<span id="ticketCountDisplay" class="val">0</span></div>
     </div>
 
     <!-- 🤝 現在の相棒表示 -->
@@ -256,7 +258,7 @@
         <button class="menu-btn btn-zukan" onclick="openZukanModal()">📱 ずかんをひらく</button>
     </div>
 
-    <!-- 🗺️ 巨大ぼうけんボタン -->
+    <!-- 🗺️ 巨大ぼうけんボタン（チケット制ロック復活） -->
     <button type="button" id="bigAdventureTriggerBtn" class="big-adventure-trigger" onclick="openAdventureSelectionModal()">
         🔴 ぼうけんに でかける！！
     </button>
@@ -266,10 +268,10 @@
         <h2>🛍️ ぽけえん交換ショップ</h2>
         <div class="shop-grid">
             <button class="shop-item-btn" onclick="buyItem('🍬 ふしぎなあめ', 100)"><span class="shop-title-cell">🍬 ふしぎなあめ (レベルを1あげる)</span><span class="shop-price-cell">100 💰</span></button>
+            <button class="shop-item-btn" onclick="buyItem('🎫 ぼうけん券', 500)"><span class="shop-title-cell">🎫 ぼうけん券 (1回おでかけ)</span><span class="shop-price-cell">500 💰</span></button>
             <button class="shop-item-btn" onclick="buyItem('🔴 モンスターボール', 100)"><span class="shop-title-cell">🔴 モンスターボール (ほかくりつ:ふつう)</span><span class="shop-price-cell">100 💰</span></button>
             <button class="shop-item-btn" onclick="buyItem('🔵 スーパーボール', 300)"><span class="shop-title-cell">🔵 スーパーボール (ほかくりつ:あがりやすい)</span><span class="shop-price-cell">300 💰</span></button>
             <button class="shop-item-btn" onclick="buyItem('🟡 ハイパーボール', 600)"><span class="shop-title-cell">🟡 ハイパーボール (ほかくりつ:超あがりやすい)</span><span class="shop-price-cell">600 💰</span></button>
-            <button class="shop-item-btn" onclick="buyItem('🎮 ゲーム15分 延長', 600)"><span class="shop-title-cell">🎮 ゲーム15分 延長</span><span class="shop-price-cell">600 💰</span></button>
         </div>
     </div>
 
@@ -280,6 +282,7 @@
         <div style="display:flex; gap:4px; margin-bottom:12px; flex-wrap: wrap;">
             <input type="number" id="parentAmount" style="width:60px; font-family:inherit; text-align:center; border:2px solid #cbd5e1; border-radius:8px;" value="5">
             <button style="font-family:inherit; font-size:0.7rem; font-weight:bold; padding:8px;" onclick="adjustParentData('pokeen')">➕コイン</button>
+            <button style="font-family:inherit; font-size:0.7rem; font-weight:bold; padding:8px;" onclick="adjustParentData('ticket')">➕🎫チケ</button>
             <button style="font-family:inherit; font-size:0.7rem; font-weight:bold; padding:8px;" onclick="adjustParentData('ball_normal')">➕🔴</button>
             <button style="font-family:inherit; font-size:0.7rem; font-weight:bold; padding:8px;" onclick="adjustParentData('ball_super')">➕🔵</button>
             <button style="font-family:inherit; font-size:0.7rem; font-weight:bold; padding:8px;" onclick="adjustParentData('ball_hyper')">➕🟡</button>
@@ -450,7 +453,7 @@
         function createInitialUserData() {
             return {
                 partner: null, partnerLevel: 1, pokeen: 300,
-                bag: { ball_normal: 5, ball_super: 1, ball_hyper: 0, candy: 0 },
+                bag: { ball_normal: 5, ball_super: 1, ball_hyper: 0, candy: 0, ticket: 1 },
                 zukan_normal: [], zukan_mega: [], fixed_encounters: null
             };
         }
@@ -463,6 +466,13 @@
 
         let currentUser = 'kouta';
         let zukanTab = 'normal';
+        let battleState = { step: 0, enemy: null };
+
+        const masterQuests = {
+            kouta: ["学校の音読 📖", "自宅用の計算ドリル ➕", "自宅用の漢字ドリル ✍️"],
+            haruto: ["英語のレッスン 🔤", "小学校のじゅんびドリル ✏️", "宿題ペーパー 📋"]
+        };
+        const masterHelps = ["おふろ洗い 🛁", "お部屋の片付け ✨", "お皿の片付け 🍽️"];
 
         function getImgUrl(id) {
             if (!id) return "";
@@ -476,8 +486,8 @@
         function getEvolvedId(baseId, level) {
             if (!baseId || baseId === "0025") return "0025";
             let offset = 0;
-            if (level >= 36) offset = 2; // 最終進化 Lv.36
-            else if (level >= 16) offset = 1; // 第2進化 Lv.16
+            if (level >= 36) offset = 2;
+            else if (level >= 16) offset = 1;
             
             if (baseId === "0447" && level >= 30) return "0448"; 
             return String(parseInt(baseId) + offset).padStart(4, '0');
@@ -514,8 +524,16 @@
 
         function renderUI() {
             const uData = cloudData[`study_v2_${currentUser}`] || createInitialUserData();
+            
+            // 安全対策：チケットデータが入っていない場合のフォールバック
+            if (uData.bag.ticket === undefined) uData.bag.ticket = 0;
+
             document.getElementById('userLevel').textContent = uData.partnerLevel;
             document.getElementById('pokeenBalance').textContent = uData.pokeen + " 💰";
+            document.getElementById('ticketCountDisplay').textContent = uData.bag.ticket + " 枚";
+
+            // 🎫 チケット枚数に応じて冒険ボタンの活性化を100%制御
+            document.getElementById('bigAdventureTriggerBtn').disabled = (uData.bag.ticket <= 0);
 
             if (uData.partner) {
                 const currentId = getEvolvedId(uData.partner, uData.partnerLevel);
@@ -559,8 +577,8 @@
                 cloudData["study_v2_progress_"][todayStr][currentUser].gachaClaimed = true;
                 const uData = cloudData[`study_v2_${currentUser}`];
                 uData.partnerLevel += 1;
-                uData.bag.ball_normal = (uData.bag.ball_normal || 0) + 1;
-                alert("ミッションコンプリート！ 🎉\n相棒レベルがアップして、モンスターボールを1こゲット！");
+                uData.bag.ticket = (uData.bag.ticket || 0) + 1; // クリアでチケット+1枚
+                alert("ミッションコンプリート！ 🎉\n相棒レベルがアップして、ぼうけん券を1まいゲット！");
                 renderUI();
             }
         }
@@ -587,18 +605,27 @@
             const container = document.getElementById('bagItemsContainer'); container.innerHTML = '';
             const uData = cloudData[`study_v2_${currentUser}`];
             const items = [
-                { k: 'ball_normal', t: '🔴 モンスターボール' }, { k: 'ball_super', t: '🔵 スーパーボール' }, { k: 'ball_hyper', t: '🟡 ハイパーボール' }, { k: 'candy', t: '🍬 ふしぎなあめ', c: true }
+                { k: 'ticket', t: '🎫 ぼうけん券', c: true, act: "useTicketFromBag()" },
+                { k: 'ball_normal', t: '🔴 モンスターボール', c: false }, 
+                { k: 'ball_super', t: '🔵 スーパーボール', c: false }, 
+                { k: 'ball_hyper', t: '🟡 ハイパーボール', c: false }, 
+                { k: 'candy', t: '🍬 ふしぎなあめ', c: true, act: "useCandyFromBag()" }
             ];
             items.forEach(item => {
                 const count = uData.bag[item.k] || 0;
                 const row = document.createElement('div'); row.className = 'bag-item-row';
                 row.innerHTML = `<div class="bag-item-info"><span class="bag-item-title">${item.t}</span><span class="bag-item-count">x${count}</span></div>
-                    <button class="use-item-btn" ${(!count || !item.c)?'disabled':''} onclick="useCandyFromBag()">つかう</button>`;
+                    <button class="use-item-btn" ${(!count || !item.c)?'disabled':''} onclick="${item.act}">つかう</button>`;
                 container.appendChild(row);
             });
             document.getElementById('bagModal').style.display = 'flex';
         }
         function closeBagModal() { document.getElementById('bagModal').style.display = 'none'; }
+
+        function useTicketFromBag() {
+            closeBagModal();
+            openAdventureSelectionModal();
+        }
 
         function useCandyFromBag() {
             const uData = cloudData[`study_v2_${currentUser}`];
@@ -615,6 +642,7 @@
             if (confirm(`【${name}】と こうかんする？`)) {
                 uData.pokeen -= price;
                 if (name.includes('ふしぎなあめ')) uData.bag.candy = (uData.bag.candy || 0) + 1;
+                if (name.includes('ぼうけん券')) uData.bag.ticket = (uData.bag.ticket || 0) + 1;
                 if (name.includes('モンスターボール')) uData.bag.ball_normal = (uData.bag.ball_normal || 0) + 1;
                 if (name.includes('スーパーボール')) uData.bag.ball_super = (uData.bag.ball_super || 0) + 1;
                 if (name.includes('ハイパーボール')) uData.bag.ball_hyper = (uData.bag.ball_hyper || 0) + 1;
@@ -691,6 +719,11 @@
         }
 
         function openAdventureSelectionModal() {
+            const uData = cloudData[`study_v2_${currentUser}`];
+            if (uData.bag.ticket <= 0) {
+                alert("🎫 ぼうけん券がありません！ミッションをクリアするか、ショップで交換してね！");
+                return;
+            }
             const encounters = getOrRollFixedEncounters();
             Object.keys(encounters).forEach(zone => {
                 const img = document.getElementById(`shadow-${zone}`); if (img) img.src = getImgUrl(encounters[zone].id);
@@ -702,6 +735,15 @@
         function startBattle(zone) {
             closeAdventureModal();
             const uData = cloudData[`study_v2_${currentUser}`];
+            
+            // バトル開始時点でチケットを1枚消費
+            if (uData.bag.ticket > 0) {
+                uData.bag.ticket--;
+            } else {
+                alert("ぼうけん券が足りません！");
+                return;
+            }
+
             const encounters = getOrRollFixedEncounters();
             const enemy = encounters[zone];
 
@@ -723,7 +765,6 @@
             
             document.getElementById('battleLogBox').textContent = `あ！ 野生の 【${finalEnemy.name}】が あらわれた！`;
             
-            // 🛠️ モンスターボール表示コントロール修正
             const bIcon = document.getElementById('ballIcon');
             bIcon.className = "";
             bIcon.style.display = "none"; 
@@ -734,6 +775,7 @@
             document.getElementById('battleCloseBtn').style.display = "none";
 
             document.getElementById('battleModal').style.display = 'flex';
+            saveAllToCloud();
         }
 
         function nextBattlePhase() {
@@ -777,7 +819,7 @@
             const enemy = battleState.enemy;
             const bIcon = document.getElementById('ballIcon');
 
-            bIcon.style.display = "inline-block"; // 投げてから初めてボールを見せる
+            bIcon.style.display = "inline-block";
 
             if (ballType === 'normal') { uData.bag.ball_normal--; bIcon.textContent = "🔴"; }
             if (ballType === 'super') { uData.bag.ball_super--; bIcon.textContent = "🔵"; }
@@ -798,7 +840,6 @@
                     log.innerHTML = `やったぜ！ 【${enemy.name}】を つかまえた！ 🎉\n💰 <strong>+${coins} ぽけえん</strong> ゲット！`;
                     uData.pokeen += coins;
                     
-                    // 🛠️ 通常・メガの図鑑登録バグ修正
                     if (battleState.isMega) {
                         if (!uData.zukan_mega.includes(enemy.id)) uData.zukan_mega.push(enemy.id);
                     } else {
@@ -832,6 +873,7 @@
             const amt = parseInt(document.getElementById('parentAmount').value) || 1;
             const uData = cloudData[`study_v2_${currentUser}`];
             if (type === 'pokeen') uData.pokeen += amt;
+            if (type === 'ticket') uData.bag.ticket = (uData.bag.ticket || 0) + amt;
             if (type === 'ball_normal') uData.bag.ball_normal = (uData.bag.ball_normal || 0) + amt;
             if (type === 'ball_super') uData.bag.ball_super = (uData.bag.ball_super || 0) + amt;
             if (type === 'ball_hyper') uData.bag.ball_hyper = (uData.bag.ball_hyper || 0) + amt;
