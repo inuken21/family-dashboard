@@ -241,12 +241,14 @@
         <button type="button" class="user-tab haruto" onclick="changeUser('haruto')">🔥 はると</button>
     </div>
 
+    <!-- 👛 ステータスバー -->
     <div class="card status-card">
         <div class="status-item"><span id="lblStatusLevel">🏅 相棒レベル</span><span id="userLevel" class="val">1</span></div>
         <div class="status-item"><span id="lblStatusWallet">👛 さいふ</span><span id="pokeenBalance" class="val">0</span></div>
         <div class="status-item"><span id="lblStatusTicket">🎫 ぼうけん券</span><span id="ticketCountDisplay" class="val">0</span></div>
     </div>
 
+    <!-- 🤝 現在の相棒表示 -->
     <div class="partner-display-bar" onclick="openPartnerSelectionModal()">
         <div class="partner-img-cell"><img id="statusBarPartnerImg" src="" alt="相棒"></div>
         <div class="partner-info-cell">
@@ -256,9 +258,11 @@
         <div id="lblPartnerChangeBtn" class="partner-change-hint">かえる 🔄</div>
     </div>
 
+    <!-- 📋 ミッションエリア -->
     <div class="card" id="questCard">
         <h2><span id="lblMissionTitle">⚔️ 本日のミッション！</span> <span id="expPreview" style="font-size:0.75rem; color:#64748b;">0/3</span></h2>
         
+        <!-- 🎰 チャレンジミッション枠 -->
         <div class="slot-box">
             <div id="challengeSlotWindow" class="slot-window">🎰 ボタンをおして チャレンジを きめよう！</div>
             <button type="button" id="challengeSlotBtn" class="slot-trigger-btn" onclick="spinChallengeSlot()">スタート！</button>
@@ -267,16 +271,19 @@
         <ul class="quest-list" id="questList"></ul>
     </div>
 
+    <!-- 📱 行動メニュー -->
     <div class="action-menu-grid">
         <button class="menu-btn btn-bag" onclick="openBagModal()">👜 <span id="lblMenuBag">どうぐ</span></button>
         <button class="menu-btn btn-zukan" onclick="openZukanModal()">📱 <span id="lblMenuZukan">ずかん</span></button>
         <button class="menu-btn btn-calendar" onclick="openCalendarModal()">📅 <span id="lblMenuRecord">きろく</span></button>
     </div>
 
+    <!-- 🗺️ 巨大ぼうけんボタン -->
     <button type="button" id="bigAdventureTriggerBtn" class="big-adventure-trigger" onclick="openAdventureSelectionModal()">
         🔴 ぼうけんに でかける！！
     </button>
 
+    <!-- 🛍️ 交換所 -->
     <div class="card">
         <h2><span id="lblShopTitle">🛍️ ぽけえん交換ショップ</span></h2>
         <div class="shop-grid">
@@ -288,6 +295,7 @@
         </div>
     </div>
 
+    <!-- 🔒 パパママ専用調整パネル -->
     <div id="secretParentPanel" class="parent-panel">
         <h4 style="margin:0 0 8px 0; color:#dc2626;">⚙️ パパ・ママ専用 シークレット調整ルーム</h4>
         <p style="font-size:0.75rem; margin:0 0 8px 0; color:#475569;">選択中の子どものデータを操作・設定します。</p>
@@ -312,6 +320,7 @@
         <button style="width:100%; margin-top:8px; font-family:inherit; font-size:0.8rem; background:#64748b; color:white; border:none; border-radius:8px; padding:6px;" onclick="closeSecretParentMenu()">閉じる</button>
     </div>
 
+    <!-- 👜 どうぐ（バッグ）モーダル -->
     <div id="bagModal" class="modal-cover">
         <div class="modal-content" style="background:#1e293b;">
             <h3 style="margin:0 0 12px 0; color:#facc15;">👜 アイテムバッグ</h3>
@@ -320,6 +329,7 @@
         </div>
     </div>
 
+    <!-- 📱 ロトム図鑑モーダル -->
     <div id="zukanModal" class="modal-cover">
         <div class="rotom-skin">
             <div class="rotom-head-decoration"></div>
@@ -353,6 +363,7 @@
         </div>
     </div>
 
+    <!-- 📅 きろく（カレンダー）モーダル -->
     <div id="calendarModal" class="modal-cover">
         <div class="modal-content" style="background: linear-gradient(135deg, #4c1d95 0%, #1e1b4b 100%); width: 100%; max-width:340px;">
             <h3 style="margin:0; color:#facc15;">📅 ぼうけんのきろく</h3>
@@ -364,6 +375,7 @@
         </div>
     </div>
 
+    <!-- 🤝 相棒選択モーダル -->
     <div id="partnerSelectModal" class="modal-cover">
         <div class="modal-content" style="max-width:340px;">
             <h3 style="margin:0; color:#facc15; font-size:1.05rem;">あいぼうポケモンを えらぼう！</h3>
@@ -372,6 +384,7 @@
         </div>
     </div>
 
+    <!-- 🗺️ 冒険先選択モーダル -->
     <div id="adventureModal" class="modal-cover">
         <div class="modal-content">
             <h3 id="lblAdventureModalTitle" style="margin:0; color:#facc15; font-size:1.05rem;">どこに ぼうけんに でかける？</h3>
@@ -398,6 +411,7 @@
         </div>
     </div>
 
+    <!-- ⚔️ バトルモーダル -->
     <div id="battleModal" class="modal-cover">
         <div class="modal-content">
             <h3 id="battleStageTitle" style="margin:0; font-size:1rem; color:#facc15;">ぼうけんバトル</h3>
@@ -483,22 +497,6 @@
             mega: ["しんそく", "インファイト", "ガリョウテンセイ", "サイコブレイク", "りゅうのまい"]
         };
 
-        const ballAssets = {
-            normal: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png",
-            super: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png",
-            hyper: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png",
-            master: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png"
-        };
-
-        const masterQuests = {
-            kouta: ["学校の音読 📖", "自宅用の計算ドリル ➕", "自宅用の漢字ドリル ✍️"],
-            haruto: ["えいごの れっすん 🔤", "しょうがっこうの じゅんび どりる ✏️", "しゅくだい ぺーぱー 📋"]
-        };
-        const masterHelps = {
-            kouta: ["おふろ洗い 🛁", "お部屋の片付け ✨", "お皿の片付け 🍽️"],
-            haruto: ["おふろあらい 🛁", "おへやの かたづけ ✨", "おさらの かたづけ 🍽️"]
-        };
-
         let parentChallengePool = [
             "うわばきをあらう", "くつをそろえる", "おさらをはこぶ", "どくしょ10ぷん", "ラジオたいそう", "おてつだい1かい"
         ];
@@ -518,6 +516,19 @@
             "study_v2_haruto": createInitialUserData(),
             "study_v2_progress_": {},
             "study_v3_challenge_pool": parentChallengePool
+        };
+
+        let currentUser = 'kouta';
+        let zukanTab = 'normal';
+        let battleState = { step: 0, enemy: null };
+
+        const masterQuests = {
+            kouta: ["学校の音読 📖", "自宅用の計算ドリル ➕", "自宅用の漢字ドリル ✍️"],
+            haruto: ["えいごの れっすん 🔤", "しょうがっこうの じゅんび どりる ✏️", "しゅくだい ぺーぱー 📋"]
+        };
+        const masterHelps = {
+            kouta: ["おふろ洗い 🛁", "お部屋の片付け ✨", "お皿の片付け 🍽️"],
+            haruto: ["おふろあらい 🛁", "おへやの かたづけ ✨", "おさらの かたづけ 🍽️"]
         };
 
         function translateToHarutoLanuage() {
@@ -545,7 +556,6 @@
             translateToHarutoLanuage(); 
 
             const uData = cloudData[`study_v2_${currentUser}`];
-            // 🛠️ リセット時、あるいは初回時に確実にモーダルが開くようにガードを整理
             if (!uData || !uData.partner) { 
                 openPartnerSelectionModal(); 
             } else { 
@@ -686,7 +696,6 @@
             }
         }
 
-        // 🤝 選び直しのためのバグ修正を適用した相棒選択モーダル生成
         function openPartnerSelectionModal() {
             const container = document.getElementById('partnerSelectGroupContainer'); container.innerHTML = '';
             regionalStarters.forEach(group => {
@@ -935,7 +944,116 @@
             }
         }
 
+        // 🛠️ 確率計算部分（掛け算タイポバグ）を完全にクリーンに修正
         function throwBall(ballType) {
             const uData = cloudData[`study_v2_${currentUser}`];
             if (ballType === 'normal' && !(uData.bag.ball_normal > 0)) return;
-            if (ballType === 'super' && !(uData.bag.ball_
+            if (ballType === 'super' && !(uData.bag.ball_super > 0)) return;
+            if (ballType === 'hyper' && !(uData.bag.ball_hyper > 0)) return;
+            if (ballType === 'master' && !(uData.bag.ball_master > 0)) return;
+
+            document.getElementById('ballSelectSection').style.display = "none";
+            const log = document.getElementById('battleLogBox');
+            const enemy = battleState.enemy;
+            const bIcon = document.getElementById('ballIcon');
+
+            bIcon.src = ballAssets[ballType]; bIcon.style.display = "block";
+
+            if (ballType === 'normal') uData.bag.ball_normal--;
+            if (ballType === 'super') uData.bag.ball_super--;
+            if (ballType === 'hyper') uData.bag.ball_hyper--;
+            if (ballType === 'master') uData.bag.ball_master--;
+
+            bIcon.className = "ball-shake active";
+            log.textContent = `ボールを なげた！\nゆれている......`;
+
+            let catchRate = ballType === 'normal' ? 0.65 : (ballType === 'super' ? 0.85 : (ballType === 'hyper' ? 0.95 : 1.0));
+            if (battleState.isMega) { catchRate -= 0.2; }
+
+            const roll = Math.random();
+            setTimeout(() => {
+                bIcon.className = "";
+                if (roll <= catchRate) {
+                    log.innerHTML = `やったぜ！ 【${enemy.name}】を つかまえた！ 🎉`;
+                    if (battleState.isMega) {
+                        if (!uData.zukan_mega.includes(enemy.id)) uData.zukan_mega.push(enemy.id);
+                    } else {
+                        if (!uData.zukan_normal.includes(enemy.id)) uData.zukan_normal.push(enemy.id);
+                    }
+                    const rewardCoins = [100, 150, 200, 300, 500][Math.floor(Math.random() * 5)];
+                    uData.pokeen += rewardCoins;
+                    log.innerHTML += `<br>💰 <strong>+${rewardCoins} ぽけえん</strong> をてにいれた！`;
+                } else {
+                    log.innerHTML = `あ！ ボールから とびだしてしまった！\n【${enemy.name}】は にげていった！ 💨`;
+                }
+                uData.fixed_encounters = null;
+                uData.chosen_challenge_mission = null; 
+                document.getElementById('battleCloseBtn').style.display = "block";
+                saveAllToCloud();
+            }, 1400);
+        }
+
+        function closeBattleModal() { document.getElementById('battleModal').style.display = 'none'; renderUI(); }
+        function openSecretParentMenu() {
+            const pw = prompt("パパ・ママ専用パスワード：");
+            if (pw === "1022") { document.getElementById('secretParentPanel').style.display = 'block'; window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }
+        }
+        function closeSecretParentMenu() { document.getElementById('secretParentPanel').style.display = 'none'; }
+
+        function saveChallengePoolFromParent() {
+            const txt = document.getElementById('parentChallengePoolInput').value;
+            if (txt) {
+                const arr = txt.split(',').map(x => x.trim()).filter(x => x.length > 0);
+                cloudData["study_v3_challenge_pool"] = arr;
+                alert("🎰 チャレンジミッションの候補リストを保存しました！");
+                saveAllToCloud(); renderUI();
+            }
+        }
+
+        function adjustParentData(type) {
+            const amt = parseInt(document.getElementById('parentAmount').value) || 1;
+            const uData = cloudData[`study_v2_${currentUser}`];
+            if (type === 'pokeen') uData.pokeen += amt;
+            if (type === 'ticket') uData.bag.ticket = (uData.bag.ticket || 0) + amt;
+            if (type === 'ball_normal') uData.bag.ball_normal = (uData.bag.ball_normal || 0) + amt;
+            if (type === 'ball_super') uData.bag.ball_super = (uData.bag.ball_super || 0) + amt;
+            if (type === 'ball_hyper') uData.bag.ball_hyper = (uData.bag.ball_hyper || 0) + amt;
+            if (type === 'ball_master') uData.bag.ball_master = (uData.bag.ball_master || 0) + amt;
+            if (type === 'candy') uData.bag.candy = (uData.bag.candy || 0) + amt;
+            renderUI(); saveAllToCloud();
+        }
+
+        function resetCurrentUserData() {
+            const childName = currentUser === 'kouta' ? 'こうた' : 'はると';
+            if (confirm(`🚨 けいこく 🚨\n本当に 【${childName}】 のセーブデータをリセットしますか？`)) {
+                if (confirm("⚠️ 本当の本当によろしいですか？この操作はとりけせません。")) {
+                    cloudData[`study_v2_${currentUser}`] = createInitialUserData();
+                    alert(`${childName} のデータをリセットしました！`);
+                    closeSecretParentMenu(); 
+                    saveAllToCloud();
+                    changeUser(currentUser);
+                }
+            }
+        }
+
+        async function saveAllToCloud() {
+            document.getElementById('syncBadge').textContent = "☁️ セーブ中...";
+            try {
+                await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'save', key: 'study_v2_bundle_data', value: JSON.stringify(cloudData) })});
+                document.getElementById('syncBadge').textContent = "同期完了";
+            } catch (e) {}
+        }
+
+        async function initApp() {
+            try {
+                const r = await fetch(GAS_URL); const res = await r.json();
+                if (res && res['study_v2_bundle_data']) { const parsed = JSON.parse(res['study_v2_bundle_data']); if (parsed) cloudData = parsed; }
+            } catch(e) {}
+            // エラーを吐かずにここまで無事に到達するため、同期画面がハイド（非表示）されます
+            document.getElementById('loadingCover').style.display = 'none';
+            changeUser('kouta');
+        }
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
