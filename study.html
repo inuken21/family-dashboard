@@ -101,7 +101,7 @@
         .zone-btn:disabled { background: #e2e8f0; border-color: #94a3b8; box-shadow: none; cursor: not-allowed; opacity: 0.6; }
         .zone-title { font-weight: 900; font-size: 0.8rem; margin-bottom: 4px; }
         
-        /* 👁️ シルエット（影）を爆速CSSで完全再現 */
+        /* 👁️ シルエット（影）の再現 */
         .silhouette-preview { width: 55px; height: 55px; object-fit: contain; filter: brightness(0); opacity: 0.85; pointer-events: none; }
         
         .adventure-action-btn {
@@ -132,7 +132,7 @@
         .grid-pokemon-box { background: white; border: 2px solid #334155; border-radius: 10px; padding: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 75px; position: relative; }
         .grid-pokemon-box img { width: 45px; height: 45px; object-fit: contain; }
         .grid-pokemon-box span { font-size: 0.6rem; font-weight: 900; text-align: center; margin-top: 2px; }
-        .grid-pokemon-box.unowned img { filter: brightness(0); opacity: 0.15; } /* 未所持はうっすら影に */
+        .grid-pokemon-box.unowned img { filter: brightness(0); opacity: 0.15; }
         .grid-pokemon-box.unowned span { color: #94a3b8; }
         .zukan-number-badge { position: absolute; top: 2px; left: 4px; font-size: 0.5rem; font-weight: bold; color: #64748b; }
 
@@ -142,7 +142,7 @@
         .battle-scene-box { display: flex; justify-content: space-around; align-items: center; margin: 15px 0; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px; }
         .battle-pkm-wrapper { display: flex; flex-direction: column; align-items: center; font-weight: bold; font-size: 0.8rem; }
         .battle-pkm-wrapper img { width: 75px; height: 75px; object-fit: contain; }
-        .battle-log { background: #0f172a; border: 2px solid #475569; padding: 10px; border-radius: 8px; font-size: 0.9rem; font-weight: bold; text-align: left; min-height: 54px; color: #facc15; font-family: monospace; }
+        .battle-log { background: #0f172a; border: 2px solid #475569; padding: 10px; border-radius: 8px; font-size: 0.9rem; font-weight: bold; text-align: left; min-height: 54px; color: #facc15; font-family: monospace; line-height: 1.4; white-space: pre-line; }
         
         .battle-btn { width: 100%; height: 46px; background: #ea580c; color: white; border: 3px solid white; border-radius: 23px; font-size: 1.1rem; font-weight: 900; cursor: pointer; box-shadow: 0 4px 0 #000; margin-top: 10px; }
         .battle-btn:active { transform: translateY(2px); box-shadow: none; }
@@ -259,17 +259,13 @@
     <div id="battleModal" class="modal-cover">
         <div class="modal-content">
             <h3 id="battleStageTitle" style="margin:0; font-size:1.1rem; color:#facc15;">あやしい くさむら</h3>
-            
             <div class="battle-hp-bar-bg"><div id="enemyHpBar" class="battle-hp-bar-fill"></div></div>
-            
             <div class="battle-scene-box">
                 <div class="battle-pkm-wrapper"><img id="battlePartnerImg" src="" alt="相棒"><span id="battlePartnerName">---</span></div>
                 <div style="font-size:1.5rem; font-weight:900; color:#ef4444;">VS</div>
                 <div class="battle-pkm-wrapper"><img id="battleEnemyImg" src="" alt="敵"><span id="battleEnemyName">---</span></div>
             </div>
-
-            <div id="battleLogBox" class="battle-log">こうたの ぼうけんが はじまる！</div>
-            
+            <div id="battleLogBox" class="battle-log">ぼうけんが はじまる！</div>
             <button type="button" id="battleActionBtn" class="battle-btn" onclick="nextBattlePhase()">たたかう！ ⚔️</button>
             <button type="button" id="battleCloseBtn" class="modal-close-btn" onclick="closeBattleModal()">ゲットだぜ！ 🤝</button>
         </div>
@@ -277,7 +273,7 @@
 
     <div id="partnerSelectModal" class="modal-cover">
         <div class="modal-content" style="max-width:360px;">
-            <h3 style="margin:0 0 12px 0;">🦖 あいぼうポケモンを 選ぼう！</h3>
+            <h3>🦖 あいぼうポケモンを 選ぼう！</h3>
             <div class="zukan-grid" id="partnerSelectGrid"></div>
             <button type="button" class="modal-close-btn" style="display:block; margin-top:12px; background:#475569;" onclick="closePartnerSelectModal()">とじる</button>
         </div>
@@ -286,7 +282,9 @@
     <script>
         const GAS_URL = "https://script.google.com/macros/s/AKfycbw0YdRq2aEPNBXCtByhIst6wVS0WDDv1olhdg49m66yUFP6hoyTf8m_lo4V6JL98lkU/exec";
         
-        // 通常図鑑マスタ
+        const now = new Date();
+        const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
         const normalPokemonMaster = [
             { id: "0025", name: "ピカチュウ", baseId: "0025" },
             { id: "0001", name: "フシギダネ", baseId: "0025" }, { id: "0002", name: "フシギソウ", baseId: "0025" }, { id: "0003", name: "フシギバナ", baseId: "0025" },
@@ -299,14 +297,12 @@
             { id: "0906", name: "ニャオハ", baseId: "0906" }, { id: "0909", name: "ホゲータ", baseId: "0909" }, { id: "0912", name: "クワッス", baseId: "0912" }
         ];
 
-        // メガシンカ図鑑マスタ
         const megaPokemonMaster = [
             { id: "0006_f2", name: "メガリザードンX" }, { id: "0006_f3", name: "メガリザードンY" },
             { id: "0003_f2", name: "メガフシギバナ" }, { id: "0009_f2", name: "メガカメックス" },
             { id: "0448_f2", name: "メガルカリオ" }
         ];
 
-        // フィールド別出現定義（シルエット候補用）
         const fieldSpawns = {
             water: [
                 { id: "0007", name: "ゼニガメ", isMega: false }, { id: "0258", name: "ミズゴロウ", isMega: false }, 
@@ -340,9 +336,7 @@
 
         let currentUser = 'kouta';
         let currentZukanTab = 'normal';
-        let activeFieldPool = {}; // 今日の4エリアの潜伏ポケモン保持
-
-        // バトル進行用ステータス
+        let activeFieldPool = {}; 
         let battleState = { step: 0, enemy: null, fieldKey: "" };
 
         const masterQuests = {
@@ -354,28 +348,22 @@
         function getImgUrl(id) {
             const isMega = id.includes('_');
             const baseId = isMega ? id.split('_')[0] : id;
-            const num3 = baseId.substring(1); // "0025" -> "025"
+            const num3 = baseId.substring(1); 
             const suffix = isMega ? "_" + id.split('_')[1] : "";
             return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${num3}${suffix}.png`;
         }
 
-        // 案B：経験値（クリア日数）からレベルを算出するロジック
         function calculateLevel(exp) {
-            // 3日クリアごとに1レベルアップ
             return Math.floor(exp / 3) + 1;
         }
 
-        // 案B：レベルに応じて御三家相棒を自動進化させる判定
         function getEvolvedId(baseId, level) {
-            if (baseId === "0025") return "0025"; // ピカチュウは固定
-            
-            // 御三家マスタの進化ラインを抽出
+            if (baseId === "0025") return "0025";
             const line = normalPokemonMaster.filter(p => p.baseId === baseId);
             if (line.length < 3) return baseId;
-
-            if (level >= 12) return line[2].id; // 最終進化 (Lv.12)
-            if (level >= 5) return line[1].id;  // 中間進化 (Lv.5)
-            return line[0].id;                  // 初期
+            if (level >= 12) return line[2].id; 
+            if (level >= 5) return line[1].id;  
+            return line[0].id;                  
         }
 
         function changeUser(user) {
@@ -386,9 +374,8 @@
             renderUI();
         }
 
-        // 日替わりで各フィールドに出現するポケモンを1匹ずつ固定（シルエット用）
         function generateDailyFields() {
-            const seed = now.getDate(); // 日付をシードにして毎日変化
+            const seed = now.getDate(); 
             Object.keys(fieldSpawns).forEach(key => {
                 const pool = fieldSpawns[key];
                 const idx = (seed + pool.length) % pool.length;
@@ -397,39 +384,31 @@
         }
 
         function renderUI() {
-            // 1. レベル・経験値の同期
             if (!cloudData["study_level"]) cloudData["study_level"] = { "kouta": { "exp": 0 }, "haruto": { "exp": 0 } };
             const exp = cloudData["study_level"][currentUser]?.exp || 0;
             const level = calculateLevel(exp);
             document.getElementById('userLevel').textContent = level;
 
-            // 2. 相棒ポケモンの自動進化判定
             const basePokeId = cloudData["study_user_pokemon"]?.[currentUser] || "0025";
             const currentEvolvedId = getEvolvedId(basePokeId, level);
             const pInfo = normalPokemonMaster.find(p => p.id === currentEvolvedId) || normalPokemonMaster[0];
             document.getElementById('partnerName').textContent = pInfo.name;
             document.getElementById('partnerImg').src = getImgUrl(pInfo.id);
 
-            // 自動で図鑑にも登録（進化時救済）
             unlockZukan(currentEvolvedId, false);
 
-            // 3. 財布＆冒険チケット
             const balance = cloudData["study_balance"]?.[currentUser] || { "pokeen": 0, "gachaCount": 0 };
             document.getElementById('pokeenBalance').textContent = balance.pokeen;
             document.getElementById('gachaCount').textContent = balance.gachaCount;
 
-            // エリア選択肢のシルエット画像流し込み
             Object.keys(activeFieldPool).forEach(key => {
                 const pkm = activeFieldPool[key];
                 const btn = document.getElementById(`zone-${key}`);
-                const img = document.getElementById(`shadow-water` ? `shadow-${key}` : '');
+                const img = document.getElementById(`shadow-${key}`);
                 if (img) img.src = getImgUrl(pkm.id);
-                
-                // チケットが0枚ならフィールド選択を無効化
                 btn.disabled = (balance.gachaCount <= 0);
             });
 
-            // 4. クエストレンダリング
             const listEl = document.getElementById('questList');
             listEl.innerHTML = '';
             if (!cloudData["study_progress_" + todayStr]) cloudData["study_progress_" + todayStr] = { "kouta": { "done": [] }, "haruto": { "done": [] } };
@@ -476,10 +455,12 @@
             if (studyCleared && !cloudData["study_progress_" + todayStr][currentUser].gachaClaimed) {
                 cloudData["study_progress_" + todayStr][currentUser].gachaClaimed = true;
                 
-                // 経験値(クリア日数)＋1
                 cloudData["study_level"][currentUser].exp += 1;
-                // 冒険チケット＋1
                 cloudData["study_balance"][currentUser].gachaCount += 1;
+                
+                // 【バグ修正箇所】クォーテーションで囲み、フリーズを完全回避
+                document.body.style.background = "#fff";
+                setTimeout(() => { document.body.style.background = 'var(--bg-color)'; }, 150);
                 
                 alert("ミッションコンプリート！ 🎉\nけいけんちが アップして、ぼうけんチケットを1まい ゲットしたぞ！\nフィールドを選んで 冒険に出発だ！ 🗺️🔴");
                 
@@ -489,25 +470,21 @@
             }
         }
 
-        // ⚔️ フレンダ風冒険バトル開始
         function startAdventure(fieldKey) {
             const balance = cloudData["study_balance"]?.[currentUser];
             if (!balance || balance.gachaCount <= 0) return;
 
-            // 楽観的UI：チケットを即消費
             balance.gachaCount--;
             document.getElementById('gachaCount').textContent = balance.gachaCount;
 
             const enemy = activeFieldPool[fieldKey];
             battleState = { step: 0, enemy: enemy, fieldKey: fieldKey };
 
-            // モーダル初期化
             const titles = { water: "🌊 みずべの ちくさ", forest: "🌳 しんぴの もり", volcano: "🌋 ごつごつ かざん", thunder: "⚡ いなずまの へんげ" };
             document.getElementById('battleStageTitle').textContent = titles[fieldKey];
             document.getElementById('enemyHpBar').style.width = "100%";
             document.getElementById('enemyHpBar').style.background = "#22c55e";
             
-            // 相棒画像セット
             const exp = cloudData["study_level"][currentUser]?.exp || 0;
             const myId = getEvolvedId(cloudData["study_user_pokemon"][currentUser], calculateLevel(exp));
             const myName = normalPokemonMaster.find(p => p.id === myId)?.name || "相棒";
@@ -515,10 +492,8 @@
             document.getElementById('battlePartnerImg').src = getImgUrl(myId);
             document.getElementById('battlePartnerName').textContent = myName;
 
-            // 敵画像セット（バトル中はシルエット解除！）
             document.getElementById('battleEnemyImg').src = getImgUrl(enemy.id);
             document.getElementById('battleEnemyName').textContent = enemy.name;
-            document.getElementById('battleEnemyImg').style.filter = "none";
 
             document.getElementById('battleLogBox').textContent = `あ！ 野生の 【${enemy.name}】が とびだしてきた！`;
             
@@ -538,33 +513,26 @@
             const enemy = battleState.enemy;
 
             if (battleState.step === 0) {
-                // ターン1：こうげき
                 log.textContent = `いけっ！ 【${myName}】の こうげき！\nこうかは ばつぐんだ！💥`;
                 document.getElementById('enemyHpBar').style.width = "20%";
                 document.getElementById('enemyHpBar').style.background = "#ef4444";
                 document.getElementById('battleActionBtn').textContent = "モンスターボールを投げる！ 🔴";
                 battleState.step = 1;
             } else if (battleState.step === 1) {
-                // ターン2：ゲットチャンス（ボール投げ）
                 document.getElementById('battleActionBtn').style.display = "none";
-                document.getElementById('ballIcon').className = "ball-shake active"; // ボールが揺れる
+                document.getElementById('ballIcon').className = "ball-shake active";
                 log.textContent = `モンスターボールを なげた！\nゆれている......`;
 
-                // 報酬ぽけえんをランダム決定（100〜500ぽけえん）
                 const randomCoins = [100, 150, 200, 250, 300, 500];
                 const earnedPokeen = randomCoins[Math.floor(Math.random() * randomCoins.length)];
 
                 setTimeout(() => {
                     document.getElementById('ballIcon').className = "ball-shake";
                     document.getElementById('ballIcon').textContent = "✨⭐✨";
-                    log.innerHTML = `やったぜ！ 【${enemy.name}】を つかまえた！ 🎉<br>💰 <strong>+${earnedPokeen} ぽけえん</strong> ゲット！`;
+                    log.innerHTML = `やったぜ！ 【${enemy.name}】を つかまえた！ 🎉\n💰 <strong>+${earnedPokeen} ぽけえん</strong> ゲット！`;
                     
-                    // ぽけえん財布に加算
                     cloudData["study_balance"][currentUser].pokeen += earnedPokeen;
-                    
-                    // 図鑑アンロック
                     unlockZukan(enemy.id, enemy.isMega);
-
                     document.getElementById('battleCloseBtn').style.display = "block";
                     
                     saveToCloud("study_balance", JSON.stringify(cloudData["study_balance"]));
@@ -577,7 +545,6 @@
             renderUI();
         }
 
-        // 図鑑アンロック永続化処理
         function unlockZukan(id, isMega) {
             const key = isMega ? "study_zukan_mega" : "study_zukan_normal";
             if (!cloudData[key]) cloudData[key] = { "kouta": [], "haruto": [] };
@@ -589,7 +556,6 @@
             }
         }
 
-        // 🛍️ ショップ交換
         function buyItem(itemName, price) {
             const balance = cloudData["study_balance"]?.[currentUser];
             if (!balance || balance.pokeen < price) {
@@ -604,7 +570,6 @@
             }
         }
 
-        // 📖 図鑑タブ切り替え
         function switchZukanTab(tab) {
             currentZukanTab = tab;
             document.getElementById('zukanTabNormal').className = tab === 'normal' ? 'zukan-tab-btn active' : 'zukan-tab-btn';
@@ -636,12 +601,9 @@
             });
         }
 
-        // 📖 相棒選び直しモーダル
         function openZukanSelectionModal() {
             const grid = document.getElementById('partnerSelectGrid');
             grid.innerHTML = '';
-            
-            // 御三家初期のリストだけを抜粋して選択肢にする
             const starters = normalPokemonMaster.filter(p => p.id === p.baseId);
 
             starters.forEach(p => {
@@ -661,7 +623,6 @@
         }
         function closePartnerSelectModal() { document.getElementById('partnerSelectModal').style.display = 'none'; }
 
-        // ⚙️ 親用調整
         function adjustParentData(isPlus, type) {
             const amtEl = document.getElementById('parentAmount');
             const amount = parseInt(amtEl.value) || 1;
@@ -689,7 +650,7 @@
         }
 
         async function initApp() {
-            generateDailyFields(); // 今日のシルエット候補生成
+            generateDailyFields(); 
             const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 2000, "timeout"));
             const fetchPromise = (async () => {
                 try { const res = await fetch(GAS_URL); return await res.json(); } catch(e) { return null; }
