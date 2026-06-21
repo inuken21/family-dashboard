@@ -9,98 +9,24 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #f1f5f9;
-            --text-color: #0f172a;
-            --border-radius: 20px;
-            --rotom-red: #ff3c3c;
-            --rotom-screen: #eaf6fc;
-            --kouta-main: #2563eb;
-            --kouta-bg: #eff6ff;
-            --haruto-main: #dc2626;
-            --haruto-bg: #fef2f2;
-        }
-        
+        :root { --bg-color: #f1f5f9; --text-color: #0f172a; --border-radius: 20px; --rotom-red: #ff3c3c; --rotom-screen: #eaf6fc; --kouta-main: #2563eb; --kouta-bg: #eff6ff; --haruto-main: #dc2626; --haruto-bg: #fef2f2; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body {
-            font-family: 'M PLUS Rounded 1c', 'Helvetica Neue', Arial, sans-serif;
-            font-weight: 800;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 16px;
-            padding-bottom: 80px;
-            user-select: none;
-        }
-
-        header { 
-            position: relative;
-            text-align: center; 
-            margin: 12px 0 24px 0;
-            padding: 0 36px;
-        }
+        body { font-family: 'M PLUS Rounded 1c', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 16px; padding-bottom: 80px; user-select: none; }
+        header { position: relative; text-align: center; margin: 12px 0 24px 0; padding: 0 36px; }
         header h1 { font-size: 1.2rem; font-weight: 900; color: #0f172a; margin: 0; letter-spacing: -0.5px; }
-        
-        .secret-gear-btn {
-            position: absolute;
-            right: 4px;
-            top: -2px;
-            font-size: 1.3rem;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #94a3b8;
-            padding: 6px;
-        }
-
-        .user-switcher {
-            display: table;
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 16px 0;
-            margin-bottom: 24px;
-        }
-        .user-tab {
-            display: table-cell;
-            width: 50%;
-            height: 56px;
-            text-align: center;
-            vertical-align: middle;
-            border: 3.5px solid #0f172a;
-            font-size: 1.1rem;
-            font-weight: 900;
-            cursor: pointer;
-            background: #cbd5e1;
-            color: #475569;
-            box-shadow: 0 5px 0 #0f172a;
-            border-radius: var(--border-radius);
-        }
+        .secret-gear-btn { position: absolute; right: 4px; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: #94a3b8; padding: 6px; }
+        .user-switcher { display: table; width: 100%; border-collapse: separate; border-spacing: 16px 0; margin-bottom: 24px; }
+        .user-tab { display: table-cell; width: 50%; height: 56px; text-align: center; vertical-align: middle; border: 3.5px solid #0f172a; font-size: 1.1rem; font-weight: 900; cursor: pointer; background: #cbd5e1; color: #475569; box-shadow: 0 5px 0 #0f172a; border-radius: var(--border-radius); }
         .user-tab.kouta.active { background-color: var(--kouta-main); color: white; }
         .user-tab.haruto.active { background-color: var(--haruto-main); color: white; }
         .user-tab:active { transform: translateY(2px); box-shadow: 0 3px 0 #0f172a; }
-
-        .card {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 18px 16px;
-            margin-bottom: 20px;
-            border: 3.5px solid #0f172a;
-            box-shadow: 0 5px 0 #0f172a;
-        }
+        .card { background: white; border-radius: var(--border-radius); padding: 18px 16px; margin-bottom: 20px; border: 3.5px solid #0f172a; box-shadow: 0 5px 0 #0f172a; }
         .card h2 { font-size: 1.05rem; margin: 0 0 14px 0; font-weight: 900; display: flex; justify-content: space-between; align-items: center; }
-
-        .status-card {
-            background: #1e293b; color: white; border-color: #0f172a; padding: 14px 4px; display: table; width: 100%; margin-bottom: 16px;
-        }
-        .status-item {
-            display: table-cell; width: 33.33%; text-align: center; font-size: 0.75rem; font-weight: 900; color: #94a3b8; border-right: 2px solid #475569; vertical-align: middle;
-        }
+        .status-card { background: #1e293b; color: white; border-color: #0f172a; padding: 14px 4px; display: table; width: 100%; margin-bottom: 16px; }
+        .status-item { display: table-cell; width: 33.33%; text-align: center; font-size: 0.75rem; font-weight: 900; color: #94a3b8; border-right: 2px solid #475569; vertical-align: middle; }
         .status-item:last-child { border-right: none; }
         .status-item .val { display: block; font-size: 1.15rem; font-weight: 900; color: #facc15; margin-top: 4px; }
-
-        .partner-display-bar {
-            background: #ffffff; border: 3.5px solid #0f172a; border-radius: 16px; padding: 10px 14px; margin-bottom: 20px; display: table; width: 100%; cursor: pointer; box-shadow: 0 4px 0 #0f172a;
-        }
+        .partner-display-bar { background: #ffffff; border: 3.5px solid #0f172a; border-radius: 16px; padding: 10px 14px; margin-bottom: 20px; display: table; width: 100%; cursor: pointer; box-shadow: 0 4px 0 #0f172a; }
         .partner-display-bar:active { transform: translateY(2px); box-shadow: 0 2px 0 #0f172a; }
         .partner-img-cell { display: table-cell; width: 50px; vertical-align: middle; }
         .partner-img-cell img { width: 44px; height: 44px; object-fit: contain; display: block; margin: 0 auto; }
@@ -108,17 +34,14 @@
         .partner-lbl { font-size: 0.65rem; color: #64748b; font-weight: 900; display: block; margin-bottom: 1px; }
         .partner-pkm-name { font-size: 0.95rem; font-weight: 900; color: #0f172a; }
         .partner-change-hint { display: table-cell; vertical-align: middle; text-align: right; font-size: 0.75rem; color: #2563eb; font-weight: 900; }
-
         .mission-hp-bg { width: 100%; height: 12px; background: #cbd5e1; border-radius: 6px; border: 2.5px solid #0f172a; margin-bottom: 20px; overflow: hidden; }
         .mission-hp-fill { height: 100%; background: #10b981; width: 0%; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-
         .zone-header { font-size: 0.85rem; font-weight: 900; color: white; padding: 6px 14px; border-radius: 12px 12px 0 0; margin-top: 10px; border: 3px solid #0f172a; border-bottom: none; display: inline-block; box-shadow: 0 4px 0 #0f172a; transform: translateY(4px); position: relative; z-index: 2; }
         .hw-zone { background-color: #f59e0b; }
         .self-zone { background-color: #10b981; }
         .lesson-zone { background-color: #3b82f6; }
         .challenge-zone { background-color: #ef4444; }
         .zone-container { border: 3px solid #0f172a; border-radius: 0 12px 12px 12px; padding: 12px; background: #f8fafc; box-shadow: 0 4px 0 #0f172a; margin-bottom: 16px; position: relative; z-index: 1; display: flex; flex-direction: column; gap: 8px; }
-
         .quest-item { display: flex; align-items: center; background: white; border: 2.5px solid #0f172a; border-radius: 10px; padding: 12px 10px; cursor: pointer; transition: all 0.1s; box-shadow: 0 3px 0 #0f172a; }
         .quest-item:active { transform: scale(0.98); box-shadow: 0 1px 0 #0f172a; }
         .quest-item.done { background: #e2e8f0; opacity: 0.7; }
@@ -126,39 +49,33 @@
         .quest-item.done .quest-fake-cb { background: #ef4444; color: white; font-weight: bold; border-color: #0f172a; }
         .quest-cell-text { padding-left: 10px; font-size: 0.9rem; font-weight: 900; color: #1e293b; line-height: 1.3; }
         .quest-item.done .quest-cell-text { text-decoration: line-through; }
-
         .slot-box { display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #334155 0%, #1e293b 100%); border: 3px solid #0f172a; border-radius: 14px; padding: 12px 14px; margin-bottom: 12px; color: white; min-height: 60px; }
         .slot-window { flex: 1; text-align: left; font-size: 0.95rem; font-weight: 900; color: #facc15; padding-right: 10px; white-space: normal; word-break: break-word; line-height: 1.3; }
         .slot-trigger-btn { background: #ea580c; color: white; border: 2px solid white; border-radius: 10px; padding: 8px 14px; font-family: inherit; font-size: 0.8rem; font-weight: 900; cursor: pointer; box-shadow: 0 3px 0 #000; flex-shrink: 0; align-self: center; }
         .slot-trigger-btn:active { transform: translateY(1px); box-shadow: 0 2px 0 #000; }
         .slot-trigger-btn:disabled { background: #64748b; color: #94a3b8; box-shadow: none; cursor: not-allowed; }
-
         .action-menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 20px 0; }
         .menu-btn { height: 50px; border: 3px solid #0f172a; border-radius: 14px; font-size: 0.8rem; font-weight: 900; cursor: pointer; box-shadow: 0 4px 0 #0f172a; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 2px; }
         .menu-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #0f172a; }
         .btn-bag { background: linear-gradient(180deg, #eab308, #ca8a04); color: white; }
         .btn-zukan { background: linear-gradient(180deg, #06b6d4, #0891b2); color: white; }
         .btn-calendar { background: linear-gradient(180deg, #a855f7, #7e22ce); color: white; }
-
         .big-adventure-trigger { width: 100%; height: 64px; background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%); color: white; border: 3.5px solid #0f172a; border-radius: 18px; font-size: 1.15rem; font-weight: 900; box-shadow: 0 5px 0 #0f172a; cursor: pointer; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; text-shadow: 0 2px 2px rgba(0,0,0,0.4); }
         .big-adventure-trigger img { width: 28px; height: 28px; object-fit: contain; }
         .big-adventure-trigger:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 2px 0 #0f172a; }
         .big-adventure-trigger:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; box-shadow: 0 2px 0 #94a3b8 !important; transform: translateY(3px); cursor: not-allowed; opacity: 0.6; text-shadow: none; }
         .big-adventure-trigger:disabled img { filter: grayscale(1); opacity: 0.5; }
-
         .shop-grid { display: flex; flex-direction: column; gap: 8px; }
         .shop-item-btn { display: flex; align-items: center; width: 100%; background: #f8fafc; border: 2.5px solid #0f172a; border-radius: 12px; padding: 12px; cursor: pointer; text-align: left; box-shadow: 0 3px 0 #0f172a; }
         .shop-item-btn:active { transform: translateY(1px); box-shadow: 0 2px 0 #0f172a; }
         .shop-title-cell { flex: 1; font-weight: 900; font-size: 0.85rem; color: #1e293b; display: flex; align-items: center; }
         .shop-title-cell img { width: 20px; height: 20px; object-fit: contain; margin-right: 6px; flex-shrink: 0; }
         .shop-price-cell { font-weight: 900; font-size: 0.95rem; color: #ea580c; white-space: nowrap; margin-left: 10px; text-align: right; }
-
         .rotom-skin { background-color: var(--rotom-red); border: 4.5px solid #0f172a; border-radius: 28px; padding: 16px; box-shadow: 0 7px 0 #991b1b; position: relative; width: 100%; max-width: 340px; color: #0f172a; }
         .rotom-head-decoration { width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent; border-bottom: 24px solid var(--rotom-red); position: absolute; top: -23px; left: calc(50% - 18px); filter: drop-shadow(0px -4px 0px #0f172a); }
         .rotom-eyes { text-align: center; padding-bottom: 10px; font-size: 1.3rem; letter-spacing: 6px; }
         .rotom-screen-frame { background-color: #1e293b; padding: 10px; border-radius: 18px; border: 2.5px solid #0f172a; }
         .rotom-lcd { background-color: var(--rotom-screen); border-radius: 12px; padding: 10px; }
-        
         .zukan-tab-row { display: flex; gap: 4px; margin-bottom: 8px; }
         .zukan-tab-btn { flex: 1; height: 36px; border: 2px solid #0f172a; background: #cbd5e1; font-weight: 900; font-size: 0.75rem; border-radius: 8px; cursor: pointer; }
         .zukan-tab-btn.active { background: #ea580c; color: white; }
@@ -166,14 +83,12 @@
         .progress-container { background: #cbd5e1; border-radius: 8px; height: 18px; border: 2.5px solid #0f172a; overflow: hidden; margin-bottom: 12px; display: flex; align-items: center; position: relative; }
         .progress-fill-bar { height: 100%; background: #22c55e; width: 0%; transition: width 0.3s ease; }
         .progress-text-label { position: absolute; width: 100%; text-align: center; font-size: 0.75rem; font-weight: 900; color: #0f172a; }
-
         .zukan-display-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; max-height: 240px; overflow-y: auto; }
         .grid-pokemon-box { background: white; border: 2px solid #0f172a; border-radius: 8px; padding: 6px 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 68px; position: relative; }
         .grid-pokemon-box img { width: 34px; height: 34px; object-fit: contain; }
         .grid-pokemon-box span { font-size: 0.5rem; font-weight: 900; text-align: center; margin-top: 3px; display: block; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .grid-pokemon-box.unowned img { filter: brightness(0); opacity: 0.12; }
         .zukan-number-badge { position: absolute; top: 1px; left: 2px; font-size: 0.45rem; font-weight: 900; color: #64748b; }
-
         .bag-item-row { display: flex; justify-content: space-between; align-items: center; background: white; border: 2.5px solid #0f172a; border-radius: 12px; padding: 8px 12px; margin-bottom: 8px; color: #0f172a; }
         .bag-item-info { display: flex; align-items: center; gap: 8px; }
         .bag-item-info img { width: 28px; height: 24px; object-fit: contain; }
@@ -181,38 +96,31 @@
         .bag-item-count { font-size: 0.8rem; color: #ea580c; font-weight: 900; }
         .use-item-btn { background: #22c55e; color: white; border: 2px solid #0f172a; border-radius: 8px; padding: 4px 12px; font-family: inherit; font-size: 0.8rem; font-weight: 900; cursor: pointer; }
         .use-item-btn:disabled { background: #cbd5e1; color: #94a3b8; cursor: not-allowed; }
-
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 8px; }
         .calendar-day-head { font-size: 0.65rem; font-weight: 900; text-align: center; color: #cbd5e1; padding-bottom: 4px; }
         .calendar-cell { background: rgba(255,255,255,0.08); border-radius: 6px; aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; font-size: 0.7rem; color: #94a3b8; }
         .calendar-cell.current-month { color: white; background: rgba(255,255,255,0.15); }
         .calendar-cell.stamped { background: #22c55e; color: white; }
         .calendar-cell.stamped::after { content: "🔴"; font-size: 0.7rem; position: absolute; bottom: 2px; }
-
         .adventure-zone-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 12px; }
         .zone-btn { background: #ffffff; border: 3px solid #0f172a; border-radius: 16px; padding: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 104px; box-shadow: 0 4px 0 #0f172a; color: #0f172a; }
         .zone-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #0f172a; }
         .zone-title { font-weight: 900; font-size: 0.75rem; margin-bottom: 4px; }
         .silhouette-preview { width: 48px; height: 48px; object-fit: contain; filter: brightness(0); opacity: 0.85; }
-
         .region-group-title { font-size: 0.85rem; color: #facc15; font-weight: 900; text-align: left; margin: 12px 0 6px 0; border-left: 4px solid #ea580c; padding-left: 6px; }
         .partner-select-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
         .partner-choice-box { background: white; border: 2.5px solid #0f172a; border-radius: 12px; padding: 6px; text-align: center; cursor: pointer; color: #0f172a; box-shadow: 0 3px 0 #0f172a; }
         .partner-choice-box img { width: 44px; height: 44px; object-fit: contain; }
         .partner-choice-box div { font-size: 0.7rem; font-weight: 900; margin-top: 2px; }
-
         .ball-select-row { display: flex; gap: 6px; justify-content: center; margin-top: 10px; }
         .ball-choice-item { flex: 1; background: rgba(255,255,255,0.1); border: 2px solid #475569; border-radius: 12px; padding: 6px 2px; text-align: center; cursor: pointer; }
         .ball-choice-item.disabled { opacity: 0.3; cursor: not-allowed; }
         .ball-choice-item img { width: 32px; height: 32px; object-fit: contain; display: block; margin: 0 auto 2px auto; }
         .ball-choice-item span { font-size: 0.55rem; font-weight: 900; display: block; color: white; }
-
         .modal-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 16px; }
         .modal-content { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 3.5px solid white; border-radius: 24px; padding: 20px; text-align: center; width: 100%; max-width: 320px; color: white; }
-        
         #ballIcon { display: none; width: 64px; height: 64px; object-fit: contain; margin: 8px auto; }
         #ballIcon.visible { display: block; }
-
         .battle-hp-bar-bg { width: 100%; height: 10px; background: #475569; border-radius: 50px; border: 2px solid white; margin: 10px 0; overflow: hidden; }
         .battle-hp-bar-fill { width: 100%; height: 100%; background: #22c55e; transition: width 0.3s ease; }
         .battle-scene-box { display: flex; justify-content: space-around; align-items: center; margin: 14px 0; }
@@ -222,10 +130,8 @@
         .battle-log { background: #0f172a; border: 2px solid #475569; padding: 10px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; text-align: left; min-height: 64px; color: #facc15; white-space: pre-line; line-height: 1.4; }
         .battle-btn { width: 100%; height: 46px; font-family: inherit; background: #ea580c; color: white; border: 2.5px solid white; border-radius: 24px; font-size: 1rem; font-weight: 900; cursor: pointer; }
         .modal-close-btn { font-family: inherit; background: #22c55e; color: white; border: 2px solid white; padding: 12px; border-radius: 24px; font-weight: 900; width: 100%; font-size: 1rem; display: none; }
-        
         .ball-shake.active { animation: ballWobble 0.4s ease infinite; }
         @keyframes ballWobble { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-12deg); } 75% { transform: rotate(12deg); } }
-
         .parent-panel { background: #f1f5f9; border: 3.5px solid #dc2626; margin-top: 24px; padding: 14px; border-radius: 16px; display: none; color: #0f172a; }
         .sync-badge { position: fixed; bottom: 12px; right: 12px; background: rgba(0,0,0,0.8); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 900; z-index: 1000; }
         .loading-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; z-index: 10000; font-weight: 900; font-size: 1.1rem; }
@@ -505,6 +411,45 @@
         let currentUser = 'kouta';
         let battleState = {};
 
+        // 🔥 Web Audio API: プログラムで「ピコピコ音」を作る魔法のエンジン
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playRetroSound(type) {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            const t = audioCtx.currentTime;
+            
+            if (type === 'click') {
+                // ボタンを押した時の「ピッ」
+                const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+                osc.type = 'square'; osc.frequency.setValueAtTime(880, t);
+                gain.gain.setValueAtTime(0.05, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(t); osc.stop(t + 0.1);
+            } else if (type === 'clear') {
+                // ゾーンクリア時の「ピロリロリン！」
+                [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
+                    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+                    o.type = 'square'; o.frequency.setValueAtTime(f, t + i*0.1);
+                    g.gain.setValueAtTime(0.05, t + i*0.1); g.gain.exponentialRampToValueAtTime(0.001, t + i*0.1 + 0.15);
+                    o.connect(g); g.connect(audioCtx.destination);
+                    o.start(t + i*0.1); o.stop(t + i*0.1 + 0.15);
+                });
+            } else if (type === 'coin') {
+                // お金ゲットやアイテム交換の「チャリン！」
+                const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+                osc.type = 'square'; osc.frequency.setValueAtTime(987.77, t);
+                gain.gain.setValueAtTime(0.05, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(t); osc.stop(t + 0.1);
+                
+                const osc2 = audioCtx.createOscillator(); const gain2 = audioCtx.createGain();
+                osc2.type = 'square'; osc2.frequency.setValueAtTime(1318.51, t + 0.1);
+                gain2.gain.setValueAtTime(0.05, t + 0.1); gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+                osc2.connect(gain2); gain2.connect(audioCtx.destination);
+                osc2.start(t + 0.1); osc2.stop(t + 0.3);
+            }
+        }
+
         const pkmNameCache = {}; 
         async function getPokemonNameAsync(idStr) {
             const baseId = parseInt(idStr.split('_')[0]);
@@ -520,26 +465,16 @@
             return `No.${baseId}`;
         }
 
-        // 🔥 🟢 検討結果から生まれた「音声再生用共通ヘルパー関数」
-        function playSound(url) {
-            if (!url) return;
-            const audio = new Audio(url);
-            audio.play().catch(e => console.log("音声再生がブラウザにブロックされました（一度画面をどこかタップすると直ります）:", e));
-        }
-
-        // 🔥 公式APIからポケモンの鳴き声URLを引っ張ってきて再生する関数
         async function playPokemonCry(idStr) {
             const baseId = parseInt(idStr.split('_')[0]);
             try {
                 const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${baseId}`);
                 const data = await res.json();
-                // 公式API(PokeAPI)内にある最新の鳴き声データ(mp3)のURLを取得
                 if (data.cries && data.cries.latest) {
-                    playSound(data.cries.latest);
+                    const audio = new Audio(data.cries.latest);
+                    audio.play().catch(e => console.log("音声ブロック", e));
                 }
-            } catch(e) {
-                console.error("鳴き声の取得に失敗しました", e);
-            }
+            } catch(e) {}
         }
 
         async function saveAllToCloud() {
@@ -598,7 +533,6 @@
         }
 
         function calculateLevel(exp) { return Math.floor(exp / 3) + 1; }
-
         function getEvolvedId(baseId, level) {
             if (!baseId || baseId === "0025") return "0025";
             let offset = 0;
@@ -618,6 +552,7 @@
         }
 
         function changeUser(user) {
+            playRetroSound('click');
             currentUser = user;
             document.querySelectorAll('.user-tab').forEach(t => t.classList.remove('active'));
             document.querySelector(`.user-tab.${user}`).classList.add('active');
@@ -644,14 +579,16 @@
         }
 
         function toggleTask(task) {
+            playRetroSound('click');
             let doneList = cloudData["study_progress_" + todayStr][currentUser].done;
             if (doneList.includes(task)) {
                 cloudData["study_progress_" + todayStr][currentUser].done = doneList.filter(t => t !== task);
             } else {
                 cloudData["study_progress_" + todayStr][currentUser].done.push(task);
             }
-            renderUI();
             saveAllToCloud();
+            renderUI();
+            checkZoneClear(); // 🔥 クリック直後にゾーンごとのクリア判定！
         }
 
         function renderUI() {
@@ -669,6 +606,10 @@
             if (!cloudData["study_v2_calendar"][currentUser]) cloudData["study_v2_calendar"][currentUser] = [];
             if (!cloudData["study_v3_chosen_challenge"]) cloudData["study_v3_chosen_challenge"] = {};
             if (!cloudData["study_progress_" + todayStr]) cloudData["study_progress_" + todayStr] = { "kouta": { "done": [] }, "haruto": { "done": [] } };
+            // 🔥 新規: ゾーンクリア履歴の確保
+            if (!cloudData["study_progress_" + todayStr][currentUser].zoneClaimed) {
+                cloudData["study_progress_" + todayStr][currentUser].zoneClaimed = {};
+            }
 
             const balance = cloudData["study_balance"][currentUser];
             const exp = cloudData["study_level"][currentUser].exp;
@@ -752,44 +693,72 @@
             document.getElementById('expPreview').textContent = `${completedTasks}/${totalTasks}`;
             document.getElementById('missionProgressBar').style.width = totalTasks === 0 ? "0%" : `${(completedTasks/totalTasks)*100}%`;
 
-            checkAllClearBonus(totalTasks, completedTasks);
-
             document.getElementById('parentCurrentTargetName').textContent = currentUser === 'kouta' ? 'こうた' : 'はると';
             const currentPool = cloudData["study_v3_challenge_pool"][currentUser] || defaultPools[currentUser];
             document.getElementById('parentChallengePoolInput').value = currentPool.join(',');
         }
 
-        function checkAllClearBonus(total, completed) {
-            if (total > 0 && total === completed && !cloudData["study_progress_" + todayStr][currentUser].gachaClaimed) {
-                cloudData["study_progress_" + todayStr][currentUser].gachaClaimed = true;
-                
-                const dayOfWeek = now.getDay();
-                let ticketReward = 1;
-                let bonusMsg = "ぼうけん券を 1枚ゲット！";
-                if (dayOfWeek === 5) {
-                    ticketReward = 2;
-                    bonusMsg = "🔥 金曜日早撃ちスーパーボーナス！ぼうけん券を【2枚】ゲットしたぞ！！";
+        // 🔥 新しい「ゾーン別クリア報酬システム」
+        function checkZoneClear() {
+            const prog = cloudData["study_progress_" + todayStr][currentUser];
+            const doneList = prog.done || [];
+            const claimed = prog.zoneClaimed || {};
+            
+            // 各ゾーンの定義と、クリア時の報酬ロジック
+            const zones = [
+                { id: 'hw', name: 'しゅくだい', tasks: masterTasks[currentUser].homework,
+                  reward: () => { cloudData.study_balance[currentUser].pokeen += 100; cloudData.study_v2_bag_balls[currentUser].normal += 1; return "💰100ぽけえん と 🔴モンスターボールx1"; } },
+                { id: 'self', name: 'じしゅう', tasks: masterTasks[currentUser].selfStudy,
+                  reward: () => { cloudData.study_balance[currentUser].pokeen += 100; cloudData.study_v2_bag_balls[currentUser].normal += 1; return "💰100ぽけえん と 🔴モンスターボールx1"; } },
+                { id: 'lesson', name: 'ならいごと', tasks: getLessons(currentUser, now.getDay()),
+                  reward: () => { cloudData.study_balance[currentUser].pokeen += 150; return "💰150ぽけえん"; } }
+            ];
+
+            const chosenChallenge = cloudData["study_v3_chosen_challenge"][currentUser];
+            if (chosenChallenge) {
+                zones.push({ id: 'chal', name: 'チャレンジ', tasks: [chosenChallenge],
+                  reward: () => { cloudData.study_balance[currentUser].gachaCount += 1; cloudData.study_level[currentUser].exp += 3; return "🎫ぼうけん券x1 と 🌟経験値アップ！"; } });
+            }
+
+            let newlyClaimed = [];
+
+            // 各ゾーンが全部終わっているかチェック
+            zones.forEach(z => {
+                if (z.tasks.length > 0 && !claimed[z.id]) {
+                    const isAllDone = z.tasks.every(t => doneList.includes(t));
+                    if (isAllDone) {
+                        claimed[z.id] = true;
+                        const msg = z.reward();
+                        newlyClaimed.push(`【${z.name}】クリア！\n👉 ${msg}`);
+                    }
                 }
+            });
 
-                cloudData["study_level"][currentUser].exp += 3;
-                cloudData["study_balance"][currentUser].gachaCount = (cloudData["study_balance"][currentUser].gachaCount || 0) + ticketReward;
-                cloudData["study_v2_bag_balls"][currentUser].normal += 5;
-                bonusMsg += "\n🔴 さらに冒険用のモンスターボールを5こプレゼント！";
-
+            // 新しくクリアしたゾーンがあればお祝い
+            if (newlyClaimed.length > 0) {
+                playRetroSound('clear'); // 🎉 祝福のピロリロリン！
+                prog.zoneClaimed = claimed;
+                
+                // スタンプ（カレンダー）は1つでも何かゾーンをクリアしたら押す！
                 const calendarList = cloudData["study_v2_calendar"][currentUser];
                 if (!calendarList.includes(todayStr)) {
                     calendarList.push(todayStr);
                     if (calendarList.length % 5 === 0) {
                         cloudData["study_v2_bag_candy"][currentUser]++;
-                        bonusMsg += "\n🏅 スタンプが5マス貯まったので『ふしぎなあめ』が届いたぞ！";
+                        newlyClaimed.push("🏅 スタンプが5マス貯まったので『ふしぎなあめ』が届いたぞ！");
                     }
                 }
-                alert(currentUser === 'haruto' ? `ミッションくりあ！ 🎉\n${bonusMsg}` : `ミッションコンプリート！ 🎉\n${bonusMsg}`);
-                renderUI();
+
+                setTimeout(() => {
+                    alert("🎉 ゾーンクリア！\n\n" + newlyClaimed.join("\n\n"));
+                    saveAllToCloud();
+                    renderUI();
+                }, 100);
             }
         }
 
         function openPartnerSelectionModal() {
+            playRetroSound('click');
             const container = document.getElementById('partnerSelectGroupContainer'); container.innerHTML = '';
             regionalStarters.forEach(group => {
                 const title = document.createElement('div'); title.className = 'region-group-title'; title.textContent = group.region; container.appendChild(title);
@@ -797,6 +766,7 @@
                 group.starters.forEach(p => {
                     const box = document.createElement('div'); box.className = 'partner-choice-box'; box.innerHTML = `<img src="https://assets.pokemon.com/assets/cms2/img/pokedex/full/${String(parseInt(p.id)).padStart(3, '0')}.png" alt="${p.name}"><div>${p.name}</div>`;
                     box.addEventListener('click', () => {
+                        playRetroSound('coin');
                         cloudData["study_user_pokemon"][currentUser] = p.id; 
                         closePartnerSelectModal(); 
                         renderUI(); 
@@ -808,9 +778,10 @@
             });
             document.getElementById('partnerSelectModal').style.display = 'flex';
         }
-        function closePartnerSelectModal() { document.getElementById('partnerSelectModal').style.display = 'none'; }
+        function closePartnerSelectModal() { playRetroSound('click'); document.getElementById('partnerSelectModal').style.display = 'none'; }
 
         function openBagModal() {
+            playRetroSound('click');
             const container = document.getElementById('bagItemsContainer'); container.innerHTML = '';
             const b = cloudData["study_balance"][currentUser];
             const balls = cloudData["study_v2_bag_balls"][currentUser];
@@ -833,10 +804,11 @@
             });
             document.getElementById('bagModal').style.display = 'flex';
         }
-        function closeBagModal() { document.getElementById('bagModal').style.display = 'none'; }
+        function closeBagModal() { playRetroSound('click'); document.getElementById('bagModal').style.display = 'none'; }
         function useTicketFromBag() { closeBagModal(); openAdventureSelectionModal(); }
         function useCandyFromBag() {
             if (cloudData["study_v2_bag_candy"][currentUser] > 0) {
+                playRetroSound('clear');
                 cloudData["study_v2_bag_candy"][currentUser]--;
                 cloudData["study_level"][currentUser].exp += 3; 
                 alert(`🍬 あめをつかった！レベルが あがったぞ！ ✨`);
@@ -845,9 +817,11 @@
         }
 
         function buyItem(name, price) {
+            playRetroSound('click');
             const b = cloudData["study_balance"][currentUser];
             if (b.pokeen < price) { alert("ぽけえんが たりないよ！ 👛"); return; }
             if (confirm(`【${name}】と こうかんする？`)) {
+                playRetroSound('coin');
                 b.pokeen -= price;
                 if (name.includes('ふしぎなあめ')) cloudData["study_v2_bag_candy"][currentUser]++;
                 if (name.includes('ぼうけん券')) b.gachaCount++;
@@ -858,9 +832,10 @@
             }
         }
 
-        function openZukanModal() { document.getElementById('zukanModal').style.display = 'flex'; switchZukanTab('normal'); }
-        function closeZukanModal() { document.getElementById('zukanModal').style.display = 'none'; }
+        function openZukanModal() { playRetroSound('click'); document.getElementById('zukanModal').style.display = 'flex'; switchZukanTab('normal'); }
+        function closeZukanModal() { playRetroSound('click'); document.getElementById('zukanModal').style.display = 'none'; }
         function switchZukanTab(tab) {
+            playRetroSound('click');
             zukanTab = tab;
             document.getElementById('tabNormalBtn').className = tab === 'normal' ? 'zukan-tab-btn active' : 'zukan-tab-btn';
             document.getElementById('tabMegaBtn').className = tab === 'mega' ? 'zukan-tab-btn active' : 'zukan-tab-btn';
@@ -901,8 +876,7 @@
             const nameId = `zukan-name-${id}-${Date.now()}`;
             box.innerHTML = `<div class="zukan-number-badge">#${String(displayNum).padStart(3, '0')}</div><img src="${getImgUrl(id)}" alt="?"><span id="${nameId}">...</span>`;
             
-            // 🔥 ずかんの各マスをタップしたときにも鳴き声を再生
-            box.onclick = () => { if (hasIt) playPokemonCry(id); };
+            box.onclick = () => { if (hasIt) { playRetroSound('click'); playPokemonCry(id); } };
             
             grid.appendChild(box);
 
@@ -917,6 +891,7 @@
         }
 
         function openCalendarModal() {
+            playRetroSound('click');
             const calendarList = cloudData["study_v2_calendar"][currentUser] || [];
             document.getElementById('totalStampLabel').textContent = `これまでのぼうけん日数: ${calendarList.length} 日`;
             
@@ -943,7 +918,7 @@
             }
             document.getElementById('calendarModal').style.display = 'flex';
         }
-        function closeCalendarModal() { document.getElementById('calendarModal').style.display = 'none'; }
+        function closeCalendarModal() { playRetroSound('click'); document.getElementById('calendarModal').style.display = 'none'; }
 
         function getOrRollFixedEncounters() {
             if (!cloudData["study_fixed_encounters"]) cloudData["study_fixed_encounters"] = { "kouta": null, "haruto": null };
@@ -976,6 +951,7 @@
         }
 
         function openAdventureSelectionModal() {
+            playRetroSound('click');
             const b = cloudData["study_balance"][currentUser];
             if (!b.gachaCount || b.gachaCount <= 0) { alert("🎫 ぼうけん券がありません！"); return; }
             const encounters = getOrRollFixedEncounters();
@@ -984,9 +960,10 @@
             });
             document.getElementById('adventureModal').style.display = 'flex';
         }
-        function closeAdventureModal() { document.getElementById('adventureModal').style.display = 'none'; }
+        function closeAdventureModal() { playRetroSound('click'); document.getElementById('adventureModal').style.display = 'none'; }
 
         async function startBattle(zone) {
+            playRetroSound('click');
             closeAdventureModal();
             const b = cloudData["study_balance"][currentUser];
             if (b.gachaCount > 0) b.gachaCount--; else return;
@@ -1014,7 +991,7 @@
             document.getElementById('battleEnemyName').textContent = enemyName;
             document.getElementById('battleLogBox').textContent = `あ！ 野生の 【${enemyName}】が あらわれた！`;
             
-            // 🔥 🟢 出現した野生ポケモンの公式鳴き声を再生！！
+            // 🔥 出現したポケモンの鳴き声を再生
             playPokemonCry(finalEnemy.id);
 
             const bIcon = document.getElementById('ballIcon'); bIcon.className = ""; bIcon.style.display = "none"; 
@@ -1027,6 +1004,7 @@
         }
 
         function nextBattlePhase() {
+            playRetroSound('click');
             const log = document.getElementById('battleLogBox');
             const myName = battleState.myName;
             const enemyName = battleState.enemyName;
@@ -1065,6 +1043,7 @@
         }
 
         function throwBall(ballType) {
+            playRetroSound('click');
             const balls = cloudData["study_v2_bag_balls"][currentUser];
             if (ballType === 'normal' && !(balls.normal > 0)) return;
             if (ballType === 'super' && !(balls.super > 0)) return;
@@ -1094,6 +1073,7 @@
             setTimeout(() => {
                 bIcon.className = "";
                 if (roll <= catchRate) {
+                    playRetroSound('clear'); // ゲット成功ファンファーレ！
                     log.innerHTML = `やったぜ！ 【${enemyName}】を つかまえた！ 🎉`;
                     if (battleState.isMega) {
                         if (!cloudData["study_zukan_mega"][currentUser].includes(enemy.id)) cloudData["study_zukan_mega"][currentUser].push(enemy.id);
@@ -1104,8 +1084,7 @@
                     cloudData["study_balance"][currentUser].pokeen += rewardCoins;
                     log.innerHTML += `<br>💰 <strong>+${rewardCoins} ぽけえん</strong> をてにいれた！`;
                     
-                    // 🔥 ゲット成功時、捕まえたポケモンの鳴き声をもう一度再生！
-                    playPokemonCry(enemy.id);
+                    setTimeout(() => playPokemonCry(enemy.id), 500); // 鳴き声
                 } else {
                     log.innerHTML = `あ！ ボールから とびだしてしまった！\n【${enemyName}】は にげていった！ 💨`;
                 }
@@ -1116,12 +1095,12 @@
             }, 1400);
         }
 
-        function closeBattleModal() { document.getElementById('battleModal').style.display = 'none'; renderUI(); }
+        function closeBattleModal() { playRetroSound('click'); document.getElementById('battleModal').style.display = 'none'; renderUI(); }
         function openSecretParentMenu() {
             const pw = prompt("パパ・ママ専用パスワード：");
             if (pw === "1022") { document.getElementById('secretParentPanel').style.display = 'block'; window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }
         }
-        function closeSecretParentMenu() { document.getElementById('secretParentPanel').style.display = 'none'; }
+        function closeSecretParentMenu() { playRetroSound('click'); document.getElementById('secretParentPanel').style.display = 'none'; }
 
         function saveChallengePoolFromParent() {
             const txt = document.getElementById('parentChallengePoolInput').value;
@@ -1165,16 +1144,21 @@
         }
 
         function spinChallengeSlot() {
+            playRetroSound('click');
             const pool = cloudData["study_v3_challenge_pool"][currentUser] || defaultPools[currentUser];
             if (pool.length === 0) return;
             const slotBtn = document.getElementById('challengeSlotBtn');
             slotBtn.disabled = true;
             let count = 0;
+            
+            // スロット中のカタカタ音
             const interval = setInterval(() => {
+                playRetroSound('click');
                 document.getElementById('challengeSlotWindow').textContent = "🎯 " + pool[count % pool.length];
                 count++;
                 if (count > 15) {
                     clearInterval(interval);
+                    playRetroSound('coin'); // 決定音
                     const finalChoice = pool[Math.floor(Math.random() * pool.length)];
                     document.getElementById('challengeSlotWindow').textContent = "🎯 チャレンジ: " + finalChoice;
                     cloudData["study_v3_chosen_challenge"][currentUser] = finalChoice;
