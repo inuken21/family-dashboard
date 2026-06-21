@@ -58,6 +58,7 @@
         }
         header h1 { margin: 0; font-size: 1.3rem; font-weight: 800; letter-spacing: 0.05em; }
 
+        /* 🛠️ はみ出しの原因を根本排除するため、カード類のwidthをすべてauto(安全自動幅)に変更 */
         .card {
             background: white;
             padding: 15px;
@@ -65,6 +66,7 @@
             margin-bottom: 15px;
             box-shadow: var(--card-shadow);
             border: 1px solid rgba(226, 232, 240, 0.8);
+            width: auto;              /* 固定幅や100%指定を破壊して安全幅に */
             box-sizing: border-box;
         }
 
@@ -77,7 +79,7 @@
             font-weight: 700;
         }
 
-        /* 予定ボックス全体を立体化 */
+        /* 🛠️ ここがはみ出しの主犯。width: 100%を撤廃し、画面内にキュッと収まる設定へ */
         .schedule-box {
             background-color: #ffffff;
             border: 1px solid rgba(226, 232, 240, 0.8);
@@ -85,8 +87,8 @@
             border-radius: var(--border-radius);
             margin-bottom: 15px;
             box-shadow: var(--card-shadow);
-            box-sizing: border-box; /* 枠線を道連れに外側に広がらせないための絶対設定 */
-            width: 100%;
+            width: auto;              /* 100%幅によるはみ出しを完全防止 */
+            box-sizing: border-box;  /* パディング込みで幅を安全計算 */
         }
         
         .week-nav {
@@ -113,17 +115,16 @@
             font-size: 1rem;
         }
         
-        /* 🛠️ ボタンの合計幅が親幅を壊さないようにフレックス制御を厳格化 */
         .day-btn-container {
             display: flex;
             justify-content: space-between;
             margin-bottom: 15px;
-            gap: 3px;                 /* 隙間を僅かに詰めてスマホ幅に配慮 */
+            gap: 3px;
             width: 100%;
             box-sizing: border-box;
         }
         .day-btn {
-            flex: 1;                  /* 5つのボタンを均等に綺麗に割る */
+            flex: 1;
             padding: 10px 0;
             border: 1px solid #cbd5e1;
             background-color: white;
@@ -135,7 +136,7 @@
             text-align: center;
             -webkit-appearance: none;
             box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-            min-width: 0;             /* 幅の限界を突破して縮むことを許可 */
+            min-width: 0;
             box-sizing: border-box;
         }
         .day-btn.active {
@@ -145,7 +146,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
-        /* 🛠️ 親要素の幅と完全に同期し、絶対にはみ出さない100%指定へ修正 */
+        /* 🛠️ 親が安全幅(auto)になったため、100%計算バグから解放 */
         .selected-date-display {
             text-align: center;
             font-weight: bold;
@@ -155,12 +156,12 @@
             padding: 8px 6px;
             border-radius: 6px;
             box-shadow: var(--inner-shadow);
-            border-top: 2px solid var(--kouta-border); /* 初期化時に青系の線でパキッと */
+            border-top: 2px solid var(--kouta-border);
             border-bottom: 2px solid var(--kouta-border);
-            width: 100%;             /* 親の計算された内幅と完全一致させる */
-            margin: 0 0 15px 0;      /* 外側マージンを100%計算の内側へ */
+            width: auto;             /* 100%ではなく、親カードのパディング内で最大に広げる */
+            margin: 0 0 15px 0;
             display: block;
-            box-sizing: border-box;  /* パディングのせいで外にはみ出すのを完全防止 */
+            box-sizing: border-box;
         }
 
         .schedule-row {
