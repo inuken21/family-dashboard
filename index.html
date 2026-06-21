@@ -20,6 +20,12 @@
             --haruto-border: #fb8c00;
             --terakoya-color: #e8f5e9;
             --terakoya-border: #2e7d32;
+            
+            /* 🆕 カスタムTODO用マイルドカラー */
+            --kouta-todo-bg: #f0f7ff;
+            --kouta-todo-border: #bae6fd;
+            --haruto-todo-bg: #fff5f5;
+            --haruto-todo-border: #fecaca;
         }
         
         body {
@@ -117,7 +123,6 @@
             color: white;
         }
 
-        /* 🆕 選択日付表示エリアのスタイル */
         .selected-date-display {
             text-align: center;
             font-weight: bold;
@@ -251,6 +256,105 @@
         .res-btn.phone-btn { background-color: #10b981; }
         .res-btn.phone-btn:active { background-color: #059669; }
 
+        /* 🆕 カスタムTODOパネル用スタイル */
+        .todo-panel-child {
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid transparent;
+        }
+        .todo-panel-child.kouta-theme { background-color: var(--kouta-todo-bg); border-color: var(--kouta-todo-border); }
+        .todo-panel-child.haruto-theme { background-color: var(--haruto-todo-bg); border-color: var(--haruto-todo-border); }
+        
+        .todo-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+        .todo-count-badge {
+            font-size: 0.75rem;
+            background: #475569;
+            color: white;
+            padding: 1px 6px;
+            border-radius: 10px;
+        }
+        .todo-input-row {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+        .todo-input-text {
+            flex: 1;
+            padding: 6px;
+            font-size: 0.85rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .todo-add-btn {
+            background-color: #475569;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .todo-custom-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .todo-custom-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px dashed rgba(0,0,0,0.08);
+            gap: 8px;
+        }
+        .todo-custom-item:last-child { border-bottom: none; }
+        .todo-custom-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            flex: 1;
+            word-break: break-all;
+        }
+        .todo-custom-cb {
+            transform: scale(1.15);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        
+        /* 🤩 チェック時のわくわく演出（斜線 ＆ クリア！） */
+        .todo-custom-cb:checked + .todo-custom-text {
+            text-decoration: line-through;
+            color: #94a3b8;
+        }
+        .todo-custom-cb:checked + .todo-custom-text::after {
+            content: " 🎉 クリア！";
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #10b981;
+            display: inline-block;
+            margin-left: 4px;
+        }
+        .todo-del-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 2px 4px;
+            flex-shrink: 0;
+        }
+
         .cal-container {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -371,17 +475,31 @@
         
         .badge { background-color: var(--accent-color); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-left: 5px; }
         
-        .memo-textarea, .responsive-textarea { 
+        /* 🛠️ メモ欄を省スペース型（高さ半分）にスリム化 */
+        .memo-textarea { 
             width: 100%; 
-            height: 120px; 
-            padding: 10px; 
+            height: 60px; 
+            padding: 8px; 
             box-sizing: border-box; 
             border: 1px solid #ccc; 
             border-radius: 6px; 
-            font-size: 1rem; 
+            font-size: 0.95rem; 
             resize: vertical; 
             background-color: #fafafa; 
-            line-height: 1.5; 
+            line-height: 1.4; 
+        }
+        
+        .responsive-textarea {
+            width: 100%;
+            height: 120px;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            resize: vertical;
+            background-color: #fafafa;
+            line-height: 1.5;
         }
         
         .save-status { font-size: 0.8rem; color: #1a73e8; text-align: right; margin-top: 5px; font-weight: bold; }
@@ -413,7 +531,7 @@
             <button type="button" class="day-btn" id="btn-day-5">金</button>
         </div>
         
-        <div class="selected-date-display" id="selected-date-label">📆 読み込み中...</div>
+        <div class="selected-date-display" id="selected-date-label"></div>
         
         <div class="schedule-row">
             <span class="name-label kouta-label">こうた</span>
@@ -456,6 +574,40 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="card" style="border: 2px solid #475569;">
+        <h2 style="color: #475569; border-bottom-color: #475569;">📋 子供別自由TODOリスト</h2>
+        
+        <div class="todo-panel-child kouta-theme">
+            <div class="todo-panel-header">
+                <span style="color:var(--kouta-border);">👦 〈こうた〉タスク</span>
+                <span class="todo-count-badge" id="kouta-todo-count">残り: 0個</span>
+            </div>
+            <div class="todo-input-row">
+                <input type="text" id="kouta-todo-input" class="todo-input-text" placeholder="例：ヘアカット">
+                <button type="button" class="todo-add-btn" onclick="addCustomTodo('kouta')">＋ 追加</button>
+            </div>
+            <ul class="todo-custom-list" id="kouta-custom-todo-list"></ul>
+        </div>
+        
+        <div class="todo-panel-child haruto-theme">
+            <div class="todo-panel-header">
+                <span style="color:#e53935;">👶 〈はると〉タスク</span>
+                <span class="todo-count-badge" id="haruto-todo-count" style="background:#e53935;">残り: 0個</span>
+            </div>
+            <div class="todo-input-row">
+                <input type="text" id="haruto-todo-input" class="todo-input-text" placeholder="例：お泊り保育アンケート提出">
+                <button type="button" class="todo-add-btn" style="background-color:#e53935;" onclick="addCustomTodo('haruto')">＋ 追加</button>
+            </div>
+            <ul class="todo-custom-list" id="haruto-custom-todo-list"></ul>
+        </div>
+    </div>
+
+    <div class="card" style="border: 1px solid #1a73e8; padding: 10px;">
+        <h2 style="color: #1a73e8; border-bottom-color: #1a73e8; font-size: 1.05rem; margin-bottom: 6px;">✍️ メモ欄</h2>
+        <textarea id="customMemo" class="memo-textarea" placeholder="自由なメモ書きに（ご夫婦でリアルタイム共有されます）"></textarea>
+        <div id="saveStatus" class="save-status">同期完了</div>
     </div>
 
     <details class="kouta-details">
@@ -515,12 +667,6 @@
             <div class="cal-container" id="bento-calendar"></div>
         </div>
     </details>
-
-    <div class="card" style="border: 2px solid #1a73e8;">
-        <h2 style="color: #1a73e8; border-bottom-color: #1a73e8;">✍️ メモ ＆ TODOリスト</h2>
-        <textarea id="customMemo" class="memo-textarea" placeholder="ここに書いた内容はご夫婦のスマホに自動共有されます"></textarea>
-        <div id="saveStatus" class="save-status">同期完了</div>
-    </div>
 
     <div class="card kouta-card">
         <h2 class="kouta-header">👦 康太（こうた）持ち物リスト</h2>
@@ -795,6 +941,77 @@
             }
         }
 
+        // 🆕 カスタムTODOリストの描画 ＆ カウント更新ロジック
+        function renderCustomTodoList(child) {
+            const listEl = document.getElementById(child + '-custom-todo-list');
+            if (!listEl) return;
+            listEl.innerHTML = '';
+
+            let listData = [];
+            try { listData = JSON.parse(globalCloudData["todo_list_" + child] || "[]"); } catch(e){}
+
+            let incompleteCount = 0;
+
+            listData.forEach((item, index) => {
+                if (!item.checked) incompleteCount++;
+
+                const li = document.createElement('li');
+                li.className = 'todo-custom-item';
+
+                const label = document.createElement('label');
+                label.className = 'todo-custom-label';
+
+                const cb = document.createElement('input');
+                cb.type = 'checkbox';
+                cb.className = 'todo-custom-cb';
+                cb.checked = !!item.checked;
+                cb.addEventListener('change', async (e) => {
+                    listData[index].checked = e.target.checked;
+                    await saveCloudData("todo_list_" + child, JSON.stringify(listData));
+                    renderCustomTodoList(child);
+                });
+
+                const span = document.createElement('span');
+                span.className = 'todo-custom-text';
+                span.textContent = item.text;
+
+                label.appendChild(cb);
+                label.appendChild(span);
+
+                const delBtn = document.createElement('button');
+                delBtn.type = 'button';
+                delBtn.className = 'todo-del-btn';
+                delBtn.innerHTML = '🗑️';
+                delBtn.addEventListener('click', async () => {
+                    listData.splice(index, 1);
+                    await saveCloudData("todo_list_" + child, JSON.stringify(listData));
+                    renderCustomTodoList(child);
+                });
+
+                li.appendChild(label);
+                li.appendChild(delBtn);
+                listEl.appendChild(li);
+            });
+
+            const countEl = document.getElementById(child + '-todo-count');
+            if (countEl) countEl.textContent = `残り: ${incompleteCount}個`;
+        }
+
+        // 🆕 カスタムTODOの新規追加ロジック
+        async function addCustomTodo(child) {
+            const inputEl = document.getElementById(child + '-todo-input');
+            if (!inputEl || !inputEl.value.trim()) return;
+
+            let listData = [];
+            try { listData = JSON.parse(globalCloudData["todo_list_" + child] || "[]"); } catch(e){}
+
+            listData.push({ text: inputEl.value.trim(), checked: false });
+            inputEl.value = '';
+
+            await saveCloudData("todo_list_" + child, JSON.stringify(listData));
+            renderCustomTodoList(child);
+        }
+
         function selectDay(dayNum) {
             selectedDayNum = dayNum;
             for(let i=1; i<=5; i++) {
@@ -807,7 +1024,6 @@
             const targetDateStr = getTargetDateStr(dayNum);
             updateWeekTitle();
             
-            // 🆕 選択された「〇月〇日（曜日）」を画面に分かりやすく出力
             const parts = targetDateStr.split('-');
             const days = ["日", "月", "火", "水", "木", "金", "土"];
             const dateLabelEl = document.getElementById('selected-date-label');
@@ -992,7 +1208,7 @@
                     if (pDuty) pDuty.checked = !!config.isDuty;
                     
                     updatePanelLivePreview();
-                    const qPanel = document.getElementById('quick-panel');
+                    const qPanel = document.getElementById('kouta-quick-panel');
                     if (qPanel) qPanel.style.display = 'block';
                 });
 
@@ -1088,8 +1304,8 @@
             }
         }
 
-        if(document.getElementById('kouta-cal-prev')) document.getElementById('kouta-cal-prev').addEventListener('click', () => { koutaCalMonth--; if (koutaCalMonth < 0) { koutaCalMonth = 11; koutaCalYear--; } renderKoutaCalendar(koutaCalYear, koutaCalMonth); if(document.getElementById('quick-panel')) document.getElementById('quick-panel').style.display='none'; });
-        if(document.getElementById('kouta-cal-next')) document.getElementById('kouta-cal-next').addEventListener('click', () => { koutaCalMonth++; if (koutaCalMonth > 11) { koutaCalMonth = 0; koutaCalYear++; } renderKoutaCalendar(koutaCalYear, koutaCalMonth); if(document.getElementById('quick-panel')) document.getElementById('quick-panel').style.display='none'; });
+        if(document.getElementById('kouta-cal-prev')) document.getElementById('kouta-cal-prev').addEventListener('click', () => { koutaCalMonth--; if (koutaCalMonth < 0) { koutaCalMonth = 11; koutaCalYear--; } renderKoutaCalendar(koutaCalYear, koutaCalMonth); if(document.getElementById('kouta-quick-panel')) document.getElementById('kouta-quick-panel').style.display='none'; });
+        if(document.getElementById('kouta-cal-next')) document.getElementById('kouta-cal-next').addEventListener('click', () => { koutaCalMonth++; if (koutaCalMonth > 11) { koutaCalMonth = 0; koutaCalYear++; } renderKoutaCalendar(koutaCalYear, koutaCalMonth); if(document.getElementById('kouta-quick-panel')) document.getElementById('kouta-quick-panel').style.display='none'; });
 
         if(document.getElementById('cal-prev')) document.getElementById('cal-prev').addEventListener('click', () => { currentCalMonth--; if (currentCalMonth < 0) { currentCalMonth = 11; currentCalYear--; } renderBentoCalendar(currentCalYear, currentCalMonth); });
         if(document.getElementById('cal-next')) document.getElementById('cal-next').addEventListener('click', () => { currentCalMonth++; if (currentCalMonth > 11) { currentCalMonth = 0; currentCalYear++; } renderBentoCalendar(currentCalYear, currentCalMonth); });
@@ -1117,6 +1333,14 @@
             document.getElementById('customMemo').addEventListener('input', (e) => { clearTimeout(memoTimeout); memoTimeout = setTimeout(() => { saveCloudData("memo", e.target.value); }, 1000); });
         }
 
+        // エンターキーでのTODO追加を有効化
+        if(document.getElementById('kouta-todo-input')) {
+            document.getElementById('kouta-todo-input').addEventListener('keypress', (e) => { if(e.key === 'Enter') addCustomTodo('kouta'); });
+        }
+        if(document.getElementById('haruto-todo-input')) {
+            document.getElementById('haruto-todo-input').addEventListener('keypress', (e) => { if(e.key === 'Enter') addCustomTodo('haruto'); });
+        }
+
         window.addEventListener('DOMContentLoaded', async () => {
             await fetchCloudData();
             let currentDay = new Date().getDay();
@@ -1124,6 +1348,11 @@
             renderKoutaCalendar(koutaCalYear, koutaCalMonth);
             renderBentoCalendar(currentCalYear, currentCalMonth);
             selectDay(currentDay);
+            
+            // 🆕 新カスタムTODOリストの初期描画
+            renderCustomTodoList('kouta');
+            renderCustomTodoList('haruto');
+
             if(document.getElementById('customMemo')) document.getElementById('customMemo').value = globalCloudData["memo"] || "";
         });
 
