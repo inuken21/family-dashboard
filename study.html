@@ -463,6 +463,11 @@
         const now = new Date();
         const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
+        // 🚨 不足していたマスターデータを補完
+        const parentChallengePool = ["うわばきをあらう", "くつをそろえる", "おさらをはこぶ", "どくしょ10ぷん"];
+        const masterQuests = { "kouta": ["漢字ドリル", "計算ドリル", "読書"], "haruto": ["ひらがなれんしゅう", "かずあそび", "えほんよみ"] };
+        const masterHelps = { "kouta": ["靴を揃える"], "haruto": ["お皿を運ぶ"] };
+
         const regions = {
             kanto: { start: 1, end: 151 }, johto: { start: 152, end: 251 }, hoenn: { start: 252, end: 386 },
             sinnoh: { start: 387, end: 493 }, unova: { start: 494, end: 649 }, kalos: { start: 650, end: 721 },
@@ -510,7 +515,6 @@
             master: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png"
         };
 
-        // 🌟 GASの生データを安全に引き出すためのローカルマスタ構造
         let cloudData = {
             "study_user_pokemon": { "kouta": "0025", "haruto": "0004" },
             "study_balance": { "kouta": { "pokeen": 300, "gachaCount": 0 }, "haruto": { "pokeen": 300, "gachaCount": 0 } },
@@ -524,6 +528,62 @@
             "study_v3_challenge_pool": parentChallengePool,
             "study_v3_chosen_challenge": { "kouta": null, "haruto": null }
         };
+
+        let currentUser = 'kouta';
+        let battleState = {};
+
+        // 🚨 不足していた関数群を補完
+        function translateToHarutoLanuage() {
+            // エラー回避のためのプレースホルダー
+        }
+
+        async function saveAllToCloud() {
+            const badge = document.getElementById('syncBadge');
+            if (badge) badge.textContent = "☁️ セーブ中...";
+            try {
+                for (let key of Object.keys(cloudData)) {
+                    await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'save', key: key, value: JSON.stringify(cloudData[key]) })});
+                }
+                if (badge) badge.textContent = "同期完了";
+            } catch (e) {
+                if (badge) badge.textContent = "セーブエラー";
+                console.error("保存失敗", e);
+            }
+        }
+
+        let appReady = false;
+        async function initApp() {
+            // 通信が5秒以上かかったら強制起動（フリーズ回避）
+            setTimeout(() => {
+                if (!appReady) {
+                    console.warn("同期タイムアウト。オフラインモードで起動します。");
+                    appReady = true;
+                    document.getElementById('loadingCover').style.display = 'none';
+                    changeUser('kouta');
+                }
+            }, 5000);
+
+            try {
+                const response = await fetch(GAS_URL);
+                const res = await response.json();
+                if (res) {
+                    Object.keys(res).forEach(k => {
+                        if (cloudData[k] !== undefined) {
+                            try { cloudData[k] = JSON.parse(res[k]); } catch(e) { cloudData[k] = res[k]; }
+                        }
+                    });
+                }
+            } catch(e) {
+                console.error("データ同期エラー", e);
+            }
+            
+            if (!appReady) {
+                appReady = true;
+                document.getElementById('loadingCover').style.display = 'none';
+                changeUser('kouta');
+            }
+        }
+        window.addEventListener('DOMContentLoaded', initApp);
 
         function getImgUrl(id) {
             if (!id) return "";
@@ -570,7 +630,6 @@
             
             translateToHarutoLanuage(); 
 
-            // 🌟 GAS側の相棒のセーブ状態を安全にチェック
             if (!cloudData["study_user_pokemon"] || !cloudData["study_user_pokemon"][currentUser]) { 
                 openPartnerSelectionModal(); 
             } else { 
@@ -579,7 +638,6 @@
         }
 
         function renderUI() {
-            // 安全第一：データが万が一破損していた場合のフォールバック（初期化）
             if (!cloudData["study_balance"][currentUser]) cloudData["study_balance"][currentUser] = { "pokeen": 300, "gachaCount": 1 };
             if (!cloudData["study_level"][currentUser]) cloudData["study_level"][currentUser] = { "exp": 0 };
             if (!cloudData["study_zukan_normal"][currentUser]) cloudData["study_zukan_normal"][currentUser] = [];
@@ -604,7 +662,6 @@
 
             document.getElementById('bigAdventureTriggerBtn').disabled = (!balance.gachaCount || balance.gachaCount <= 0);
 
-            // 相棒表示
             const baseId = cloudData["study_user_pokemon"][currentUser];
             if (baseId) {
                 const currentEvolvedId = getEvolvedId(baseId, level);
@@ -616,7 +673,6 @@
                 document.getElementById('statusBarPartnerName').textContent = "---";
             }
 
-            // チャレンジ枠
             const winEl = document.getElementById('challengeSlotWindow');
             const slotBtn = document.getElementById('challengeSlotBtn');
             const chosenChallenge = cloudData["study_v3_chosen_challenge"][currentUser];
@@ -629,7 +685,6 @@
                 slotBtn.disabled = false;
             }
 
-            // ミッション構築（ここで絶対フリーズをガード）
             const listEl = document.getElementById('questList'); listEl.innerHTML = '';
             if (!cloudData["study_progress_" + todayStr]) cloudData["study_progress_" + todayStr] = { "kouta": { "done": [] }, "haruto": { "done": [] } };
             const doneList = cloudData["study_progress_" + todayStr][currentUser]?.done || [];
@@ -1018,9 +1073,69 @@
         }
         function closeSecretParentMenu() { document.getElementById('secretParentPanel').style.display = 'none'; }
 
+        // 追加: 親用メニューからのセーブ機能
         function saveChallengePoolFromParent() {
             const txt = document.getElementById('parentChallengePoolInput').value;
             if (txt) {
                 const arr = txt.split(',').map(x => x.trim()).filter(x => x.length > 0);
                 cloudData["study_v3_challenge_pool"] = arr;
-                alert("🎰 チャレンジミッションの候補リストを保存しました
+                alert("🎰 チャレンジミッションの候補リストを保存しました");
+                saveAllToCloud();
+            }
+        }
+
+        // 追加: 親用メニューからのデータ調整機能
+        function adjustParentData(type) {
+            const amount = parseInt(document.getElementById('parentAmount').value) || 0;
+            if(type === 'pokeen') cloudData.study_balance[currentUser].pokeen += amount;
+            if(type === 'ticket') cloudData.study_balance[currentUser].gachaCount += amount;
+            if(type === 'ball_normal') cloudData.study_v2_bag_balls[currentUser].normal += amount;
+            if(type === 'ball_super') cloudData.study_v2_bag_balls[currentUser].super += amount;
+            if(type === 'ball_hyper') cloudData.study_v2_bag_balls[currentUser].hyper += amount;
+            if(type === 'ball_master') cloudData.study_v2_bag_balls[currentUser].master += amount;
+            if(type === 'candy') cloudData.study_v2_bag_candy[currentUser] += amount;
+            renderUI();
+            saveAllToCloud();
+            alert("データを調整しました");
+        }
+
+        // 追加: セーブデータリセット機能
+        function resetCurrentUserData() {
+            if(confirm("本当にセーブデータをリセットしますか？")) {
+                cloudData.study_balance[currentUser] = { "pokeen": 300, "gachaCount": 0 };
+                cloudData.study_level[currentUser] = { "exp": 0 };
+                cloudData.study_zukan_normal[currentUser] = [];
+                cloudData.study_zukan_mega[currentUser] = [];
+                cloudData.study_v2_bag_balls[currentUser] = { normal: 5, super: 1, hyper: 0, master: 0 };
+                cloudData.study_v2_bag_candy[currentUser] = 0;
+                cloudData.study_v2_calendar[currentUser] = [];
+                cloudData.study_v3_chosen_challenge[currentUser] = null;
+                renderUI();
+                saveAllToCloud();
+                alert("リセットしました");
+            }
+        }
+
+        // 追加: スロット機能
+        function spinChallengeSlot() {
+            const pool = cloudData["study_v3_challenge_pool"] || parentChallengePool;
+            if (pool.length === 0) return;
+            const slotBtn = document.getElementById('challengeSlotBtn');
+            slotBtn.disabled = true;
+            let count = 0;
+            const interval = setInterval(() => {
+                document.getElementById('challengeSlotWindow').textContent = "🎯 " + pool[count % pool.length];
+                count++;
+                if (count > 15) {
+                    clearInterval(interval);
+                    const finalChoice = pool[Math.floor(Math.random() * pool.length)];
+                    document.getElementById('challengeSlotWindow').textContent = "🎯 チャレンジ: " + finalChoice;
+                    cloudData["study_v3_chosen_challenge"][currentUser] = finalChoice;
+                    renderUI();
+                    saveAllToCloud();
+                }
+            }, 100);
+        }
+    </script>
+</body>
+</html>
