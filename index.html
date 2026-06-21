@@ -8,6 +8,7 @@
 
     <style>
         :root {
+            /* 全体共通 */
             --bg-color: #f1f5f9; 
             --text-color: #333333;
             --muted-text: #64748b;
@@ -36,7 +37,7 @@
         }
         
         * {
-            box-sizing: border-box; /* すべての要素の幅計算を安全化 */
+            box-sizing: border-box;
         }
 
         body {
@@ -55,7 +56,6 @@
         }
         header h1 { margin: 0; font-size: 1.3rem; font-weight: 800; color: #1e293b; }
 
-        /* 🟢 すべてのメインカードの幅ロジックを共通化（はみ出しを物理的にリセット） */
         .card, .schedule-box {
             background: white;
             padding: 15px;
@@ -80,7 +80,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 8px; /* 引っ越し先の日付との間を微調整 */
         }
         .week-nav-btn {
             background-color: var(--btn-neutral-bg);
@@ -95,6 +95,18 @@
         .week-nav-btn:active { background-color: var(--btn-neutral-active); }
         .week-nav-title { font-weight: bold; color: #1e293b; font-size: 1rem; }
         
+        /* 🆕 枠線を完全排除し、すっきり美しく文字だけ並べるスタイル */
+        .selected-date-display {
+            text-align: center;
+            font-weight: 800;
+            font-size: 1.05rem; /* 主役としてパッと見やすく */
+            color: var(--kouta-text); /* 締まりのあるタイポグラフィカラー */
+            padding: 4px 0;
+            margin: 0 0 12px 0;
+            width: 100%;
+            display: block;
+        }
+
         .day-btn-container {
             display: flex;
             justify-content: space-between;
@@ -118,22 +130,6 @@
             color: white;
             border-color: #475569;
             box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-        }
-
-        /* 🔴 徹底クリーンアップ：ゴースト命令を排除し、親の幅（100%）にピタッと合わせる */
-        .selected-date-display {
-            text-align: center;
-            font-weight: bold;
-            font-size: 0.95rem;
-            color: #1e293b;
-            background-color: #ffffff;
-            padding: 8px;
-            border-radius: 6px;
-            box-shadow: var(--inner-shadow);
-            border-top: 2px solid var(--kouta-border);
-            border-bottom: 2px solid var(--kouta-border);
-            width: 100%;
-            margin: 0 0 15px 0;
         }
 
         .schedule-row {
@@ -220,6 +216,7 @@
             font-size: 0.75rem;
             font-weight: bold;
             cursor: pointer;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
         .res-btn.phone-btn { background-color: var(--btn-phone-bg); color: var(--btn-phone-text); }
 
@@ -268,14 +265,30 @@
         .todo-custom-list { list-style: none; padding: 0; margin: 0; }
         .todo-custom-item { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px dashed rgba(0,0,0,0.05); gap: 8px; }
         .todo-custom-item:last-child { border-bottom: none; }
-        .todo-custom-label { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; cursor: pointer; flex: 1; word-break: break-all; }
+        .todo-custom-label { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; cursor: pointer; flex: 1; min-width: 0; }
         .todo-custom-cb { transform: scale(1.1); cursor: pointer; flex-shrink: 0; }
+        
+        /* 🆕 要件・日付・残日数を一行で絶対に死守（ノーラップ制御） */
+        .todo-text-container { 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+            flex: 1; 
+            min-width: 0; /* フレックス子要素の縮小を有効化 */
+            white-space: nowrap; /* 1行を絶対に維持 */
+        }
+        
+        /* テキストが長すぎる場合のみ自動で綺麗に「…」にするガード */
+        .todo-custom-text {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
         
         .todo-custom-cb:checked + .todo-text-container .todo-custom-text { text-decoration: line-through; opacity: 0.4; }
         .todo-custom-cb:checked + .todo-text-container .todo-custom-text::after { content: " 🎉"; font-size: 0.8rem; }
-        .todo-text-container { display: inline-flex; align-items: center; gap: 4px; flex-wrap: wrap; flex: 1; }
         
-        /* 📅 TODO内日付のスタイリングを統合・最適化 */
         .todo-date-label {
             font-size: 0.75rem;
             font-weight: bold;
@@ -283,18 +296,19 @@
             background-color: #f1f5f9;
             padding: 1px 5px;
             border-radius: 4px;
-            white-space: nowrap;
+            flex-shrink: 0; /* 日付を絶対に潰さない */
         }
         .todo-custom-cb:checked + .todo-text-container .todo-date-label { color: #cbd5e1; background-color: #f8fafc; text-decoration: line-through; opacity: 0.4; }
 
-        .deadline-badge { font-size: 0.65rem; font-weight: bold; padding: 1px 4px; border-radius: 4px; color: white; white-space: nowrap; }
+        .deadline-badge { font-size: 0.65rem; font-weight: bold; padding: 1px 4px; border-radius: 4px; color: white; flex-shrink: 0; /* バッジを絶対に潰さない */ }
         .deadline-badge.overdue { background-color: #ef4444; }
         .deadline-badge.today { background-color: #f97316; }
         .deadline-badge.future { background-color: var(--kouta-border); }
         .todo-custom-cb:checked + .todo-text-container .deadline-badge { background-color: #cbd5e1 !important; color: #94a3b8; text-decoration: line-through; opacity: 0.4; }
-        .todo-del-btn { background: none; border: none; cursor: pointer; font-size: 0.85rem; opacity: 0.5; }
+        
+        .todo-del-btn { background: none; border: none; cursor: pointer; font-size: 0.85rem; opacity: 0.5; flex-shrink: 0; }
 
-        /* カレンダー共通構造（集約して軽量化） */
+        /* カレンダー共通構造 */
         .cal-container { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; margin-top: 10px; }
         .cal-header { font-weight: bold; font-size: 0.75rem; color: #64748b; padding-bottom: 4px; }
         
@@ -386,12 +400,16 @@
         <h1>Family Dashboard</h1>
     </header>
 
+    <!-- 🟢 1番目：予定（スケジュール表示エリア） -->
     <div class="schedule-box">
         <div class="week-nav">
             <button type="button" class="week-nav-btn" id="week-prev">◀ 前の週</button>
             <span class="week-nav-title" id="week-title">📅 今週の予定</span>
             <button type="button" class="week-nav-btn" id="week-next">次の週 ▶</button>
         </div>
+
+        <!-- 🆕 枠線を完全排除し、タイトルと曜日ボタンの間にすっきり引っ越した日付エリア -->
+        <div class="selected-date-display" id="selected-date-label"></div>
 
         <div class="day-btn-container">
             <button type="button" class="day-btn" id="btn-day-1">月</button>
@@ -400,8 +418,6 @@
             <button type="button" class="day-btn" id="btn-day-4">木</button>
             <button type="button" class="day-btn" id="btn-day-5">金</button>
         </div>
-        
-        <div class="selected-date-display" id="selected-date-label"></div>
         
         <div class="schedule-row">
             <span class="name-label kouta-label">こうた</span>
@@ -446,9 +462,11 @@
         </div>
     </div>
 
+    <!-- 🟢 2番目：カスタムTODOパネル -->
     <div class="card">
         <h2>📋 子供別自由TODOリスト</h2>
         
+        <!-- 🟦 こうた -->
         <div class="todo-panel-child kouta-theme">
             <div class="todo-panel-header">
                 <span>👦 〈こうた〉タスク</span>
@@ -466,6 +484,7 @@
             <ul class="todo-custom-list" id="kouta-custom-todo-list"></ul>
         </div>
         
+        <!-- 🟥 はると -->
         <div class="todo-panel-child haruto-theme">
             <div class="todo-panel-header">
                 <span>👶 〈はると〉タスク</span>
@@ -484,12 +503,14 @@
         </div>
     </div>
 
+    <!-- 🟢 3番目：自由記述メモ欄 -->
     <div class="card" style="padding: 10px;">
         <h2 style="font-size: 1rem; margin-bottom: 6px;">✍ ... メモ欄</h2>
         <textarea id="customMemo" class="memo-textarea" placeholder="自由なメモ書きに（ご夫婦でリアルタイム共有されます）"></textarea>
         <div id="saveStatus" class="save-status">同期完了</div>
     </div>
 
+    <!-- 🟢 4番目：こうた宮崎小カレンダー -->
     <details class="kouta-details">
         <summary>🏫 こうた 宮崎小カレンダー</summary>
         <div class="details-content">
@@ -522,6 +543,7 @@
         </div>
     </details>
 
+    <!-- 🟢 5番目：はるとお弁当カレンダー -->
     <details class="bento-details">
         <summary>🍱 はるとお弁当カレンダー</summary>
         <div class="details-content">
@@ -538,6 +560,7 @@
         </div>
     </details>
 
+    <!-- 👦 康太の持ち物リスト -->
     <div class="card kouta-card">
         <h2>👦 康太（こうた）持ち物リスト</h2>
         <div id="kouta-terakoya-alert" class="terakoya-alert">📖 本日は【寺子屋（宮崎小）Bチーム】の開講日です！宿題・ドリル・筆記用具を忘れずに！</div>
@@ -609,6 +632,7 @@
         </details>
     </div>
 
+    <!-- 👶 はるとの持ち物リスト -->
     <div class="card haruto-card">
         <h2>👶 はると 持ち物リスト</h2>
         <div id="haruto-bento-alert" class="bento-alert">🍱 本日は【お弁当の日】です！お弁当と食具を忘れずに。</div>
@@ -663,6 +687,7 @@
         </details>
     </div>
 
+    <!-- 🐛 コピペ文面 -->
     <div class="card">
         <h2 style="font-size: 1rem; color: #475569;">🐛 あおむし広場 予約用定型文（コピペ用）</h2>
         <textarea class="responsive-textarea" style="height:110px; font-family:monospace;" readonly>月：スイミング
