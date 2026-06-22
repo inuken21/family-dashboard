@@ -92,7 +92,7 @@
         }
         .day-btn.active { background-color: #475569; color: white; border-color: #475569; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
 
-        /* 🆕 送り・迎え 1行ハーフ＆ハーフ型エリア */
+        /* 送り・迎え 1行ハーフ＆ハーフ型エリア */
         .transfer-row { display: flex; gap: 8px; margin-bottom: 15px; width: 100%; }
         .transfer-box {
             flex: 1; display: flex; align-items: center; justify-content: space-between;
@@ -296,7 +296,7 @@
             <div class="day-btn" id="btn-day-5">金</div>
         </div>
         
-        <!-- 🆕 送り・迎え担当 1行ハーフ＆ハーフ型 -->
+        <!-- 送り・迎え担当 1行ハーフ＆ハーフ型 -->
         <div class="transfer-row">
             <div class="transfer-box">
                 <span class="transfer-label">🌅 送り</span>
@@ -536,8 +536,13 @@
         let globalCloudData = {};
         let selectedDayNum = 1;
         let currentWeekOffset = 0;
-        let currentCalYear = 2026, currentCalMonth = 5;
-        let koutaCalYear = 2026, koutaCalMonth = 5;
+        
+        // 🛠️ 月カレンダー用の年・月もリアルタイムの「今日」を基準にするように変更
+        let currentCalYear = new Date().getFullYear();
+        let currentCalMonth = new Date().getMonth();
+        let koutaCalYear = new Date().getFullYear();
+        let koutaCalMonth = new Date().getMonth();
+        
         let activePanelDateStr = null;
 
         function switchTab(tabId, btn) {
@@ -573,7 +578,8 @@
         }
 
         function getTargetDateStr(dayNum) {
-            const today = new Date(2026, 5, 21);
+            // 🛠️ 固定の日付設定から「現在のリアルタイムな日付」の自動取得へ変更
+            const today = new Date();
             const currentDayIdx = today.getDay();
             let baseDate = new Date(today);
             if (currentDayIdx === 0) baseDate.setDate(today.getDate() + 1);
@@ -606,7 +612,6 @@
             await saveCloudData("res_" + type + "_status_" + targetDateStr, val);
         }
 
-        /* 🆕 送り・迎えステータスの適用とデータ保存 */
         function applyTransferStyle(type, val) {
             const el = document.getElementById('sel-' + type);
             if(!el) return;
@@ -635,7 +640,8 @@
 
         function getDeadlineStatus(dateStr) {
             if (!dateStr) return { label: "", classStr: "", diff: Infinity };
-            const today = new Date(2026, 5, 21); today.setHours(0,0,0,0);
+            // 🛠️ 「あと◯日」のバッジ計算用にもリアルタイムの日付を利用するように変更
+            const today = new Date(); today.setHours(0,0,0,0);
             const target = new Date(dateStr); target.setHours(0,0,0,0);
             const diffDays = Math.round((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
             if (diffDays < 0) return { label: "超過中！", classStr: "overdue", diff: diffDays };
@@ -725,7 +731,6 @@
             
             document.getElementById('selected-date-label').textContent = `${parts[0]}年${parseInt(parts[1])}月${parseInt(parts[2])}日 (${days[dayNum]})`;
 
-            /* 🆕 送り・迎えステータスの同期 */
             const dropoffVal = globalCloudData["dropoff_status_" + targetDateStr] || "yet";
             applyTransferStyle('dropoff', dropoffVal);
             
@@ -853,9 +858,22 @@
         let memoTimeout; document.getElementById('customMemo').addEventListener('input', (e) => { clearTimeout(memoTimeout); memoTimeout = setTimeout(() => { saveCloudData("memo", e.target.value); }, 1000); });
 
         window.addEventListener('DOMContentLoaded', async () => {
-            await fetchCloudData(); let currentDay = new Date(2026, 5, 21).getDay(); if (currentDay === 0 || currentDay === 6) currentDay = 1;
-            renderKoutaCalendar(koutaCalYear, koutaCalMonth); renderBentoCalendar(currentCalYear, currentCalMonth); selectDay(currentDay);
-            renderCustomTodoList('kouta'); renderCustomTodoList('haruto'); document.getElementById('customMemo').value = globalCloudData["memo"] || "";
+            await fetchCloudData(); 
+            
+            // 🛠️ ページを開いた時のリアルタイムの「今日」を取得してデフォルトセットするように変更
+            const today = new Date();
+            let currentDay = today.getDay(); 
+            
+            // 土日の場合は強制的に「月曜（1）」をセットして平日の予定を優先表示させる
+            if (currentDay === 0 || currentDay === 6) currentDay = 1; 
+            
+            renderKoutaCalendar(koutaCalYear, koutaCalMonth); 
+            renderBentoCalendar(currentCalYear, currentCalMonth); 
+            selectDay(currentDay);
+            
+            renderCustomTodoList('kouta'); 
+            renderCustomTodoList('haruto'); 
+            document.getElementById('customMemo').value = globalCloudData["memo"] || "";
             
             for (let i = 1; i <= 5; i++) {
                 const btn = document.getElementById('btn-day-' + i);
