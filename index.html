@@ -51,59 +51,28 @@
         header h1 { margin: 0; font-size: 1.3rem; font-weight: 800; color: #1e293b; }
 
         .card, .schedule-box {
-            background: white;
-            padding: 15px;
-            border-radius: var(--border-radius);
-            margin-bottom: 15px;
-            box-shadow: var(--card-shadow);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            width: 100%;
+            background: white; padding: 15px; border-radius: var(--border-radius);
+            margin-bottom: 15px; box-shadow: var(--card-shadow);
+            border: 1px solid rgba(226, 232, 240, 0.8); width: 100%;
         }
 
-        h2 {
-            font-size: 1.05rem;
-            color: #1e293b;
-            margin: 0 0 10px 0;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #e2e8f0;
-            font-weight: 700;
-        }
+        h2 { font-size: 1.05rem; color: #1e293b; margin: 0 0 10px 0; padding-bottom: 8px; border-bottom: 2px solid #e2e8f0; font-weight: 700; }
 
-        /* 📅 今週の予定エリア */
         .week-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .week-nav-btn {
-            background-color: var(--btn-neutral-bg); border: none; padding: 5px 12px; border-radius: 6px;
-            font-size: 0.8rem; font-weight: bold; color: var(--btn-neutral-text); cursor: pointer;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
+        .week-nav-btn { background-color: var(--btn-neutral-bg); border: none; padding: 5px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: var(--btn-neutral-text); cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .week-nav-btn:active { background-color: var(--btn-neutral-active); }
         .week-nav-title { font-weight: bold; color: #1e293b; font-size: 1rem; }
         
-        .selected-date-display {
-            text-align: center; font-weight: 800; font-size: 1.1rem; color: #0f172a;
-            padding: 2px 0; margin: 0 0 12px 0; width: 100%; display: block; letter-spacing: 0.02em;
-        }
+        .selected-date-display { text-align: center; font-weight: 800; font-size: 1.1rem; color: #0f172a; padding: 2px 0; margin: 0 0 12px 0; width: 100%; display: block; letter-spacing: 0.02em; }
 
         .day-btn-container { display: flex; justify-content: space-between; margin-bottom: 12px; gap: 4px; width: 100%; }
-        .day-btn {
-            flex: 1; padding: 10px 0; border: 1px solid #cbd5e1; background-color: white;
-            color: #64748b; border-radius: 6px; font-weight: bold; font-size: 0.9rem; cursor: pointer; text-align: center;
-            user-select: none; -webkit-user-select: none; overflow: hidden;
-        }
+        .day-btn { flex: 1; padding: 10px 0; border: 1px solid #cbd5e1; background-color: white; color: #64748b; border-radius: 6px; font-weight: bold; font-size: 0.9rem; cursor: pointer; text-align: center; user-select: none; -webkit-user-select: none; overflow: hidden; }
         .day-btn.active { background-color: #475569; color: white; border-color: #475569; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
 
-        /* 送り・迎え 1行ハーフ＆ハーフ型エリア */
         .transfer-row { display: flex; gap: 8px; margin-bottom: 15px; width: 100%; }
-        .transfer-box {
-            flex: 1; display: flex; align-items: center; justify-content: space-between;
-            background-color: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 6px;
-        }
+        .transfer-box { flex: 1; display: flex; align-items: center; justify-content: space-between; background-color: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 6px; }
         .transfer-label { font-size: 0.8rem; font-weight: bold; color: #475569; margin-right: 4px; white-space: nowrap; }
-        .transfer-select {
-            flex: 1; padding: 4px; font-size: 0.85rem; font-weight: bold; border-radius: 4px;
-            border: 1px solid #cbd5e1; background-color: #ffffff; color: #334155;
-            cursor: pointer; outline: none; text-align: center; text-align-last: center;
-        }
+        .transfer-select { flex: 1; padding: 4px; font-size: 0.85rem; font-weight: bold; border-radius: 4px; border: 1px solid #cbd5e1; background-color: #ffffff; color: #334155; cursor: pointer; outline: none; text-align: center; text-align-last: center; }
         .transfer-select.status-yet { background-color: #fef3c7; color: #92400e; border-color: #fde68a; }
         .transfer-select.status-kenta { background-color: #e0f2fe; color: #0369a1; border-color: #bae6fd; }
         .transfer-select.status-natsuno { background-color: #ffe4e6; color: #be123c; border-color: #fecdd3; }
@@ -111,53 +80,39 @@
 
         .schedule-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #e2e8f0; }
         .schedule-row:last-child { border-bottom: none; }
-        
-        .name-label {
-            font-weight: bold; width: 65px; padding: 4px 0; border-radius: 4px; text-align: center;
-            font-size: 0.85rem; flex-shrink: 0; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
+        .name-label { font-weight: bold; width: 65px; padding: 4px 0; border-radius: 4px; text-align: center; font-size: 0.85rem; flex-shrink: 0; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .kouta-label { background-color: var(--kouta-bg); color: var(--kouta-text); }
         .haruto-label { background-color: var(--haruto-bg); color: var(--haruto-text); }
-        
         .schedule-text-display { flex: 1; margin: 0 10px; font-size: 0.9rem; font-weight: bold; color: #334155; }
         .schedule-edit-input { display: none; flex: 1; margin: 0 10px; border: 1px solid #cbd5e1; border-radius: 4px; padding: 6px 8px; font-size: 0.9rem; }
-
         .edit-btn { background-color: var(--btn-neutral-bg); color: var(--btn-neutral-text); border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; cursor: pointer; flex-shrink: 0; }
         .edit-btn.saving { background-color: #bbf7d0; color: #15803d; }
 
-        /* 予約確認パネル */
         .reservation-panel { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-top: 10px; box-shadow: var(--inner-shadow); }
         .res-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #e2e8f0; gap: 8px; }
         .res-row:last-child { border-bottom: none; }
         .res-label-box { flex: 1; font-size: 0.85rem; font-weight: bold; color: #475569; }
-        
         .res-status-select { padding: 4px 6px; font-size: 0.8rem; font-weight: bold; border-radius: 4px; border: 1px solid #cbd5e1; background-color: #e2e8f0; color: #475569; cursor: pointer; width: 90px; text-align: center; }
         .res-status-select.status-ok { background-color: #d1fae5; color: #065f46; border-color: #a7f3d0; }
         .res-status-select.status-no { background-color: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; text-decoration: line-through; }
         .res-status-select.status-yet { background-color: #fef3c7; color: #92400e; border-color: #fde68a; }
-
         .res-btn-group { display: flex; gap: 4px; flex-shrink: 0; }
         .res-btn { background-color: var(--btn-neutral-bg); color: var(--btn-neutral-text); border: none; padding: 5px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .res-btn.phone-btn { background-color: var(--btn-phone-bg); color: var(--btn-phone-text); }
 
-        /* 子供別自由TODOエリア */
         .todo-panel-child { border-radius: 8px; padding: 12px 12px 12px 16px; margin-bottom: 12px; background-color: #f8fafc; border: 1px solid #e2e8f0; position: relative; overflow: hidden; }
         .todo-panel-child::before { content: ""; position: absolute; top: 0; left: 0; width: 6px; height: 100%; }
         .todo-panel-child.kouta-theme::before { background-color: var(--kouta-border); }
         .todo-panel-child.haruto-theme::before { background-color: var(--haruto-border); }
-        
         .todo-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-weight: bold; font-size: 0.9rem; }
         .todo-panel-child.kouta-theme .todo-panel-header { color: var(--kouta-text); }
         .todo-panel-child.haruto-theme .todo-panel-header { color: var(--haruto-text); }
-
         .todo-count-badge { font-size: 0.7rem; background: rgba(0,0,0,0.05); padding: 2px 8px; border-radius: 10px; font-weight: bold; }
         .todo-input-row { display: flex; gap: 6px; margin-bottom: 4px; align-items: center; }
         .todo-input-text { flex: 1; padding: 7px; font-size: 0.85rem; border: 1px solid #cbd5e1; border-radius: 4px; height: 34px; background-color: #ffffff; box-shadow: var(--inner-shadow); }
-        
         .todo-date-wrapper { position: relative; width: 36px; height: 34px; display: flex; align-items: center; justify-content: center; background: white; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer; flex-shrink: 0; overflow: hidden; }
         .todo-date-icon-btn { font-size: 1rem; opacity: 0.7; pointer-events: none; }
         .todo-input-date { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; margin: 0; padding: 0; }
-        
         .todo-add-btn { background-color: white; border: 1px solid #cbd5e1; color: #475569; padding: 0 10px; font-size: 0.8rem; font-weight: bold; border-radius: 4px; cursor: pointer; height: 34px; }
         .todo-selected-date-preview { font-size: 0.75rem; margin-bottom: 6px; padding-left: 2px; font-weight: bold; display: none; }
         
@@ -166,47 +121,28 @@
         .todo-custom-item:last-child { border-bottom: none; }
         .todo-custom-label { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; cursor: pointer; flex: 1; min-width: 0; position: relative; }
         .todo-custom-cb { transform: scale(1.1); cursor: pointer; flex-shrink: 0; }
-        
         .todo-text-container { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; white-space: nowrap; position: relative; }
         .todo-custom-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; cursor: help; }
-        
-        .todo-custom-text::before {
-            content: attr(data-fulltext); position: absolute; bottom: 125%; left: 0;
-            background-color: #1e293b; color: #ffffff; padding: 6px 10px; border-radius: 6px;
-            font-size: 0.8rem; font-weight: bold; white-space: normal; word-break: break-all;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 100; width: 220px; max-width: 280px;
-            opacity: 0; pointer-events: none; transition: opacity 0.15s ease;
-        }
+        .todo-custom-text::before { content: attr(data-fulltext); position: absolute; bottom: 125%; left: 0; background-color: #1e293b; color: #ffffff; padding: 6px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; white-space: normal; word-break: break-all; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 100; width: 220px; max-width: 280px; opacity: 0; pointer-events: none; transition: opacity 0.15s ease; }
         .todo-custom-text:active::before, .todo-custom-text:hover::before { opacity: 1; pointer-events: auto; }
-
         .todo-custom-cb:checked + .todo-text-container .todo-custom-text { text-decoration: line-through; opacity: 0.4; }
         .todo-custom-cb:checked + .todo-text-container::after { content: " 🎉"; font-size: 0.85rem; margin-left: 2px; animation: pop 0.3s ease; flex-shrink: 0; }
-        
         @keyframes pop { 0% { transform: scale(0.6); } 100% { transform: scale(1); } }
-        
         .todo-date-label { font-size: 0.75rem; font-weight: bold; color: #64748b; background-color: #f1f5f9; padding: 1px 5px; border-radius: 4px; flex-shrink: 0; }
         .todo-custom-cb:checked + .todo-text-container .todo-date-label { color: #cbd5e1; background-color: #f8fafc; text-decoration: line-through; opacity: 0.4; }
-
         .deadline-badge { font-size: 0.65rem; font-weight: bold; padding: 1px 4px; border-radius: 4px; color: white; flex-shrink: 0; }
         .deadline-badge.overdue { background-color: #ef4444; }
         .deadline-badge.today { background-color: #f97316; }
         .deadline-badge.future { background-color: var(--kouta-border); }
         .todo-custom-cb:checked + .todo-text-container .deadline-badge { background-color: #cbd5e1 !important; color: #94a3b8; text-decoration: line-through; opacity: 0.4; }
-        
         .todo-del-btn { background: none; border: none; cursor: pointer; font-size: 0.85rem; opacity: 0.5; flex-shrink: 0; }
 
-        /* 📂 下部タブシステム */
         .tab-button-container { display: flex; gap: 6px; margin-bottom: 15px; width: 100%; }
-        .tab-btn {
-            flex: 1; padding: 12px 0; background-color: #e2e8f0; color: #475569;
-            border: 1px solid #cbd5e1; border-radius: 8px; font-weight: bold; font-size: 0.9rem;
-            cursor: pointer; text-align: center; transition: all 0.2s;
-        }
+        .tab-btn { flex: 1; padding: 12px 0; background-color: #e2e8f0; color: #475569; border: 1px solid #cbd5e1; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; text-align: center; transition: all 0.2s; }
         .tab-btn.active { background-color: white; color: var(--kouta-text); border-bottom: 3px solid var(--kouta-border); box-shadow: var(--card-shadow); }
         .tab-content-panel { display: none; width: 100%; }
         .tab-content-panel.active { display: block; }
 
-        /* カレンダー共通構造 */
         .cal-container { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; margin-top: 10px; }
         .cal-header { font-weight: bold; font-size: 0.75rem; color: #64748b; padding-bottom: 4px; }
         .cal-day { padding: 6px 0; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.85rem; cursor: pointer; position: relative; min-height: 44px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
@@ -259,26 +195,47 @@
         .terakoya-alert { background-color: var(--terakoya-bg); border-left: 4px solid var(--terakoya-text); color: var(--terakoya-text); }
         .bento-alert { background-color: var(--haruto-bg); border-left: 4px solid var(--haruto-border); color: var(--haruto-text); }
         .terakoya-alert, .bento-alert { font-weight: bold; padding: 8px; margin-bottom: 10px; font-size: 0.85rem; display: none; border-radius: 0 4px 4px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        
         .badge { background-color: #64748b; color: white; padding: 1px 5px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; margin-left: 5px; }
         
         .memo-textarea { width: 100%; height: 60px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; resize: vertical; line-height: 1.4; box-shadow: var(--inner-shadow); }
         .responsive-textarea { width: 100%; height: 120px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; resize: vertical; line-height: 1.5; box-shadow: var(--inner-shadow); }
         .save-status { font-size: 0.75rem; color: var(--muted-text); text-align: right; margin-top: 4px; font-weight: bold; }
         .loading-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(241, 245, 249, 0.9); display: flex; justify-content: center; align-items: center; z-index: 9999; font-weight: bold; color: #475569; font-size: 1.1rem; }
+
+        /* 🆕 Phase1: ユーザー登録モーダル ＆ トースト通知 */
+        .user-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); display: flex; justify-content: center; align-items: center; z-index: 10000; }
+        .user-modal { background: white; padding: 25px; border-radius: 12px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .user-modal h3 { margin: 0 0 10px 0; font-size: 1.1rem; color: #1e293b; }
+        .user-btn-group { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
+        .user-btn { flex: 1; padding: 12px 0; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; color: white; }
+        .user-btn.kenta { background-color: var(--kouta-border); }
+        .user-btn.natsuno { background-color: var(--haruto-border); }
+        
+        .toast-notification { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); background-color: rgba(30, 41, 59, 0.9); color: white; padding: 10px 20px; border-radius: 30px; font-size: 0.85rem; font-weight: bold; opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 9000; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .toast-notification.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     </style>
 </head>
 <body>
 
     <div id="loading" class="loading-cover">☁️ Google同期中...</div>
 
+    <div id="userModal" class="user-modal-overlay" style="display: none;">
+        <div class="user-modal">
+            <h3>📱 このスマホを使うのは？</h3>
+            <p style="font-size:0.8rem; color:#64748b; margin:0;">※最終更新者の記録に使用します<br>（後から変更できません）</p>
+            <div class="user-btn-group">
+                <button class="user-btn kenta" onclick="setUserName('けんた')">🧑 けんた</button>
+                <button class="user-btn natsuno" onclick="setUserName('なつの')">👩 なつの</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast-notification"></div>
+
     <header>
         <h1>Family Dashboard</h1>
     </header>
 
-    <!-- ==================== 👑 常時固定表示エリア ==================== -->
-
-    <!-- ① 今週の予定 -->
     <div class="schedule-box">
         <div class="week-nav">
             <button type="button" class="week-nav-btn" id="week-prev">◀ 前の週</button>
@@ -296,7 +253,6 @@
             <div class="day-btn" id="btn-day-5">金</div>
         </div>
         
-        <!-- 送り・迎え担当 1行ハーフ＆ハーフ型 -->
         <div class="transfer-row">
             <div class="transfer-box">
                 <span class="transfer-label">🌅 送り</span>
@@ -361,7 +317,6 @@
         </div>
     </div>
 
-    <!-- ② 子供別自由TODOリスト -->
     <div class="card">
         <h2>📋 子供別自由TODOリスト</h2>
         
@@ -400,15 +355,11 @@
         </div>
     </div>
 
-    <!-- ③ メモ欄 -->
     <div class="card" style="padding: 10px;">
         <h2 style="font-size: 1rem; margin-bottom: 6px;">✍ ... メモ欄</h2>
         <textarea id="customMemo" class="memo-textarea" placeholder="自由なメモ書きに（ご夫婦でリアルタイム共有されます）"></textarea>
         <div id="saveStatus" class="save-status">同期完了</div>
     </div>
-
-
-    <!-- ==================== 📂 下部：切り替えタブエリア ==================== -->
 
     <div class="tab-button-container">
         <button type="button" class="tab-btn active" onclick="switchTab('tab-calendar', this)">カレンダー 📅</button>
@@ -416,7 +367,6 @@
         <button type="button" class="tab-btn" onclick="switchTab('tab-aomushi', this)">あおむしメモ 🐛</button>
     </div>
 
-    <!-- タブ①：カレンダー -->
     <div id="tab-calendar" class="tab-content-panel active">
         <details class="kouta-details">
             <summary>🏫 こうた 宮崎小カレンダー</summary>
@@ -467,7 +417,6 @@
         </details>
     </div>
 
-    <!-- タブ②：もちもの -->
     <div id="tab-mochimono" class="tab-content-panel">
         <div class="card kouta-card">
             <h2>👦 康太（こうた）持ち物リスト</h2>
@@ -491,7 +440,6 @@
         </div>
     </div>
 
-    <!-- タブ③：あおむしメモ -->
     <div id="tab-aomushi" class="tab-content-panel">
         <div class="card">
             <h2>🐛 あおむし広場 予約用定型文（コピペ用）</h2>
@@ -536,14 +484,31 @@
         let globalCloudData = {};
         let selectedDayNum = 1;
         let currentWeekOffset = 0;
-        
-        // 🛠️ 月カレンダー用の年・月もリアルタイムの「今日」を基準にするように変更
         let currentCalYear = new Date().getFullYear();
         let currentCalMonth = new Date().getMonth();
         let koutaCalYear = new Date().getFullYear();
         let koutaCalMonth = new Date().getMonth();
-        
         let activePanelDateStr = null;
+        
+        // 🆕 ユーザー名（ローカルストレージ）
+        let localUserName = localStorage.getItem('family_app_user_name');
+
+        function setUserName(name) {
+            localUserName = name;
+            localStorage.setItem('family_app_user_name', name);
+            document.getElementById('userModal').style.display = 'none';
+            showToast(`👤 ${name}さんとして登録しました`);
+        }
+
+        // 🆕 トースト通知表示関数
+        let toastTimeout;
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
 
         function switchTab(tabId, btn) {
             document.querySelectorAll('.tab-content-panel').forEach(panel => panel.classList.remove('active'));
@@ -565,20 +530,35 @@
                 const response = await fetch(GAS_WEB_APP_URL);
                 globalCloudData = await response.json();
                 document.getElementById('loading').style.display = 'none';
+                
+                // 🆕 ロード時に最終更新情報を表示
+                const lastInfo = globalCloudData['last_update_info'];
+                if(lastInfo) {
+                    document.getElementById('saveStatus').textContent = `同期完了 [最終更新: ${lastInfo}]`;
+                }
             } catch (e) { document.getElementById('loading').textContent = "⚠️ 同期エラーが発生しました。"; }
         }
 
-        async function saveCloudData(key, value) {
+        async function saveCloudData(key, value, silent = false) {
             document.getElementById('saveStatus').textContent = "☁️ 保存中...";
             try {
                 await fetch(GAS_WEB_APP_URL, { method: 'POST', body: JSON.stringify({ action: 'save', key: key, value: value }) });
                 globalCloudData[key] = value;
-                document.getElementById('saveStatus').textContent = "同期完了";
+                
+                // 🆕 保存時に最終更新者を記録（UIを待たせないように非同期で飛ばす）
+                if(!silent && localUserName) {
+                    const now = new Date();
+                    const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+                    const updateInfo = `今日 ${timeStr} (${localUserName})`;
+                    document.getElementById('saveStatus').textContent = `同期完了 [最終更新: ${updateInfo}]`;
+                    fetch(GAS_WEB_APP_URL, { method: 'POST', body: JSON.stringify({ action: 'save', key: 'last_update_info', value: updateInfo }) });
+                } else {
+                    document.getElementById('saveStatus').textContent = "同期完了";
+                }
             } catch (e) { document.getElementById('saveStatus').textContent = "❌ 保存失敗"; }
         }
 
         function getTargetDateStr(dayNum) {
-            // 🛠️ 固定の日付設定から「現在のリアルタイムな日付」の自動取得へ変更
             const today = new Date();
             const currentDayIdx = today.getDay();
             let baseDate = new Date(today);
@@ -640,7 +620,6 @@
 
         function getDeadlineStatus(dateStr) {
             if (!dateStr) return { label: "", classStr: "", diff: Infinity };
-            // 🛠️ 「あと◯日」のバッジ計算用にもリアルタイムの日付を利用するように変更
             const today = new Date(); today.setHours(0,0,0,0);
             const target = new Date(dateStr); target.setHours(0,0,0,0);
             const diffDays = Math.round((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
@@ -683,7 +662,6 @@
                 });
 
                 const textContainer = document.createElement('span'); textContainer.className = 'todo-text-container';
-                
                 const spanText = document.createElement('span'); 
                 spanText.className = 'todo-custom-text'; 
                 spanText.textContent = item.text;
@@ -703,6 +681,8 @@
                 delBtn.addEventListener('click', async () => {
                     listData.splice(index, 1);
                     renderCustomTodoList(child);
+                    // 🆕 削除時にトースト通知を表示
+                    showToast('🗑️ タスクを削除しました');
                     await saveCloudData("todo_list_" + child, JSON.stringify(listData.map(t => ({ text: t.text, date: t.date, checked: t.checked }))));
                 });
                 li.appendChild(label); li.appendChild(delBtn); listEl.appendChild(li);
@@ -858,13 +838,15 @@
         let memoTimeout; document.getElementById('customMemo').addEventListener('input', (e) => { clearTimeout(memoTimeout); memoTimeout = setTimeout(() => { saveCloudData("memo", e.target.value); }, 1000); });
 
         window.addEventListener('DOMContentLoaded', async () => {
+            // 🆕 初回アクセス時のユーザー名登録モーダル制御
+            if (!localUserName) {
+                document.getElementById('userModal').style.display = 'flex';
+            }
+
             await fetchCloudData(); 
             
-            // 🛠️ ページを開いた時のリアルタイムの「今日」を取得してデフォルトセットするように変更
             const today = new Date();
             let currentDay = today.getDay(); 
-            
-            // 土日の場合は強制的に「月曜（1）」をセットして平日の予定を優先表示させる
             if (currentDay === 0 || currentDay === 6) currentDay = 1; 
             
             renderKoutaCalendar(koutaCalYear, koutaCalMonth); 
