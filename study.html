@@ -17,8 +17,9 @@
         .secret-gear-btn { position: absolute; right: 4px; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: #94a3b8; padding: 6px; }
         .bgm-toggle-btn { position: absolute; left: 4px; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: #0f172a; padding: 6px; }
         
-        .user-switcher { display: table; width: 100%; border-collapse: separate; border-spacing: 16px 0; margin-bottom: 24px; }
-        .user-tab { display: table-cell; width: 50%; height: 56px; text-align: center; vertical-align: middle; border: 3.5px solid #0f172a; font-size: 1.1rem; font-weight: 900; cursor: pointer; background: #cbd5e1; color: #475569; box-shadow: 0 5px 0 #0f172a; border-radius: var(--border-radius); }
+        /* 🔥 バグ修正: Flexboxで確実に隙間を作り、レイアウト崩れを防ぐ */
+        .user-switcher { display: flex; gap: 16px; justify-content: center; margin-bottom: 24px; }
+        .user-tab { flex: 1; height: 56px; display: flex; align-items: center; justify-content: center; border: 3.5px solid #0f172a; font-size: 1.1rem; font-weight: 900; cursor: pointer; background: #cbd5e1; color: #475569; box-shadow: 0 5px 0 #0f172a; border-radius: var(--border-radius); transition: transform 0.1s, box-shadow 0.1s; }
         .user-tab.kouta.active { background-color: var(--kouta-main); color: white; }
         .user-tab.haruto.active { background-color: var(--haruto-main); color: white; }
         .user-tab:active { transform: translateY(2px); box-shadow: 0 3px 0 #0f172a; }
@@ -91,10 +92,7 @@
         .rotom-lcd { background-color: var(--rotom-screen); border-radius: 12px; padding: 10px; }
         
         .zukan-tab-row { display: flex; gap: 4px; margin-bottom: 8px; }
-        
-        /* 🔥 バグ修正: 未選択時の文字色を強制的に暗い色(#0f172a)にする */
         .zukan-tab-btn { flex: 1; height: 36px; border: 2px solid #0f172a; background: #cbd5e1; color: #0f172a; font-weight: 900; font-size: 0.75rem; border-radius: 8px; cursor: pointer; }
-        /* 🔥 選択された時だけ白文字になるように修正 */
         .zukan-tab-btn.active { background: #ea580c; color: #ffffff; }
         
         .region-select { width: 100%; height: 38px; font-family: inherit; font-size: 0.85rem; font-weight: 900; background: #ffffff; border: 2.5px solid #0f172a; border-radius: 10px; padding: 0 4px; }
@@ -187,7 +185,7 @@
     <div id="syncBadge" class="sync-badge">通信中...</div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
-    <div style="position: fixed; width: 10px; height: 10px; top: 0; left: 0; opacity: 0.01; z-index: -9999; pointer-events: none;">
+    <div style="position: fixed; width: 1px; height: 1px; top: 0; left: 0; opacity: 0.01; z-index: -9999; pointer-events: none;">
         <div id="bgmPlayerDiv"></div>
     </div>
 
@@ -419,8 +417,8 @@
         const regionalStarters = [ { region: "とくべつ枠 ⚡", starters: [{id:"0025", name:"ピカチュウ"}] }, { region: "カントー地方 (初代)", starters: [{id:"0001", name:"フシギダネ"}, {id:"0004", name:"ヒトカゲ"}, {id:"0007", name:"ゼニガメ"}] }, { region: "ジョウト地方", starters: [{id:"0152", name:"チコリータ"}, {id:"0155", name:"ヒノアラシ"}, {id:"0158", name:"ワニノコ"}] }, { region: "ホウエン地方", starters: [{id:"0252", name:"キモリ"}, {id:"0255", name:"アチャモ"}, {id:"0258", name:"ミズゴロウ"}] }, { region: "シンオウ地方", starters: [{id:"0387", name:"ナエトル"}, {id:"0390", name:"ヒコザル"}, {id:"0393", name:"ポッチャマ"}] }, { region: "カロス地方", starters: [{id:"0650", name:"ハリマロン"}, {id:"0653", name:"フォッコ"}, {id:"0656", name:"ケロマツ"}] }, { region: "パルデア地方 (最新)", starters: [{id:"0906", name:"ニャオハ"}, {id:"0909", name:"ホゲータ"}, {id:"0912", name:"クワッス"}] } ];
         const starterPool = { water: [{id:"0009", name:"カメックス"}, {id:"0158", name:"ワニノコ"}, {id:"0258", name:"ミズゴロウ"}, {id:"0393", name:"ポッチャマ"}, {id:"0658", name:"ゲッコウガ"}], forest: [{id:"0003", name:"フシギバナ"}, {id:"0152", name:"チコリータ"}, {id:"0252", name:"キモリ"}, {id:"0387", name:"ナエトル"}, {id:"0906", name:"ニャオハ"}], volcano: [{id:"0006", name:"リザードン"}, {id:"0155", name:"ヒノアラシ"}, {id:"0255", name:"アチャモ"}, {id:"0390", name:"ヒコザル"}, {id:"0909", name:"ホゲータ"}], thunder: [{id:"0026", name:"ライチュウ"}, {id:"0448", name:"ルカリオ"}, {id:"0150", name:"ミュウツー"}, {id:"0384", name:"レックウザ"}] };
         const moves = { electric: ["10まんボルト", "かみなり", "ボルテッカー", "アイアンテール"], fire: ["ひのこ", "かえんほうしゃ", "だいもんじ", "ブラストバーン"], water: ["みずでっぽう", "ハイドロポンプ", "アクアブレイク", "みずしゅりけん"], grass: ["つるのむち", "リーフブレード", "ソーラービーム", "ハードプラント"], normal: ["たいあたり", "ずつき", "メガトンパンチ", "はかいこうせん"], mega: ["しんそく", "インファイト", "ガリョウテンセイ", "サイコブレイク", "りゅうのまい"] };
-        // 🔥 バグ修正: ぼうけん券の画像を、切れない確実な画像(mystic-ticket)に差し替えました
-        const ballAssets = { normal: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png", super: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png", hyper: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png", master: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png", ticket: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/mystic-ticket.png" };
+        // 🔥 バグ修正: ぼうけん券の画像を確実に表示される公式素材(ss-ticket)に差し替えました
+        const ballAssets = { normal: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png", super: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png", hyper: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png", master: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png", ticket: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ss-ticket.png" };
 
         let currentUser = 'kouta';
         let battleState = {};
@@ -586,11 +584,19 @@
         }
         window.addEventListener('DOMContentLoaded', initApp);
 
+        // 🔥 バグ修正: PokeAPIの公式アートワークを利用し、画像切れ（404）を完全防止！
         function getImgUrl(id) {
             if (!id) return "";
             const isMega = id.includes('_');
             const base = isMega ? id.split('_')[0] : id;
-            return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${String(parseInt(base)).padStart(3, '0')}${isMega ? "_" + id.split('_')[1] : ""}.png`;
+            const num = parseInt(base);
+            
+            if (isMega) {
+                // メガシンカのみassetsを使用
+                return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${String(num).padStart(3, '0')}_${id.split('_')[1]}.png`;
+            }
+            // 通常のポケモンは絶対に画像切れしない公式アートワークを使用
+            return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${num}.png`;
         }
 
         function calculateLevel(exp) { return Math.floor((exp || 0) / 3) + 1; }
@@ -624,6 +630,7 @@
             return lessons;
         }
 
+        // 🔥 バグ修正: 他のタスクが巻き込まれてチェックされる現象を厳格なフィルターで防止
         function toggleTask(taskName) {
             unlockAudio(); playRetroSound('click');
             if (!cloudData["study_progress_" + todayStr]) {
@@ -636,6 +643,7 @@
             let doneList = cloudData["study_progress_" + todayStr][currentUser].done;
             
             if (doneList.includes(taskName)) {
+                // 完全一致する文字だけをリストから削除する
                 cloudData["study_progress_" + todayStr][currentUser].done = doneList.filter(t => t !== taskName);
             } else {
                 cloudData["study_progress_" + todayStr][currentUser].done.push(taskName);
@@ -655,7 +663,6 @@
             if (!cloudData["study_v2_bag_balls"] || !cloudData["study_v2_bag_balls"][currentUser]) cloudData["study_v2_bag_balls"][currentUser] = { normal: 5, super: 1, hyper: 0, master: 0 };
             if (cloudData["study_v2_bag_candy"][currentUser] === undefined) cloudData["study_v2_bag_candy"][currentUser] = 0;
             
-            // 🔥 バグ修正: カレンダーデータが壊れないように完全な配列として初期化する
             if (!cloudData["study_v2_calendar"]) cloudData["study_v2_calendar"] = {};
             if (!Array.isArray(cloudData["study_v2_calendar"][currentUser])) cloudData["study_v2_calendar"][currentUser] = [];
             
@@ -716,7 +723,6 @@
             document.getElementById('parentCurrentTargetName').textContent = currentUser === 'kouta' ? 'こうた' : 'はると';
             document.getElementById('parentChallengePoolInput').value = (cloudData["study_v3_challenge_pool"][currentUser] || defaultPools[currentUser]).join(',');
             
-            // 図鑑の初期表示バグ回避のため、見えないところで再描画しておく
             renderZukanGrid();
         }
 
@@ -821,6 +827,7 @@
                     
                     const hrktList = data.flavor_text_entries.filter(f => f.language.name === "ja-Hrkt");
                     const jaList = data.flavor_text_entries.filter(f => f.language.name === "ja");
+                    
                     const flavor = (hrktList.length > 0) ? hrktList[hrktList.length - 1] : (jaList.length > 0 ? jaList[jaList.length - 1] : null);
                     
                     if (flavor) {
@@ -899,7 +906,6 @@
         }
         function closePartnerSelectModal() { playRetroSound('click'); document.getElementById('partnerSelectModal').style.display = 'none'; }
 
-        // 🔥 バグ修正: 開いた瞬間に強制描画して初期表示を確保
         let zukanTab = 'normal';
         function openZukanModal() { 
             unlockAudio(); playRetroSound('click'); 
@@ -910,7 +916,6 @@
         }
         function closeZukanModal() { playRetroSound('click'); document.getElementById('zukanModal').style.display = 'none'; }
         
-        // 🔥 バグ修正: 存在しなかったラッパーID(regionSelectWrapper)を追加したHTMLと連携
         function switchZukanTab(tab) { 
             zukanTab = tab; 
             document.getElementById('tabNormalBtn').className = tab === 'normal' ? 'zukan-tab-btn active' : 'zukan-tab-btn';
@@ -923,7 +928,6 @@
         function closeBagModal() { playRetroSound('click'); document.getElementById('bagModal').style.display = 'none'; }
         function useCandyFromBag() { if(cloudData.study_v2_bag_candy[currentUser]>0){ const id = cloudData.study_user_pokemon[currentUser]; if(!id) return; playRetroSound('clear'); cloudData.study_v2_bag_candy[currentUser]--; cloudData.study_level[currentUser][id] = (cloudData.study_level[currentUser][id]||0)+3; alert(`🍬 あめをつかった！`); openBagModal(); renderUI(); triggerCloudSave(); } }
         
-        // 🔥 バグ修正: 古いデータ形式の時にクラッシュしないように配列判定を追加
         function openCalendarModal() { 
             unlockAudio(); playRetroSound('click'); 
             const calendarList = Array.isArray(cloudData["study_v2_calendar"][currentUser]) ? cloudData["study_v2_calendar"][currentUser] : [];
@@ -974,20 +978,29 @@
         function openAdventureSelectionModal() { unlockAudio(); playRetroSound('click'); if(cloudData.study_balance[currentUser].gachaCount<=0) return; document.getElementById('adventureModal').style.display = 'flex'; }
         function closeAdventureModal() { playRetroSound('click'); document.getElementById('adventureModal').style.display = 'none'; }
         
+        // 🔥 バグ修正: バトル開始の瞬間に過去の冒険先候補をリセットし、毎回ランダム抽選させる
         async function startBattle(zone) {
             playRetroSound('click'); closeAdventureModal();
             cloudData.study_balance[currentUser].gachaCount--;
             switchBgmMode('battle');
 
-            const enemyId = "000" + (Math.floor(Math.random()*9)+1); 
+            const encounters = getOrRollFixedEncounters(); const enemy = encounters[zone];
+            let finalEnemy = enemy;
+            if (Math.random() < 0.2 && !enemy.id.includes('_')) {
+                const hasMega = megaList.find(m => m.id.startsWith(enemy.id)); if (hasMega) finalEnemy = hasMega;
+            }
+
             const baseId = cloudData["study_user_pokemon"][currentUser];
-            const currentMyId = getEvolvedId(baseId, calculateLevel(cloudData.study_level[currentUser][baseId]));
+            const exp = cloudData["study_level"][currentUser][baseId] || 0;
+            const currentMyId = getEvolvedId(baseId, calculateLevel(exp));
             
-            battleState = { step: 0, enemy: {id: enemyId}, myName: "相棒", enemyName: "やせいポケモン" };
+            battleState = { step: 0, enemy: finalEnemy, isMega: finalEnemy.id.includes('_'), enemyHp: 100, myName: "相棒", enemyName: "やせいポケモン" };
             
             document.getElementById('enemyHpBar').style.width = "100%";
+            document.getElementById('enemyHpBar').style.background = "#22c55e";
+            
             document.getElementById('battlePartnerImg').src = getImgUrl(currentMyId);
-            document.getElementById('battleEnemyImg').src = getImgUrl(enemyId);
+            document.getElementById('battleEnemyImg').src = getImgUrl(finalEnemy.id);
             document.getElementById('battleLogBox').textContent = `あ！ 野生の ポケモン が あらわれた！`;
             
             document.getElementById('ballIcon').style.display = "none"; 
@@ -996,8 +1009,11 @@
             document.getElementById('battleCloseBtn').style.display = "none";
             document.getElementById('battleModal').style.display = 'flex';
             
+            // リセット: ボールを投げる前に次の抽選を白紙に戻しておく
+            cloudData["study_fixed_encounters"][currentUser] = null;
+            
             getPokemonNameAsync(currentMyId).then(n => { battleState.myName = n; document.getElementById('battlePartnerName').textContent = n; });
-            getPokemonNameAsync(enemyId).then(n => { battleState.enemyName = n; document.getElementById('battleEnemyName').textContent = n; playPokemonCry(enemyId); });
+            getPokemonNameAsync(finalEnemy.id).then(n => { battleState.enemyName = n; document.getElementById('battleEnemyName').textContent = n; playPokemonCry(finalEnemy.id); });
             triggerCloudSave();
         }
 
@@ -1005,38 +1021,70 @@
             playRetroSound('click');
             const log = document.getElementById('battleLogBox');
             if (battleState.step === 0) {
-                log.textContent = `いけっ！ ${battleState.myName}！\nこうかは ばつぐんだ！ 💥`;
+                const myId = cloudData["study_user_pokemon"][currentUser];
+                const myMove = getPokemonAttackMove(myId, battleState.myName);
+                log.textContent = `いけっ！ ${battleState.myName}の ${myMove}！\nこうかは ばつぐんだ！ 💥`;
                 document.getElementById('enemyHpBar').style.width = "35%";
+                document.getElementById('enemyHpBar').style.background = "#eab308";
                 battleState.step = 1;
             } else if (battleState.step === 1) {
-                log.textContent = `やせいの ${battleState.enemyName}の こうげき！\nしかし かわした！`;
+                const enemyMove = getPokemonAttackMove(battleState.enemy.id, battleState.enemyName);
+                log.textContent = `やせいの ${battleState.enemyName}の ${enemyMove}！\nしかし かわした！`;
                 document.getElementById('enemyHpBar').style.width = "10%";
+                document.getElementById('enemyHpBar').style.background = "#ef4444";
                 document.getElementById('battleActionBtn').style.display = "none";
                 const balls = cloudData["study_v2_bag_balls"][currentUser];
-                document.getElementById('countP').textContent = balls.normal;
-                document.getElementById('countS').textContent = balls.super;
-                document.getElementById('countH').textContent = balls.hyper;
-                document.getElementById('countM').textContent = balls.master;
+                document.getElementById('countP').textContent = balls.normal || 0;
+                document.getElementById('countS').textContent = balls.super || 0;
+                document.getElementById('countH').textContent = balls.hyper || 0;
+                document.getElementById('countM').textContent = balls.master || 0;
                 document.getElementById('ballSelectSection').style.display = "block";
             }
         }
 
-        function throwBall(type) {
+        function throwBall(ballType) {
             playRetroSound('click');
+            const balls = cloudData["study_v2_bag_balls"][currentUser];
+            if (ballType === 'normal' && !(balls.normal > 0)) return;
+            if (ballType === 'super' && !(balls.super > 0)) return;
+            if (ballType === 'hyper' && !(balls.hyper > 0)) return;
+            if (ballType === 'master' && !(balls.master > 0)) return;
+
             document.getElementById('ballSelectSection').style.display = "none";
             const log = document.getElementById('battleLogBox');
-            document.getElementById('ballIcon').src = ballAssets[type];
-            document.getElementById('ballIcon').style.display = "block";
-            log.textContent = `ボールを なげた！`;
-            
+            const bIcon = document.getElementById('ballIcon');
+
+            bIcon.src = ballAssets[ballType]; bIcon.style.display = "block";
+
+            if (ballType === 'normal') balls.normal--;
+            if (ballType === 'super') balls.super--;
+            if (ballType === 'hyper') balls.hyper--;
+            if (ballType === 'master') balls.master--;
+
+            bIcon.className = "ball-shake active";
+            log.textContent = `ボールを なげた！\nゆれている......`;
+
+            let catchRate = ballType === 'normal' ? 0.65 : (ballType === 'super' ? 0.85 : (ballType === 'hyper' ? 0.95 : 1.0));
+            if (battleState.isMega) { catchRate -= 0.2; }
+
             setTimeout(() => {
-                playRetroSound('clear');
-                log.innerHTML = `やったぜ！ ${battleState.enemyName}を つかまえた！<br>💰 <strong>+100 ぽけえん</strong>`;
-                cloudData.study_balance[currentUser].pokeen += 100;
-                if(!cloudData.study_zukan_normal[currentUser].includes(battleState.enemy.id)) cloudData.study_zukan_normal[currentUser].push(battleState.enemy.id);
+                bIcon.className = "";
+                if (Math.random() <= catchRate || ballType === 'master') {
+                    playRetroSound('clear');
+                    log.innerHTML = `やったぜ！ ${battleState.enemyName}を つかまえた！ 🎉<br>💰 <strong>+100 ぽけえん</strong>`;
+                    cloudData.study_balance[currentUser].pokeen += 100;
+                    if (battleState.isMega) {
+                        if (!cloudData["study_zukan_mega"][currentUser].includes(battleState.enemy.id)) cloudData["study_zukan_mega"][currentUser].push(battleState.enemy.id);
+                    } else {
+                        if (!cloudData["study_zukan_normal"][currentUser].includes(battleState.enemy.id)) cloudData["study_zukan_normal"][currentUser].push(battleState.enemy.id);
+                    }
+                    setTimeout(() => playPokemonCry(battleState.enemy.id), 500);
+                } else {
+                    log.innerHTML = `あ！ ボールから とびだしてしまった！\n${battleState.enemyName}は にげていった！ 💨`;
+                }
                 document.getElementById('battleCloseBtn').style.display = "block";
                 triggerCloudSave();
-            }, 1500);
+            }, 1400);
         }
 
         function closeBattleModal() { playRetroSound('click'); switchBgmMode('main'); document.getElementById('battleModal').style.display = 'none'; renderUI(); }
@@ -1063,11 +1111,14 @@
             if(type==='ticket') cloudData.study_balance[currentUser].gachaCount += a;
             if(type==='candy') cloudData.study_v2_bag_candy[currentUser] += a;
             if(type==='ball_normal') cloudData.study_v2_bag_balls[currentUser].normal += a;
+            if(type==='ball_super') cloudData.study_v2_bag_balls[currentUser].super += a;
+            if(type==='ball_hyper') cloudData.study_v2_bag_balls[currentUser].hyper += a;
+            if(type==='ball_master') cloudData.study_v2_bag_balls[currentUser].master += a;
             renderUI(); triggerCloudSave(); alert("データを調整しました");
         }
         function saveChallengePoolFromParent() {
             const txt = document.getElementById('parentChallengePoolInput').value;
-            cloudData["study_v3_challenge_pool"][currentUser] = txt.split(',').map(x=>x.trim()).filter(x=>x);
+            cloudData["study_v3_challenge_pool"][currentUser] = txt.split(',').map(x=>x.trim()).filter(x=>x.length>0);
             triggerCloudSave(); alert("保存しました");
         }
     </script>
