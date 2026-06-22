@@ -7,190 +7,140 @@
     <title>ポケットモンスター こうた&はると</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
     <style>
-        :root { --bg-color: #f1f5f9; --text-color: #0f172a; --border-radius: 20px; --rotom-red: #ff3c3c; --rotom-screen: #eaf6fc; --kouta-main: #2563eb; --kouta-bg: #eff6ff; --haruto-main: #dc2626; --haruto-bg: #fef2f2; }
+        :root { 
+            --bg-color: #f8f9fa; 
+            --text-color: #212529; 
+            --border-color: #212529;
+            --kouta-main: #3b82f6; 
+            --haruto-main: #ef4444; 
+            --box-shadow: 4px 4px 0px var(--border-color);
+        }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'M PLUS Rounded 1c', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 16px; padding-bottom: 80px; user-select: none; }
-        header { position: relative; text-align: center; margin: 12px 0 24px 0; padding: 0 36px; }
-        header h1 { font-size: 1.25rem; font-weight: 900; color: #0f172a; margin: 0; letter-spacing: -0.5px; line-height: 1.3; }
-        .secret-gear-btn { position: absolute; right: 4px; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: #94a3b8; padding: 6px; }
-        .bgm-toggle-btn { position: absolute; left: 4px; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: #0f172a; padding: 6px; }
         
-        .user-switcher { display: table; width: 100%; border-collapse: separate; border-spacing: 16px 0; margin-bottom: 24px; }
-        .user-tab { display: table-cell; width: 50%; height: 56px; text-align: center; vertical-align: middle; border: 3.5px solid #0f172a; font-size: 1.1rem; font-weight: 900; cursor: pointer; background: #cbd5e1; color: #475569; box-shadow: 0 5px 0 #0f172a; border-radius: var(--border-radius); }
+        /* 🔥 フォントをドット絵風に統一！ */
+        body { 
+            font-family: 'DotGothic16', sans-serif; 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            margin: 0; 
+            padding: 16px; 
+            padding-bottom: 80px; 
+            user-select: none; 
+            letter-spacing: 1px;
+        }
+
+        header { position: relative; text-align: center; margin: 12px 0 24px 0; padding: 0 36px; }
+        header h1 { font-size: 1.4rem; font-weight: normal; color: var(--text-color); margin: 0; line-height: 1.4; text-shadow: 2px 2px 0px #cbd5e1; }
+        .secret-gear-btn { position: absolute; right: 4px; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: var(--border-color); padding: 6px; }
+        .bgm-toggle-btn { position: absolute; left: 4px; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: var(--border-color); padding: 6px; }
+        
+        /* 🔥 タブの隙間を空けて、GB風の太枠ブロックに変更 */
+        .user-switcher { display: flex; gap: 16px; margin-bottom: 24px; }
+        .user-tab { flex: 1; height: 56px; text-align: center; border: 4px solid var(--border-color); font-size: 1.2rem; font-family: inherit; cursor: pointer; background: #cbd5e1; color: var(--border-color); box-shadow: var(--box-shadow); border-radius: 4px; transition: transform 0.1s, box-shadow 0.1s; }
         .user-tab.kouta.active { background-color: var(--kouta-main); color: white; }
         .user-tab.haruto.active { background-color: var(--haruto-main); color: white; }
-        .user-tab:active { transform: translateY(2px); box-shadow: 0 3px 0 #0f172a; }
+        .user-tab:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--border-color); }
 
-        .card { background: white; border-radius: var(--border-radius); padding: 18px 16px; margin-bottom: 20px; border: 3.5px solid #0f172a; box-shadow: 0 5px 0 #0f172a; }
-        .card h2 { font-size: 1.05rem; margin: 0 0 14px 0; font-weight: 900; display: flex; justify-content: space-between; align-items: center; }
+        /* 🔥 全体のカード（枠）もレトロ風に */
+        .card { background: white; border-radius: 4px; padding: 18px 16px; margin-bottom: 24px; border: 4px solid var(--border-color); box-shadow: var(--box-shadow); }
+        .card h2 { font-size: 1.1rem; margin: 0 0 14px 0; font-weight: normal; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px dotted var(--border-color); padding-bottom: 8px; }
 
-        .status-card { background: #1e293b; color: white; border-color: #0f172a; padding: 14px 4px; display: table; width: 100%; margin-bottom: 16px; }
-        .status-item { display: table-cell; width: 33.33%; text-align: center; font-size: 0.75rem; font-weight: 900; color: #94a3b8; border-right: 2px solid #475569; vertical-align: middle; }
+        .status-card { background: #e2e8f0; color: var(--text-color); }
+        .status-item { display: table-cell; width: 33.33%; text-align: center; font-size: 0.8rem; border-right: 4px solid var(--border-color); vertical-align: middle; }
         .status-item:last-child { border-right: none; }
-        .status-item .val { display: block; font-size: 1.15rem; font-weight: 900; color: #facc15; margin-top: 4px; }
+        .status-item .val { display: block; font-size: 1.2rem; margin-top: 4px; }
 
-        .partner-display-bar { background: #ffffff; border: 3.5px solid #0f172a; border-radius: 16px; padding: 10px 14px; margin-bottom: 20px; display: table; width: 100%; cursor: pointer; box-shadow: 0 4px 0 #0f172a; }
-        .partner-display-bar:active { transform: translateY(2px); box-shadow: 0 2px 0 #0f172a; }
+        .partner-display-bar { background: #ffffff; border: 4px solid var(--border-color); border-radius: 4px; padding: 10px 14px; margin-bottom: 20px; display: table; width: 100%; cursor: pointer; box-shadow: var(--box-shadow); }
+        .partner-display-bar:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--border-color); }
         .partner-img-cell { display: table-cell; width: 50px; vertical-align: middle; }
-        .partner-img-cell img { width: 44px; height: 44px; object-fit: contain; display: block; margin: 0 auto; }
+        .partner-img-cell img { width: 48px; height: 48px; object-fit: contain; display: block; margin: 0 auto; image-rendering: pixelated; }
         .partner-info-cell { display: table-cell; vertical-align: middle; padding-left: 10px; }
-        .partner-lbl { font-size: 0.65rem; color: #64748b; font-weight: 900; display: block; margin-bottom: 1px; }
-        .partner-pkm-name { font-size: 0.95rem; font-weight: 900; color: #0f172a; }
-        .partner-change-hint { display: table-cell; vertical-align: middle; text-align: right; font-size: 0.75rem; color: #2563eb; font-weight: 900; }
+        .partner-lbl { font-size: 0.75rem; color: #475569; display: block; margin-bottom: 2px; }
+        .partner-pkm-name { font-size: 1.1rem; color: var(--text-color); }
+        .partner-change-hint { display: table-cell; vertical-align: middle; text-align: right; font-size: 0.8rem; color: var(--border-color); }
 
-        .mission-hp-bg { width: 100%; height: 12px; background: #cbd5e1; border-radius: 6px; border: 2.5px solid #0f172a; margin-bottom: 20px; overflow: hidden; }
-        .mission-hp-fill { height: 100%; background: #10b981; width: 0%; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .mission-hp-bg { width: 100%; height: 16px; background: #cbd5e1; border-radius: 0; border: 4px solid var(--border-color); margin-bottom: 20px; overflow: hidden; }
+        .mission-hp-fill { height: 100%; background: #22c55e; width: 0%; transition: width 0.4s; }
 
-        .zone-header { font-size: 0.85rem; font-weight: 900; color: white; padding: 6px 14px; border-radius: 12px 12px 0 0; margin-top: 10px; border: 3px solid #0f172a; border-bottom: none; display: inline-block; box-shadow: 0 4px 0 #0f172a; transform: translateY(4px); position: relative; z-index: 2; }
+        .zone-header { font-size: 0.9rem; color: white; padding: 6px 14px; border: 4px solid var(--border-color); border-bottom: none; display: inline-block; box-shadow: var(--box-shadow); transform: translateY(4px); position: relative; z-index: 2; }
         .hw-zone { background-color: #f59e0b; }
         .self-zone { background-color: #10b981; }
         .lesson-zone { background-color: #3b82f6; }
         .challenge-zone { background-color: #ef4444; }
-        .zone-container { border: 3px solid #0f172a; border-radius: 0 12px 12px 12px; padding: 12px; background: #f8fafc; box-shadow: 0 4px 0 #0f172a; margin-bottom: 16px; position: relative; z-index: 1; display: flex; flex-direction: column; gap: 8px; }
+        .zone-container { border: 4px solid var(--border-color); padding: 12px; background: #f8fafc; box-shadow: var(--box-shadow); margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
 
-        .quest-item { display: flex; align-items: center; background: white; border: 2.5px solid #0f172a; border-radius: 10px; padding: 12px 10px; cursor: pointer; transition: all 0.1s; box-shadow: 0 3px 0 #0f172a; }
-        .quest-item:active { transform: scale(0.98); box-shadow: 0 1px 0 #0f172a; }
-        .quest-item.done { background: #e2e8f0; opacity: 0.7; }
-        .quest-fake-cb { width: 24px; height: 24px; border: 2.5px solid #0f172a; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
-        .quest-item.done .quest-fake-cb { background: #ef4444; color: white; font-weight: bold; border-color: #0f172a; }
-        .quest-cell-text { padding-left: 10px; font-size: 0.9rem; font-weight: 900; color: #1e293b; line-height: 1.3; }
+        .quest-item { display: flex; align-items: center; background: white; border: 4px solid var(--border-color); border-radius: 4px; padding: 12px 10px; cursor: pointer; box-shadow: 2px 2px 0 var(--border-color); transition: all 0.1s; }
+        .quest-item:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--border-color); }
+        .quest-item.done { background: #cbd5e1; color: #64748b; }
+        .quest-fake-cb { width: 24px; height: 24px; border: 4px solid var(--border-color); background: white; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+        .quest-item.done .quest-fake-cb { background: var(--text-color); color: white; border-color: var(--border-color); }
+        .quest-cell-text { padding-left: 12px; font-size: 1rem; line-height: 1.3; }
         .quest-item.done .quest-cell-text { text-decoration: line-through; }
 
-        .slot-box { display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #334155 0%, #1e293b 100%); border: 3px solid #0f172a; border-radius: 14px; padding: 12px 14px; margin-bottom: 12px; color: white; min-height: 60px; }
-        .slot-window { flex: 1; text-align: left; font-size: 0.95rem; font-weight: 900; color: #facc15; padding-right: 10px; white-space: normal; word-break: break-word; line-height: 1.3; }
-        .slot-trigger-btn { background: #ea580c; color: white; border: 2px solid white; border-radius: 10px; padding: 8px 14px; font-family: inherit; font-size: 0.8rem; font-weight: 900; cursor: pointer; box-shadow: 0 3px 0 #000; flex-shrink: 0; align-self: center; }
-        .slot-trigger-btn:active { transform: translateY(1px); box-shadow: 0 2px 0 #000; }
-        .slot-trigger-btn:disabled { background: #64748b; color: #94a3b8; box-shadow: none; cursor: not-allowed; }
+        .slot-box { display: flex; align-items: center; justify-content: space-between; background: var(--border-color); border: 4px solid var(--border-color); border-radius: 4px; padding: 12px 14px; margin-bottom: 16px; color: white; min-height: 60px; }
+        .slot-window { flex: 1; text-align: left; font-size: 1rem; color: #facc15; padding-right: 10px; white-space: normal; word-break: break-word; }
+        .slot-trigger-btn { background: white; color: var(--border-color); border: 4px solid var(--border-color); padding: 8px 14px; font-family: inherit; font-size: 0.9rem; cursor: pointer; box-shadow: 2px 2px 0px #cbd5e1; flex-shrink: 0; }
+        .slot-trigger-btn:active { transform: translate(2px,2px); box-shadow: 0 0 0 transparent; }
 
-        .action-menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 20px 0; }
-        .menu-btn { height: 50px; border: 3px solid #0f172a; border-radius: 14px; font-size: 0.8rem; font-weight: 900; cursor: pointer; box-shadow: 0 4px 0 #0f172a; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 2px; }
-        .menu-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #0f172a; }
-        .btn-bag { background: linear-gradient(180deg, #eab308, #ca8a04); color: white; }
-        .btn-zukan { background: linear-gradient(180deg, #06b6d4, #0891b2); color: white; }
-        .btn-calendar { background: linear-gradient(180deg, #a855f7, #7e22ce); color: white; }
+        .action-menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 24px 0; }
+        .menu-btn { height: 60px; border: 4px solid var(--border-color); font-family: inherit; font-size: 0.9rem; cursor: pointer; box-shadow: var(--box-shadow); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px; border-radius: 4px; }
+        .menu-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--border-color); }
+        .btn-bag { background: #facc15; color: var(--text-color); }
+        .btn-zukan { background: #22d3ee; color: var(--text-color); }
+        .btn-calendar { background: #c084fc; color: white; }
 
-        .big-adventure-trigger { width: 100%; height: 64px; background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%); color: white; border: 3.5px solid #0f172a; border-radius: 18px; font-size: 1.15rem; font-weight: 900; box-shadow: 0 5px 0 #0f172a; cursor: pointer; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; text-shadow: 0 2px 2px rgba(0,0,0,0.4); }
-        .big-adventure-trigger img { width: 28px; height: 28px; object-fit: contain; }
-        .big-adventure-trigger:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 2px 0 #0f172a; }
-        .big-adventure-trigger:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; box-shadow: 0 2px 0 #94a3b8 !important; transform: translateY(3px); cursor: not-allowed; opacity: 0.6; text-shadow: none; }
-        .big-adventure-trigger:disabled img { filter: grayscale(1); opacity: 0.5; }
+        .big-adventure-trigger { width: 100%; height: 70px; background: #ef4444; color: white; border: 4px solid var(--border-color); font-family: inherit; font-size: 1.2rem; box-shadow: var(--box-shadow); cursor: pointer; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; gap: 12px; border-radius: 4px; }
+        .big-adventure-trigger img { width: 28px; height: 28px; object-fit: contain; image-rendering: pixelated; }
+        .big-adventure-trigger:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--border-color); }
+        .big-adventure-trigger:disabled { background: #94a3b8 !important; color: #e2e8f0 !important; cursor: not-allowed; }
 
-        .shop-grid { display: flex; flex-direction: column; gap: 8px; }
-        .shop-item-btn { display: flex; align-items: center; width: 100%; background: #f8fafc; border: 2.5px solid #0f172a; border-radius: 12px; padding: 12px; cursor: pointer; text-align: left; box-shadow: 0 3px 0 #0f172a; }
-        .shop-item-btn:active { transform: translateY(1px); box-shadow: 0 2px 0 #0f172a; }
-        .shop-title-cell { flex: 1; font-weight: 900; font-size: 0.85rem; color: #1e293b; display: flex; align-items: center; }
-        .shop-title-cell img { width: 20px; height: 20px; object-fit: contain; margin-right: 6px; flex-shrink: 0; }
-        .shop-price-cell { font-weight: 900; font-size: 0.95rem; color: #ea580c; white-space: nowrap; margin-left: 10px; text-align: right; }
+        .shop-grid { display: flex; flex-direction: column; gap: 12px; }
+        .shop-item-btn { display: flex; align-items: center; width: 100%; background: #ffffff; border: 4px solid var(--border-color); padding: 12px; cursor: pointer; text-align: left; box-shadow: 4px 4px 0px #cbd5e1; border-radius: 4px; font-family: inherit; }
+        .shop-item-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #cbd5e1; }
+        .shop-title-cell { flex: 1; font-size: 0.9rem; color: var(--text-color); display: flex; align-items: center; }
+        .shop-title-cell img { width: 24px; height: 24px; object-fit: contain; margin-right: 8px; flex-shrink: 0; image-rendering: pixelated; }
+        .shop-price-cell { font-size: 1rem; color: #ea580c; white-space: nowrap; margin-left: 10px; text-align: right; }
 
-        .rotom-skin { background-color: var(--rotom-red); border: 4.5px solid #0f172a; border-radius: 28px; padding: 16px; box-shadow: 0 7px 0 #991b1b; position: relative; width: 100%; max-width: 340px; color: #0f172a; }
-        .rotom-head-decoration { width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent; border-bottom: 24px solid var(--rotom-red); position: absolute; top: -23px; left: calc(50% - 18px); filter: drop-shadow(0px -4px 0px #0f172a); }
-        .rotom-eyes { text-align: center; padding-bottom: 10px; font-size: 1.3rem; letter-spacing: 6px; }
-        .rotom-screen-frame { background-color: #1e293b; padding: 10px; border-radius: 18px; border: 2.5px solid #0f172a; }
-        .rotom-lcd { background-color: var(--rotom-screen); border-radius: 12px; padding: 10px; }
-        
-        .zukan-tab-row { display: flex; gap: 4px; margin-bottom: 8px; }
-        .zukan-tab-btn { flex: 1; height: 36px; border: 2px solid #0f172a; background: #cbd5e1; font-weight: 900; font-size: 0.75rem; border-radius: 8px; cursor: pointer; }
-        .zukan-tab-btn.active { background: #ea580c; color: white; }
-        .region-select { width: 100%; height: 38px; font-family: inherit; font-size: 0.85rem; font-weight: 900; background: #ffffff; border: 2.5px solid #0f172a; border-radius: 10px; padding: 0 4px; }
-        .progress-container { background: #cbd5e1; border-radius: 8px; height: 18px; border: 2.5px solid #0f172a; overflow: hidden; margin-bottom: 12px; display: flex; align-items: center; position: relative; }
-        .progress-fill-bar { height: 100%; background: #22c55e; width: 0%; transition: width 0.3s ease; }
-        .progress-text-label { position: absolute; width: 100%; text-align: center; font-size: 0.75rem; font-weight: 900; color: #0f172a; }
-
-        .zukan-display-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; max-height: 240px; overflow-y: auto; padding-right: 2px; }
-        .grid-pokemon-box { background: white; border: 2px solid #0f172a; border-radius: 8px; padding: 6px 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 68px; position: relative; cursor: pointer; }
-        .grid-pokemon-box:active { transform: scale(0.95); }
-        .grid-pokemon-box img { width: 34px; height: 34px; object-fit: contain; }
-        .grid-pokemon-box span { font-size: 0.5rem; font-weight: 900; text-align: center; margin-top: 3px; display: block; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .grid-pokemon-box.unowned img { filter: brightness(0); opacity: 0.12; }
-        .grid-pokemon-box.unowned:active { transform: none; cursor: default; }
-        .zukan-number-badge { position: absolute; top: 1px; left: 2px; font-size: 0.45rem; font-weight: 900; color: #64748b; }
-
-        .bag-item-row { display: flex; justify-content: space-between; align-items: center; background: white; border: 2.5px solid #0f172a; border-radius: 12px; padding: 8px 12px; margin-bottom: 8px; color: #0f172a; }
-        .bag-item-info { display: flex; align-items: center; gap: 8px; }
-        .bag-item-info img { width: 28px; height: 24px; object-fit: contain; }
-        .bag-item-title { font-size: 0.85rem; font-weight: 900; }
-        .bag-item-count { font-size: 0.8rem; color: #ea580c; font-weight: 900; }
-        .use-item-btn { background: #22c55e; color: white; border: 2px solid #0f172a; border-radius: 8px; padding: 4px 12px; font-family: inherit; font-size: 0.8rem; font-weight: 900; cursor: pointer; }
-        .use-item-btn:disabled { background: #cbd5e1; color: #94a3b8; cursor: not-allowed; }
-
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 8px; }
-        .calendar-day-head { font-size: 0.65rem; font-weight: 900; text-align: center; color: #cbd5e1; padding-bottom: 4px; }
-        .calendar-cell { background: rgba(255,255,255,0.08); border-radius: 6px; aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; font-size: 0.7rem; color: #94a3b8; }
-        .calendar-cell.current-month { color: white; background: rgba(255,255,255,0.15); }
-        .calendar-cell.stamped { background: #22c55e; color: white; }
-        .calendar-cell.stamped::after { content: "🔴"; font-size: 0.7rem; position: absolute; bottom: 2px; }
-
-        .adventure-zone-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 12px; }
-        .zone-btn { background: #ffffff; border: 3px solid #0f172a; border-radius: 16px; padding: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 104px; box-shadow: 0 4px 0 #0f172a; color: #0f172a; }
-        .zone-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #0f172a; }
-        .zone-title { font-weight: 900; font-size: 0.75rem; margin-bottom: 4px; }
-        .silhouette-preview { width: 48px; height: 48px; object-fit: contain; filter: brightness(0); opacity: 0.85; }
-
-        .region-group-title { font-size: 0.85rem; color: #facc15; font-weight: 900; text-align: left; margin: 12px 0 6px 0; border-left: 4px solid #ea580c; padding-left: 6px; }
-        .partner-select-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
-        .partner-choice-box { background: white; border: 2.5px solid #0f172a; border-radius: 12px; padding: 6px; text-align: center; cursor: pointer; color: #0f172a; box-shadow: 0 3px 0 #0f172a; position: relative; }
-        .partner-choice-box img { width: 44px; height: 44px; object-fit: contain; }
-        .partner-choice-box div { font-size: 0.7rem; font-weight: 900; margin-top: 2px; }
-        .partner-lv-badge { position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; font-size: 0.6rem; font-weight: bold; border-radius: 10px; padding: 2px 6px; border: 2px solid #0f172a; z-index: 10; }
-
-        .ball-select-row { display: flex; gap: 6px; justify-content: center; margin-top: 10px; }
-        .ball-choice-item { flex: 1; background: rgba(255,255,255,0.1); border: 2px solid #475569; border-radius: 12px; padding: 6px 2px; text-align: center; cursor: pointer; }
-        .ball-choice-item.disabled { opacity: 0.3; cursor: not-allowed; }
-        .ball-choice-item img { width: 32px; height: 32px; object-fit: contain; display: block; margin: 0 auto 2px auto; }
-        .ball-choice-item span { font-size: 0.55rem; font-weight: 900; display: block; color: white; }
-
+        /* モーダル群 */
         .modal-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 16px; }
-        .modal-content { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 3.5px solid white; border-radius: 24px; padding: 20px; text-align: center; width: 100%; max-width: 320px; color: white; }
+        .modal-content { background: white; border: 6px solid var(--border-color); border-radius: 4px; padding: 20px; text-align: center; width: 100%; max-width: 320px; color: var(--text-color); box-shadow: 8px 8px 0px rgba(255,255,255,0.2); }
         
-        #ballIcon { display: none; width: 64px; height: 64px; object-fit: contain; margin: 8px auto; }
-        #ballIcon.visible { display: block; }
+        .zukan-display-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-height: 280px; overflow-y: auto; margin-top: 12px; }
+        .grid-pokemon-box { background: white; border: 4px solid var(--border-color); padding: 6px 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 72px; position: relative; cursor: pointer; }
+        .grid-pokemon-box img { width: 40px; height: 40px; object-fit: contain; image-rendering: pixelated; }
+        .grid-pokemon-box span { font-size: 0.6rem; text-align: center; margin-top: 4px; display: block; width: 100%; overflow: hidden; white-space: nowrap; }
+        .grid-pokemon-box.unowned img { filter: brightness(0); opacity: 0.1; }
+        .zukan-number-badge { position: absolute; top: 0; left: 2px; font-size: 0.5rem; color: #64748b; }
 
-        .battle-hp-bar-bg { width: 100%; height: 10px; background: #475569; border-radius: 50px; border: 2px solid white; margin: 10px 0; overflow: hidden; }
-        .battle-hp-bar-fill { width: 100%; height: 100%; background: #22c55e; transition: width 0.3s ease; }
-        .battle-scene-box { display: flex; justify-content: space-around; align-items: center; margin: 14px 0; }
-        .battle-pkm-wrapper { text-align: center; width: 45%; }
-        .battle-pkm-wrapper img { width: 68px; height: 68px; object-fit: contain; }
-        .battle-pkm-wrapper span { display: block; font-size: 0.7rem; font-weight: 900; margin-top: 4px; color: #cbd5e1; }
-        .battle-log { background: #0f172a; border: 2px solid #475569; padding: 10px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; text-align: left; min-height: 64px; color: #facc15; white-space: pre-line; line-height: 1.4; }
-        .battle-btn { width: 100%; height: 46px; font-family: inherit; background: #ea580c; color: white; border: 2.5px solid white; border-radius: 24px; font-size: 1rem; font-weight: 900; cursor: pointer; }
-        .modal-close-btn { font-family: inherit; background: #22c55e; color: white; border: 2px solid white; padding: 12px; border-radius: 24px; font-weight: 900; width: 100%; font-size: 1rem; display: none; }
-        
-        .ball-shake.active { animation: ballWobble 0.4s ease infinite; }
-        @keyframes ballWobble { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-12deg); } 75% { transform: rotate(12deg); } }
+        .battle-hp-bar-bg { width: 100%; height: 14px; background: #cbd5e1; border: 4px solid var(--border-color); margin: 10px 0; }
+        .battle-hp-bar-fill { width: 100%; height: 100%; background: #22c55e; transition: width 0.3s; }
+        .battle-scene-box { display: flex; justify-content: space-around; align-items: center; margin: 16px 0; }
+        .battle-pkm-wrapper img { width: 80px; height: 80px; object-fit: contain; image-rendering: pixelated; }
+        .battle-log { background: var(--border-color); border: 4px solid white; padding: 12px; font-size: 0.95rem; text-align: left; min-height: 70px; color: white; white-space: pre-line; line-height: 1.5; margin-bottom: 12px; }
+        .battle-btn { width: 100%; height: 50px; font-family: inherit; background: white; color: var(--border-color); border: 4px solid var(--border-color); font-size: 1.1rem; cursor: pointer; box-shadow: 4px 4px 0 var(--border-color); }
+        .battle-btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--border-color); }
 
-        .parent-panel { background: #f1f5f9; border: 3.5px solid #dc2626; margin-top: 24px; padding: 14px; border-radius: 16px; display: none; color: #0f172a; }
-        .sync-badge { position: fixed; bottom: 12px; right: 12px; background: rgba(0,0,0,0.8); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 900; z-index: 1000; }
-        .loading-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; z-index: 10000; font-weight: 900; font-size: 1.1rem; }
+        .sync-badge { position: fixed; bottom: 16px; right: 16px; background: var(--border-color); color: white; padding: 8px 16px; font-size: 0.8rem; z-index: 1000; border: 4px solid white; box-shadow: 4px 4px 0 black; display: none; }
+        .loading-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--border-color); color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10000; font-size: 1.2rem; }
     </style>
 </head>
 <body>
 
-    <script>
-        let appReady = false;
-        const fallbackTimer = setTimeout(() => {
-            if (!appReady) {
-                appReady = true;
-                const cover = document.getElementById('loadingCover');
-                if(cover) cover.style.display = 'none';
-                if(typeof changeUser === 'function') changeUser('kouta');
-            }
-        }, 5000);
-    </script>
-
-    <div id="loadingCover" class="loading-cover">🔴 ぼうけんのしょを 同期中...</div>
-    <div id="syncBadge" class="sync-badge">同期完了</div>
+    <div id="loadingCover" class="loading-cover">
+        <div>🔴 セーブデータ よみこみちゅう...</div>
+    </div>
+    <div id="syncBadge" class="sync-badge">通信中...</div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
-
     <div style="position: fixed; width: 10px; height: 10px; top: 0; left: 0; opacity: 0.01; z-index: -9999; pointer-events: none;">
         <div id="bgmPlayerDiv"></div>
     </div>
 
     <header>
         <button id="bgmToggleBtn" class="bgm-toggle-btn" onclick="toggleBGM()">🔇</button>
-        <h1 id="mainTitleHeader">⚔️ ポケットモンスター<br>こうた&はると</h1>
+        <h1 id="mainTitleHeader">⚔️ ポケットモンスター<br>こうた & はると</h1>
         <button type="button" class="secret-gear-btn" onclick="openSecretParentMenu()">⚙️</button>
     </header>
 
@@ -200,9 +150,9 @@
     </div>
 
     <div class="card status-card">
-        <div class="status-item"><span id="lblStatusLevel">🏅 相棒レベル</span><span id="userLevel" class="val">1</span></div>
-        <div class="status-item"><span id="lblStatusWallet">👛 さいふ</span><span id="pokeenBalance" class="val">0</span></div>
-        <div class="status-item"><span id="lblStatusTicket">🎫 ぼうけん券</span><span id="ticketCountDisplay" class="val">0</span></div>
+        <div class="status-item"><span id="lblStatusLevel">🏅 レベル</span><span id="userLevel" class="val">1</span></div>
+        <div class="status-item"><span id="lblStatusWallet">👛 おこづかい</span><span id="pokeenBalance" class="val">0</span></div>
+        <div class="status-item"><span id="lblStatusTicket">🎫 チケット</span><span id="ticketCountDisplay" class="val">0</span></div>
     </div>
 
     <div class="partner-display-bar" onclick="openPartnerSelectionModal()">
@@ -211,26 +161,29 @@
             <span id="lblPartnerIntro" class="partner-lbl">いっしょに ぼうけんする あいぼう</span>
             <span id="statusBarPartnerName" class="partner-pkm-name">---</span>
         </div>
-        <div id="lblPartnerChangeBtn" class="partner-change-hint">かえる 🔄</div>
+        <div id="lblPartnerChangeBtn" class="partner-change-hint">かえる ▶</div>
     </div>
 
     <div class="card" id="questCard">
         <h2>
-            <span id="lblMissionTitle">⚔️ 本日のミッション！</span> 
-            <span id="expPreview" style="font-size:0.75rem; color:#64748b;">0/0</span>
+            <span id="lblMissionTitle">⚔️ ほんじつの ミッション</span> 
+            <span id="expPreview" style="font-size:0.9rem; color:#64748b;">0/0</span>
         </h2>
+        
         <div class="mission-hp-bg"><div id="missionProgressBar" class="mission-hp-fill"></div></div>
+        
         <div class="slot-box" id="slotBoxArea">
             <div id="challengeSlotWindow" class="slot-window">🎰 ボタンをおして チャレンジを きめよう！</div>
             <button type="button" id="challengeSlotBtn" class="slot-trigger-btn" onclick="spinChallengeSlot()">スタート！</button>
         </div>
+
         <div id="questList"></div>
     </div>
 
     <div class="action-menu-grid">
-        <button class="menu-btn btn-bag" onclick="openBagModal()">👜 <span id="lblMenuBag">どうぐ</span></button>
-        <button class="menu-btn btn-zukan" onclick="openZukanModal()">📱 <span id="lblMenuZukan">ずかん</span></button>
-        <button class="menu-btn btn-calendar" onclick="openCalendarModal()">📅 <span id="lblMenuRecord">きろく</span></button>
+        <button class="menu-btn btn-bag" onclick="openBagModal()">👜<br><span id="lblMenuBag">どうぐ</span></button>
+        <button class="menu-btn btn-zukan" onclick="openZukanModal()">📱<br><span id="lblMenuZukan">ずかん</span></button>
+        <button class="menu-btn btn-calendar" onclick="openCalendarModal()">📅<br><span id="lblMenuRecord">きろく</span></button>
     </div>
 
     <button type="button" id="bigAdventureTriggerBtn" class="big-adventure-trigger" onclick="openAdventureSelectionModal()">
@@ -239,97 +192,85 @@
     </button>
 
     <div class="card">
-        <h2><span id="lblShopTitle">🏪 フレンドリーショップ</span></h2>
+        <h2><span id="lblShopTitle">🏪 フレンドリィショップ</span></h2>
         <div class="shop-grid">
-            <button class="shop-item-btn" onclick="buyItem('🍬 ふしぎなあめ', 100)"><span class="shop-title-cell">🍬 ふしぎなあめ (レベルを1あげる)</span><span class="shop-price-cell">100 💰</span></button>
+            <button class="shop-item-btn" onclick="buyItem('🍬 ふしぎなあめ', 100)"><span class="shop-title-cell">🍬 ふしぎなあめ (レベルUP)</span><span class="shop-price-cell">100 💰</span></button>
             <button class="shop-item-btn" onclick="buyItem('🎫 ぼうけん券', 500)"><span class="shop-title-cell">🎫 ぼうけん券 (1回おでかけ)</span><span class="shop-price-cell">500 💰</span></button>
-            <button class="shop-item-btn" onclick="buyItem('🔴 モンスターボール', 100)"><span class="shop-title-cell"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png">モンスターボール (ほかくりつ:ふつう)</span><span class="shop-price-cell">100 💰</span></button>
-            <button class="shop-item-btn" onclick="buyItem('🔵 スーパーボール', 300)"><span class="shop-title-cell"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png">スーパーボール (ほかくりつ:高め)</span><span class="shop-price-cell">300 💰</span></button>
-            <button class="shop-item-btn" onclick="buyItem('🟡 ハイパーボール', 600)"><span class="shop-title-cell"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png">ハイパーボール (ほかくりつ:超高い)</span><span class="shop-price-cell">600 💰</span></button>
+            <button class="shop-item-btn" onclick="buyItem('🔴 モンスターボール', 100)"><span class="shop-title-cell"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png">モンスターボール</span><span class="shop-price-cell">100 💰</span></button>
+            <button class="shop-item-btn" onclick="buyItem('🔵 スーパーボール', 300)"><span class="shop-title-cell"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png">スーパーボール</span><span class="shop-price-cell">300 💰</span></button>
+            <button class="shop-item-btn" onclick="buyItem('🟡 ハイパーボール', 600)"><span class="shop-title-cell"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png">ハイパーボール</span><span class="shop-price-cell">600 💰</span></button>
         </div>
     </div>
 
-    <div id="secretParentPanel" class="parent-panel">
-        <h4 style="margin:0 0 8px 0; color:#dc2626;">⚙️ パパ・ママ専用 シークレット調整ルーム</h4>
-        <p style="font-size:0.75rem; margin:0 0 8px 0; color:#475569;"><span id="parentCurrentTargetName">こうた</span> のデータを操作します。</p>
+    <div id="secretParentPanel" style="background:#e2e8f0; border: 4px solid var(--border-color); margin-top: 24px; padding: 14px; display: none; color: var(--text-color);">
+        <h4 style="margin:0 0 8px 0; color:#dc2626;">⚙️ パパ・ママ専用 調整ルーム</h4>
+        <p style="font-size:0.8rem; margin:0 0 8px 0;"><span id="parentCurrentTargetName">こうた</span> のデータを操作します。</p>
         
-        <div style="background:#fff; padding:10px; border-radius:10px; border:1px solid #cbd5e1; margin-bottom:12px;">
-            <span style="font-size:0.75rem; font-weight:bold; color:#0f172a;">🎰 チャレンジミッション候補の一覧（カンマ区切り）</span>
-            <textarea id="parentChallengePoolInput" style="width:100%; height:50px; font-family:inherit; font-size:0.75rem; margin-top:4px; padding:4px;" placeholder="うわばきを洗う,靴をそろえる"></textarea>
-            <button type="button" style="font-family:inherit; font-size:0.7rem; background:#22c55e; color:white; border:none; border-radius:4px; padding:4px 10px; margin-top:4px;" onclick="saveChallengePoolFromParent()">この子どもの候補リストをセーブ保存する</button>
+        <div style="background:#fff; padding:10px; border:2px solid var(--border-color); margin-bottom:12px;">
+            <span style="font-size:0.8rem; font-weight:bold;">🎰 チャレンジミッション候補（カンマ区切り）</span>
+            <textarea id="parentChallengePoolInput" style="width:100%; height:50px; font-family:inherit; font-size:0.8rem; margin-top:4px; padding:4px;" placeholder="うわばきを洗う,靴をそろえる"></textarea>
+            <button type="button" style="font-family:inherit; font-size:0.8rem; background:#22c55e; color:white; border:2px solid var(--border-color); padding:6px; margin-top:4px; width:100%;" onclick="saveChallengePoolFromParent()">候補を保存する</button>
         </div>
 
         <div style="display:flex; gap:4px; margin-bottom:12px; flex-wrap: wrap;">
-            <input type="number" id="parentAmount" style="width:50px; font-family:inherit; text-align:center; border:2px solid #cbd5e1; border-radius:8px;" value="5">
-            <button style="font-family:inherit; font-size:0.7rem; font-weight:bold; padding:6px;" onclick="adjustParentData('pokeen')">➕コイン</button>
-            <button style="font-family:inherit; font-size:0.7rem; font-weight:bold; padding:6px;" onclick="adjustParentData('ticket')">➕🎫チケ</button>
-            <button style="font-family:inherit; font-size:0.7rem; font-weight:bold; padding:6px;" onclick="adjustParentData('ball_normal')">➕🔴</button>
-            <button style="font-family:inherit; font-size:0.7rem; font-weight:bold; padding:6px;" onclick="adjustParentData('ball_super')">➕🔵</button>
-            <button style="font-family:inherit; font-size:0.7rem; font-weight:bold; padding:6px;" onclick="adjustParentData('ball_hyper')">➕🟡</button>
-            <button style="font-family:inherit; font-size:0.7rem; font-weight:bold; padding:6px;" onclick="adjustParentData('ball_master')">➕マスター</button>
-            <button style="font-family:inherit; font-size:0.7rem; font-weight:bold; padding:6px;" onclick="adjustParentData('candy')">➕🍬あめ</button>
+            <input type="number" id="parentAmount" style="width:60px; font-family:inherit; text-align:center; border:2px solid var(--border-color);" value="5">
+            <button style="font-family:inherit; font-size:0.8rem; padding:6px; border:2px solid var(--border-color);" onclick="adjustParentData('pokeen')">➕コイン</button>
+            <button style="font-family:inherit; font-size:0.8rem; padding:6px; border:2px solid var(--border-color);" onclick="adjustParentData('ticket')">➕🎫チケ</button>
+            <button style="font-family:inherit; font-size:0.8rem; padding:6px; border:2px solid var(--border-color);" onclick="adjustParentData('candy')">➕🍬あめ</button>
+            <button style="font-family:inherit; font-size:0.8rem; padding:6px; border:2px solid var(--border-color);" onclick="adjustParentData('ball_normal')">➕🔴</button>
         </div>
         
-        <div style="background:#fff; padding:10px; border-radius:10px; border:1px solid #cbd5e1; margin-bottom:12px;">
-            <label style="font-size:0.8rem; font-weight:bold; color:#0f172a; cursor:pointer;">
+        <div style="background:#fff; padding:10px; border:2px solid var(--border-color); margin-bottom:12px;">
+            <label style="font-size:0.8rem; font-weight:bold; cursor:pointer;">
                 <input type="checkbox" id="devZukanToggle" onchange="toggleDevZukan()"> 🛠️ 図鑑全開モード (テスト用)
             </label>
-            <p style="font-size:0.6rem; color:#64748b; margin:4px 0 0 0;">ONにすると図鑑が全種類表示されます（セーブデータには影響しません）。</p>
         </div>
 
-        <button style="width:100%; font-family:inherit; font-size:0.8rem; font-weight:bold; background:#ef4444; color:white; border:none; border-radius:8px; padding:10px;" onclick="resetCurrentUserData()">🚨 セーブデータをリセットする</button>
-        <button style="width:100%; margin-top:8px; font-family:inherit; font-size:0.8rem; background:#64748b; color:white; border:none; border-radius:8px; padding:6px;" onclick="closeSecretParentMenu()">閉じる</button>
+        <button style="width:100%; font-family:inherit; font-size:0.9rem; font-weight:bold; background:#ef4444; color:white; border:4px solid var(--border-color); padding:10px;" onclick="resetCurrentUserData()">🚨 セーブデータを初期化する</button>
+        <button style="width:100%; margin-top:8px; font-family:inherit; font-size:0.9rem; background:white; color:var(--text-color); border:4px solid var(--border-color); padding:10px;" onclick="closeSecretParentMenu()">閉じる</button>
     </div>
 
     <div id="bagModal" class="modal-cover">
-        <div class="modal-content" style="background:#1e293b;">
-            <h3 style="margin:0 0 12px 0; color:#facc15;">👜 アイテムバッグ</h3>
+        <div class="modal-content">
+            <h3 style="margin:0 0 16px 0;">👜 どうぐ</h3>
             <div id="bagItemsContainer"></div>
-            <button type="button" class="battle-btn" style="background:#475569; margin-top:12px; height:38px; font-size:0.85rem;" onclick="closeBagModal()">とじる</button>
+            <button type="button" class="battle-btn" style="margin-top:16px;" onclick="closeBagModal()">とじる</button>
         </div>
     </div>
 
     <div id="zukanModal" class="modal-cover">
-        <div class="rotom-skin">
-            <div class="rotom-head-decoration"></div>
-            <div class="rotom-eyes">👀⚡💬</div>
-            <div class="rotom-screen-frame">
-                <div class="rotom-lcd">
-                    <div class="zukan-tab-row">
-                        <button id="tabNormalBtn" class="zukan-tab-btn active" onclick="switchZukanTab('normal')">通常ずかん</button>
-                        <button id="tabMegaBtn" class="zukan-tab-btn" onclick="switchZukanTab('mega')">メガシンカ</button>
-                    </div>
-                    <div style="display: flex; gap: 4px; margin-bottom: 10px;">
-                        <select id="regionSelector" class="region-select" onchange="renderZukanGrid()" style="margin-bottom: 0; flex: 1;">
-                            <option value="all">🔍 ぜんぶ表示する</option>
-                            <option value="kanto">カントー (No.001〜151)</option>
-                            <option value="johto">ジョウト (No.152〜251)</option>
-                            <option value="hoenn">ホウエン (No.252〜386)</option>
-                            <option value="sinnoh">シンオウ (No.387〜493)</option>
-                            <option value="unova">イッシュ (No.494〜649)</option>
-                            <option value="kalos">カロス (No.650〜721)</option>
-                            <option value="paldea">パルデア (No.906〜1025)</option>
-                        </select>
-                        <label style="background: #ffffff; border: 2.5px solid #0f172a; border-radius: 10px; padding: 0 8px; display: flex; align-items: center; font-size: 0.75rem; font-weight: 900; color: #0f172a; cursor: pointer;">
-                            <input type="checkbox" id="caughtOnlyToggle" onchange="renderZukanGrid()" style="margin-right: 4px;">もってる
-                        </label>
-                    </div>
-                    <div class="progress-container">
-                        <div id="zukanProgressBar" class="progress-fill-bar"></div>
-                        <div id="zukanProgressText" class="progress-text-label">0 / 0 (0%)</div>
-                    </div>
-                    <div class="zukan-display-grid" id="zukanGridDisplay"></div>
-                </div>
+        <div class="modal-content" style="max-width: 360px; padding: 12px;">
+            <h3 style="margin:0 0 12px 0;">📱 ポケモンずかん</h3>
+            <div style="display: flex; gap: 4px; margin-bottom: 8px;">
+                <button id="tabNormalBtn" class="battle-btn" style="height:40px; font-size:0.9rem; flex:1;" onclick="switchZukanTab('normal')">通常ずかん</button>
+                <button id="tabMegaBtn" class="battle-btn" style="height:40px; font-size:0.9rem; flex:1; background:#f8fafc;" onclick="switchZukanTab('mega')">メガシンカ</button>
             </div>
-            <button type="button" class="battle-btn" style="background:#0f172a; margin-top:10px; height:36px; font-size:0.85rem; border-color:#475569;" onclick="closeZukanModal()">ずかんを閉じる</button>
+            <div style="display: flex; gap: 4px; margin-bottom: 10px;">
+                <select id="regionSelector" onchange="renderZukanGrid()" style="flex: 1; font-family:inherit; font-size:0.9rem; border: 4px solid var(--border-color); padding: 4px;">
+                    <option value="all">🔍 ぜんぶ表示</option>
+                    <option value="kanto">カントー (001-151)</option>
+                    <option value="johto">ジョウト (152-251)</option>
+                    <option value="hoenn">ホウエン (252-386)</option>
+                    <option value="sinnoh">シンオウ (387-493)</option>
+                    <option value="unova">イッシュ (494-649)</option>
+                    <option value="kalos">カロス (650-721)</option>
+                    <option value="paldea">パルデア (906-1025)</option>
+                </select>
+                <label style="border: 4px solid var(--border-color); padding: 0 8px; display: flex; align-items: center; font-size: 0.8rem; font-weight: bold; cursor: pointer;">
+                    <input type="checkbox" id="caughtOnlyToggle" onchange="renderZukanGrid()" style="margin-right: 4px;">もってる
+                </label>
+            </div>
+            <div style="background: var(--border-color); color: white; padding: 4px; font-size: 0.9rem; text-align: right;" id="zukanProgressText">0 / 0 (0%)</div>
+            <div class="zukan-display-grid" id="zukanGridDisplay"></div>
+            <button type="button" class="battle-btn" style="margin-top:12px;" onclick="closeZukanModal()">とじる</button>
         </div>
     </div>
 
     <div id="zukanDetailModal" class="modal-cover" style="z-index: 10000;">
-        <div class="modal-content" style="background: #f8fafc; border-color: #0f172a; color: #0f172a;">
-            <img id="zukanDetailImg" src="" style="width: 120px; height: 120px; display: block; margin: 0 auto; filter: drop-shadow(0 4px 0 rgba(0,0,0,0.1));">
-            <h3 id="zukanDetailName" style="margin: 10px 0; font-size: 1.4rem; color: #ea580c;">...</h3>
-            <div style="background: #e2e8f0; border: 3px solid #cbd5e1; border-radius: 12px; padding: 12px; text-align: left; font-size: 0.95rem; font-weight: 900; line-height: 1.5; min-height: 80px;" id="zukanDetailText">
+        <div class="modal-content" style="background: white;">
+            <img id="zukanDetailImg" src="" style="width: 120px; height: 120px; display: block; margin: 0 auto; image-rendering: pixelated;">
+            <h3 id="zukanDetailName" style="margin: 10px 0; font-size: 1.4rem;">...</h3>
+            <div style="border: 4px solid var(--border-color); padding: 12px; text-align: left; font-size: 1rem; line-height: 1.6; min-height: 100px; background: #f8fafc;" id="zukanDetailText">
                 データを よみこみちゅう...
             </div>
             <button type="button" class="battle-btn" style="margin-top:16px;" onclick="closeZukanDetailModal()">とじる</button>
@@ -337,63 +278,61 @@
     </div>
 
     <div id="calendarModal" class="modal-cover">
-        <div class="modal-content" style="background: linear-gradient(135deg, #4c1d95 0%, #1e1b4b 100%); width: 100%; max-width:340px;">
-            <h3 style="margin:0; color:#facc15;">📅 ぼうけんのきろく</h3>
-            <p id="totalStampLabel" style="font-size:0.75rem; color:#cbd5e1; margin:4px 0;">これまでのぼうけん日数: 0日</p>
-            <p style="font-size:0.65rem; color:#a78bfa; margin:0 0 10px 0;">⭐ 5マス埋まるごとにふしぎなあめが届くぞ！</p>
-            <div id="calendarMonthTitle" style="font-size:1rem; font-weight:900; margin-bottom:8px;">----年 --月</div>
+        <div class="modal-content">
+            <h3 style="margin:0 0 8px 0;">📅 ぼうけんのきろく</h3>
+            <p id="totalStampLabel" style="font-size:0.9rem; margin:0 0 16px 0;">ぼうけん日数: 0日</p>
+            <div id="calendarMonthTitle" style="font-size:1.1rem; font-weight:bold; border-bottom:4px solid var(--border-color); padding-bottom:4px; margin-bottom:8px;">----年 --月</div>
             <div class="calendar-grid" id="calendarGridDisplay"></div>
-            <button type="button" class="battle-btn" style="background:#475569; margin-top:14px; height:38px; font-size:0.85rem;" onclick="closeCalendarModal()">とじる</button>
+            <button type="button" class="battle-btn" style="margin-top:16px;" onclick="closeCalendarModal()">とじる</button>
         </div>
     </div>
 
     <div id="partnerSelectModal" class="modal-cover">
-        <div class="modal-content" style="max-width:340px;">
-            <h3 style="margin:0; color:#facc15; font-size:1.05rem;">あいぼうポケモンを えらぼう！</h3>
-            <div id="partnerSelectGroupContainer" style="max-height: 280px; overflow-y: auto; margin-top: 6px; padding-right: 4px;"></div>
-            <button type="button" class="battle-btn" style="background:#475569; margin-top:10px; height:34px; font-size:0.8rem;" onclick="closePartnerSelectModal()">やめる</button>
+        <div class="modal-content" style="max-width:360px;">
+            <h3 style="margin:0 0 12px 0;">あいぼう を えらぼう！</h3>
+            <div id="partnerSelectGroupContainer" style="max-height: 300px; overflow-y: auto; text-align:left;"></div>
+            <button type="button" class="battle-btn" style="margin-top:16px;" onclick="closePartnerSelectModal()">やめる</button>
         </div>
     </div>
 
     <div id="adventureModal" class="modal-cover">
         <div class="modal-content">
-            <h3 id="lblAdventureModalTitle" style="margin:0; color:#facc15; font-size:1.05rem;">どこに ぼうけんに でかける？</h3>
-            <p id="lblAdventureModalDesc" style="font-size:0.75rem; color:#94a3b8; margin:4px 0;">1ひきは かならず はじめて出会う ポケモンだぞ！</p>
-            <div class="adventure-zone-grid">
-                <button class="zone-btn" onclick="startBattle('water')"><span class="zone-title" style="color:#3b82f6;">🌊 みずべ</span><img id="shadow-water" class="silhouette-preview" src="" alt="?"></button>
-                <button class="zone-btn" onclick="startBattle('forest')"><span class="zone-title" style="color:#22c55e;">🌳 もり</span><img id="shadow-forest" class="silhouette-preview" src="" alt="?"></button>
-                <button class="zone-btn" onclick="startBattle('volcano')"><span class="zone-title" style="color:#ef4444;">🌋 かざん</span><img id="shadow-volcano" class="silhouette-preview" src="" alt="?"></button>
-                <button class="zone-btn" onclick="startBattle('thunder')"><span class="zone-title" style="color:#eab308;">⚡ いなずま</span><img id="shadow-thunder" class="silhouette-preview" src="" alt="?"></button>
+            <h3 id="lblAdventureModalTitle" style="margin:0 0 12px 0;">どこに でかける？</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <button style="border: 4px solid var(--border-color); background:white; padding:12px; font-family:inherit; cursor:pointer;" onclick="startBattle('water')">🌊 みずべ<br><img id="shadow-water" style="width:40px; filter:brightness(0);" src=""></button>
+                <button style="border: 4px solid var(--border-color); background:white; padding:12px; font-family:inherit; cursor:pointer;" onclick="startBattle('forest')">🌳 もり<br><img id="shadow-forest" style="width:40px; filter:brightness(0);" src=""></button>
+                <button style="border: 4px solid var(--border-color); background:white; padding:12px; font-family:inherit; cursor:pointer;" onclick="startBattle('volcano')">🌋 かざん<br><img id="shadow-volcano" style="width:40px; filter:brightness(0);" src=""></button>
+                <button style="border: 4px solid var(--border-color); background:white; padding:12px; font-family:inherit; cursor:pointer;" onclick="startBattle('thunder')">⚡ いなずま<br><img id="shadow-thunder" style="width:40px; filter:brightness(0);" src=""></button>
             </div>
-            <button type="button" class="battle-btn" style="background:#475569; margin-top:14px; height:38px; font-size:0.85rem;" onclick="closeAdventureModal()">やめる</button>
+            <button type="button" class="battle-btn" style="margin-top:16px;" onclick="closeAdventureModal()">やめる</button>
         </div>
     </div>
 
     <div id="battleModal" class="modal-cover">
         <div class="modal-content">
-            <h3 id="battleStageTitle" style="margin:0; font-size:1rem; color:#facc15;">ぼうけんバトル</h3>
+            <h3 style="margin:0;">やせいポケモン が あらわれた！</h3>
             <div class="battle-hp-bar-bg"><div id="enemyHpBar" class="battle-hp-bar-fill"></div></div>
             <div class="battle-scene-box">
-                <div class="battle-pkm-wrapper"><img id="battlePartnerImg" src="" alt="相棒"><span id="battlePartnerName">---</span></div>
-                <div style="font-size:1.2rem; font-weight:900; color:#ef4444;">VS</div>
-                <div class="battle-pkm-wrapper"><img id="battleEnemyImg" src="" alt="敵"><span id="battleEnemyName">---</span></div>
+                <div class="battle-pkm-wrapper"><img id="battlePartnerImg" src=""><span id="battlePartnerName">---</span></div>
+                <div style="font-size:1.2rem; font-weight:bold;">VS</div>
+                <div class="battle-pkm-wrapper"><img id="battleEnemyImg" src=""><span id="battleEnemyName">---</span></div>
             </div>
             <div id="battleLogBox" class="battle-log"></div>
-            <img id="ballIcon" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="ball">
+            <img id="ballIcon" src="" style="display:none; width:48px; margin: 8px auto;">
             
-            <button type="button" id="battleActionBtn" class="battle-btn" onclick="nextBattlePhase()">わざをくりだす！ ⚔️</button>
+            <button type="button" id="battleActionBtn" class="battle-btn" onclick="nextBattlePhase()">たたかう</button>
             
             <div id="ballSelectSection" style="display:none;">
-                <p id="lblWhichBallThrow" style="font-size:0.7rem; color:#cbd5e1; margin: 4px 0;">どのボールを なげる？</p>
-                <div class="ball-select-row">
-                    <div class="ball-choice-item" id="btnN" onclick="throwBall('normal')"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png"><span>モンスター(<span id="countP">0</span>)</span></div>
-                    <div class="ball-choice-item" id="btnS" onclick="throwBall('super')"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png"><span>スーパー(<span id="countS">0</span>)</span></div>
-                    <div class="ball-choice-item" id="btnH" onclick="throwBall('hyper')"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png"><span>ハイパー(<span id="countH">0</span>)</span></div>
-                    <div class="ball-choice-item" id="btnM" onclick="throwBall('master')"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png"><span>マスター(<span id="countM">0</span>)</span></div>
+                <p style="font-size:0.9rem; margin: 4px 0;">どうぐ を つかう</p>
+                <div style="display:flex; gap:4px; justify-content:center;">
+                    <div style="flex:1; border:4px solid var(--border-color); padding:4px; cursor:pointer;" onclick="throwBall('normal')"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" style="width:24px;"><br><span style="font-size:0.7rem;">x<span id="countP">0</span></span></div>
+                    <div style="flex:1; border:4px solid var(--border-color); padding:4px; cursor:pointer;" onclick="throwBall('super')"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png" style="width:24px;"><br><span style="font-size:0.7rem;">x<span id="countS">0</span></span></div>
+                    <div style="flex:1; border:4px solid var(--border-color); padding:4px; cursor:pointer;" onclick="throwBall('hyper')"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png" style="width:24px;"><br><span style="font-size:0.7rem;">x<span id="countH">0</span></span></div>
+                    <div style="flex:1; border:4px solid var(--border-color); padding:4px; cursor:pointer;" onclick="throwBall('master')"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png" style="width:24px;"><br><span style="font-size:0.7rem;">x<span id="countM">0</span></span></div>
                 </div>
             </div>
 
-            <button type="button" id="battleCloseBtn" class="modal-close-btn" onclick="closeBattleModal()">次へすすむ 🤝</button>
+            <button type="button" id="battleCloseBtn" class="battle-btn" style="display:none; margin-top:12px;" onclick="closeBattleModal()">もどる</button>
         </div>
     </div>
 
@@ -406,22 +345,17 @@
             kouta: { homework: ["音読", "計算ドリル", "漢字ドリル"], selfStudy: ["5分漢字ドリル", "ポケモン計算ドリル"] },
             haruto: { homework: [], selfStudy: ["えいご", "ポケモンドリル", "プリント"] }
         };
-
-        const defaultPools = {
-            kouta: ["うわばきをあらう", "くつをそろえる", "おさらをはこぶ", "どくしょ10ぷん"],
-            haruto: ["うわばきをあらう", "くつをそろえる", "おさらをはこぶ", "どくしょ10ぷん"]
-        };
-
+        const defaultPools = { kouta: ["うわばきをあらう", "くつをそろえる"], haruto: ["うわばきをあらう", "くつをそろえる"] };
         const regions = { kanto: { start: 1, end: 151 }, johto: { start: 152, end: 251 }, hoenn: { start: 252, end: 386 }, sinnoh: { start: 387, end: 493 }, unova: { start: 494, end: 649 }, kalos: { start: 650, end: 721 }, paldea: { start: 906, end: 1025 } };
-        const megaList = [ {id:"0006_f2", name:"メガリザードンX"}, {id:"0006_f3", name:"メガリザードンY"}, {id:"0003_f2", name:"メガフシギバナ"}, {id:"0009_f2", name:"メガカメックス"}, {id:"0150_f2", name:"メガミュウツーX"}, {id:"0150_f3", name:"メガミュウツーY"}, {id:"0384_f2", name:"メガレックウザ"},  {id:"0094_f2", name:"メガゲンガー"}, {id:"0448_f2", name:"メガルカリオ"}, {id:"0257_f2", name:"メガバシャーモ"} ];
-        const regionalStarters = [ { region: "とくべつ枠 ⚡", starters: [{id:"0025", name:"ピカチュウ"}] }, { region: "カントー地方 (初代)", starters: [{id:"0001", name:"フシギダネ"}, {id:"0004", name:"ヒトカゲ"}, {id:"0007", name:"ゼニガメ"}] }, { region: "ジョウト地方", starters: [{id:"0152", name:"チコリータ"}, {id:"0155", name:"ヒノアラシ"}, {id:"0158", name:"ワニノコ"}] }, { region: "ホウエン地方", starters: [{id:"0252", name:"キモリ"}, {id:"0255", name:"アチャモ"}, {id:"0258", name:"ミズゴロウ"}] }, { region: "シンオウ地方", starters: [{id:"0387", name:"ナエトル"}, {id:"0390", name:"ヒコザル"}, {id:"0393", name:"ポッチャマ"}] }, { region: "カロス地方", starters: [{id:"0650", name:"ハリマロン"}, {id:"0653", name:"フォッコ"}, {id:"0656", name:"ケロマツ"}] }, { region: "パルデア地方 (最新)", starters: [{id:"0906", name:"ニャオハ"}, {id:"0909", name:"ホゲータ"}, {id:"0912", name:"クワッス"}] } ];
-        const starterPool = { water: [{id:"0009", name:"カメックス"}, {id:"0158", name:"ワニノコ"}, {id:"0258", name:"ミズゴロウ"}, {id:"0393", name:"ポッチャマ"}, {id:"0658", name:"ゲッコウガ"}], forest: [{id:"0003", name:"フシギバナ"}, {id:"0152", name:"チコリータ"}, {id:"0252", name:"キモリ"}, {id:"0387", name:"ナエトル"}, {id:"0906", name:"ニャオハ"}], volcano: [{id:"0006", name:"リザードン"}, {id:"0155", name:"ヒノアラシ"}, {id:"0255", name:"アチャモ"}, {id:"0390", name:"ヒコザル"}, {id:"0909", name:"ホゲータ"}], thunder: [{id:"0026", name:"ライチュウ"}, {id:"0448", name:"ルカリオ"}, {id:"0150", name:"ミュウツー"}, {id:"0384", name:"レックウザ"}] };
-        const moves = { electric: ["10まんボルト", "かみなり", "ボルテッカー", "アイアンテール"], fire: ["ひのこ", "かえんほうしゃ", "だいもんじ", "ブラストバーン"], water: ["みずでっぽう", "ハイドロポンプ", "アクアブレイク", "みずしゅりけん"], grass: ["つるのむち", "リーフブレード", "ソーラービーム", "ハードプラント"], normal: ["たいあたり", "ずつき", "メガトンパンチ", "はかいこうせん"], mega: ["しんそく", "インファイト", "ガリョウテンセイ", "サイコブレイク", "りゅうのまい"] };
+        const megaList = [ {id:"0006_f2", name:"メガリザードンX"}, {id:"0003_f2", name:"メガフシギバナ"}, {id:"0009_f2", name:"メガカメックス"}, {id:"0150_f2", name:"メガミュウツーX"}, {id:"0384_f2", name:"メガレックウザ"},  {id:"0094_f2", name:"メガゲンガー"}, {id:"0448_f2", name:"メガルカリオ"} ];
+        const regionalStarters = [ { region: "カントー", starters: [{id:"0001", name:"フシギダネ"}, {id:"0004", name:"ヒトカゲ"}, {id:"0007", name:"ゼニガメ"}, {id:"0025", name:"ピカチュウ"}] }, { region: "ジョウト", starters: [{id:"0152", name:"チコリータ"}, {id:"0155", name:"ヒノアラシ"}, {id:"0158", name:"ワニノコ"}] }, { region: "ホウエン", starters: [{id:"0252", name:"キモリ"}, {id:"0255", name:"アチャモ"}, {id:"0258", name:"ミズゴロウ"}] }, { region: "パルデア", starters: [{id:"0906", name:"ニャオハ"}, {id:"0909", name:"ホゲータ"}, {id:"0912", name:"クワッス"}] } ];
+        const starterPool = { water: [{id:"0009"}, {id:"0158"}, {id:"0393"}, {id:"0658"}], forest: [{id:"0003"}, {id:"0152"}, {id:"0387"}, {id:"0906"}], volcano: [{id:"0006"}, {id:"0155"}, {id:"0390"}, {id:"0909"}], thunder: [{id:"0026"}, {id:"0448"}, {id:"0150"}, {id:"0384"}] };
+        const moves = { electric: ["10まんボルト", "かみなり"], fire: ["かえんほうしゃ", "だいもんじ"], water: ["ハイドロポンプ", "なみのり"], grass: ["はっぱカッター", "ソーラービーム"], normal: ["たいあたり", "はかいこうせん"], mega: ["しんそく", "ギガインパクト"] };
         const ballAssets = { normal: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png", super: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png", hyper: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png", master: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png" };
 
         let cloudData = {
             "study_user_pokemon": { "kouta": "0025", "haruto": "0004" },
-            "study_balance": { "kouta": { "pokeen": 300, "gachaCount": 0 }, "haruto": { "pokeen": 300, "gachaCount": 0 } },
+            "study_balance": { "kouta": { pokeen: 300, gachaCount: 0 }, "haruto": { pokeen: 300, gachaCount: 0 } },
             "study_level": { "kouta": { "0025": 0 }, "haruto": { "0004": 0 } },
             "study_zukan_normal": { "kouta": ["0025"], "haruto": ["0004"] },
             "study_zukan_mega": { "kouta": [], "haruto": [] },
@@ -436,75 +370,55 @@
         let currentUser = 'kouta';
         let battleState = {};
 
-        // 🔥 YouTube Player API (Playsinlineでスマホ・iPad対応！)
+        // 🔥 YouTube BGM ロジック (Play Inline対応でモバイルでも鳴るように！)
         let bgmPlayer;
         let isYoutubeReady = false;
         let isBgmOn = false;
         let currentBgmMode = 'main';
+        const MAIN_BGM_ID = 'e7n8DID-zVs'; // 赤緑 OP
+        const BATTLE_BGM_ID = 'IQhk79DIq7A'; // 戦闘
         
-        const MAIN_BGM_ID = 'e7n8DID-zVs';   // 赤緑 OP
-        const BATTLE_BGM_ID = 'IQhk79DIq7A'; // 戦闘！野生ポケモン
+        // ユーザーが最初に画面を触った時に確実に起動させるフラグ
+        let userHasInteracted = false;
 
         function onYouTubeIframeAPIReady() {
             bgmPlayer = new YT.Player('bgmPlayerDiv', {
-                height: '10',
-                width: '10',
-                videoId: MAIN_BGM_ID,
+                height: '10', width: '10', videoId: MAIN_BGM_ID,
                 playerVars: { 'playsinline': 1, 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': MAIN_BGM_ID },
-                events: {
-                    'onReady': (e) => {
-                        e.target.setVolume(20);
-                        isYoutubeReady = true;
-                    },
-                    'onStateChange': (e) => {
-                        if (e.data === YT.PlayerState.ENDED) e.target.playVideo();
-                    }
-                }
+                events: { 'onReady': (e) => { e.target.setVolume(25); isYoutubeReady = true; } }
             });
         }
 
+        // タブ切り替えや画面タップ時に呼ばれる（初回起動ロック解除）
+        function unlockAudio() {
+            if(!userHasInteracted) {
+                userHasInteracted = true;
+                if(isYoutubeReady && isBgmOn) bgmPlayer.playVideo();
+            }
+        }
+
         function toggleBGM() {
+            unlockAudio();
             isBgmOn = !isBgmOn;
             document.getElementById('bgmToggleBtn').textContent = isBgmOn ? "🔊" : "🔇";
-            if (!isYoutubeReady) {
-                if(isBgmOn) alert("おんがくの じゅんびちゅう です。もうすこし まってね！");
-                isBgmOn = false;
-                document.getElementById('bgmToggleBtn').textContent = "🔇";
-                return;
-            }
-            if(isBgmOn) {
-                bgmPlayer.playVideo();
-            } else {
-                bgmPlayer.pauseVideo();
-            }
+            if (!isYoutubeReady) return;
+            if(isBgmOn) { bgmPlayer.playVideo(); } else { bgmPlayer.pauseVideo(); }
         }
 
         function switchBgmMode(mode) {
             if (currentBgmMode === mode) return;
             currentBgmMode = mode;
             if (!isYoutubeReady) return;
-            
             let targetId = mode === 'main' ? MAIN_BGM_ID : BATTLE_BGM_ID;
-            let volume = mode === 'main' ? 20 : 35;
-            
             bgmPlayer.loadVideoById({videoId: targetId});
-            bgmPlayer.setVolume(volume);
-            
-            if (!isBgmOn) {
-                setTimeout(() => { bgmPlayer.pauseVideo(); }, 100);
-            }
+            if (!isBgmOn) setTimeout(() => { bgmPlayer.pauseVideo(); }, 100);
         }
 
-        // ピコピコ効果音
+        // 効果音
         let audioCtx = null;
-        function getAudioCtx() {
-            if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} }
-            return audioCtx;
-        }
-
+        function getAudioCtx() { if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} } return audioCtx; }
         function playRetroSound(type) {
-            const ctx = getAudioCtx();
-            if(!ctx) return;
+            const ctx = getAudioCtx(); if(!ctx) return;
             if(ctx.state === 'suspended') ctx.resume();
             const t = ctx.currentTime;
             try {
@@ -520,11 +434,6 @@
                         g.gain.setValueAtTime(0.05, t + i*0.1); g.gain.exponentialRampToValueAtTime(0.001, t + i*0.1 + 0.15);
                         o.connect(g); g.connect(ctx.destination); o.start(t + i*0.1); o.stop(t + i*0.1 + 0.15);
                     });
-                } else if (type === 'coin') {
-                    const osc = ctx.createOscillator(); const gain = ctx.createGain();
-                    osc.type = 'square'; osc.frequency.setValueAtTime(987.77, t);
-                    gain.gain.setValueAtTime(0.05, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
-                    osc.connect(gain); gain.connect(ctx.destination); osc.start(t); osc.stop(t + 0.1);
                 }
             } catch(e) {}
         }
@@ -546,29 +455,32 @@
 
         function playPokemonCry(idStr) {
             const baseId = parseInt(idStr.split('_')[0]);
-            try {
-                fetch(`https://pokeapi.co/api/v2/pokemon/${baseId}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.cries && data.cries.latest) {
-                        const audio = new Audio(data.cries.latest);
-                        audio.play().catch(e => {});
-                    }
-                });
-            } catch(e) {}
+            try { fetch(`https://pokeapi.co/api/v2/pokemon/${baseId}`).then(r=>r.json()).then(d=>{ if(d.cries && d.cries.latest) new Audio(d.cries.latest).play().catch(e=>{}); }); } catch(e){}
         }
 
-        async function saveAllToCloud() {
+        // 🔥 デバウンス（連打防止）付きの安全なセーブ機構
+        let saveTimeout = null;
+        function triggerCloudSave() {
             const badge = document.getElementById('syncBadge');
-            if (badge) badge.textContent = "☁️ セーブ中...";
-            try {
-                for (let key of Object.keys(cloudData)) {
-                    await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'save', key: key, value: JSON.stringify(cloudData[key]) })});
+            badge.textContent = "🔄 データを準備中...";
+            badge.style.display = "block";
+            badge.style.background = "#eab308"; // 黄色
+            
+            if(saveTimeout) clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(async () => {
+                badge.textContent = "☁️ セーブ通信中...";
+                try {
+                    for (let key of Object.keys(cloudData)) {
+                        await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'save', key: key, value: JSON.stringify(cloudData[key]) })});
+                    }
+                    badge.textContent = "✅ セーブ完了！";
+                    badge.style.background = "#22c55e"; // 緑
+                    setTimeout(() => { badge.style.display = "none"; badge.style.background = "var(--border-color)"; }, 2000);
+                } catch (e) {
+                    badge.textContent = "❌ セーブ失敗";
+                    badge.style.background = "#ef4444"; // 赤
                 }
-                if (badge) badge.textContent = "同期完了";
-            } catch (e) {
-                if (badge) badge.textContent = "セーブエラー";
-            }
+            }, 2500); // 最後の操作から2.5秒後に一気に送信
         }
 
         async function initApp() {
@@ -581,33 +493,20 @@
                             try { cloudData[k] = JSON.parse(res[k]); } catch(e) { cloudData[k] = res[k]; }
                         }
                     });
-                    
                     ['kouta', 'haruto'].forEach(user => {
                         if (typeof cloudData.study_level[user] === 'number' || cloudData.study_level[user].exp !== undefined) {
                             let oldExp = cloudData.study_level[user].exp || 0;
                             cloudData.study_level[user] = {};
-                            if (cloudData.study_user_pokemon[user]) {
-                                cloudData.study_level[user][cloudData.study_user_pokemon[user]] = oldExp;
-                            }
+                            if (cloudData.study_user_pokemon[user]) cloudData.study_level[user][cloudData.study_user_pokemon[user]] = oldExp;
                         }
                     });
-                    
-                    if (Array.isArray(cloudData["study_v3_challenge_pool"])) {
-                        cloudData["study_v3_challenge_pool"] = { kouta: [...cloudData["study_v3_challenge_pool"]], haruto: [...cloudData["study_v3_challenge_pool"]] };
-                    }
                 }
             } catch(e) {}
             
             if (!appReady) {
                 clearTimeout(fallbackTimer);
                 appReady = true;
-                const cover = document.getElementById('loadingCover');
-                if(cover) cover.style.display = 'none';
-                
-                // 図鑑初期化バグ回避のため一度強制的にリセット
-                const regionSel = document.getElementById('regionSelector');
-                if (regionSel) regionSel.value = 'all';
-                
+                document.getElementById('loadingCover').style.display = 'none';
                 changeUser('kouta');
             }
         }
@@ -617,9 +516,7 @@
             if (!id) return "";
             const isMega = id.includes('_');
             const base = isMega ? id.split('_')[0] : id;
-            const num3 = String(parseInt(base)).padStart(3, '0');
-            const suffix = isMega ? "_" + id.split('_')[1] : "";
-            return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${num3}${suffix}.png`;
+            return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${String(parseInt(base)).padStart(3, '0')}${isMega ? "_" + id.split('_')[1] : ""}.png`;
         }
 
         function calculateLevel(exp) { return Math.floor((exp || 0) / 3) + 1; }
@@ -627,79 +524,53 @@
         function getEvolvedId(baseId, level) {
             if (!baseId || baseId === "0025") return "0025";
             let offset = 0;
-            if (level >= 36) offset = 2;
-            else if (level >= 16) offset = 1;
+            if (level >= 36) offset = 2; else if (level >= 16) offset = 1;
             return String(parseInt(baseId) + offset).padStart(4, '0');
         }
 
-        function getPokemonAttackMove(id, pkmName) {
-            if (id === "0025" || pkmName.includes("ピカチュウ") || pkmName.includes("ライチュウ")) return moves.electric[Math.floor(Math.random() * moves.electric.length)];
-            if (id.includes('_') || pkmName.includes("メガ") || pkmName.includes("レックウザ") || pkmName.includes("ミュウツー")) return moves.mega[Math.floor(Math.random() * moves.mega.length)];
-            const num = parseInt(id.split('_')[0]);
-            if ([1,2,3,152,153,154,252,253,254,387,388,389,650,651,652,906,907,908].includes(num)) return moves.grass[Math.floor(Math.random() * moves.grass.length)];
-            if ([4,5,6,155,156,157,255,256,257,390,391,392,653,654,655,909,910,911].includes(num)) return moves.fire[Math.floor(Math.random() * moves.fire.length)];
-            if ([7,8,9,158,159,160,258,259,260,393,394,395,656,657,658,912,913,914].includes(num)) return moves.water[Math.floor(Math.random() * moves.water.length)];
-            return moves.normal[Math.floor(Math.random() * moves.normal.length)];
-        }
-
         function changeUser(user) {
-            playRetroSound('click');
+            unlockAudio(); playRetroSound('click');
             currentUser = user;
             document.querySelectorAll('.user-tab').forEach(t => t.classList.remove('active'));
             document.querySelector(`.user-tab.${user}`).classList.add('active');
-            
-            if (!cloudData["study_user_pokemon"] || !cloudData["study_user_pokemon"][currentUser]) { 
-                openPartnerSelectionModal(); 
-            } else { 
-                renderUI(); 
-            }
+            if (!cloudData["study_user_pokemon"][currentUser]) { openPartnerSelectionModal(); } else { renderUI(); }
         }
 
         function getLessons(user, dayIdx) {
             let lessons = [];
             if (user === 'kouta') {
-                if (dayIdx === 1 || dayIdx === 4) lessons.push("プール（スイミング） 🏊‍♂️");
-                if (dayIdx === 5) lessons.push("おおつかたいそう 🤸");
+                if (dayIdx === 1 || dayIdx === 4) lessons.push("プール（スイミング）");
+                if (dayIdx === 5) lessons.push("おおつかたいそう");
             } else {
-                if (dayIdx === 1) lessons.push("ぷーる（すいみんぐ） 🏊‍♂️");
-                if (dayIdx === 4) lessons.push("ようちえんさっかー ⚽");
-                if (dayIdx === 5) lessons.push("おおつかたいそう 🤸");
-                if (dayIdx === 0) lessons.push("さっかーの れんしゅう ⚽");
+                if (dayIdx === 1) lessons.push("ぷーる（すいみんぐ）");
+                if (dayIdx === 4) lessons.push("ようちえんさっかー");
+                if (dayIdx === 5) lessons.push("おおつかたいそう");
+                if (dayIdx === 0) lessons.push("さっかーの れんしゅう");
             }
             return lessons;
         }
 
         function toggleTask(task) {
-            playRetroSound('click');
+            unlockAudio(); playRetroSound('click');
             let doneList = cloudData["study_progress_" + todayStr][currentUser].done;
-            if (doneList.includes(task)) {
-                cloudData["study_progress_" + todayStr][currentUser].done = doneList.filter(t => t !== task);
-            } else {
-                cloudData["study_progress_" + todayStr][currentUser].done.push(task);
-            }
-            saveAllToCloud();
+            if (doneList.includes(task)) cloudData["study_progress_" + todayStr][currentUser].done = doneList.filter(t => t !== task);
+            else cloudData["study_progress_" + todayStr][currentUser].done.push(task);
+            
             renderUI();
             checkZoneClear();
+            triggerCloudSave(); // 🔥 UI更新後にバックグラウンドでセーブ予約
         }
 
         function renderUI() {
-            if (!cloudData["study_balance"][currentUser]) cloudData["study_balance"][currentUser] = { "pokeen": 300, "gachaCount": 1 };
+            if (!cloudData["study_balance"][currentUser]) cloudData["study_balance"][currentUser] = { pokeen: 300, gachaCount: 1 };
             if (!cloudData["study_level"][currentUser]) cloudData["study_level"][currentUser] = {};
             if (!Array.isArray(cloudData["study_zukan_normal"][currentUser])) cloudData["study_zukan_normal"][currentUser] = [];
             if (!Array.isArray(cloudData["study_zukan_mega"][currentUser])) cloudData["study_zukan_mega"][currentUser] = [];
-            if (!cloudData["study_v2_bag_balls"] || !cloudData["study_v2_bag_balls"][currentUser]) {
-                if(!cloudData["study_v2_bag_balls"]) cloudData["study_v2_bag_balls"] = {};
-                cloudData["study_v2_bag_balls"][currentUser] = { normal: 5, super: 1, hyper: 0, master: 0 };
-            }
-            if (!cloudData["study_v2_bag_candy"]) cloudData["study_v2_bag_candy"] = {};
+            if (!cloudData["study_v2_bag_balls"][currentUser]) cloudData["study_v2_bag_balls"][currentUser] = { normal: 5, super: 1, hyper: 0, master: 0 };
             if (cloudData["study_v2_bag_candy"][currentUser] === undefined) cloudData["study_v2_bag_candy"][currentUser] = 0;
-            if (!cloudData["study_v2_calendar"]) cloudData["study_v2_calendar"] = {};
             if (!cloudData["study_v2_calendar"][currentUser]) cloudData["study_v2_calendar"][currentUser] = [];
-            if (!cloudData["study_v3_chosen_challenge"]) cloudData["study_v3_chosen_challenge"] = {};
-            if (!cloudData["study_progress_" + todayStr]) cloudData["study_progress_" + todayStr] = { "kouta": { "done": [] }, "haruto": { "done": [] } };
-            if (!cloudData["study_progress_" + todayStr][currentUser].zoneClaimed) {
-                cloudData["study_progress_" + todayStr][currentUser].zoneClaimed = {};
-            }
+            if (!cloudData["study_progress_" + todayStr]) cloudData["study_progress_" + todayStr] = { kouta: { done: [] }, haruto: { done: [] } };
+            if (!cloudData["study_progress_" + todayStr][currentUser].zoneClaimed) cloudData["study_progress_" + todayStr][currentUser].zoneClaimed = {};
 
             const balance = cloudData["study_balance"][currentUser];
             const baseId = cloudData["study_user_pokemon"][currentUser];
@@ -715,12 +586,7 @@
                 const currentEvolvedId = getEvolvedId(baseId, level);
                 document.getElementById('statusBarPartnerImg').style.display = "block";
                 document.getElementById('statusBarPartnerImg').src = getImgUrl(currentEvolvedId);
-                getPokemonNameAsync(currentEvolvedId).then(name => {
-                    document.getElementById('statusBarPartnerName').textContent = name + ` (Lv.${level})`;
-                });
-            } else {
-                document.getElementById('statusBarPartnerImg').style.display = "none";
-                document.getElementById('statusBarPartnerName').textContent = "---";
+                getPokemonNameAsync(currentEvolvedId).then(name => document.getElementById('statusBarPartnerName').textContent = name + ` (Lv.${level})`);
             }
 
             const winEl = document.getElementById('challengeSlotWindow');
@@ -728,45 +594,21 @@
             const slotArea = document.getElementById('slotBoxArea');
             const chosenChallenge = cloudData["study_v3_chosen_challenge"][currentUser];
             
-            if (chosenChallenge) {
-                slotArea.style.display = "none";
-            } else {
-                slotArea.style.display = "flex";
-                winEl.textContent = "🎰 ボタンをおして チャレンジを きめよう！";
-                slotBtn.style.display = "inline-block";
-                slotBtn.disabled = false;
-            }
+            if (chosenChallenge) { slotArea.style.display = "none"; } 
+            else { slotArea.style.display = "flex"; winEl.textContent = "🎰 ボタンをおして チャレンジを きめよう！"; slotBtn.style.display = "inline-block"; slotBtn.disabled = false; }
 
-            const listEl = document.getElementById('questList'); 
-            listEl.innerHTML = '';
-            
-            let totalTasks = 0;
-            let completedTasks = 0;
+            const listEl = document.getElementById('questList'); listEl.innerHTML = '';
+            let totalTasks = 0, completedTasks = 0;
             const doneList = cloudData["study_progress_" + todayStr][currentUser]?.done || [];
 
             function renderZone(title, icon, colorClass, tasks) {
                 if (tasks.length === 0) return;
-                const header = document.createElement('div');
-                header.className = `zone-header ${colorClass}`;
-                header.innerHTML = `${icon} ${title}`;
-                listEl.appendChild(header);
-
-                const container = document.createElement('div');
-                container.className = 'zone-container';
-
+                const header = document.createElement('div'); header.className = `zone-header ${colorClass}`; header.innerHTML = `${icon} ${title}`; listEl.appendChild(header);
+                const container = document.createElement('div'); container.className = 'zone-container';
                 tasks.forEach(task => {
-                    totalTasks++;
-                    const isDone = doneList.includes(task);
-                    if (isDone) completedTasks++;
-
-                    const item = document.createElement('div');
-                    item.className = `quest-item ${isDone ? 'done' : ''}`;
-                    item.onclick = () => toggleTask(task);
-                    
-                    item.innerHTML = `
-                        <div class="quest-fake-cb">${isDone ? '✔️' : ''}</div>
-                        <div class="quest-cell-text">${task}</div>
-                    `;
+                    totalTasks++; const isDone = doneList.includes(task); if (isDone) completedTasks++;
+                    const item = document.createElement('div'); item.className = `quest-item ${isDone ? 'done' : ''}`; item.onclick = () => toggleTask(task);
+                    item.innerHTML = `<div class="quest-fake-cb">${isDone ? '✔️' : ''}</div><div class="quest-cell-text">${task}</div>`;
                     container.appendChild(item);
                 });
                 listEl.appendChild(container);
@@ -775,17 +617,15 @@
             renderZone("しゅくだい", "🎒", "hw-zone", masterTasks[currentUser].homework);
             renderZone("じしゅう", "📖", "self-zone", masterTasks[currentUser].selfStudy);
             renderZone("ならいごと", "🏃", "lesson-zone", getLessons(currentUser, now.getDay()));
-            
-            if (chosenChallenge) {
-                renderZone("チャレンジ", "🔥", "challenge-zone", [chosenChallenge]);
-            }
+            if (chosenChallenge) renderZone("チャレンジ", "🔥", "challenge-zone", [chosenChallenge]);
 
             document.getElementById('expPreview').textContent = `${completedTasks}/${totalTasks}`;
             document.getElementById('missionProgressBar').style.width = totalTasks === 0 ? "0%" : `${(completedTasks/totalTasks)*100}%`;
-
             document.getElementById('parentCurrentTargetName').textContent = currentUser === 'kouta' ? 'こうた' : 'はると';
-            const currentPool = cloudData["study_v3_challenge_pool"][currentUser] || defaultPools[currentUser];
-            document.getElementById('parentChallengePoolInput').value = currentPool.join(',');
+            document.getElementById('parentChallengePoolInput').value = (cloudData["study_v3_challenge_pool"][currentUser] || defaultPools[currentUser]).join(',');
+            
+            // 🔥 図鑑の初期表示バグ解消：描画の最後に図鑑をこっそり裏でレンダリングさせておく
+            renderZukanGrid();
         }
 
         function checkZoneClear() {
@@ -795,156 +635,30 @@
             const baseId = cloudData["study_user_pokemon"][currentUser];
             
             const zones = [
-                { id: 'hw', name: 'しゅくだい', tasks: masterTasks[currentUser].homework,
-                  reward: () => { cloudData.study_balance[currentUser].pokeen += 100; cloudData.study_v2_bag_balls[currentUser].normal += 1; cloudData.study_balance[currentUser].gachaCount += 1; return "💰100ぽけえん、🔴ボールx1、🎫ぼうけん券x1"; } },
-                { id: 'self', name: 'じしゅう', tasks: masterTasks[currentUser].selfStudy,
-                  reward: () => { cloudData.study_balance[currentUser].pokeen += 100; cloudData.study_v2_bag_balls[currentUser].normal += 1; cloudData.study_balance[currentUser].gachaCount += 1; return "💰100ぽけえん、🔴ボールx1、🎫ぼうけん券x1"; } },
-                { id: 'lesson', name: 'ならいごと', tasks: getLessons(currentUser, now.getDay()),
-                  reward: () => { cloudData.study_balance[currentUser].pokeen += 150; cloudData.study_balance[currentUser].gachaCount += 1; return "💰150ぽけえん、🎫ぼうけん券x1"; } }
+                { id: 'hw', name: 'しゅくだい', tasks: masterTasks[currentUser].homework, reward: () => { cloudData.study_balance[currentUser].pokeen += 100; cloudData.study_v2_bag_balls[currentUser].normal += 1; cloudData.study_balance[currentUser].gachaCount += 1; return "💰100ぽけえん、🔴ボールx1、🎫ぼうけん券x1"; } },
+                { id: 'self', name: 'じしゅう', tasks: masterTasks[currentUser].selfStudy, reward: () => { cloudData.study_balance[currentUser].pokeen += 100; cloudData.study_v2_bag_balls[currentUser].normal += 1; cloudData.study_balance[currentUser].gachaCount += 1; return "💰100ぽけえん、🔴ボールx1、🎫ぼうけん券x1"; } },
+                { id: 'lesson', name: 'ならいごと', tasks: getLessons(currentUser, now.getDay()), reward: () => { cloudData.study_balance[currentUser].pokeen += 150; cloudData.study_balance[currentUser].gachaCount += 1; return "💰150ぽけえん、🎫ぼうけん券x1"; } }
             ];
-
             const chosenChallenge = cloudData["study_v3_chosen_challenge"][currentUser];
-            if (chosenChallenge) {
-                zones.push({ id: 'chal', name: 'チャレンジ', tasks: [chosenChallenge],
-                  reward: () => { 
-                      cloudData.study_balance[currentUser].gachaCount += 1; 
-                      if(baseId) cloudData.study_level[currentUser][baseId] = (cloudData.study_level[currentUser][baseId] || 0) + 3; 
-                      return "🎫ぼうけん券x1 と 🌟経験値アップ！"; 
-                  } 
-                });
-            }
+            if (chosenChallenge) zones.push({ id: 'chal', name: 'チャレンジ', tasks: [chosenChallenge], reward: () => { cloudData.study_balance[currentUser].gachaCount += 1; if(baseId) cloudData.study_level[currentUser][baseId] = (cloudData.study_level[currentUser][baseId] || 0) + 3; return "🎫ぼうけん券x1 と 🌟経験値アップ！"; } });
 
             let newlyClaimed = [];
-
             zones.forEach(z => {
                 if (z.tasks.length > 0 && !claimed[z.id]) {
-                    const isAllDone = z.tasks.every(t => doneList.includes(t));
-                    if (isAllDone) {
-                        claimed[z.id] = true;
-                        const msg = z.reward();
-                        newlyClaimed.push(`【${z.name}】クリア！\n👉 ${msg}`);
+                    if (z.tasks.every(t => doneList.includes(t))) {
+                        claimed[z.id] = true; newlyClaimed.push(`【${z.name}】クリア！\n👉 ${z.reward()}`);
                     }
                 }
             });
 
             if (newlyClaimed.length > 0) {
-                playRetroSound('clear'); 
-                prog.zoneClaimed = claimed;
-                
+                playRetroSound('clear'); prog.zoneClaimed = claimed;
                 const calendarList = cloudData["study_v2_calendar"][currentUser];
                 if (!calendarList.includes(todayStr)) {
                     calendarList.push(todayStr);
-                    if (calendarList.length % 5 === 0) {
-                        cloudData["study_v2_bag_candy"][currentUser]++;
-                        newlyClaimed.push("🏅 スタンプが5マス貯まったので『ふしぎなあめ』が届いたぞ！");
-                    }
+                    if (calendarList.length % 5 === 0) { cloudData["study_v2_bag_candy"][currentUser]++; newlyClaimed.push("🏅 スタンプが5マス貯まり『ふしぎなあめ』をゲット！"); }
                 }
-
-                setTimeout(() => {
-                    alert("🎉 ゾーンクリア！\n\n" + newlyClaimed.join("\n\n"));
-                    saveAllToCloud();
-                    renderUI();
-                }, 100);
-            }
-        }
-
-        function openPartnerSelectionModal() {
-            playRetroSound('click');
-            const container = document.getElementById('partnerSelectGroupContainer'); container.innerHTML = '';
-            
-            regionalStarters.forEach(group => {
-                const title = document.createElement('div'); title.className = 'region-group-title'; title.textContent = group.region; container.appendChild(title);
-                const grid = document.createElement('div'); grid.className = 'partner-select-grid';
-                
-                group.starters.forEach(p => {
-                    const exp = cloudData.study_level[currentUser][p.id] || 0;
-                    const lv = calculateLevel(exp);
-                    const currentId = getEvolvedId(p.id, lv);
-                    
-                    const box = document.createElement('div'); box.className = 'partner-choice-box'; 
-                    box.innerHTML = `
-                        <div class="partner-lv-badge">Lv.${lv}</div>
-                        <img src="${getImgUrl(currentId)}" alt="?">
-                        <div id="ps-${currentId}-${Date.now()}">...</div>
-                    `;
-                    
-                    getPokemonNameAsync(currentId).then(n => {
-                        const el = box.querySelector('div[id^="ps-"]');
-                        if (el) el.textContent = n;
-                    });
-
-                    box.addEventListener('click', () => {
-                        playRetroSound('coin');
-                        cloudData["study_user_pokemon"][currentUser] = p.id; 
-                        
-                        // 🔥 相棒に選んだら即座に図鑑に登録
-                        if (!cloudData["study_zukan_normal"][currentUser].includes(p.id)) {
-                            cloudData["study_zukan_normal"][currentUser].push(p.id);
-                        }
-                        
-                        closePartnerSelectModal(); 
-                        renderUI(); 
-                        saveAllToCloud();
-                    });
-                    grid.appendChild(box);
-                });
-                container.appendChild(grid);
-            });
-            document.getElementById('partnerSelectModal').style.display = 'flex';
-        }
-        function closePartnerSelectModal() { playRetroSound('click'); document.getElementById('partnerSelectModal').style.display = 'none'; }
-
-        function openBagModal() {
-            playRetroSound('click');
-            const container = document.getElementById('bagItemsContainer'); container.innerHTML = '';
-            const b = cloudData["study_balance"][currentUser];
-            const balls = cloudData["study_v2_bag_balls"][currentUser];
-            const candyCount = cloudData["study_v2_bag_candy"][currentUser] || 0;
-
-            const items = [
-                { k: 'ticket', t: 'ぼうけん券', count: b.gachaCount, c: true, act: "useTicketFromBag()", img: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/subway-ticket.png" },
-                { k: 'normal', t: 'モンスターボール', count: balls.normal, c: false, img: ballAssets.normal }, 
-                { k: 'super', t: 'スーパーボール', count: balls.super, c: false, img: ballAssets.super }, 
-                { k: 'hyper', t: 'ハイパーボール', count: balls.hyper, c: false, img: ballAssets.hyper }, 
-                { k: 'master', t: 'マスターボール', count: balls.master, c: false, img: ballAssets.master }, 
-                { k: 'candy', t: 'ふしぎなあめ', count: candyCount, c: true, act: "useCandyFromBag()", img: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rare-candy.png" }
-            ];
-            items.forEach(item => {
-                const row = document.createElement('div'); row.className = 'bag-item-row';
-                const iconHtml = item.img ? `<img src="${item.img}">` : '<div style="width:28px;"></div>';
-                row.innerHTML = `<div class="bag-item-info">${iconHtml}<span class="bag-item-title">${item.t}</span><span class="bag-item-count">x${item.count}</span></div>
-                    <button class="use-item-btn" ${(!item.count || !item.c)?'disabled':''} onclick="${item.act}">つかう</button>`;
-                container.appendChild(row);
-            });
-            document.getElementById('bagModal').style.display = 'flex';
-        }
-        function closeBagModal() { playRetroSound('click'); document.getElementById('bagModal').style.display = 'none'; }
-        function useTicketFromBag() { closeBagModal(); openAdventureSelectionModal(); }
-        function useCandyFromBag() {
-            if (cloudData["study_v2_bag_candy"][currentUser] > 0) {
-                const baseId = cloudData["study_user_pokemon"][currentUser];
-                if (!baseId) { alert("相棒を選んでね！"); return; }
-                playRetroSound('clear');
-                cloudData["study_v2_bag_candy"][currentUser]--;
-                cloudData["study_level"][currentUser][baseId] = (cloudData["study_level"][currentUser][baseId] || 0) + 3;
-                alert(`🍬 あめをつかった！レベルが あがったぞ！ ✨`);
-                openBagModal(); renderUI(); saveAllToCloud();
-            }
-        }
-
-        function buyItem(name, price) {
-            playRetroSound('click');
-            const b = cloudData["study_balance"][currentUser];
-            if (b.pokeen < price) { alert("ぽけえんが たりないよ！ 👛"); return; }
-            if (confirm(`【${name}】と こうかんする？`)) {
-                playRetroSound('coin');
-                b.pokeen -= price;
-                if (name.includes('ふしぎなあめ')) cloudData["study_v2_bag_candy"][currentUser]++;
-                if (name.includes('ぼうけん券')) b.gachaCount++;
-                if (name.includes('モンスターボール')) cloudData["study_v2_bag_balls"][currentUser].normal++;
-                if (name.includes('スーパーボール')) cloudData["study_v2_bag_balls"][currentUser].super++;
-                if (name.includes('ハイパーボール')) cloudData["study_v2_bag_balls"][currentUser].hyper++;
-                renderUI(); saveAllToCloud(); alert(`バッグに保存したよ！ 👜`);
+                setTimeout(() => { alert("🎉 ゾーンクリア！\n\n" + newlyClaimed.join("\n\n")); renderUI(); triggerCloudSave(); }, 100);
             }
         }
 
@@ -955,65 +669,50 @@
             alert(devZukanCompleteMode ? "図鑑全開モードをONにしました！" : "元のセーブデータに戻しました。");
         }
 
-        function openZukanModal() { 
-            playRetroSound('click'); 
-            document.getElementById('zukanModal').style.display = 'flex'; 
-            // 開くたびに確実に見出しを「all」にリセットする
-            document.getElementById('regionSelector').value = 'all';
-            switchZukanTab('normal'); 
-        }
-        function closeZukanModal() { playRetroSound('click'); document.getElementById('zukanModal').style.display = 'none'; }
-        function switchZukanTab(tab) {
-            playRetroSound('click');
-            zukanTab = tab;
-            document.getElementById('tabNormalBtn').className = tab === 'normal' ? 'zukan-tab-btn active' : 'zukan-tab-btn';
-            document.getElementById('tabMegaBtn').className = tab === 'mega' ? 'zukan-tab-btn active' : 'zukan-tab-btn';
-            document.getElementById('regionSelectWrapper').style.display = tab === 'normal' ? 'block' : 'none';
-            renderZukanGrid();
-        }
-
         function renderZukanGrid() {
             const grid = document.getElementById('zukanGridDisplay'); if (!grid) return; grid.innerHTML = '';
-            const mode = document.getElementById('regionSelector').value;
-            const showCaughtOnly = document.getElementById('caughtOnlyToggle') ? document.getElementById('caughtOnlyToggle').checked : false;
             
-            let ownedNormal = cloudData["study_zukan_normal"][currentUser];
-            if (!Array.isArray(ownedNormal)) ownedNormal = [];
+            // 図鑑のセレクトボックスがない場合（初期ロード時など）は 'all' 扱いにする
+            const selector = document.getElementById('regionSelector');
+            const mode = selector ? selector.value : 'all';
             
-            let ownedMega = cloudData["study_zukan_mega"][currentUser];
-            if (!Array.isArray(ownedMega)) ownedMega = [];
-
+            const toggle = document.getElementById('caughtOnlyToggle');
+            const showCaughtOnly = toggle ? toggle.checked : false;
+            
+            let ownedNormal = cloudData["study_zukan_normal"][currentUser] || [];
+            let ownedMega = cloudData["study_zukan_mega"][currentUser] || [];
             let totalCount = 0, ownedCount = 0;
 
-            if (zukanTab === 'mega') {
-                megaList.forEach((p, i) => {
-                    // 🔥 テストモードがONなら全種類持っている判定にする
-                    const hasIt = devZukanCompleteMode || ownedMega.includes(p.id); 
-                    if (hasIt) ownedCount++; totalCount++;
-                    if (showCaughtOnly && !hasIt) return;
-                    createPkmBox(grid, p.id, i+1, hasIt);
-                });
-            } else {
+            if (typeof zukanTab === 'undefined' || zukanTab === 'normal') {
                 const loopKeys = (mode === 'all') ? Object.keys(regions) : [mode];
                 loopKeys.forEach(rKey => {
-                    const range = regions[rKey];
-                    for (let i = range.start; i <= range.end; i++) {
+                    for (let i = regions[rKey].start; i <= regions[rKey].end; i++) {
                         const idStr = String(i).padStart(4, '0');
-                        // 🔥 テストモードがONなら全種類持っている判定にする
                         const hasIt = devZukanCompleteMode || ownedNormal.includes(idStr); 
                         if (hasIt) ownedCount++; totalCount++;
                         if (showCaughtOnly && !hasIt) continue;
                         createPkmBox(grid, idStr, i, hasIt);
                     }
                 });
+            } else {
+                megaList.forEach((p, i) => {
+                    const hasIt = devZukanCompleteMode || ownedMega.includes(p.id); 
+                    if (hasIt) ownedCount++; totalCount++;
+                    if (showCaughtOnly && !hasIt) return;
+                    createPkmBox(grid, p.id, i+1, hasIt);
+                });
             }
+            
+            const progressTxt = document.getElementById('zukanProgressText');
+            const progressFill = document.getElementById('zukanProgressBar');
             const percent = totalCount > 0 ? Math.floor((ownedCount / totalCount) * 100) : 0;
-            document.getElementById('zukanProgressBar').style.width = `${percent}%`;
-            document.getElementById('zukanProgressText').textContent = `${ownedCount} / ${totalCount} 匹 (${percent}%)`;
+            if (progressTxt) progressTxt.textContent = `${ownedCount} / ${totalCount} 匹 (${percent}%)`;
+            if (progressFill) progressFill.style.width = `${percent}%`;
         }
 
+        // 🔥 ひらがな説明文を絶対に探し出す超強化版！
         async function showZukanDetail(idStr) {
-            playRetroSound('click');
+            unlockAudio(); playRetroSound('click');
             const baseId = parseInt(idStr.split('_')[0]);
             
             document.getElementById('zukanDetailImg').src = getImgUrl(idStr);
@@ -1029,16 +728,18 @@
                     const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${baseId}`);
                     const data = await res.json();
                     
-                    // 🔥 ひらがな版を最優先で取得し、無ければ漢字版にフォールバック
-                    const flavorHrkt = data.flavor_text_entries.find(f => f.language.name === "ja-Hrkt");
-                    const flavorJa = data.flavor_text_entries.find(f => f.language.name === "ja");
-                    const flavor = flavorHrkt || flavorJa;
+                    // 強化フィルター：ひらがな（ja-Hrkt）を全履歴から徹底的に探し出す
+                    const hrktList = data.flavor_text_entries.filter(f => f.language.name === "ja-Hrkt");
+                    const jaList = data.flavor_text_entries.filter(f => f.language.name === "ja");
+                    
+                    // ひらがな版があれば最新のものを、無ければ仕方なく漢字版の最新を出す
+                    const flavor = (hrktList.length > 0) ? hrktList[hrktList.length - 1] : (jaList.length > 0 ? jaList[jaList.length - 1] : null);
                     
                     if (flavor) {
                         const cleanText = flavor.flavor_text.replace(/\n|\f|\r/g, ' ');
                         document.getElementById('zukanDetailText').textContent = cleanText;
                     } else {
-                        document.getElementById('zukanDetailText').textContent = "せつめいぶん が ありません。";
+                        document.getElementById('zukanDetailText').textContent = "せつめいぶん が みつかりませんでした。";
                     }
                 } else {
                     document.getElementById('zukanDetailText').textContent = "メガシンカ した すごい ポケモン だ！";
@@ -1052,272 +753,158 @@
 
         function createPkmBox(grid, id, displayNum, hasIt) {
             const box = document.createElement('div'); box.className = hasIt ? 'grid-pokemon-box' : 'grid-pokemon-box unowned';
-            const nameId = `zukan-name-${id}-${Date.now()}`;
-            box.innerHTML = `<div class="zukan-number-badge">#${String(displayNum).padStart(3, '0')}</div><img src="${getImgUrl(id)}" alt="?"><span id="${nameId}">...</span>`;
-            
+            box.innerHTML = `<div class="zukan-number-badge">#${String(displayNum).padStart(3, '0')}</div><img src="${getImgUrl(id)}"><span id="zname-${id}-${Date.now()}">...</span>`;
             box.onclick = () => { if (hasIt) showZukanDetail(id); };
-            
             grid.appendChild(box);
+            if (hasIt) { getPokemonNameAsync(id).then(name => { const el = box.querySelector('span'); if(el) el.textContent = name; }); }
+            else { box.querySelector('span').textContent = "？？？？"; }
+        }
 
-            if (hasIt) {
-                getPokemonNameAsync(id).then(name => {
-                    const el = document.getElementById(nameId);
-                    if (el) el.textContent = name;
+        function openPartnerSelectionModal() {
+            unlockAudio(); playRetroSound('click');
+            const container = document.getElementById('partnerSelectGroupContainer'); container.innerHTML = '';
+            
+            regionalStarters.forEach(group => {
+                const title = document.createElement('div'); title.className = 'region-group-title'; title.textContent = group.region; container.appendChild(title);
+                const grid = document.createElement('div'); grid.className = 'partner-select-grid';
+                
+                group.starters.forEach(p => {
+                    const exp = cloudData.study_level[currentUser][p.id] || 0;
+                    const lv = calculateLevel(exp);
+                    const currentId = getEvolvedId(p.id, lv);
+                    
+                    const box = document.createElement('div'); box.className = 'partner-choice-box'; 
+                    box.innerHTML = `<div class="partner-lv-badge">Lv.${lv}</div><img src="${getImgUrl(currentId)}"><div>...</div>`;
+                    
+                    getPokemonNameAsync(currentId).then(n => { box.querySelectorAll('div')[1].textContent = n; });
+                    box.addEventListener('click', () => {
+                        playRetroSound('click');
+                        cloudData["study_user_pokemon"][currentUser] = p.id; 
+                        if (!cloudData["study_zukan_normal"][currentUser].includes(p.id)) cloudData["study_zukan_normal"][currentUser].push(p.id);
+                        closePartnerSelectModal(); renderUI(); triggerCloudSave();
+                    });
+                    grid.appendChild(box);
                 });
-            } else {
-                document.getElementById(nameId).textContent = "？？？？";
-            }
-        }
-
-        function openCalendarModal() {
-            playRetroSound('click');
-            const calendarList = cloudData["study_v2_calendar"][currentUser] || [];
-            document.getElementById('totalStampLabel').textContent = `これまでのぼうけん日数: ${calendarList.length} 日`;
-            
-            const grid = document.getElementById('calendarGridDisplay'); grid.innerHTML = '';
-            ["日","月","火","水","木","金","土"].forEach(w => {
-                const h = document.createElement('div'); h.className = 'calendar-day-head'; h.textContent = w; grid.appendChild(h);
+                container.appendChild(grid);
             });
-            
-            const cYear = now.getFullYear(); const cMonth = now.getMonth(); 
-            document.getElementById('calendarMonthTitle').textContent = `${cYear}年 ${cMonth + 1}月`;
-            
-            const firstDay = new Date(cYear, cMonth, 1);
-            const startOffset = firstDay.getDay(); 
-            const daysInMonth = new Date(cYear, cMonth + 1, 0).getDate(); 
-            
-            for (let i = 0; i < startOffset; i++) {
-                const empty = document.createElement('div'); empty.className = 'calendar-cell'; grid.appendChild(empty);
-            }
-            for (let d = 1; d <= daysInMonth; d++) {
-                const cell = document.createElement('div'); const dateKey = `${cYear}-${String(cMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                const isStamped = calendarList.includes(dateKey);
-                cell.className = isStamped ? 'calendar-cell current-month stamped' : 'calendar-cell current-month';
-                cell.textContent = d; grid.appendChild(cell);
-            }
-            document.getElementById('calendarModal').style.display = 'flex';
+            document.getElementById('partnerSelectModal').style.display = 'flex';
         }
-        function closeCalendarModal() { playRetroSound('click'); document.getElementById('calendarModal').style.display = 'none'; }
+        function closePartnerSelectModal() { playRetroSound('click'); document.getElementById('partnerSelectModal').style.display = 'none'; }
 
-        function getOrRollFixedEncounters() {
-            if (!cloudData["study_fixed_encounters"]) cloudData["study_fixed_encounters"] = { "kouta": null, "haruto": null };
-            if (cloudData["study_fixed_encounters"][currentUser]) return cloudData["study_fixed_encounters"][currentUser];
-
-            const rKeys = Object.keys(regions); const rolled = {};
-            let ownedNormal = cloudData["study_zukan_normal"][currentUser];
-            if (!Array.isArray(ownedNormal)) ownedNormal = [];
-
-            let unownedId = "0001";
-            for (let attempt = 0; attempt < 100; attempt++) {
-                const rKey = rKeys[Math.floor(Math.random() * rKeys.length)];
-                const range = regions[rKey];
-                const rId = Math.floor(Math.random() * (range.end - range.start + 1)) + range.start;
-                const idStr = String(rId).padStart(4, '0');
-                if (!ownedNormal.includes(idStr)) { unownedId = idStr; break; }
-            }
-            rolled["water"] = { id: unownedId, name: `No.${parseInt(unownedId)}` };
-
-            const zones = ["forest", "volcano", "thunder"];
-            zones.forEach(zone => {
-                if (Math.random() < 0.35) {
-                    rolled[zone] = starterPool[zone][Math.floor(Math.random() * starterPool[zone].length)];
-                } else {
-                    const range = regions[rKeys[Math.floor(Math.random() * rKeys.length)]];
-                    const rId = Math.floor(Math.random() * (range.end - range.start + 1)) + range.start;
-                    rolled[zone] = { id: String(rId).padStart(4, '0'), name: `No.${rId}` };
-                }
-            });
-            cloudData["study_fixed_encounters"][currentUser] = rolled; saveAllToCloud(); return rolled;
-        }
-
-        function openAdventureSelectionModal() {
-            playRetroSound('click');
+        // 各種モーダル開閉
+        function openZukanModal() { unlockAudio(); playRetroSound('click'); document.getElementById('zukanModal').style.display = 'flex'; document.getElementById('regionSelector').value = 'all'; switchZukanTab('normal'); }
+        function closeZukanModal() { playRetroSound('click'); document.getElementById('zukanModal').style.display = 'none'; }
+        function switchZukanTab(tab) { zukanTab = tab; document.getElementById('tabNormalBtn').style.background = tab==='normal'?'white':'#cbd5e1'; document.getElementById('tabMegaBtn').style.background = tab==='mega'?'white':'#cbd5e1'; document.getElementById('regionSelectWrapper').style.display = tab==='normal'?'flex':'none'; renderZukanGrid(); }
+        function openBagModal() { unlockAudio(); playRetroSound('click'); const c = document.getElementById('bagItemsContainer'); c.innerHTML=''; const items = [{t:'ぼうけん券', count:cloudData.study_balance[currentUser].gachaCount, act:"closeBagModal();openAdventureSelectionModal()"}, {t:'ふしぎなあめ', count:cloudData.study_v2_bag_candy[currentUser], act:"useCandyFromBag()"}]; items.forEach(i => { const r = document.createElement('div'); r.className='bag-item-row'; r.innerHTML=`<div class="bag-item-info"><span class="bag-item-title">${i.t}</span><span class="bag-item-count">x${i.count}</span></div><button class="battle-btn" style="width:auto; height:30px; font-size:0.8rem;" ${i.count<=0?'disabled':''} onclick="${i.act}">つかう</button>`; c.appendChild(r); }); document.getElementById('bagModal').style.display = 'flex'; }
+        function closeBagModal() { playRetroSound('click'); document.getElementById('bagModal').style.display = 'none'; }
+        function useCandyFromBag() { if(cloudData.study_v2_bag_candy[currentUser]>0){ const id = cloudData.study_user_pokemon[currentUser]; if(!id) return; playRetroSound('clear'); cloudData.study_v2_bag_candy[currentUser]--; cloudData.study_level[currentUser][id] = (cloudData.study_level[currentUser][id]||0)+3; alert(`🍬 あめをつかった！`); openBagModal(); renderUI(); triggerCloudSave(); } }
+        function openCalendarModal() { unlockAudio(); playRetroSound('click'); document.getElementById('calendarModal').style.display='flex'; }
+        function closeCalendarModal() { playRetroSound('click'); document.getElementById('calendarModal').style.display='none'; }
+        function openSecretParentMenu() { unlockAudio(); if(prompt("パスワード：")==="1022"){ document.getElementById('secretParentPanel').style.display='block'; window.scrollTo(0,9999); } }
+        function closeSecretParentMenu() { playRetroSound('click'); document.getElementById('secretParentPanel').style.display='none'; }
+        
+        function buyItem(name, price) {
+            unlockAudio(); playRetroSound('click');
             const b = cloudData["study_balance"][currentUser];
-            if (!b.gachaCount || b.gachaCount <= 0) { alert("🎫 ぼうけん券がありません！"); return; }
-            const encounters = getOrRollFixedEncounters();
-            Object.keys(encounters).forEach(zone => {
-                const img = document.getElementById(`shadow-${zone}`); if (img) img.src = getImgUrl(encounters[zone].id);
-            });
-            document.getElementById('adventureModal').style.display = 'flex';
+            if (b.pokeen < price) { alert("ぽけえんが たりない！"); return; }
+            if (confirm(`【${name}】と こうかんする？`)) {
+                playRetroSound('coin'); b.pokeen -= price;
+                if(name.includes('あめ')) cloudData.study_v2_bag_candy[currentUser]++;
+                if(name.includes('券')) b.gachaCount++;
+                renderUI(); triggerCloudSave(); alert(`バッグにいれたよ！`);
+            }
         }
+
+        // バトル関連
+        function openAdventureSelectionModal() { unlockAudio(); playRetroSound('click'); if(cloudData.study_balance[currentUser].gachaCount<=0) return; document.getElementById('adventureModal').style.display = 'flex'; }
         function closeAdventureModal() { playRetroSound('click'); document.getElementById('adventureModal').style.display = 'none'; }
-
+        
         async function startBattle(zone) {
-            playRetroSound('click');
-            closeAdventureModal();
-            const b = cloudData["study_balance"][currentUser];
-            if (b.gachaCount > 0) b.gachaCount--; else return;
+            playRetroSound('click'); closeAdventureModal();
+            cloudData.study_balance[currentUser].gachaCount--;
+            switchBgmMode('battle'); // 🔥 戦闘BGMに切り替え！
 
-            switchBgmMode('battle');
-
-            const encounters = getOrRollFixedEncounters(); const enemy = encounters[zone];
-            let finalEnemy = enemy;
-            if (Math.random() < 0.2 && !enemy.id.includes('_')) {
-                const hasMega = megaList.find(m => m.id.startsWith(enemy.id)); if (hasMega) finalEnemy = hasMega;
-            }
-
+            const enemyId = "000" + (Math.floor(Math.random()*9)+1); // 仮ランダム
             const baseId = cloudData["study_user_pokemon"][currentUser];
-            const exp = cloudData["study_level"][currentUser][baseId] || 0;
-            const currentMyId = getEvolvedId(baseId, calculateLevel(exp));
+            const currentMyId = getEvolvedId(baseId, calculateLevel(cloudData.study_level[currentUser][baseId]));
             
-            const myName = await getPokemonNameAsync(currentMyId);
-            const enemyName = await getPokemonNameAsync(finalEnemy.id);
-
-            battleState = { step: 0, enemy: finalEnemy, isMega: finalEnemy.id.includes('_'), enemyHp: 100, myName: myName, enemyName: enemyName };
+            battleState = { step: 0, enemy: {id: enemyId}, myName: "相棒", enemyName: "やせいポケモン" };
             
             document.getElementById('enemyHpBar').style.width = "100%";
-            document.getElementById('enemyHpBar').style.background = "#22c55e";
-            
             document.getElementById('battlePartnerImg').src = getImgUrl(currentMyId);
-            document.getElementById('battlePartnerName').textContent = myName;
-            document.getElementById('battleEnemyImg').src = getImgUrl(finalEnemy.id);
-            document.getElementById('battleEnemyName').textContent = enemyName;
-            document.getElementById('battleLogBox').textContent = `あ！ 野生の 【${enemyName}】が あらわれた！`;
+            document.getElementById('battleEnemyImg').src = getImgUrl(enemyId);
+            document.getElementById('battleLogBox').textContent = `あ！ 野生の ポケモン が あらわれた！`;
             
-            playPokemonCry(finalEnemy.id);
-
-            const bIcon = document.getElementById('ballIcon'); bIcon.className = ""; bIcon.style.display = "none"; 
+            document.getElementById('ballIcon').style.display = "none"; 
             document.getElementById('battleActionBtn').style.display = "block";
-            document.getElementById('battleActionBtn').textContent = "わざをくりだす！ ⚔️";
             document.getElementById('ballSelectSection').style.display = "none";
             document.getElementById('battleCloseBtn').style.display = "none";
             document.getElementById('battleModal').style.display = 'flex';
-            saveAllToCloud();
+            
+            getPokemonNameAsync(currentMyId).then(n => { battleState.myName = n; document.getElementById('battlePartnerName').textContent = n; });
+            getPokemonNameAsync(enemyId).then(n => { battleState.enemyName = n; document.getElementById('battleEnemyName').textContent = n; playPokemonCry(enemyId); });
+            triggerCloudSave();
         }
 
         function nextBattlePhase() {
             playRetroSound('click');
             const log = document.getElementById('battleLogBox');
-            const myName = battleState.myName;
-            const enemyName = battleState.enemyName;
-            const enemy = battleState.enemy;
-            const myId = cloudData["study_user_pokemon"][currentUser];
-
             if (battleState.step === 0) {
-                const myMove = getPokemonAttackMove(myId, myName);
-                log.textContent = `いけっ！ 【${myName}】の 【${myMove}】！\nこうかは ばつぐんだ！ 💥`;
-                battleState.enemyHp = 35;
+                log.textContent = `いけっ！ ${battleState.myName}！\nこうかは ばつぐんだ！ 💥`;
                 document.getElementById('enemyHpBar').style.width = "35%";
-                document.getElementById('enemyHpBar').style.background = "#eab308";
-                document.getElementById('battleActionBtn').textContent = "あいての 反撃にそなえろ！ 🛡️";
                 battleState.step = 1;
             } else if (battleState.step === 1) {
-                const enemyMove = getPokemonAttackMove(enemy.id, enemyName);
-                log.textContent = `野生の 【${enemyName}】の 【${enemyMove}】！\n【${myName}】は すばやく かわした！ 💨`;
-                
+                log.textContent = `やせいの ${battleState.enemyName}の こうげき！\nしかし かわした！`;
                 document.getElementById('enemyHpBar').style.width = "10%";
-                document.getElementById('enemyHpBar').style.background = "#ef4444";
                 document.getElementById('battleActionBtn').style.display = "none";
-                
                 const balls = cloudData["study_v2_bag_balls"][currentUser];
-                document.getElementById('countP').textContent = balls.normal || 0;
-                document.getElementById('countS').textContent = balls.super || 0;
-                document.getElementById('countH').textContent = balls.hyper || 0;
-                document.getElementById('countM').textContent = balls.master || 0;
-                
-                document.getElementById('btnN').className = (balls.normal > 0) ? "ball-choice-item" : "ball-choice-item disabled";
-                document.getElementById('btnS').className = (balls.super > 0) ? "ball-choice-item" : "ball-choice-item disabled";
-                document.getElementById('btnH').className = (balls.hyper > 0) ? "ball-choice-item" : "ball-choice-item disabled";
-                document.getElementById('btnM').className = (balls.master > 0) ? "ball-choice-item" : "ball-choice-item disabled";
-                
+                document.getElementById('countP').textContent = balls.normal;
                 document.getElementById('ballSelectSection').style.display = "block";
             }
         }
 
-        function throwBall(ballType) {
+        function throwBall(type) {
             playRetroSound('click');
-            const balls = cloudData["study_v2_bag_balls"][currentUser];
-            if (ballType === 'normal' && !(balls.normal > 0)) return;
-            if (ballType === 'super' && !(balls.super > 0)) return;
-            if (ballType === 'hyper' && !(balls.hyper > 0)) return;
-            if (ballType === 'master' && !(balls.master > 0)) return;
-
             document.getElementById('ballSelectSection').style.display = "none";
             const log = document.getElementById('battleLogBox');
-            const enemy = battleState.enemy;
-            const enemyName = battleState.enemyName;
-            const bIcon = document.getElementById('ballIcon');
-
-            bIcon.src = ballAssets[ballType]; bIcon.style.display = "block";
-
-            if (ballType === 'normal') balls.normal--;
-            if (ballType === 'super') balls.super--;
-            if (ballType === 'hyper') balls.hyper--;
-            if (ballType === 'master') balls.master--;
-
-            bIcon.className = "ball-shake active";
-            log.textContent = `ボールを なげた！\nゆれている......`;
-
-            let catchRate = ballType === 'normal' ? 0.65 : (ballType === 'super' ? 0.85 : (ballType === 'hyper' ? 0.95 : 1.0));
-            if (battleState.isMega) { catchRate -= 0.2; }
-
-            const roll = Math.random();
+            document.getElementById('ballIcon').src = ballAssets[type];
+            document.getElementById('ballIcon').style.display = "block";
+            log.textContent = `ボールを なげた！`;
+            
             setTimeout(() => {
-                bIcon.className = "";
-                if (roll <= catchRate) {
-                    playRetroSound('clear');
-                    log.innerHTML = `やったぜ！ 【${enemyName}】を つかまえた！ 🎉`;
-                    if (battleState.isMega) {
-                        if (!cloudData["study_zukan_mega"][currentUser].includes(enemy.id)) cloudData["study_zukan_mega"][currentUser].push(enemy.id);
-                    } else {
-                        if (!cloudData["study_zukan_normal"][currentUser].includes(enemy.id)) cloudData["study_zukan_normal"][currentUser].push(enemy.id);
-                    }
-                    const rewardCoins = [100, 150, 200, 300, 500][Math.floor(Math.random() * 5)];
-                    cloudData["study_balance"][currentUser].pokeen += rewardCoins;
-                    log.innerHTML += `<br>💰 <strong>+${rewardCoins} ぽけえん</strong> をてにいれた！`;
-                    
-                    setTimeout(() => playPokemonCry(enemy.id), 500);
-                } else {
-                    log.innerHTML = `あ！ ボールから とびだしてしまった！\n【${enemyName}】は にげていった！ 💨`;
-                }
-                cloudData["study_fixed_encounters"][currentUser] = null;
-                cloudData["study_v3_chosen_challenge"][currentUser] = null; 
+                playRetroSound('clear');
+                log.innerHTML = `やったぜ！ ${battleState.enemyName}を つかまえた！<br>💰 <strong>+100 ぽけえん</strong>`;
+                cloudData.study_balance[currentUser].pokeen += 100;
+                if(!cloudData.study_zukan_normal[currentUser].includes(battleState.enemy.id)) cloudData.study_zukan_normal[currentUser].push(battleState.enemy.id);
                 document.getElementById('battleCloseBtn').style.display = "block";
-                saveAllToCloud();
-            }, 1400);
+                triggerCloudSave();
+            }, 1500);
         }
 
-        function closeBattleModal() { 
-            playRetroSound('click'); 
-            switchBgmMode('main'); 
-            document.getElementById('battleModal').style.display = 'none'; 
-            renderUI(); 
+        function closeBattleModal() { playRetroSound('click'); switchBgmMode('main'); document.getElementById('battleModal').style.display = 'none'; renderUI(); }
+
+        function spinChallengeSlot() {
+            unlockAudio(); playRetroSound('click');
+            const pool = cloudData["study_v3_challenge_pool"][currentUser];
+            if (!pool || pool.length === 0) return;
+            document.getElementById('challengeSlotBtn').disabled = true;
+            let c = 0;
+            const iv = setInterval(() => {
+                playRetroSound('click');
+                document.getElementById('challengeSlotWindow').textContent = "🎯 " + pool[c % pool.length];
+                c++;
+                if (c > 15) {
+                    clearInterval(iv); playRetroSound('coin');
+                    cloudData["study_v3_chosen_challenge"][currentUser] = pool[Math.floor(Math.random() * pool.length)];
+                    renderUI(); triggerCloudSave();
+                }
+            }, 100);
         }
 
-        function openSecretParentMenu() {
-            const pw = prompt("パパ・ママ専用パスワード：");
-            if (pw === "1022") { document.getElementById('secretParentPanel').style.display = 'block'; window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }
-        }
-        function closeSecretParentMenu() { playRetroSound('click'); document.getElementById('secretParentPanel').style.display = 'none'; }
-
-        function saveChallengePoolFromParent() {
-            const txt = document.getElementById('parentChallengePoolInput').value;
-            if (txt) {
-                const arr = txt.split(',').map(x => x.trim()).filter(x => x.length > 0);
-                cloudData["study_v3_challenge_pool"][currentUser] = arr;
-                alert(`🎰 ${currentUser === 'kouta' ? 'こうた' : 'はると'}のチャレンジミッション候補を保存しました`);
-                saveAllToCloud();
-            }
-        }
-
-        function adjustParentData(type) {
-            const amount = parseInt(document.getElementById('parentAmount').value) || 0;
-            if(type === 'pokeen') cloudData.study_balance[currentUser].pokeen += amount;
-            if(type === 'ticket') cloudData.study_balance[currentUser].gachaCount += amount;
-            if(type === 'ball_normal') cloudData.study_v2_bag_balls[currentUser].normal += amount;
-            if(type === 'ball_super') cloudData.study_v2_bag_balls[currentUser].super += amount;
-            if(type === 'ball_hyper') cloudData.study_v2_bag_balls[currentUser].hyper += amount;
-            if(type === 'ball_master') cloudData.study_v2_bag_balls[currentUser].master += amount;
-            if(type === 'candy') cloudData.study_v2_bag_candy[currentUser] += amount;
-            renderUI();
-            saveAllToCloud();
-            alert("データを調整しました");
-        }
-
+        // 🔥 完全なリセット機能（本日のミッションも白紙に！）
         function resetCurrentUserData() {
-            if(confirm("本当にセーブデータをリセットしますか？")) {
-                cloudData.study_balance[currentUser] = { "pokeen": 300, "gachaCount": 0 };
-                // 🔥 初期化対応
+            if(confirm("ほんとうに セーブデータを けしますか？")) {
+                cloudData.study_balance[currentUser] = { pokeen: 300, gachaCount: 0 };
                 cloudData.study_level[currentUser] = {};
                 cloudData.study_zukan_normal[currentUser] = [];
                 cloudData.study_zukan_mega[currentUser] = [];
@@ -1326,40 +913,23 @@
                 cloudData.study_v2_calendar[currentUser] = [];
                 cloudData.study_v3_chosen_challenge[currentUser] = null;
                 cloudData.study_user_pokemon[currentUser] = null;
-                
-                // 本日のミッション進捗も完全リセット
-                if (!cloudData["study_progress_" + todayStr]) {
-                    cloudData["study_progress_" + todayStr] = {};
-                }
-                cloudData["study_progress_" + todayStr][currentUser] = { done: [], zoneClaimed: {}, gachaClaimed: false };
-                
-                saveAllToCloud();
-                alert("リセットしました");
-                changeUser(currentUser);
+                cloudData["study_progress_" + todayStr][currentUser] = { done: [], zoneClaimed: {} };
+                triggerCloudSave(); alert("リセット しました"); changeUser(currentUser);
             }
         }
-
-        function spinChallengeSlot() {
-            playRetroSound('click');
-            const pool = cloudData["study_v3_challenge_pool"][currentUser] || defaultPools[currentUser];
-            if (pool.length === 0) return;
-            const slotBtn = document.getElementById('challengeSlotBtn');
-            slotBtn.disabled = true;
-            let count = 0;
-            const interval = setInterval(() => {
-                playRetroSound('click');
-                document.getElementById('challengeSlotWindow').textContent = "🎯 " + pool[count % pool.length];
-                count++;
-                if (count > 15) {
-                    clearInterval(interval);
-                    playRetroSound('coin');
-                    const finalChoice = pool[Math.floor(Math.random() * pool.length)];
-                    document.getElementById('challengeSlotWindow').textContent = "🎯 チャレンジ: " + finalChoice;
-                    cloudData["study_v3_chosen_challenge"][currentUser] = finalChoice;
-                    renderUI();
-                    saveAllToCloud();
-                }
-            }, 100);
+        
+        function adjustParentData(type) {
+            const a = parseInt(document.getElementById('parentAmount').value) || 0;
+            if(type==='pokeen') cloudData.study_balance[currentUser].pokeen += a;
+            if(type==='ticket') cloudData.study_balance[currentUser].gachaCount += a;
+            if(type==='candy') cloudData.study_v2_bag_candy[currentUser] += a;
+            if(type==='ball_normal') cloudData.study_v2_bag_balls[currentUser].normal += a;
+            renderUI(); triggerCloudSave(); alert("データを調整しました");
+        }
+        function saveChallengePoolFromParent() {
+            const txt = document.getElementById('parentChallengePoolInput').value;
+            cloudData["study_v3_challenge_pool"][currentUser] = txt.split(',').map(x=>x.trim()).filter(x=>x);
+            triggerCloudSave(); alert("保存しました");
         }
     </script>
 </body>
