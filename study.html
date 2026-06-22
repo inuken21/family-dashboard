@@ -17,9 +17,8 @@
         .secret-gear-btn { position: absolute; right: 4px; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: #94a3b8; padding: 6px; }
         .bgm-toggle-btn { position: absolute; left: 4px; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: #0f172a; padding: 6px; }
         
-        /* 🔥 バグ修正: Flexboxで確実に隙間を作り、レイアウト崩れを防ぐ */
-        .user-switcher { display: flex; gap: 12px; margin-bottom: 24px; }
-        .user-tab { flex: 1; height: 56px; text-align: center; display: flex; align-items: center; justify-content: center; border: 3.5px solid #0f172a; font-size: 1.1rem; font-weight: 900; cursor: pointer; background: #cbd5e1; color: #475569; box-shadow: 0 5px 0 #0f172a; border-radius: var(--border-radius); transition: transform 0.1s, box-shadow 0.1s; }
+        .user-switcher { display: table; width: 100%; border-collapse: separate; border-spacing: 16px 0; margin-bottom: 24px; }
+        .user-tab { display: table-cell; width: 50%; height: 56px; text-align: center; vertical-align: middle; border: 3.5px solid #0f172a; font-size: 1.1rem; font-weight: 900; cursor: pointer; background: #cbd5e1; color: #475569; box-shadow: 0 5px 0 #0f172a; border-radius: var(--border-radius); }
         .user-tab.kouta.active { background-color: var(--kouta-main); color: white; }
         .user-tab.haruto.active { background-color: var(--haruto-main); color: white; }
         .user-tab:active { transform: translateY(2px); box-shadow: 0 3px 0 #0f172a; }
@@ -92,8 +91,12 @@
         .rotom-lcd { background-color: var(--rotom-screen); border-radius: 12px; padding: 10px; }
         
         .zukan-tab-row { display: flex; gap: 4px; margin-bottom: 8px; }
-        .zukan-tab-btn { flex: 1; height: 36px; border: 2px solid #0f172a; background: #cbd5e1; font-weight: 900; font-size: 0.75rem; border-radius: 8px; cursor: pointer; }
-        .zukan-tab-btn.active { background: #ea580c; color: white; }
+        
+        /* 🔥 バグ修正: 未選択時の文字色を強制的に暗い色(#0f172a)にする */
+        .zukan-tab-btn { flex: 1; height: 36px; border: 2px solid #0f172a; background: #cbd5e1; color: #0f172a; font-weight: 900; font-size: 0.75rem; border-radius: 8px; cursor: pointer; }
+        /* 🔥 選択された時だけ白文字になるように修正 */
+        .zukan-tab-btn.active { background: #ea580c; color: #ffffff; }
+        
         .region-select { width: 100%; height: 38px; font-family: inherit; font-size: 0.85rem; font-weight: 900; background: #ffffff; border: 2.5px solid #0f172a; border-radius: 10px; padding: 0 4px; }
         .progress-container { background: #cbd5e1; border-radius: 8px; height: 18px; border: 2.5px solid #0f172a; overflow: hidden; margin-bottom: 12px; display: flex; align-items: center; position: relative; }
         .progress-fill-bar { height: 100%; background: #22c55e; width: 0%; transition: width 0.3s ease; }
@@ -180,13 +183,11 @@
         }, 5000);
     </script>
 
-    <div id="loadingCover" class="loading-cover">
-        <div>🔴 セーブデータ よみこみちゅう...</div>
-    </div>
+    <div id="loadingCover" class="loading-cover">🔴 セーブデータを よみこみちゅう...</div>
     <div id="syncBadge" class="sync-badge">通信中...</div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
-    <div style="position: fixed; width: 1px; height: 1px; top: 0; left: 0; opacity: 0.01; z-index: -9999; pointer-events: none;">
+    <div style="position: fixed; width: 10px; height: 10px; top: 0; left: 0; opacity: 0.01; z-index: -9999; pointer-events: none;">
         <div id="bgmPlayerDiv"></div>
     </div>
 
@@ -268,6 +269,7 @@
             <button style="font-family:inherit; font-size:0.7rem; font-weight:bold; padding:6px; cursor:pointer;" onclick="adjustParentData('ball_normal')">➕🔴</button>
             <button style="font-family:inherit; font-size:0.7rem; font-weight:bold; padding:6px; cursor:pointer;" onclick="adjustParentData('ball_super')">➕🔵</button>
             <button style="font-family:inherit; font-size:0.7rem; font-weight:bold; padding:6px; cursor:pointer;" onclick="adjustParentData('ball_hyper')">➕🟡</button>
+            <button style="font-family:inherit; font-size:0.7rem; font-weight:bold; padding:6px; cursor:pointer;" onclick="adjustParentData('ball_master')">➕マスター</button>
             <button style="font-family:inherit; font-size:0.7rem; font-weight:bold; padding:6px; cursor:pointer;" onclick="adjustParentData('candy')">➕🍬あめ</button>
         </div>
         
@@ -275,6 +277,7 @@
             <label style="font-size:0.8rem; font-weight:bold; color:#0f172a; cursor:pointer;">
                 <input type="checkbox" id="devZukanToggle" onchange="toggleDevZukan()"> 🛠️ 図鑑全開モード (テスト用)
             </label>
+            <p style="font-size:0.6rem; color:#64748b; margin:4px 0 0 0;">ONにすると図鑑が全種類表示されます（セーブデータには影響しません）。</p>
         </div>
 
         <button style="width:100%; font-family:inherit; font-size:0.8rem; font-weight:bold; background:#ef4444; color:white; border:none; border-radius:8px; padding:10px; cursor:pointer;" onclick="resetCurrentUserData()">🚨 セーブデータをリセットする</button>
@@ -299,7 +302,7 @@
                         <button id="tabNormalBtn" class="zukan-tab-btn active" onclick="switchZukanTab('normal')">通常ずかん</button>
                         <button id="tabMegaBtn" class="zukan-tab-btn" onclick="switchZukanTab('mega')">メガシンカ</button>
                     </div>
-                    <div style="display: flex; gap: 4px; margin-bottom: 10px;">
+                    <div id="regionSelectWrapper" style="display: flex; gap: 4px; margin-bottom: 10px;">
                         <select id="regionSelector" class="region-select" onchange="renderZukanGrid()" style="margin-bottom: 0; flex: 1;">
                             <option value="all">🔍 ぜんぶ表示する</option>
                             <option value="kanto">カントー (No.001〜151)</option>
@@ -416,8 +419,8 @@
         const regionalStarters = [ { region: "とくべつ枠 ⚡", starters: [{id:"0025", name:"ピカチュウ"}] }, { region: "カントー地方 (初代)", starters: [{id:"0001", name:"フシギダネ"}, {id:"0004", name:"ヒトカゲ"}, {id:"0007", name:"ゼニガメ"}] }, { region: "ジョウト地方", starters: [{id:"0152", name:"チコリータ"}, {id:"0155", name:"ヒノアラシ"}, {id:"0158", name:"ワニノコ"}] }, { region: "ホウエン地方", starters: [{id:"0252", name:"キモリ"}, {id:"0255", name:"アチャモ"}, {id:"0258", name:"ミズゴロウ"}] }, { region: "シンオウ地方", starters: [{id:"0387", name:"ナエトル"}, {id:"0390", name:"ヒコザル"}, {id:"0393", name:"ポッチャマ"}] }, { region: "カロス地方", starters: [{id:"0650", name:"ハリマロン"}, {id:"0653", name:"フォッコ"}, {id:"0656", name:"ケロマツ"}] }, { region: "パルデア地方 (最新)", starters: [{id:"0906", name:"ニャオハ"}, {id:"0909", name:"ホゲータ"}, {id:"0912", name:"クワッス"}] } ];
         const starterPool = { water: [{id:"0009", name:"カメックス"}, {id:"0158", name:"ワニノコ"}, {id:"0258", name:"ミズゴロウ"}, {id:"0393", name:"ポッチャマ"}, {id:"0658", name:"ゲッコウガ"}], forest: [{id:"0003", name:"フシギバナ"}, {id:"0152", name:"チコリータ"}, {id:"0252", name:"キモリ"}, {id:"0387", name:"ナエトル"}, {id:"0906", name:"ニャオハ"}], volcano: [{id:"0006", name:"リザードン"}, {id:"0155", name:"ヒノアラシ"}, {id:"0255", name:"アチャモ"}, {id:"0390", name:"ヒコザル"}, {id:"0909", name:"ホゲータ"}], thunder: [{id:"0026", name:"ライチュウ"}, {id:"0448", name:"ルカリオ"}, {id:"0150", name:"ミュウツー"}, {id:"0384", name:"レックウザ"}] };
         const moves = { electric: ["10まんボルト", "かみなり", "ボルテッカー", "アイアンテール"], fire: ["ひのこ", "かえんほうしゃ", "だいもんじ", "ブラストバーン"], water: ["みずでっぽう", "ハイドロポンプ", "アクアブレイク", "みずしゅりけん"], grass: ["つるのむち", "リーフブレード", "ソーラービーム", "ハードプラント"], normal: ["たいあたり", "ずつき", "メガトンパンチ", "はかいこうせん"], mega: ["しんそく", "インファイト", "ガリョウテンセイ", "サイコブレイク", "りゅうのまい"] };
-        // 🔥 バグ修正: ぼうけん券の切れた画像を修正（ボールアイコンに差し替え）
-        const ballAssets = { normal: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png", super: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png", hyper: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png", master: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png" };
+        // 🔥 バグ修正: ぼうけん券の画像を、切れない確実な画像(mystic-ticket)に差し替えました
+        const ballAssets = { normal: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png", super: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png", hyper: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png", master: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png", ticket: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/mystic-ticket.png" };
 
         let currentUser = 'kouta';
         let battleState = {};
@@ -505,7 +508,7 @@
             } catch(e) {}
         }
 
-        // 🔥 デバウンス付きの安全なセーブ機構
+        // デバウンス付きの安全なセーブ機構
         let saveTimeout = null;
         function triggerCloudSave() {
             const badge = document.getElementById('syncBadge');
@@ -621,10 +624,8 @@
             return lessons;
         }
 
-        // 🔥 バグ修正: タスク名で厳格にチェック判定を行う
         function toggleTask(taskName) {
             unlockAudio(); playRetroSound('click');
-            // 安全装置
             if (!cloudData["study_progress_" + todayStr]) {
                 cloudData["study_progress_" + todayStr] = { kouta: { done: [] }, haruto: { done: [] } };
             }
@@ -635,14 +636,12 @@
             let doneList = cloudData["study_progress_" + todayStr][currentUser].done;
             
             if (doneList.includes(taskName)) {
-                // すでにある場合は削除
                 cloudData["study_progress_" + todayStr][currentUser].done = doneList.filter(t => t !== taskName);
             } else {
-                // ない場合は追加
                 cloudData["study_progress_" + todayStr][currentUser].done.push(taskName);
             }
             
-            // 🔥 バグ修正: UIを描画する前に報酬判定を行い、判定結果ごとセーブする！
+            // 🔥 バグ修正: UIを描画する前に報酬判定を行い、判定結果ごとセーブする
             checkZoneClear();
             renderUI();
             triggerCloudSave(); 
@@ -655,7 +654,11 @@
             if (!Array.isArray(cloudData["study_zukan_mega"][currentUser])) cloudData["study_zukan_mega"][currentUser] = [];
             if (!cloudData["study_v2_bag_balls"] || !cloudData["study_v2_bag_balls"][currentUser]) cloudData["study_v2_bag_balls"][currentUser] = { normal: 5, super: 1, hyper: 0, master: 0 };
             if (cloudData["study_v2_bag_candy"][currentUser] === undefined) cloudData["study_v2_bag_candy"][currentUser] = 0;
-            if (!cloudData["study_v2_calendar"][currentUser]) cloudData["study_v2_calendar"][currentUser] = [];
+            
+            // 🔥 バグ修正: カレンダーデータが壊れないように完全な配列として初期化する
+            if (!cloudData["study_v2_calendar"]) cloudData["study_v2_calendar"] = {};
+            if (!Array.isArray(cloudData["study_v2_calendar"][currentUser])) cloudData["study_v2_calendar"][currentUser] = [];
+            
             if (!cloudData["study_v3_chosen_challenge"]) cloudData["study_v3_chosen_challenge"] = {};
             if (!cloudData["study_progress_" + todayStr]) cloudData["study_progress_" + todayStr] = { kouta: { done: [] }, haruto: { done: [] } };
             if (!cloudData["study_progress_" + todayStr][currentUser].zoneClaimed) cloudData["study_progress_" + todayStr][currentUser].zoneClaimed = {};
@@ -717,7 +720,6 @@
             renderZukanGrid();
         }
 
-        // 🔥 バグ修正: 報酬判定をセーブの直前に実行し、結果も一緒にセーブさせる
         function checkZoneClear() {
             const prog = cloudData["study_progress_" + todayStr][currentUser];
             const doneList = prog.done || [];
@@ -800,7 +802,6 @@
             if (progressFill) progressFill.style.width = `${percent}%`;
         }
 
-        // 🔥 ひらがな説明文を絶対に探し出す超強化版！
         async function showZukanDetail(idStr) {
             unlockAudio(); playRetroSound('click');
             const baseId = parseInt(idStr.split('_')[0]);
@@ -818,11 +819,8 @@
                     const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${baseId}`);
                     const data = await res.json();
                     
-                    // 強化フィルター：ひらがな（ja-Hrkt）を全履歴から徹底的に探し出す
                     const hrktList = data.flavor_text_entries.filter(f => f.language.name === "ja-Hrkt");
                     const jaList = data.flavor_text_entries.filter(f => f.language.name === "ja");
-                    
-                    // ひらがな版があれば最新のものを、無ければ仕方なく漢字版の最新を出す
                     const flavor = (hrktList.length > 0) ? hrktList[hrktList.length - 1] : (jaList.length > 0 ? jaList[jaList.length - 1] : null);
                     
                     if (flavor) {
@@ -843,11 +841,19 @@
 
         function createPkmBox(grid, id, displayNum, hasIt) {
             const box = document.createElement('div'); box.className = hasIt ? 'grid-pokemon-box' : 'grid-pokemon-box unowned';
-            box.innerHTML = `<div class="zukan-number-badge">#${String(displayNum).padStart(3, '0')}</div><img src="${getImgUrl(id)}"><span id="zname-${id}-${Date.now()}">...</span>`;
+            const nameId = `zukan-name-${id}-${Date.now()}`;
+            box.innerHTML = `<div class="zukan-number-badge">#${String(displayNum).padStart(3, '0')}</div><img src="${getImgUrl(id)}" alt="?"><span id="${nameId}">...</span>`;
             box.onclick = () => { if (hasIt) showZukanDetail(id); };
             grid.appendChild(box);
-            if (hasIt) { getPokemonNameAsync(id).then(name => { const el = box.querySelector('span'); if(el) el.textContent = name; }); }
-            else { box.querySelector('span').textContent = "？？？？"; }
+
+            if (hasIt) {
+                getPokemonNameAsync(id).then(name => {
+                    const el = document.getElementById(nameId);
+                    if (el) el.textContent = name;
+                });
+            } else {
+                document.getElementById(nameId).textContent = "？？？？";
+            }
         }
 
         function openPartnerSelectionModal() {
@@ -864,14 +870,26 @@
                     const currentId = getEvolvedId(p.id, lv);
                     
                     const box = document.createElement('div'); box.className = 'partner-choice-box'; 
-                    box.innerHTML = `<div class="partner-lv-badge">Lv.${lv}</div><img src="${getImgUrl(currentId)}"><div>...</div>`;
+                    box.innerHTML = `
+                        <div class="partner-lv-badge">Lv.${lv}</div>
+                        <img src="${getImgUrl(currentId)}" alt="?">
+                        <div id="ps-${currentId}-${Date.now()}">...</div>
+                    `;
                     
-                    getPokemonNameAsync(currentId).then(n => { box.querySelectorAll('div')[1].textContent = n; });
+                    getPokemonNameAsync(currentId).then(n => {
+                        const el = box.querySelector('div[id^="ps-"]');
+                        if (el) el.textContent = n;
+                    });
+
                     box.addEventListener('click', () => {
                         playRetroSound('click');
                         cloudData["study_user_pokemon"][currentUser] = p.id; 
-                        if (!cloudData["study_zukan_normal"][currentUser].includes(p.id)) cloudData["study_zukan_normal"][currentUser].push(p.id);
-                        closePartnerSelectModal(); renderUI(); triggerCloudSave();
+                        if (!cloudData["study_zukan_normal"][currentUser].includes(p.id)) {
+                            cloudData["study_zukan_normal"][currentUser].push(p.id);
+                        }
+                        closePartnerSelectModal(); 
+                        renderUI(); 
+                        triggerCloudSave();
                     });
                     grid.appendChild(box);
                 });
@@ -881,30 +899,63 @@
         }
         function closePartnerSelectModal() { playRetroSound('click'); document.getElementById('partnerSelectModal').style.display = 'none'; }
 
-        // 🔥 バグ修正: ずかんを開いた瞬間に再計算と描画を強制実行する
+        // 🔥 バグ修正: 開いた瞬間に強制描画して初期表示を確保
         let zukanTab = 'normal';
         function openZukanModal() { 
-            unlockAudio(); 
-            playRetroSound('click'); 
+            unlockAudio(); playRetroSound('click'); 
             document.getElementById('zukanModal').style.display = 'flex'; 
             document.getElementById('regionSelector').value = 'all'; 
             switchZukanTab('normal'); 
-            // 開いた瞬間に強制描画
             renderZukanGrid();
         }
         function closeZukanModal() { playRetroSound('click'); document.getElementById('zukanModal').style.display = 'none'; }
-        function switchZukanTab(tab) { zukanTab = tab; document.getElementById('tabNormalBtn').style.background = tab==='normal'?'white':'#cbd5e1'; document.getElementById('tabMegaBtn').style.background = tab==='mega'?'white':'#cbd5e1'; document.getElementById('regionSelectWrapper').style.display = tab==='normal'?'flex':'none'; renderZukanGrid(); }
         
-        function openBagModal() { unlockAudio(); playRetroSound('click'); const c = document.getElementById('bagItemsContainer'); c.innerHTML=''; const items = [{t:'ぼうけん券', count:cloudData.study_balance[currentUser].gachaCount, act:"closeBagModal();openAdventureSelectionModal()"}, {t:'ふしぎなあめ', count:cloudData.study_v2_bag_candy[currentUser], act:"useCandyFromBag()"}]; items.forEach(i => { const r = document.createElement('div'); r.className='bag-item-row'; r.innerHTML=`<div class="bag-item-info"><span class="bag-item-title">${i.t}</span><span class="bag-item-count">x${i.count}</span></div><button class="battle-btn" style="width:auto; height:34px; font-size:0.9rem;" ${i.count<=0?'disabled':''} onclick="${i.act}">つかう</button>`; c.appendChild(r); }); document.getElementById('bagModal').style.display = 'flex'; }
+        // 🔥 バグ修正: 存在しなかったラッパーID(regionSelectWrapper)を追加したHTMLと連携
+        function switchZukanTab(tab) { 
+            zukanTab = tab; 
+            document.getElementById('tabNormalBtn').className = tab === 'normal' ? 'zukan-tab-btn active' : 'zukan-tab-btn';
+            document.getElementById('tabMegaBtn').className = tab === 'mega' ? 'zukan-tab-btn active' : 'zukan-tab-btn';
+            document.getElementById('regionSelectWrapper').style.display = tab === 'normal' ? 'flex' : 'none'; 
+            renderZukanGrid(); 
+        }
+        
+        function openBagModal() { unlockAudio(); playRetroSound('click'); const c = document.getElementById('bagItemsContainer'); c.innerHTML=''; const items = [{t:'ぼうけん券', count:cloudData.study_balance[currentUser].gachaCount, act:"closeBagModal();openAdventureSelectionModal()", img: ballAssets.ticket }, {t:'モンスターボール', count:cloudData.study_v2_bag_balls[currentUser].normal, act:"", img: ballAssets.normal }, {t:'スーパーボール', count:cloudData.study_v2_bag_balls[currentUser].super, act:"", img: ballAssets.super }, {t:'ハイパーボール', count:cloudData.study_v2_bag_balls[currentUser].hyper, act:"", img: ballAssets.hyper }, {t:'マスターボール', count:cloudData.study_v2_bag_balls[currentUser].master, act:"", img: ballAssets.master }, {t:'ふしぎなあめ', count:cloudData.study_v2_bag_candy[currentUser], act:"useCandyFromBag()", img: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rare-candy.png"}]; items.forEach(i => { const r = document.createElement('div'); r.className='bag-item-row'; r.innerHTML=`<div class="bag-item-info"><img src="${i.img}"><span class="bag-item-title">${i.t}</span><span class="bag-item-count">x${i.count}</span></div><button class="battle-btn" style="width:auto; height:34px; font-size:0.9rem;" ${(!i.act || i.count<=0)?'disabled':''} onclick="${i.act}">つかう</button>`; c.appendChild(r); }); document.getElementById('bagModal').style.display = 'flex'; }
         function closeBagModal() { playRetroSound('click'); document.getElementById('bagModal').style.display = 'none'; }
         function useCandyFromBag() { if(cloudData.study_v2_bag_candy[currentUser]>0){ const id = cloudData.study_user_pokemon[currentUser]; if(!id) return; playRetroSound('clear'); cloudData.study_v2_bag_candy[currentUser]--; cloudData.study_level[currentUser][id] = (cloudData.study_level[currentUser][id]||0)+3; alert(`🍬 あめをつかった！`); openBagModal(); renderUI(); triggerCloudSave(); } }
         
-        function openCalendarModal() { unlockAudio(); playRetroSound('click'); document.getElementById('calendarModal').style.display='flex'; }
+        // 🔥 バグ修正: 古いデータ形式の時にクラッシュしないように配列判定を追加
+        function openCalendarModal() { 
+            unlockAudio(); playRetroSound('click'); 
+            const calendarList = Array.isArray(cloudData["study_v2_calendar"][currentUser]) ? cloudData["study_v2_calendar"][currentUser] : [];
+            document.getElementById('totalStampLabel').textContent = `これまでのぼうけん日数: ${calendarList.length} 日`;
+            
+            const grid = document.getElementById('calendarGridDisplay'); grid.innerHTML = '';
+            ["日","月","火","水","木","金","土"].forEach(w => {
+                const h = document.createElement('div'); h.className = 'calendar-day-head'; h.textContent = w; grid.appendChild(h);
+            });
+            
+            const cYear = now.getFullYear(); const cMonth = now.getMonth(); 
+            document.getElementById('calendarMonthTitle').textContent = `${cYear}年 ${cMonth + 1}月`;
+            
+            const firstDay = new Date(cYear, cMonth, 1);
+            const startOffset = firstDay.getDay(); 
+            const daysInMonth = new Date(cYear, cMonth + 1, 0).getDate(); 
+            
+            for (let i = 0; i < startOffset; i++) {
+                const empty = document.createElement('div'); empty.className = 'calendar-cell'; grid.appendChild(empty);
+            }
+            for (let d = 1; d <= daysInMonth; d++) {
+                const cell = document.createElement('div'); const dateKey = `${cYear}-${String(cMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                const isStamped = calendarList.includes(dateKey);
+                cell.className = isStamped ? 'calendar-cell current-month stamped' : 'calendar-cell current-month';
+                cell.textContent = d; grid.appendChild(cell);
+            }
+            document.getElementById('calendarModal').style.display='flex'; 
+        }
         function closeCalendarModal() { playRetroSound('click'); document.getElementById('calendarModal').style.display='none'; }
         function openSecretParentMenu() { unlockAudio(); if(prompt("パスワード：")==="1022"){ document.getElementById('secretParentPanel').style.display='block'; window.scrollTo(0,9999); } }
         function closeSecretParentMenu() { playRetroSound('click'); document.getElementById('secretParentPanel').style.display='none'; }
         
-        // 🔥 ぼうけん券アイコン切れ対策 (ボール等と同じ画像を一時代用)
         function buyItem(name, price) {
             unlockAudio(); playRetroSound('click');
             const b = cloudData["study_balance"][currentUser];
@@ -920,7 +971,6 @@
             }
         }
 
-        // バトル関連
         function openAdventureSelectionModal() { unlockAudio(); playRetroSound('click'); if(cloudData.study_balance[currentUser].gachaCount<=0) return; document.getElementById('adventureModal').style.display = 'flex'; }
         function closeAdventureModal() { playRetroSound('click'); document.getElementById('adventureModal').style.display = 'none'; }
         
@@ -929,7 +979,7 @@
             cloudData.study_balance[currentUser].gachaCount--;
             switchBgmMode('battle');
 
-            const enemyId = "000" + (Math.floor(Math.random()*9)+1); // 仮ランダム
+            const enemyId = "000" + (Math.floor(Math.random()*9)+1); 
             const baseId = cloudData["study_user_pokemon"][currentUser];
             const currentMyId = getEvolvedId(baseId, calculateLevel(cloudData.study_level[currentUser][baseId]));
             
