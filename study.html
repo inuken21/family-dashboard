@@ -19,7 +19,6 @@
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        /* 🔥 フォントをドット絵風に統一！ */
         body { 
             font-family: 'DotGothic16', sans-serif; 
             background-color: var(--bg-color); 
@@ -36,14 +35,12 @@
         .secret-gear-btn { position: absolute; right: 4px; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: var(--border-color); padding: 6px; }
         .bgm-toggle-btn { position: absolute; left: 4px; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: var(--border-color); padding: 6px; }
         
-        /* 🔥 タブの隙間を空けて、GB風の太枠ブロックに変更 */
         .user-switcher { display: flex; gap: 16px; margin-bottom: 24px; }
         .user-tab { flex: 1; height: 56px; text-align: center; border: 4px solid var(--border-color); font-size: 1.2rem; font-family: inherit; cursor: pointer; background: #cbd5e1; color: var(--border-color); box-shadow: var(--box-shadow); border-radius: 4px; transition: transform 0.1s, box-shadow 0.1s; }
         .user-tab.kouta.active { background-color: var(--kouta-main); color: white; }
         .user-tab.haruto.active { background-color: var(--haruto-main); color: white; }
         .user-tab:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--border-color); }
 
-        /* 🔥 全体のカード（枠）もレトロ風に */
         .card { background: white; border-radius: 4px; padding: 18px 16px; margin-bottom: 24px; border: 4px solid var(--border-color); box-shadow: var(--box-shadow); }
         .card h2 { font-size: 1.1rem; margin: 0 0 14px 0; font-weight: normal; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px dotted var(--border-color); padding-bottom: 8px; }
 
@@ -103,7 +100,6 @@
         .shop-title-cell img { width: 24px; height: 24px; object-fit: contain; margin-right: 8px; flex-shrink: 0; image-rendering: pixelated; }
         .shop-price-cell { font-size: 1rem; color: #ea580c; white-space: nowrap; margin-left: 10px; text-align: right; }
 
-        /* モーダル群 */
         .modal-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 16px; }
         .modal-content { background: white; border: 6px solid var(--border-color); border-radius: 4px; padding: 20px; text-align: center; width: 100%; max-width: 320px; color: var(--text-color); box-shadow: 8px 8px 0px rgba(255,255,255,0.2); }
         
@@ -128,12 +124,33 @@
 </head>
 <body>
 
+    <script>
+        let appReady = false;
+        const fallbackTimer = setTimeout(() => {
+            if (!appReady) {
+                console.warn("通信タイムアウト。オフラインで強制起動します。");
+                appReady = true;
+                const cover = document.getElementById('loadingCover');
+                if(cover) cover.style.display = 'none';
+                
+                // 本体のスクリプトが読み込まれるまで待ってから画面を開く
+                const checkAndInit = setInterval(() => {
+                    if (typeof changeUser === 'function') {
+                        clearInterval(checkAndInit);
+                        changeUser('kouta');
+                    }
+                }, 500);
+            }
+        }, 5000);
+    </script>
+
     <div id="loadingCover" class="loading-cover">
         <div>🔴 セーブデータ よみこみちゅう...</div>
     </div>
     <div id="syncBadge" class="sync-badge">通信中...</div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
+
     <div style="position: fixed; width: 10px; height: 10px; top: 0; left: 0; opacity: 0.01; z-index: -9999; pointer-events: none;">
         <div id="bgmPlayerDiv"></div>
     </div>
@@ -370,7 +387,7 @@
         let currentUser = 'kouta';
         let battleState = {};
 
-        // 🔥 YouTube BGM ロジック (Play Inline対応でモバイルでも鳴るように！)
+        // 🔥 YouTube BGM ロジック
         let bgmPlayer;
         let isYoutubeReady = false;
         let isBgmOn = false;
@@ -378,7 +395,6 @@
         const MAIN_BGM_ID = 'e7n8DID-zVs'; // 赤緑 OP
         const BATTLE_BGM_ID = 'IQhk79DIq7A'; // 戦闘
         
-        // ユーザーが最初に画面を触った時に確実に起動させるフラグ
         let userHasInteracted = false;
 
         function onYouTubeIframeAPIReady() {
@@ -389,7 +405,6 @@
             });
         }
 
-        // タブ切り替えや画面タップ時に呼ばれる（初回起動ロック解除）
         function unlockAudio() {
             if(!userHasInteracted) {
                 userHasInteracted = true;
@@ -462,25 +477,25 @@
         let saveTimeout = null;
         function triggerCloudSave() {
             const badge = document.getElementById('syncBadge');
-            badge.textContent = "🔄 データを準備中...";
+            badge.textContent = "🔄 セーブをじゅんび...";
             badge.style.display = "block";
-            badge.style.background = "#eab308"; // 黄色
+            badge.style.background = "#eab308";
             
             if(saveTimeout) clearTimeout(saveTimeout);
             saveTimeout = setTimeout(async () => {
-                badge.textContent = "☁️ セーブ通信中...";
+                badge.textContent = "☁️ つうしんちゅう...";
                 try {
                     for (let key of Object.keys(cloudData)) {
                         await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'save', key: key, value: JSON.stringify(cloudData[key]) })});
                     }
-                    badge.textContent = "✅ セーブ完了！";
-                    badge.style.background = "#22c55e"; // 緑
+                    badge.textContent = "✅ きろくしました！";
+                    badge.style.background = "#22c55e";
                     setTimeout(() => { badge.style.display = "none"; badge.style.background = "var(--border-color)"; }, 2000);
                 } catch (e) {
-                    badge.textContent = "❌ セーブ失敗";
-                    badge.style.background = "#ef4444"; // 赤
+                    badge.textContent = "❌ セーブしっぱい";
+                    badge.style.background = "#ef4444";
                 }
-            }, 2500); // 最後の操作から2.5秒後に一気に送信
+            }, 2500); 
         }
 
         async function initApp() {
@@ -494,10 +509,12 @@
                         }
                     });
                     ['kouta', 'haruto'].forEach(user => {
-                        if (typeof cloudData.study_level[user] === 'number' || cloudData.study_level[user].exp !== undefined) {
-                            let oldExp = cloudData.study_level[user].exp || 0;
-                            cloudData.study_level[user] = {};
-                            if (cloudData.study_user_pokemon[user]) cloudData.study_level[user][cloudData.study_user_pokemon[user]] = oldExp;
+                        if (cloudData.study_level && cloudData.study_level[user]) {
+                            if (typeof cloudData.study_level[user] === 'number' || cloudData.study_level[user].exp !== undefined) {
+                                let oldExp = cloudData.study_level[user].exp || 0;
+                                cloudData.study_level[user] = {};
+                                if (cloudData.study_user_pokemon && cloudData.study_user_pokemon[user]) cloudData.study_level[user][cloudData.study_user_pokemon[user]] = oldExp;
+                            }
                         }
                     });
                 }
@@ -506,7 +523,8 @@
             if (!appReady) {
                 clearTimeout(fallbackTimer);
                 appReady = true;
-                document.getElementById('loadingCover').style.display = 'none';
+                const cover = document.getElementById('loadingCover');
+                if(cover) cover.style.display = 'none';
                 changeUser('kouta');
             }
         }
@@ -533,7 +551,7 @@
             currentUser = user;
             document.querySelectorAll('.user-tab').forEach(t => t.classList.remove('active'));
             document.querySelector(`.user-tab.${user}`).classList.add('active');
-            if (!cloudData["study_user_pokemon"][currentUser]) { openPartnerSelectionModal(); } else { renderUI(); }
+            if (!cloudData["study_user_pokemon"] || !cloudData["study_user_pokemon"][currentUser]) { openPartnerSelectionModal(); } else { renderUI(); }
         }
 
         function getLessons(user, dayIdx) {
@@ -558,7 +576,7 @@
             
             renderUI();
             checkZoneClear();
-            triggerCloudSave(); // 🔥 UI更新後にバックグラウンドでセーブ予約
+            triggerCloudSave(); 
         }
 
         function renderUI() {
@@ -566,7 +584,7 @@
             if (!cloudData["study_level"][currentUser]) cloudData["study_level"][currentUser] = {};
             if (!Array.isArray(cloudData["study_zukan_normal"][currentUser])) cloudData["study_zukan_normal"][currentUser] = [];
             if (!Array.isArray(cloudData["study_zukan_mega"][currentUser])) cloudData["study_zukan_mega"][currentUser] = [];
-            if (!cloudData["study_v2_bag_balls"][currentUser]) cloudData["study_v2_bag_balls"][currentUser] = { normal: 5, super: 1, hyper: 0, master: 0 };
+            if (!cloudData["study_v2_bag_balls"] || !cloudData["study_v2_bag_balls"][currentUser]) cloudData["study_v2_bag_balls"][currentUser] = { normal: 5, super: 1, hyper: 0, master: 0 };
             if (cloudData["study_v2_bag_candy"][currentUser] === undefined) cloudData["study_v2_bag_candy"][currentUser] = 0;
             if (!cloudData["study_v2_calendar"][currentUser]) cloudData["study_v2_calendar"][currentUser] = [];
             if (!cloudData["study_progress_" + todayStr]) cloudData["study_progress_" + todayStr] = { kouta: { done: [] }, haruto: { done: [] } };
@@ -624,7 +642,7 @@
             document.getElementById('parentCurrentTargetName').textContent = currentUser === 'kouta' ? 'こうた' : 'はると';
             document.getElementById('parentChallengePoolInput').value = (cloudData["study_v3_challenge_pool"][currentUser] || defaultPools[currentUser]).join(',');
             
-            // 🔥 図鑑の初期表示バグ解消：描画の最後に図鑑をこっそり裏でレンダリングさせておく
+            // 🔥 図鑑の初期表示バグ回避のため、見えないところで再描画しておく
             renderZukanGrid();
         }
 
@@ -662,7 +680,6 @@
             }
         }
 
-        // 🔥 パパママ用 図鑑全開テストモード
         let devZukanCompleteMode = false;
         function toggleDevZukan() {
             devZukanCompleteMode = document.getElementById('devZukanToggle').checked;
@@ -672,10 +689,8 @@
         function renderZukanGrid() {
             const grid = document.getElementById('zukanGridDisplay'); if (!grid) return; grid.innerHTML = '';
             
-            // 図鑑のセレクトボックスがない場合（初期ロード時など）は 'all' 扱いにする
             const selector = document.getElementById('regionSelector');
             const mode = selector ? selector.value : 'all';
-            
             const toggle = document.getElementById('caughtOnlyToggle');
             const showCaughtOnly = toggle ? toggle.checked : false;
             
@@ -792,6 +807,7 @@
         function closePartnerSelectModal() { playRetroSound('click'); document.getElementById('partnerSelectModal').style.display = 'none'; }
 
         // 各種モーダル開閉
+        let zukanTab = 'normal';
         function openZukanModal() { unlockAudio(); playRetroSound('click'); document.getElementById('zukanModal').style.display = 'flex'; document.getElementById('regionSelector').value = 'all'; switchZukanTab('normal'); }
         function closeZukanModal() { playRetroSound('click'); document.getElementById('zukanModal').style.display = 'none'; }
         function switchZukanTab(tab) { zukanTab = tab; document.getElementById('tabNormalBtn').style.background = tab==='normal'?'white':'#cbd5e1'; document.getElementById('tabMegaBtn').style.background = tab==='mega'?'white':'#cbd5e1'; document.getElementById('regionSelectWrapper').style.display = tab==='normal'?'flex':'none'; renderZukanGrid(); }
@@ -901,7 +917,6 @@
             }, 100);
         }
 
-        // 🔥 完全なリセット機能（本日のミッションも白紙に！）
         function resetCurrentUserData() {
             if(confirm("ほんとうに セーブデータを けしますか？")) {
                 cloudData.study_balance[currentUser] = { pokeen: 300, gachaCount: 0 };
