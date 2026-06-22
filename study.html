@@ -98,7 +98,7 @@
         .progress-fill-bar { height: 100%; background: #22c55e; width: 0%; transition: width 0.3s ease; }
         .progress-text-label { position: absolute; width: 100%; text-align: center; font-size: 0.75rem; font-weight: 900; color: #0f172a; }
 
-        .zukan-display-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; max-height: 240px; overflow-y: auto; padding-right: 4px; }
+        .zukan-display-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; max-height: 240px; overflow-y: auto; padding-right: 2px; }
         .grid-pokemon-box { background: white; border: 2px solid #0f172a; border-radius: 8px; padding: 6px 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 68px; position: relative; cursor: pointer; }
         .grid-pokemon-box:active { transform: scale(0.95); }
         .grid-pokemon-box img { width: 34px; height: 34px; object-fit: contain; }
@@ -161,7 +161,7 @@
         @keyframes ballWobble { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-12deg); } 75% { transform: rotate(12deg); } }
 
         .parent-panel { background: #f1f5f9; border: 3.5px solid #dc2626; margin-top: 24px; padding: 14px; border-radius: 16px; display: none; color: #0f172a; }
-        .sync-badge { position: fixed; bottom: 12px; right: 12px; background: rgba(0,0,0,0.8); color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 900; z-index: 1000; display: none; }
+        .sync-badge { position: fixed; bottom: 12px; right: 12px; background: rgba(0,0,0,0.8); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 900; z-index: 1000; }
         .loading-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; z-index: 10000; font-weight: 900; font-size: 1.1rem; }
     </style>
 </head>
@@ -179,10 +179,11 @@
         }, 5000);
     </script>
 
-    <div id="loadingCover" class="loading-cover">🔴 セーブデータを よみこみちゅう...</div>
+    <div id="loadingCover" class="loading-cover">🔴 ぼうけんのしょを 同期中...</div>
     <div id="syncBadge" class="sync-badge">同期完了</div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
+
     <div style="position: fixed; width: 10px; height: 10px; top: 0; left: 0; opacity: 0.01; z-index: -9999; pointer-events: none;">
         <div id="bgmPlayerDiv"></div>
     </div>
@@ -218,16 +219,11 @@
             <span id="lblMissionTitle">⚔️ 本日のミッション！</span> 
             <span id="expPreview" style="font-size:0.75rem; color:#64748b;">0/0</span>
         </h2>
-        
-        <div class="mission-hp-bg">
-            <div id="missionProgressBar" class="mission-hp-fill"></div>
-        </div>
-        
+        <div class="mission-hp-bg"><div id="missionProgressBar" class="mission-hp-fill"></div></div>
         <div class="slot-box" id="slotBoxArea">
             <div id="challengeSlotWindow" class="slot-window">🎰 ボタンをおして チャレンジを きめよう！</div>
             <button type="button" id="challengeSlotBtn" class="slot-trigger-btn" onclick="spinChallengeSlot()">スタート！</button>
         </div>
-
         <div id="questList"></div>
     </div>
 
@@ -245,26 +241,11 @@
     <div class="card">
         <h2><span id="lblShopTitle">🏪 フレンドリーショップ</span></h2>
         <div class="shop-grid">
-            <button class="shop-item-btn" onclick="buyItem('🍬 ふしぎなあめ', 100)">
-                <span class="shop-title-cell">🍬 ふしぎなあめ (レベルを1あげる)</span>
-                <span class="shop-price-cell">100 💰</span>
-            </button>
-            <button class="shop-item-btn" onclick="buyItem('🎫 ぼうけん券', 500)">
-                <span class="shop-title-cell">🎫 ぼうけん券 (1回おでかけ)</span>
-                <span class="shop-price-cell">500 💰</span>
-            </button>
-            <button class="shop-item-btn" onclick="buyItem('🔴 モンスターボール', 100)">
-                <span class="shop-title-cell"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png">モンスターボール (ほかくりつ:ふつう)</span>
-                <span class="shop-price-cell">100 💰</span>
-            </button>
-            <button class="shop-item-btn" onclick="buyItem('🔵 スーパーボール', 300)">
-                <span class="shop-title-cell"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png">スーパーボール (ほかくりつ:高め)</span>
-                <span class="shop-price-cell">300 💰</span>
-            </button>
-            <button class="shop-item-btn" onclick="buyItem('🟡 ハイパーボール', 600)">
-                <span class="shop-title-cell"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png">ハイパーボール (ほかくりつ:超高い)</span>
-                <span class="shop-price-cell">600 💰</span>
-            </button>
+            <button class="shop-item-btn" onclick="buyItem('🍬 ふしぎなあめ', 100)"><span class="shop-title-cell">🍬 ふしぎなあめ (レベルを1あげる)</span><span class="shop-price-cell">100 💰</span></button>
+            <button class="shop-item-btn" onclick="buyItem('🎫 ぼうけん券', 500)"><span class="shop-title-cell">🎫 ぼうけん券 (1回おでかけ)</span><span class="shop-price-cell">500 💰</span></button>
+            <button class="shop-item-btn" onclick="buyItem('🔴 モンスターボール', 100)"><span class="shop-title-cell"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png">モンスターボール (ほかくりつ:ふつう)</span><span class="shop-price-cell">100 💰</span></button>
+            <button class="shop-item-btn" onclick="buyItem('🔵 スーパーボール', 300)"><span class="shop-title-cell"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png">スーパーボール (ほかくりつ:高め)</span><span class="shop-price-cell">300 💰</span></button>
+            <button class="shop-item-btn" onclick="buyItem('🟡 ハイパーボール', 600)"><span class="shop-title-cell"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png">ハイパーボール (ほかくりつ:超高い)</span><span class="shop-price-cell">600 💰</span></button>
         </div>
     </div>
 
@@ -293,6 +274,7 @@
             <label style="font-size:0.8rem; font-weight:bold; color:#0f172a; cursor:pointer;">
                 <input type="checkbox" id="devZukanToggle" onchange="toggleDevZukan()"> 🛠️ 図鑑全開モード (テスト用)
             </label>
+            <p style="font-size:0.6rem; color:#64748b; margin:4px 0 0 0;">ONにすると図鑑が全種類表示されます（セーブデータには影響しません）。</p>
         </div>
 
         <button style="width:100%; font-family:inherit; font-size:0.8rem; font-weight:bold; background:#ef4444; color:white; border:none; border-radius:8px; padding:10px;" onclick="resetCurrentUserData()">🚨 セーブデータをリセットする</button>
@@ -317,7 +299,6 @@
                         <button id="tabNormalBtn" class="zukan-tab-btn active" onclick="switchZukanTab('normal')">通常ずかん</button>
                         <button id="tabMegaBtn" class="zukan-tab-btn" onclick="switchZukanTab('mega')">メガシンカ</button>
                     </div>
-                    
                     <div style="display: flex; gap: 4px; margin-bottom: 10px;">
                         <select id="regionSelector" class="region-select" onchange="renderZukanGrid()" style="margin-bottom: 0; flex: 1;">
                             <option value="all">🔍 ぜんぶ表示する</option>
@@ -333,7 +314,6 @@
                             <input type="checkbox" id="caughtOnlyToggle" onchange="renderZukanGrid()" style="margin-right: 4px;">もってる
                         </label>
                     </div>
-
                     <div class="progress-container">
                         <div id="zukanProgressBar" class="progress-fill-bar"></div>
                         <div id="zukanProgressText" class="progress-text-label">0 / 0 (0%)</div>
@@ -380,22 +360,10 @@
             <h3 id="lblAdventureModalTitle" style="margin:0; color:#facc15; font-size:1.05rem;">どこに ぼうけんに でかける？</h3>
             <p id="lblAdventureModalDesc" style="font-size:0.75rem; color:#94a3b8; margin:4px 0;">1ひきは かならず はじめて出会う ポケモンだぞ！</p>
             <div class="adventure-zone-grid">
-                <button class="zone-btn" onclick="startBattle('water')">
-                    <span class="zone-title" style="color:#3b82f6;">🌊 みずべ</span>
-                    <img id="shadow-water" class="silhouette-preview" src="" alt="?">
-                </button>
-                <button class="zone-btn" onclick="startBattle('forest')">
-                    <span class="zone-title" style="color:#22c55e;">🌳 もり</span>
-                    <img id="shadow-forest" class="silhouette-preview" src="" alt="?">
-                </button>
-                <button class="zone-btn" onclick="startBattle('volcano')">
-                    <span class="zone-title" style="color:#ef4444;">🌋 かざん</span>
-                    <img id="shadow-volcano" class="silhouette-preview" src="" alt="?">
-                </button>
-                <button class="zone-btn" onclick="startBattle('thunder')">
-                    <span class="zone-title" style="color:#eab308;">⚡ いなずま</span>
-                    <img id="shadow-thunder" class="silhouette-preview" src="" alt="?">
-                </button>
+                <button class="zone-btn" onclick="startBattle('water')"><span class="zone-title" style="color:#3b82f6;">🌊 みずべ</span><img id="shadow-water" class="silhouette-preview" src="" alt="?"></button>
+                <button class="zone-btn" onclick="startBattle('forest')"><span class="zone-title" style="color:#22c55e;">🌳 もり</span><img id="shadow-forest" class="silhouette-preview" src="" alt="?"></button>
+                <button class="zone-btn" onclick="startBattle('volcano')"><span class="zone-title" style="color:#ef4444;">🌋 かざん</span><img id="shadow-volcano" class="silhouette-preview" src="" alt="?"></button>
+                <button class="zone-btn" onclick="startBattle('thunder')"><span class="zone-title" style="color:#eab308;">⚡ いなずま</span><img id="shadow-thunder" class="silhouette-preview" src="" alt="?"></button>
             </div>
             <button type="button" class="battle-btn" style="background:#475569; margin-top:14px; height:38px; font-size:0.85rem;" onclick="closeAdventureModal()">やめる</button>
         </div>
@@ -434,15 +402,16 @@
         const now = new Date();
         const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
-        // マスタデータ
         const masterTasks = {
             kouta: { homework: ["音読", "計算ドリル", "漢字ドリル"], selfStudy: ["5分漢字ドリル", "ポケモン計算ドリル"] },
             haruto: { homework: [], selfStudy: ["えいご", "ポケモンドリル", "プリント"] }
         };
+
         const defaultPools = {
             kouta: ["うわばきをあらう", "くつをそろえる", "おさらをはこぶ", "どくしょ10ぷん"],
             haruto: ["うわばきをあらう", "くつをそろえる", "おさらをはこぶ", "どくしょ10ぷん"]
         };
+
         const regions = { kanto: { start: 1, end: 151 }, johto: { start: 152, end: 251 }, hoenn: { start: 252, end: 386 }, sinnoh: { start: 387, end: 493 }, unova: { start: 494, end: 649 }, kalos: { start: 650, end: 721 }, paldea: { start: 906, end: 1025 } };
         const megaList = [ {id:"0006_f2", name:"メガリザードンX"}, {id:"0006_f3", name:"メガリザードンY"}, {id:"0003_f2", name:"メガフシギバナ"}, {id:"0009_f2", name:"メガカメックス"}, {id:"0150_f2", name:"メガミュウツーX"}, {id:"0150_f3", name:"メガミュウツーY"}, {id:"0384_f2", name:"メガレックウザ"},  {id:"0094_f2", name:"メガゲンガー"}, {id:"0448_f2", name:"メガルカリオ"}, {id:"0257_f2", name:"メガバシャーモ"} ];
         const regionalStarters = [ { region: "とくべつ枠 ⚡", starters: [{id:"0025", name:"ピカチュウ"}] }, { region: "カントー地方 (初代)", starters: [{id:"0001", name:"フシギダネ"}, {id:"0004", name:"ヒトカゲ"}, {id:"0007", name:"ゼニガメ"}] }, { region: "ジョウト地方", starters: [{id:"0152", name:"チコリータ"}, {id:"0155", name:"ヒノアラシ"}, {id:"0158", name:"ワニノコ"}] }, { region: "ホウエン地方", starters: [{id:"0252", name:"キモリ"}, {id:"0255", name:"アチャモ"}, {id:"0258", name:"ミズゴロウ"}] }, { region: "シンオウ地方", starters: [{id:"0387", name:"ナエトル"}, {id:"0390", name:"ヒコザル"}, {id:"0393", name:"ポッチャマ"}] }, { region: "カロス地方", starters: [{id:"0650", name:"ハリマロン"}, {id:"0653", name:"フォッコ"}, {id:"0656", name:"ケロマツ"}] }, { region: "パルデア地方 (最新)", starters: [{id:"0906", name:"ニャオハ"}, {id:"0909", name:"ホゲータ"}, {id:"0912", name:"クワッス"}] } ];
@@ -450,10 +419,6 @@
         const moves = { electric: ["10まんボルト", "かみなり", "ボルテッカー", "アイアンテール"], fire: ["ひのこ", "かえんほうしゃ", "だいもんじ", "ブラストバーン"], water: ["みずでっぽう", "ハイドロポンプ", "アクアブレイク", "みずしゅりけん"], grass: ["つるのむち", "リーフブレード", "ソーラービーム", "ハードプラント"], normal: ["たいあたり", "ずつき", "メガトンパンチ", "はかいこうせん"], mega: ["しんそく", "インファイト", "ガリョウテンセイ", "サイコブレイク", "りゅうのまい"] };
         const ballAssets = { normal: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png", super: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png", hyper: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png", master: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png" };
 
-        let currentUser = 'kouta';
-        let battleState = {};
-
-        // 🔥 クラウドデータの初期構造（個別EXP化済み）
         let cloudData = {
             "study_user_pokemon": { "kouta": "0025", "haruto": "0004" },
             "study_balance": { "kouta": { "pokeen": 300, "gachaCount": 0 }, "haruto": { "pokeen": 300, "gachaCount": 0 } },
@@ -468,53 +433,78 @@
             "study_v3_chosen_challenge": { "kouta": null, "haruto": null }
         };
 
-        // 🔥 YouTube BGM ロジック
+        let currentUser = 'kouta';
+        let battleState = {};
+
+        // 🔥 YouTube Player API (Playsinlineでスマホ・iPad対応！)
         let bgmPlayer;
         let isYoutubeReady = false;
         let isBgmOn = false;
         let currentBgmMode = 'main';
-        const MAIN_BGM_ID = 'e7n8DID-zVs';   // 赤緑 OP
-        const BATTLE_BGM_ID = 'IQhk79DIq7A'; // 戦闘
         
-        let userHasInteracted = false;
+        const MAIN_BGM_ID = 'e7n8DID-zVs';   // 赤緑 OP
+        const BATTLE_BGM_ID = 'IQhk79DIq7A'; // 戦闘！野生ポケモン
 
         function onYouTubeIframeAPIReady() {
             bgmPlayer = new YT.Player('bgmPlayerDiv', {
-                height: '10', width: '10', videoId: MAIN_BGM_ID,
+                height: '10',
+                width: '10',
+                videoId: MAIN_BGM_ID,
                 playerVars: { 'playsinline': 1, 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': MAIN_BGM_ID },
-                events: { 'onReady': (e) => { e.target.setVolume(25); isYoutubeReady = true; } }
+                events: {
+                    'onReady': (e) => {
+                        e.target.setVolume(20);
+                        isYoutubeReady = true;
+                    },
+                    'onStateChange': (e) => {
+                        if (e.data === YT.PlayerState.ENDED) e.target.playVideo();
+                    }
+                }
             });
         }
 
-        function unlockAudio() {
-            if(!userHasInteracted) {
-                userHasInteracted = true;
-                if(isYoutubeReady && isBgmOn) bgmPlayer.playVideo();
-            }
-        }
-
         function toggleBGM() {
-            unlockAudio();
             isBgmOn = !isBgmOn;
             document.getElementById('bgmToggleBtn').textContent = isBgmOn ? "🔊" : "🔇";
-            if (!isYoutubeReady) return;
-            if(isBgmOn) { bgmPlayer.playVideo(); } else { bgmPlayer.pauseVideo(); }
+            if (!isYoutubeReady) {
+                if(isBgmOn) alert("おんがくの じゅんびちゅう です。もうすこし まってね！");
+                isBgmOn = false;
+                document.getElementById('bgmToggleBtn').textContent = "🔇";
+                return;
+            }
+            if(isBgmOn) {
+                bgmPlayer.playVideo();
+            } else {
+                bgmPlayer.pauseVideo();
+            }
         }
 
         function switchBgmMode(mode) {
             if (currentBgmMode === mode) return;
             currentBgmMode = mode;
             if (!isYoutubeReady) return;
+            
             let targetId = mode === 'main' ? MAIN_BGM_ID : BATTLE_BGM_ID;
+            let volume = mode === 'main' ? 20 : 35;
+            
             bgmPlayer.loadVideoById({videoId: targetId});
-            if (!isBgmOn) setTimeout(() => { bgmPlayer.pauseVideo(); }, 100);
+            bgmPlayer.setVolume(volume);
+            
+            if (!isBgmOn) {
+                setTimeout(() => { bgmPlayer.pauseVideo(); }, 100);
+            }
         }
 
-        // 🔥 ピコピコ効果音
+        // ピコピコ効果音
         let audioCtx = null;
-        function getAudioCtx() { if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} } return audioCtx; }
+        function getAudioCtx() {
+            if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} }
+            return audioCtx;
+        }
+
         function playRetroSound(type) {
-            const ctx = getAudioCtx(); if(!ctx) return;
+            const ctx = getAudioCtx();
+            if(!ctx) return;
             if(ctx.state === 'suspended') ctx.resume();
             const t = ctx.currentTime;
             try {
@@ -539,32 +529,6 @@
             } catch(e) {}
         }
 
-        // 🔥 デバウンス付きの安全なセーブ機構
-        let saveTimeout = null;
-        function triggerCloudSave() {
-            const badge = document.getElementById('syncBadge');
-            badge.textContent = "🔄 セーブをじゅんび...";
-            badge.style.display = "block";
-            badge.style.background = "#eab308";
-            
-            if(saveTimeout) clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(async () => {
-                badge.textContent = "☁️ つうしんちゅう...";
-                try {
-                    for (let key of Object.keys(cloudData)) {
-                        await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'save', key: key, value: JSON.stringify(cloudData[key]) })});
-                    }
-                    badge.textContent = "✅ きろくしました！";
-                    badge.style.background = "#22c55e";
-                    setTimeout(() => { badge.style.display = "none"; badge.style.background = "var(--border-color)"; }, 2000);
-                } catch (e) {
-                    badge.textContent = "❌ セーブしっぱい";
-                    badge.style.background = "#ef4444";
-                }
-            }, 2500); 
-        }
-
-        // APIデータキャッシュ
         const pkmNameCache = {}; 
         async function getPokemonNameAsync(idStr) {
             const baseId = parseInt(idStr.split('_')[0]);
@@ -582,7 +546,29 @@
 
         function playPokemonCry(idStr) {
             const baseId = parseInt(idStr.split('_')[0]);
-            try { fetch(`https://pokeapi.co/api/v2/pokemon/${baseId}`).then(r=>r.json()).then(d=>{ if(d.cries && d.cries.latest) new Audio(d.cries.latest).play().catch(e=>{}); }); } catch(e){}
+            try {
+                fetch(`https://pokeapi.co/api/v2/pokemon/${baseId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.cries && data.cries.latest) {
+                        const audio = new Audio(data.cries.latest);
+                        audio.play().catch(e => {});
+                    }
+                });
+            } catch(e) {}
+        }
+
+        async function saveAllToCloud() {
+            const badge = document.getElementById('syncBadge');
+            if (badge) badge.textContent = "☁️ セーブ中...";
+            try {
+                for (let key of Object.keys(cloudData)) {
+                    await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'save', key: key, value: JSON.stringify(cloudData[key]) })});
+                }
+                if (badge) badge.textContent = "同期完了";
+            } catch (e) {
+                if (badge) badge.textContent = "セーブエラー";
+            }
         }
 
         async function initApp() {
@@ -595,15 +581,20 @@
                             try { cloudData[k] = JSON.parse(res[k]); } catch(e) { cloudData[k] = res[k]; }
                         }
                     });
+                    
                     ['kouta', 'haruto'].forEach(user => {
-                        if (cloudData.study_level && cloudData.study_level[user]) {
-                            if (typeof cloudData.study_level[user] === 'number' || cloudData.study_level[user].exp !== undefined) {
-                                let oldExp = cloudData.study_level[user].exp || 0;
-                                cloudData.study_level[user] = {};
-                                if (cloudData.study_user_pokemon && cloudData.study_user_pokemon[user]) cloudData.study_level[user][cloudData.study_user_pokemon[user]] = oldExp;
+                        if (typeof cloudData.study_level[user] === 'number' || cloudData.study_level[user].exp !== undefined) {
+                            let oldExp = cloudData.study_level[user].exp || 0;
+                            cloudData.study_level[user] = {};
+                            if (cloudData.study_user_pokemon[user]) {
+                                cloudData.study_level[user][cloudData.study_user_pokemon[user]] = oldExp;
                             }
                         }
                     });
+                    
+                    if (Array.isArray(cloudData["study_v3_challenge_pool"])) {
+                        cloudData["study_v3_challenge_pool"] = { kouta: [...cloudData["study_v3_challenge_pool"]], haruto: [...cloudData["study_v3_challenge_pool"]] };
+                    }
                 }
             } catch(e) {}
             
@@ -613,7 +604,7 @@
                 const cover = document.getElementById('loadingCover');
                 if(cover) cover.style.display = 'none';
                 
-                // 🔥 図鑑の初期表示バグ回避のため、見えないところで再描画しておく
+                // 図鑑初期化バグ回避のため一度強制的にリセット
                 const regionSel = document.getElementById('regionSelector');
                 if (regionSel) regionSel.value = 'all';
                 
@@ -636,7 +627,8 @@
         function getEvolvedId(baseId, level) {
             if (!baseId || baseId === "0025") return "0025";
             let offset = 0;
-            if (level >= 36) offset = 2; else if (level >= 16) offset = 1;
+            if (level >= 36) offset = 2;
+            else if (level >= 16) offset = 1;
             return String(parseInt(baseId) + offset).padStart(4, '0');
         }
 
@@ -651,49 +643,63 @@
         }
 
         function changeUser(user) {
-            unlockAudio(); playRetroSound('click');
+            playRetroSound('click');
             currentUser = user;
             document.querySelectorAll('.user-tab').forEach(t => t.classList.remove('active'));
             document.querySelector(`.user-tab.${user}`).classList.add('active');
-            if (!cloudData["study_user_pokemon"] || !cloudData["study_user_pokemon"][currentUser]) { openPartnerSelectionModal(); } else { renderUI(); }
+            
+            if (!cloudData["study_user_pokemon"] || !cloudData["study_user_pokemon"][currentUser]) { 
+                openPartnerSelectionModal(); 
+            } else { 
+                renderUI(); 
+            }
         }
 
         function getLessons(user, dayIdx) {
             let lessons = [];
             if (user === 'kouta') {
-                if (dayIdx === 1 || dayIdx === 4) lessons.push("プール（スイミング）");
-                if (dayIdx === 5) lessons.push("おおつかたいそう");
+                if (dayIdx === 1 || dayIdx === 4) lessons.push("プール（スイミング） 🏊‍♂️");
+                if (dayIdx === 5) lessons.push("おおつかたいそう 🤸");
             } else {
-                if (dayIdx === 1) lessons.push("ぷーる（すいみんぐ）");
-                if (dayIdx === 4) lessons.push("ようちえんさっかー");
-                if (dayIdx === 5) lessons.push("おおつかたいそう");
-                if (dayIdx === 0) lessons.push("さっかーの れんしゅう");
+                if (dayIdx === 1) lessons.push("ぷーる（すいみんぐ） 🏊‍♂️");
+                if (dayIdx === 4) lessons.push("ようちえんさっかー ⚽");
+                if (dayIdx === 5) lessons.push("おおつかたいそう 🤸");
+                if (dayIdx === 0) lessons.push("さっかーの れんしゅう ⚽");
             }
             return lessons;
         }
 
         function toggleTask(task) {
-            unlockAudio(); playRetroSound('click');
+            playRetroSound('click');
             let doneList = cloudData["study_progress_" + todayStr][currentUser].done;
-            if (doneList.includes(task)) cloudData["study_progress_" + todayStr][currentUser].done = doneList.filter(t => t !== task);
-            else cloudData["study_progress_" + todayStr][currentUser].done.push(task);
-            
+            if (doneList.includes(task)) {
+                cloudData["study_progress_" + todayStr][currentUser].done = doneList.filter(t => t !== task);
+            } else {
+                cloudData["study_progress_" + todayStr][currentUser].done.push(task);
+            }
+            saveAllToCloud();
             renderUI();
             checkZoneClear();
-            triggerCloudSave(); 
         }
 
         function renderUI() {
-            if (!cloudData["study_balance"][currentUser]) cloudData["study_balance"][currentUser] = { pokeen: 300, gachaCount: 1 };
+            if (!cloudData["study_balance"][currentUser]) cloudData["study_balance"][currentUser] = { "pokeen": 300, "gachaCount": 1 };
             if (!cloudData["study_level"][currentUser]) cloudData["study_level"][currentUser] = {};
             if (!Array.isArray(cloudData["study_zukan_normal"][currentUser])) cloudData["study_zukan_normal"][currentUser] = [];
             if (!Array.isArray(cloudData["study_zukan_mega"][currentUser])) cloudData["study_zukan_mega"][currentUser] = [];
-            if (!cloudData["study_v2_bag_balls"] || !cloudData["study_v2_bag_balls"][currentUser]) cloudData["study_v2_bag_balls"][currentUser] = { normal: 5, super: 1, hyper: 0, master: 0 };
+            if (!cloudData["study_v2_bag_balls"] || !cloudData["study_v2_bag_balls"][currentUser]) {
+                if(!cloudData["study_v2_bag_balls"]) cloudData["study_v2_bag_balls"] = {};
+                cloudData["study_v2_bag_balls"][currentUser] = { normal: 5, super: 1, hyper: 0, master: 0 };
+            }
+            if (!cloudData["study_v2_bag_candy"]) cloudData["study_v2_bag_candy"] = {};
             if (cloudData["study_v2_bag_candy"][currentUser] === undefined) cloudData["study_v2_bag_candy"][currentUser] = 0;
+            if (!cloudData["study_v2_calendar"]) cloudData["study_v2_calendar"] = {};
             if (!cloudData["study_v2_calendar"][currentUser]) cloudData["study_v2_calendar"][currentUser] = [];
             if (!cloudData["study_v3_chosen_challenge"]) cloudData["study_v3_chosen_challenge"] = {};
-            if (!cloudData["study_progress_" + todayStr]) cloudData["study_progress_" + todayStr] = { kouta: { done: [] }, haruto: { done: [] } };
-            if (!cloudData["study_progress_" + todayStr][currentUser].zoneClaimed) cloudData["study_progress_" + todayStr][currentUser].zoneClaimed = {};
+            if (!cloudData["study_progress_" + todayStr]) cloudData["study_progress_" + todayStr] = { "kouta": { "done": [] }, "haruto": { "done": [] } };
+            if (!cloudData["study_progress_" + todayStr][currentUser].zoneClaimed) {
+                cloudData["study_progress_" + todayStr][currentUser].zoneClaimed = {};
+            }
 
             const balance = cloudData["study_balance"][currentUser];
             const baseId = cloudData["study_user_pokemon"][currentUser];
@@ -709,7 +715,9 @@
                 const currentEvolvedId = getEvolvedId(baseId, level);
                 document.getElementById('statusBarPartnerImg').style.display = "block";
                 document.getElementById('statusBarPartnerImg').src = getImgUrl(currentEvolvedId);
-                getPokemonNameAsync(currentEvolvedId).then(name => document.getElementById('statusBarPartnerName').textContent = name + ` (Lv.${level})`);
+                getPokemonNameAsync(currentEvolvedId).then(name => {
+                    document.getElementById('statusBarPartnerName').textContent = name + ` (Lv.${level})`;
+                });
             } else {
                 document.getElementById('statusBarPartnerImg').style.display = "none";
                 document.getElementById('statusBarPartnerName').textContent = "---";
@@ -720,21 +728,45 @@
             const slotArea = document.getElementById('slotBoxArea');
             const chosenChallenge = cloudData["study_v3_chosen_challenge"][currentUser];
             
-            if (chosenChallenge) { slotArea.style.display = "none"; } 
-            else { slotArea.style.display = "flex"; winEl.textContent = "🎰 ボタンをおして チャレンジを きめよう！"; slotBtn.style.display = "inline-block"; slotBtn.disabled = false; }
+            if (chosenChallenge) {
+                slotArea.style.display = "none";
+            } else {
+                slotArea.style.display = "flex";
+                winEl.textContent = "🎰 ボタンをおして チャレンジを きめよう！";
+                slotBtn.style.display = "inline-block";
+                slotBtn.disabled = false;
+            }
 
-            const listEl = document.getElementById('questList'); listEl.innerHTML = '';
-            let totalTasks = 0, completedTasks = 0;
+            const listEl = document.getElementById('questList'); 
+            listEl.innerHTML = '';
+            
+            let totalTasks = 0;
+            let completedTasks = 0;
             const doneList = cloudData["study_progress_" + todayStr][currentUser]?.done || [];
 
             function renderZone(title, icon, colorClass, tasks) {
                 if (tasks.length === 0) return;
-                const header = document.createElement('div'); header.className = `zone-header ${colorClass}`; header.innerHTML = `${icon} ${title}`; listEl.appendChild(header);
-                const container = document.createElement('div'); container.className = 'zone-container';
+                const header = document.createElement('div');
+                header.className = `zone-header ${colorClass}`;
+                header.innerHTML = `${icon} ${title}`;
+                listEl.appendChild(header);
+
+                const container = document.createElement('div');
+                container.className = 'zone-container';
+
                 tasks.forEach(task => {
-                    totalTasks++; const isDone = doneList.includes(task); if (isDone) completedTasks++;
-                    const item = document.createElement('div'); item.className = `quest-item ${isDone ? 'done' : ''}`; item.onclick = () => toggleTask(task);
-                    item.innerHTML = `<div class="quest-fake-cb">${isDone ? '✔️' : ''}</div><div class="quest-cell-text">${task}</div>`;
+                    totalTasks++;
+                    const isDone = doneList.includes(task);
+                    if (isDone) completedTasks++;
+
+                    const item = document.createElement('div');
+                    item.className = `quest-item ${isDone ? 'done' : ''}`;
+                    item.onclick = () => toggleTask(task);
+                    
+                    item.innerHTML = `
+                        <div class="quest-fake-cb">${isDone ? '✔️' : ''}</div>
+                        <div class="quest-cell-text">${task}</div>
+                    `;
                     container.appendChild(item);
                 });
                 listEl.appendChild(container);
@@ -743,15 +775,17 @@
             renderZone("しゅくだい", "🎒", "hw-zone", masterTasks[currentUser].homework);
             renderZone("じしゅう", "📖", "self-zone", masterTasks[currentUser].selfStudy);
             renderZone("ならいごと", "🏃", "lesson-zone", getLessons(currentUser, now.getDay()));
-            if (chosenChallenge) renderZone("チャレンジ", "🔥", "challenge-zone", [chosenChallenge]);
+            
+            if (chosenChallenge) {
+                renderZone("チャレンジ", "🔥", "challenge-zone", [chosenChallenge]);
+            }
 
             document.getElementById('expPreview').textContent = `${completedTasks}/${totalTasks}`;
             document.getElementById('missionProgressBar').style.width = totalTasks === 0 ? "0%" : `${(completedTasks/totalTasks)*100}%`;
+
             document.getElementById('parentCurrentTargetName').textContent = currentUser === 'kouta' ? 'こうた' : 'はると';
-            document.getElementById('parentChallengePoolInput').value = (cloudData["study_v3_challenge_pool"][currentUser] || defaultPools[currentUser]).join(',');
-            
-            // 図鑑の初期表示バグ回避のため、見えないところで再描画しておく
-            renderZukanGrid();
+            const currentPool = cloudData["study_v3_challenge_pool"][currentUser] || defaultPools[currentUser];
+            document.getElementById('parentChallengePoolInput').value = currentPool.join(',');
         }
 
         function checkZoneClear() {
@@ -761,82 +795,225 @@
             const baseId = cloudData["study_user_pokemon"][currentUser];
             
             const zones = [
-                { id: 'hw', name: 'しゅくだい', tasks: masterTasks[currentUser].homework, reward: () => { cloudData.study_balance[currentUser].pokeen += 100; cloudData.study_v2_bag_balls[currentUser].normal += 1; cloudData.study_balance[currentUser].gachaCount += 1; return "💰100ぽけえん、🔴ボールx1、🎫ぼうけん券x1"; } },
-                { id: 'self', name: 'じしゅう', tasks: masterTasks[currentUser].selfStudy, reward: () => { cloudData.study_balance[currentUser].pokeen += 100; cloudData.study_v2_bag_balls[currentUser].normal += 1; cloudData.study_balance[currentUser].gachaCount += 1; return "💰100ぽけえん、🔴ボールx1、🎫ぼうけん券x1"; } },
-                { id: 'lesson', name: 'ならいごと', tasks: getLessons(currentUser, now.getDay()), reward: () => { cloudData.study_balance[currentUser].pokeen += 150; cloudData.study_balance[currentUser].gachaCount += 1; return "💰150ぽけえん、🎫ぼうけん券x1"; } }
+                { id: 'hw', name: 'しゅくだい', tasks: masterTasks[currentUser].homework,
+                  reward: () => { cloudData.study_balance[currentUser].pokeen += 100; cloudData.study_v2_bag_balls[currentUser].normal += 1; cloudData.study_balance[currentUser].gachaCount += 1; return "💰100ぽけえん、🔴ボールx1、🎫ぼうけん券x1"; } },
+                { id: 'self', name: 'じしゅう', tasks: masterTasks[currentUser].selfStudy,
+                  reward: () => { cloudData.study_balance[currentUser].pokeen += 100; cloudData.study_v2_bag_balls[currentUser].normal += 1; cloudData.study_balance[currentUser].gachaCount += 1; return "💰100ぽけえん、🔴ボールx1、🎫ぼうけん券x1"; } },
+                { id: 'lesson', name: 'ならいごと', tasks: getLessons(currentUser, now.getDay()),
+                  reward: () => { cloudData.study_balance[currentUser].pokeen += 150; cloudData.study_balance[currentUser].gachaCount += 1; return "💰150ぽけえん、🎫ぼうけん券x1"; } }
             ];
+
             const chosenChallenge = cloudData["study_v3_chosen_challenge"][currentUser];
-            if (chosenChallenge) zones.push({ id: 'chal', name: 'チャレンジ', tasks: [chosenChallenge], reward: () => { cloudData.study_balance[currentUser].gachaCount += 1; if(baseId) cloudData.study_level[currentUser][baseId] = (cloudData.study_level[currentUser][baseId] || 0) + 3; return "🎫ぼうけん券x1 と 🌟経験値アップ！"; } });
+            if (chosenChallenge) {
+                zones.push({ id: 'chal', name: 'チャレンジ', tasks: [chosenChallenge],
+                  reward: () => { 
+                      cloudData.study_balance[currentUser].gachaCount += 1; 
+                      if(baseId) cloudData.study_level[currentUser][baseId] = (cloudData.study_level[currentUser][baseId] || 0) + 3; 
+                      return "🎫ぼうけん券x1 と 🌟経験値アップ！"; 
+                  } 
+                });
+            }
 
             let newlyClaimed = [];
+
             zones.forEach(z => {
                 if (z.tasks.length > 0 && !claimed[z.id]) {
-                    if (z.tasks.every(t => doneList.includes(t))) {
-                        claimed[z.id] = true; newlyClaimed.push(`【${z.name}】クリア！\n👉 ${z.reward()}`);
+                    const isAllDone = z.tasks.every(t => doneList.includes(t));
+                    if (isAllDone) {
+                        claimed[z.id] = true;
+                        const msg = z.reward();
+                        newlyClaimed.push(`【${z.name}】クリア！\n👉 ${msg}`);
                     }
                 }
             });
 
             if (newlyClaimed.length > 0) {
-                playRetroSound('clear'); prog.zoneClaimed = claimed;
+                playRetroSound('clear'); 
+                prog.zoneClaimed = claimed;
+                
                 const calendarList = cloudData["study_v2_calendar"][currentUser];
                 if (!calendarList.includes(todayStr)) {
                     calendarList.push(todayStr);
-                    if (calendarList.length % 5 === 0) { cloudData["study_v2_bag_candy"][currentUser]++; newlyClaimed.push("🏅 スタンプが5マス貯まり『ふしぎなあめ』をゲット！"); }
+                    if (calendarList.length % 5 === 0) {
+                        cloudData["study_v2_bag_candy"][currentUser]++;
+                        newlyClaimed.push("🏅 スタンプが5マス貯まったので『ふしぎなあめ』が届いたぞ！");
+                    }
                 }
-                setTimeout(() => { alert("🎉 ゾーンクリア！\n\n" + newlyClaimed.join("\n\n")); renderUI(); triggerCloudSave(); }, 100);
+
+                setTimeout(() => {
+                    alert("🎉 ゾーンクリア！\n\n" + newlyClaimed.join("\n\n"));
+                    saveAllToCloud();
+                    renderUI();
+                }, 100);
             }
         }
 
+        function openPartnerSelectionModal() {
+            playRetroSound('click');
+            const container = document.getElementById('partnerSelectGroupContainer'); container.innerHTML = '';
+            
+            regionalStarters.forEach(group => {
+                const title = document.createElement('div'); title.className = 'region-group-title'; title.textContent = group.region; container.appendChild(title);
+                const grid = document.createElement('div'); grid.className = 'partner-select-grid';
+                
+                group.starters.forEach(p => {
+                    const exp = cloudData.study_level[currentUser][p.id] || 0;
+                    const lv = calculateLevel(exp);
+                    const currentId = getEvolvedId(p.id, lv);
+                    
+                    const box = document.createElement('div'); box.className = 'partner-choice-box'; 
+                    box.innerHTML = `
+                        <div class="partner-lv-badge">Lv.${lv}</div>
+                        <img src="${getImgUrl(currentId)}" alt="?">
+                        <div id="ps-${currentId}-${Date.now()}">...</div>
+                    `;
+                    
+                    getPokemonNameAsync(currentId).then(n => {
+                        const el = box.querySelector('div[id^="ps-"]');
+                        if (el) el.textContent = n;
+                    });
+
+                    box.addEventListener('click', () => {
+                        playRetroSound('coin');
+                        cloudData["study_user_pokemon"][currentUser] = p.id; 
+                        
+                        // 🔥 相棒に選んだら即座に図鑑に登録
+                        if (!cloudData["study_zukan_normal"][currentUser].includes(p.id)) {
+                            cloudData["study_zukan_normal"][currentUser].push(p.id);
+                        }
+                        
+                        closePartnerSelectModal(); 
+                        renderUI(); 
+                        saveAllToCloud();
+                    });
+                    grid.appendChild(box);
+                });
+                container.appendChild(grid);
+            });
+            document.getElementById('partnerSelectModal').style.display = 'flex';
+        }
+        function closePartnerSelectModal() { playRetroSound('click'); document.getElementById('partnerSelectModal').style.display = 'none'; }
+
+        function openBagModal() {
+            playRetroSound('click');
+            const container = document.getElementById('bagItemsContainer'); container.innerHTML = '';
+            const b = cloudData["study_balance"][currentUser];
+            const balls = cloudData["study_v2_bag_balls"][currentUser];
+            const candyCount = cloudData["study_v2_bag_candy"][currentUser] || 0;
+
+            const items = [
+                { k: 'ticket', t: 'ぼうけん券', count: b.gachaCount, c: true, act: "useTicketFromBag()", img: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/subway-ticket.png" },
+                { k: 'normal', t: 'モンスターボール', count: balls.normal, c: false, img: ballAssets.normal }, 
+                { k: 'super', t: 'スーパーボール', count: balls.super, c: false, img: ballAssets.super }, 
+                { k: 'hyper', t: 'ハイパーボール', count: balls.hyper, c: false, img: ballAssets.hyper }, 
+                { k: 'master', t: 'マスターボール', count: balls.master, c: false, img: ballAssets.master }, 
+                { k: 'candy', t: 'ふしぎなあめ', count: candyCount, c: true, act: "useCandyFromBag()", img: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rare-candy.png" }
+            ];
+            items.forEach(item => {
+                const row = document.createElement('div'); row.className = 'bag-item-row';
+                const iconHtml = item.img ? `<img src="${item.img}">` : '<div style="width:28px;"></div>';
+                row.innerHTML = `<div class="bag-item-info">${iconHtml}<span class="bag-item-title">${item.t}</span><span class="bag-item-count">x${item.count}</span></div>
+                    <button class="use-item-btn" ${(!item.count || !item.c)?'disabled':''} onclick="${item.act}">つかう</button>`;
+                container.appendChild(row);
+            });
+            document.getElementById('bagModal').style.display = 'flex';
+        }
+        function closeBagModal() { playRetroSound('click'); document.getElementById('bagModal').style.display = 'none'; }
+        function useTicketFromBag() { closeBagModal(); openAdventureSelectionModal(); }
+        function useCandyFromBag() {
+            if (cloudData["study_v2_bag_candy"][currentUser] > 0) {
+                const baseId = cloudData["study_user_pokemon"][currentUser];
+                if (!baseId) { alert("相棒を選んでね！"); return; }
+                playRetroSound('clear');
+                cloudData["study_v2_bag_candy"][currentUser]--;
+                cloudData["study_level"][currentUser][baseId] = (cloudData["study_level"][currentUser][baseId] || 0) + 3;
+                alert(`🍬 あめをつかった！レベルが あがったぞ！ ✨`);
+                openBagModal(); renderUI(); saveAllToCloud();
+            }
+        }
+
+        function buyItem(name, price) {
+            playRetroSound('click');
+            const b = cloudData["study_balance"][currentUser];
+            if (b.pokeen < price) { alert("ぽけえんが たりないよ！ 👛"); return; }
+            if (confirm(`【${name}】と こうかんする？`)) {
+                playRetroSound('coin');
+                b.pokeen -= price;
+                if (name.includes('ふしぎなあめ')) cloudData["study_v2_bag_candy"][currentUser]++;
+                if (name.includes('ぼうけん券')) b.gachaCount++;
+                if (name.includes('モンスターボール')) cloudData["study_v2_bag_balls"][currentUser].normal++;
+                if (name.includes('スーパーボール')) cloudData["study_v2_bag_balls"][currentUser].super++;
+                if (name.includes('ハイパーボール')) cloudData["study_v2_bag_balls"][currentUser].hyper++;
+                renderUI(); saveAllToCloud(); alert(`バッグに保存したよ！ 👜`);
+            }
+        }
+
+        // 🔥 パパママ用 図鑑全開テストモード
         let devZukanCompleteMode = false;
         function toggleDevZukan() {
             devZukanCompleteMode = document.getElementById('devZukanToggle').checked;
             alert(devZukanCompleteMode ? "図鑑全開モードをONにしました！" : "元のセーブデータに戻しました。");
-            renderZukanGrid(); // 即座に反映
+        }
+
+        function openZukanModal() { 
+            playRetroSound('click'); 
+            document.getElementById('zukanModal').style.display = 'flex'; 
+            // 開くたびに確実に見出しを「all」にリセットする
+            document.getElementById('regionSelector').value = 'all';
+            switchZukanTab('normal'); 
+        }
+        function closeZukanModal() { playRetroSound('click'); document.getElementById('zukanModal').style.display = 'none'; }
+        function switchZukanTab(tab) {
+            playRetroSound('click');
+            zukanTab = tab;
+            document.getElementById('tabNormalBtn').className = tab === 'normal' ? 'zukan-tab-btn active' : 'zukan-tab-btn';
+            document.getElementById('tabMegaBtn').className = tab === 'mega' ? 'zukan-tab-btn active' : 'zukan-tab-btn';
+            document.getElementById('regionSelectWrapper').style.display = tab === 'normal' ? 'block' : 'none';
+            renderZukanGrid();
         }
 
         function renderZukanGrid() {
             const grid = document.getElementById('zukanGridDisplay'); if (!grid) return; grid.innerHTML = '';
+            const mode = document.getElementById('regionSelector').value;
+            const showCaughtOnly = document.getElementById('caughtOnlyToggle') ? document.getElementById('caughtOnlyToggle').checked : false;
             
-            const selector = document.getElementById('regionSelector');
-            const mode = selector ? selector.value : 'all';
-            const toggle = document.getElementById('caughtOnlyToggle');
-            const showCaughtOnly = toggle ? toggle.checked : false;
+            let ownedNormal = cloudData["study_zukan_normal"][currentUser];
+            if (!Array.isArray(ownedNormal)) ownedNormal = [];
             
-            let ownedNormal = cloudData["study_zukan_normal"][currentUser] || [];
-            let ownedMega = cloudData["study_zukan_mega"][currentUser] || [];
+            let ownedMega = cloudData["study_zukan_mega"][currentUser];
+            if (!Array.isArray(ownedMega)) ownedMega = [];
+
             let totalCount = 0, ownedCount = 0;
 
-            if (typeof zukanTab === 'undefined' || zukanTab === 'normal') {
+            if (zukanTab === 'mega') {
+                megaList.forEach((p, i) => {
+                    // 🔥 テストモードがONなら全種類持っている判定にする
+                    const hasIt = devZukanCompleteMode || ownedMega.includes(p.id); 
+                    if (hasIt) ownedCount++; totalCount++;
+                    if (showCaughtOnly && !hasIt) return;
+                    createPkmBox(grid, p.id, i+1, hasIt);
+                });
+            } else {
                 const loopKeys = (mode === 'all') ? Object.keys(regions) : [mode];
                 loopKeys.forEach(rKey => {
-                    for (let i = regions[rKey].start; i <= regions[rKey].end; i++) {
+                    const range = regions[rKey];
+                    for (let i = range.start; i <= range.end; i++) {
                         const idStr = String(i).padStart(4, '0');
+                        // 🔥 テストモードがONなら全種類持っている判定にする
                         const hasIt = devZukanCompleteMode || ownedNormal.includes(idStr); 
                         if (hasIt) ownedCount++; totalCount++;
                         if (showCaughtOnly && !hasIt) continue;
                         createPkmBox(grid, idStr, i, hasIt);
                     }
                 });
-            } else {
-                megaList.forEach((p, i) => {
-                    const hasIt = devZukanCompleteMode || ownedMega.includes(p.id); 
-                    if (hasIt) ownedCount++; totalCount++;
-                    if (showCaughtOnly && !hasIt) return;
-                    createPkmBox(grid, p.id, i+1, hasIt);
-                });
             }
-            
-            const progressTxt = document.getElementById('zukanProgressText');
-            const progressFill = document.getElementById('zukanProgressBar');
             const percent = totalCount > 0 ? Math.floor((ownedCount / totalCount) * 100) : 0;
-            if (progressTxt) progressTxt.textContent = `${ownedCount} / ${totalCount} 匹 (${percent}%)`;
-            if (progressFill) progressFill.style.width = `${percent}%`;
+            document.getElementById('zukanProgressBar').style.width = `${percent}%`;
+            document.getElementById('zukanProgressText').textContent = `${ownedCount} / ${totalCount} 匹 (${percent}%)`;
         }
 
-        // 🔥 ひらがな説明文を絶対に探し出す超強化版！
         async function showZukanDetail(idStr) {
-            unlockAudio(); playRetroSound('click');
+            playRetroSound('click');
             const baseId = parseInt(idStr.split('_')[0]);
             
             document.getElementById('zukanDetailImg').src = getImgUrl(idStr);
@@ -852,18 +1029,16 @@
                     const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${baseId}`);
                     const data = await res.json();
                     
-                    // 強化フィルター：ひらがな（ja-Hrkt）を全履歴から徹底的に探し出す
-                    const hrktList = data.flavor_text_entries.filter(f => f.language.name === "ja-Hrkt");
-                    const jaList = data.flavor_text_entries.filter(f => f.language.name === "ja");
-                    
-                    // ひらがな版があれば最新のものを、無ければ仕方なく漢字版の最新を出す
-                    const flavor = (hrktList.length > 0) ? hrktList[hrktList.length - 1] : (jaList.length > 0 ? jaList[jaList.length - 1] : null);
+                    // 🔥 ひらがな版を最優先で取得し、無ければ漢字版にフォールバック
+                    const flavorHrkt = data.flavor_text_entries.find(f => f.language.name === "ja-Hrkt");
+                    const flavorJa = data.flavor_text_entries.find(f => f.language.name === "ja");
+                    const flavor = flavorHrkt || flavorJa;
                     
                     if (flavor) {
                         const cleanText = flavor.flavor_text.replace(/\n|\f|\r/g, ' ');
                         document.getElementById('zukanDetailText').textContent = cleanText;
                     } else {
-                        document.getElementById('zukanDetailText').textContent = "せつめいぶん が みつかりませんでした。";
+                        document.getElementById('zukanDetailText').textContent = "せつめいぶん が ありません。";
                     }
                 } else {
                     document.getElementById('zukanDetailText').textContent = "メガシンカ した すごい ポケモン だ！";
@@ -877,148 +1052,272 @@
 
         function createPkmBox(grid, id, displayNum, hasIt) {
             const box = document.createElement('div'); box.className = hasIt ? 'grid-pokemon-box' : 'grid-pokemon-box unowned';
-            box.innerHTML = `<div class="zukan-number-badge">#${String(displayNum).padStart(3, '0')}</div><img src="${getImgUrl(id)}"><span id="zname-${id}-${Date.now()}">...</span>`;
-            box.onclick = () => { if (hasIt) showZukanDetail(id); };
-            grid.appendChild(box);
-            if (hasIt) { getPokemonNameAsync(id).then(name => { const el = box.querySelector('span'); if(el) el.textContent = name; }); }
-            else { box.querySelector('span').textContent = "？？？？"; }
-        }
-
-        function openPartnerSelectionModal() {
-            unlockAudio(); playRetroSound('click');
-            const container = document.getElementById('partnerSelectGroupContainer'); container.innerHTML = '';
+            const nameId = `zukan-name-${id}-${Date.now()}`;
+            box.innerHTML = `<div class="zukan-number-badge">#${String(displayNum).padStart(3, '0')}</div><img src="${getImgUrl(id)}" alt="?"><span id="${nameId}">...</span>`;
             
-            regionalStarters.forEach(group => {
-                const title = document.createElement('div'); title.className = 'region-group-title'; title.textContent = group.region; container.appendChild(title);
-                const grid = document.createElement('div'); grid.className = 'partner-select-grid';
-                
-                group.starters.forEach(p => {
-                    const exp = cloudData.study_level[currentUser][p.id] || 0;
-                    const lv = calculateLevel(exp);
-                    const currentId = getEvolvedId(p.id, lv);
-                    
-                    const box = document.createElement('div'); box.className = 'partner-choice-box'; 
-                    box.innerHTML = `<div class="partner-lv-badge">Lv.${lv}</div><img src="${getImgUrl(currentId)}"><div>...</div>`;
-                    
-                    getPokemonNameAsync(currentId).then(n => { box.querySelectorAll('div')[1].textContent = n; });
-                    box.addEventListener('click', () => {
-                        playRetroSound('click');
-                        cloudData["study_user_pokemon"][currentUser] = p.id; 
-                        if (!cloudData["study_zukan_normal"][currentUser].includes(p.id)) cloudData["study_zukan_normal"][currentUser].push(p.id);
-                        closePartnerSelectModal(); renderUI(); triggerCloudSave();
-                    });
-                    grid.appendChild(box);
-                });
-                container.appendChild(grid);
-            });
-            document.getElementById('partnerSelectModal').style.display = 'flex';
-        }
-        function closePartnerSelectModal() { playRetroSound('click'); document.getElementById('partnerSelectModal').style.display = 'none'; }
+            box.onclick = () => { if (hasIt) showZukanDetail(id); };
+            
+            grid.appendChild(box);
 
-        // 各種モーダル開閉
-        let zukanTab = 'normal';
-        function openZukanModal() { unlockAudio(); playRetroSound('click'); document.getElementById('zukanModal').style.display = 'flex'; document.getElementById('regionSelector').value = 'all'; switchZukanTab('normal'); }
-        function closeZukanModal() { playRetroSound('click'); document.getElementById('zukanModal').style.display = 'none'; }
-        function switchZukanTab(tab) { zukanTab = tab; document.getElementById('tabNormalBtn').style.background = tab==='normal'?'white':'#cbd5e1'; document.getElementById('tabMegaBtn').style.background = tab==='mega'?'white':'#cbd5e1'; document.getElementById('regionSelectWrapper').style.display = tab==='normal'?'flex':'none'; renderZukanGrid(); }
-        
-        function openBagModal() { unlockAudio(); playRetroSound('click'); const c = document.getElementById('bagItemsContainer'); c.innerHTML=''; const items = [{t:'ぼうけん券', count:cloudData.study_balance[currentUser].gachaCount, act:"closeBagModal();openAdventureSelectionModal()"}, {t:'ふしぎなあめ', count:cloudData.study_v2_bag_candy[currentUser], act:"useCandyFromBag()"}]; items.forEach(i => { const r = document.createElement('div'); r.className='bag-item-row'; r.innerHTML=`<div class="bag-item-info"><span class="bag-item-title">${i.t}</span><span class="bag-item-count">x${i.count}</span></div><button class="battle-btn" style="width:auto; height:34px; font-size:0.9rem;" ${i.count<=0?'disabled':''} onclick="${i.act}">つかう</button>`; c.appendChild(r); }); document.getElementById('bagModal').style.display = 'flex'; }
-        function closeBagModal() { playRetroSound('click'); document.getElementById('bagModal').style.display = 'none'; }
-        function useCandyFromBag() { if(cloudData.study_v2_bag_candy[currentUser]>0){ const id = cloudData.study_user_pokemon[currentUser]; if(!id) return; playRetroSound('clear'); cloudData.study_v2_bag_candy[currentUser]--; cloudData.study_level[currentUser][id] = (cloudData.study_level[currentUser][id]||0)+3; alert(`🍬 あめをつかった！`); openBagModal(); renderUI(); triggerCloudSave(); } }
-        
-        function openCalendarModal() { unlockAudio(); playRetroSound('click'); document.getElementById('calendarModal').style.display='flex'; }
-        function closeCalendarModal() { playRetroSound('click'); document.getElementById('calendarModal').style.display='none'; }
-        function openSecretParentMenu() { unlockAudio(); if(prompt("パスワード：")==="1022"){ document.getElementById('secretParentPanel').style.display='block'; window.scrollTo(0,9999); } }
-        function closeSecretParentMenu() { playRetroSound('click'); document.getElementById('secretParentPanel').style.display='none'; }
-        
-        function buyItem(name, price) {
-            unlockAudio(); playRetroSound('click');
-            const b = cloudData["study_balance"][currentUser];
-            if (b.pokeen < price) { alert("ぽけえんが たりない！"); return; }
-            if (confirm(`【${name}】と こうかんする？`)) {
-                playRetroSound('coin'); b.pokeen -= price;
-                if(name.includes('あめ')) cloudData.study_v2_bag_candy[currentUser]++;
-                if(name.includes('券')) b.gachaCount++;
-                if(name.includes('モンスターボール')) cloudData.study_v2_bag_balls[currentUser].normal++;
-                if(name.includes('スーパーボール')) cloudData.study_v2_bag_balls[currentUser].super++;
-                if(name.includes('ハイパーボール')) cloudData.study_v2_bag_balls[currentUser].hyper++;
-                renderUI(); triggerCloudSave(); alert(`バッグにいれたよ！`);
+            if (hasIt) {
+                getPokemonNameAsync(id).then(name => {
+                    const el = document.getElementById(nameId);
+                    if (el) el.textContent = name;
+                });
+            } else {
+                document.getElementById(nameId).textContent = "？？？？";
             }
         }
 
-        // バトル関連
-        function openAdventureSelectionModal() { unlockAudio(); playRetroSound('click'); if(cloudData.study_balance[currentUser].gachaCount<=0) return; document.getElementById('adventureModal').style.display = 'flex'; }
+        function openCalendarModal() {
+            playRetroSound('click');
+            const calendarList = cloudData["study_v2_calendar"][currentUser] || [];
+            document.getElementById('totalStampLabel').textContent = `これまでのぼうけん日数: ${calendarList.length} 日`;
+            
+            const grid = document.getElementById('calendarGridDisplay'); grid.innerHTML = '';
+            ["日","月","火","水","木","金","土"].forEach(w => {
+                const h = document.createElement('div'); h.className = 'calendar-day-head'; h.textContent = w; grid.appendChild(h);
+            });
+            
+            const cYear = now.getFullYear(); const cMonth = now.getMonth(); 
+            document.getElementById('calendarMonthTitle').textContent = `${cYear}年 ${cMonth + 1}月`;
+            
+            const firstDay = new Date(cYear, cMonth, 1);
+            const startOffset = firstDay.getDay(); 
+            const daysInMonth = new Date(cYear, cMonth + 1, 0).getDate(); 
+            
+            for (let i = 0; i < startOffset; i++) {
+                const empty = document.createElement('div'); empty.className = 'calendar-cell'; grid.appendChild(empty);
+            }
+            for (let d = 1; d <= daysInMonth; d++) {
+                const cell = document.createElement('div'); const dateKey = `${cYear}-${String(cMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                const isStamped = calendarList.includes(dateKey);
+                cell.className = isStamped ? 'calendar-cell current-month stamped' : 'calendar-cell current-month';
+                cell.textContent = d; grid.appendChild(cell);
+            }
+            document.getElementById('calendarModal').style.display = 'flex';
+        }
+        function closeCalendarModal() { playRetroSound('click'); document.getElementById('calendarModal').style.display = 'none'; }
+
+        function getOrRollFixedEncounters() {
+            if (!cloudData["study_fixed_encounters"]) cloudData["study_fixed_encounters"] = { "kouta": null, "haruto": null };
+            if (cloudData["study_fixed_encounters"][currentUser]) return cloudData["study_fixed_encounters"][currentUser];
+
+            const rKeys = Object.keys(regions); const rolled = {};
+            let ownedNormal = cloudData["study_zukan_normal"][currentUser];
+            if (!Array.isArray(ownedNormal)) ownedNormal = [];
+
+            let unownedId = "0001";
+            for (let attempt = 0; attempt < 100; attempt++) {
+                const rKey = rKeys[Math.floor(Math.random() * rKeys.length)];
+                const range = regions[rKey];
+                const rId = Math.floor(Math.random() * (range.end - range.start + 1)) + range.start;
+                const idStr = String(rId).padStart(4, '0');
+                if (!ownedNormal.includes(idStr)) { unownedId = idStr; break; }
+            }
+            rolled["water"] = { id: unownedId, name: `No.${parseInt(unownedId)}` };
+
+            const zones = ["forest", "volcano", "thunder"];
+            zones.forEach(zone => {
+                if (Math.random() < 0.35) {
+                    rolled[zone] = starterPool[zone][Math.floor(Math.random() * starterPool[zone].length)];
+                } else {
+                    const range = regions[rKeys[Math.floor(Math.random() * rKeys.length)]];
+                    const rId = Math.floor(Math.random() * (range.end - range.start + 1)) + range.start;
+                    rolled[zone] = { id: String(rId).padStart(4, '0'), name: `No.${rId}` };
+                }
+            });
+            cloudData["study_fixed_encounters"][currentUser] = rolled; saveAllToCloud(); return rolled;
+        }
+
+        function openAdventureSelectionModal() {
+            playRetroSound('click');
+            const b = cloudData["study_balance"][currentUser];
+            if (!b.gachaCount || b.gachaCount <= 0) { alert("🎫 ぼうけん券がありません！"); return; }
+            const encounters = getOrRollFixedEncounters();
+            Object.keys(encounters).forEach(zone => {
+                const img = document.getElementById(`shadow-${zone}`); if (img) img.src = getImgUrl(encounters[zone].id);
+            });
+            document.getElementById('adventureModal').style.display = 'flex';
+        }
         function closeAdventureModal() { playRetroSound('click'); document.getElementById('adventureModal').style.display = 'none'; }
-        
+
         async function startBattle(zone) {
-            playRetroSound('click'); closeAdventureModal();
-            cloudData.study_balance[currentUser].gachaCount--;
+            playRetroSound('click');
+            closeAdventureModal();
+            const b = cloudData["study_balance"][currentUser];
+            if (b.gachaCount > 0) b.gachaCount--; else return;
+
             switchBgmMode('battle');
 
-            const enemyId = "000" + (Math.floor(Math.random()*9)+1); // 仮ランダム
+            const encounters = getOrRollFixedEncounters(); const enemy = encounters[zone];
+            let finalEnemy = enemy;
+            if (Math.random() < 0.2 && !enemy.id.includes('_')) {
+                const hasMega = megaList.find(m => m.id.startsWith(enemy.id)); if (hasMega) finalEnemy = hasMega;
+            }
+
             const baseId = cloudData["study_user_pokemon"][currentUser];
-            const currentMyId = getEvolvedId(baseId, calculateLevel(cloudData.study_level[currentUser][baseId]));
+            const exp = cloudData["study_level"][currentUser][baseId] || 0;
+            const currentMyId = getEvolvedId(baseId, calculateLevel(exp));
             
-            battleState = { step: 0, enemy: {id: enemyId}, myName: "相棒", enemyName: "やせいポケモン" };
+            const myName = await getPokemonNameAsync(currentMyId);
+            const enemyName = await getPokemonNameAsync(finalEnemy.id);
+
+            battleState = { step: 0, enemy: finalEnemy, isMega: finalEnemy.id.includes('_'), enemyHp: 100, myName: myName, enemyName: enemyName };
             
             document.getElementById('enemyHpBar').style.width = "100%";
-            document.getElementById('battlePartnerImg').src = getImgUrl(currentMyId);
-            document.getElementById('battleEnemyImg').src = getImgUrl(enemyId);
-            document.getElementById('battleLogBox').textContent = `あ！ 野生の ポケモン が あらわれた！`;
+            document.getElementById('enemyHpBar').style.background = "#22c55e";
             
-            document.getElementById('ballIcon').style.display = "none"; 
+            document.getElementById('battlePartnerImg').src = getImgUrl(currentMyId);
+            document.getElementById('battlePartnerName').textContent = myName;
+            document.getElementById('battleEnemyImg').src = getImgUrl(finalEnemy.id);
+            document.getElementById('battleEnemyName').textContent = enemyName;
+            document.getElementById('battleLogBox').textContent = `あ！ 野生の 【${enemyName}】が あらわれた！`;
+            
+            playPokemonCry(finalEnemy.id);
+
+            const bIcon = document.getElementById('ballIcon'); bIcon.className = ""; bIcon.style.display = "none"; 
             document.getElementById('battleActionBtn').style.display = "block";
+            document.getElementById('battleActionBtn').textContent = "わざをくりだす！ ⚔️";
             document.getElementById('ballSelectSection').style.display = "none";
             document.getElementById('battleCloseBtn').style.display = "none";
             document.getElementById('battleModal').style.display = 'flex';
-            
-            getPokemonNameAsync(currentMyId).then(n => { battleState.myName = n; document.getElementById('battlePartnerName').textContent = n; });
-            getPokemonNameAsync(enemyId).then(n => { battleState.enemyName = n; document.getElementById('battleEnemyName').textContent = n; playPokemonCry(enemyId); });
-            triggerCloudSave();
+            saveAllToCloud();
         }
 
         function nextBattlePhase() {
             playRetroSound('click');
             const log = document.getElementById('battleLogBox');
+            const myName = battleState.myName;
+            const enemyName = battleState.enemyName;
+            const enemy = battleState.enemy;
+            const myId = cloudData["study_user_pokemon"][currentUser];
+
             if (battleState.step === 0) {
-                log.textContent = `いけっ！ ${battleState.myName}！\nこうかは ばつぐんだ！ 💥`;
+                const myMove = getPokemonAttackMove(myId, myName);
+                log.textContent = `いけっ！ 【${myName}】の 【${myMove}】！\nこうかは ばつぐんだ！ 💥`;
+                battleState.enemyHp = 35;
                 document.getElementById('enemyHpBar').style.width = "35%";
+                document.getElementById('enemyHpBar').style.background = "#eab308";
+                document.getElementById('battleActionBtn').textContent = "あいての 反撃にそなえろ！ 🛡️";
                 battleState.step = 1;
             } else if (battleState.step === 1) {
-                log.textContent = `やせいの ${battleState.enemyName}の こうげき！\nしかし かわした！`;
+                const enemyMove = getPokemonAttackMove(enemy.id, enemyName);
+                log.textContent = `野生の 【${enemyName}】の 【${enemyMove}】！\n【${myName}】は すばやく かわした！ 💨`;
+                
                 document.getElementById('enemyHpBar').style.width = "10%";
+                document.getElementById('enemyHpBar').style.background = "#ef4444";
                 document.getElementById('battleActionBtn').style.display = "none";
+                
                 const balls = cloudData["study_v2_bag_balls"][currentUser];
-                document.getElementById('countP').textContent = balls.normal;
-                document.getElementById('countS').textContent = balls.super;
-                document.getElementById('countH').textContent = balls.hyper;
-                document.getElementById('countM').textContent = balls.master;
+                document.getElementById('countP').textContent = balls.normal || 0;
+                document.getElementById('countS').textContent = balls.super || 0;
+                document.getElementById('countH').textContent = balls.hyper || 0;
+                document.getElementById('countM').textContent = balls.master || 0;
+                
+                document.getElementById('btnN').className = (balls.normal > 0) ? "ball-choice-item" : "ball-choice-item disabled";
+                document.getElementById('btnS').className = (balls.super > 0) ? "ball-choice-item" : "ball-choice-item disabled";
+                document.getElementById('btnH').className = (balls.hyper > 0) ? "ball-choice-item" : "ball-choice-item disabled";
+                document.getElementById('btnM').className = (balls.master > 0) ? "ball-choice-item" : "ball-choice-item disabled";
+                
                 document.getElementById('ballSelectSection').style.display = "block";
             }
         }
 
-        function throwBall(type) {
+        function throwBall(ballType) {
             playRetroSound('click');
+            const balls = cloudData["study_v2_bag_balls"][currentUser];
+            if (ballType === 'normal' && !(balls.normal > 0)) return;
+            if (ballType === 'super' && !(balls.super > 0)) return;
+            if (ballType === 'hyper' && !(balls.hyper > 0)) return;
+            if (ballType === 'master' && !(balls.master > 0)) return;
+
             document.getElementById('ballSelectSection').style.display = "none";
             const log = document.getElementById('battleLogBox');
-            document.getElementById('ballIcon').src = ballAssets[type];
-            document.getElementById('ballIcon').style.display = "block";
-            log.textContent = `ボールを なげた！`;
-            
+            const enemy = battleState.enemy;
+            const enemyName = battleState.enemyName;
+            const bIcon = document.getElementById('ballIcon');
+
+            bIcon.src = ballAssets[ballType]; bIcon.style.display = "block";
+
+            if (ballType === 'normal') balls.normal--;
+            if (ballType === 'super') balls.super--;
+            if (ballType === 'hyper') balls.hyper--;
+            if (ballType === 'master') balls.master--;
+
+            bIcon.className = "ball-shake active";
+            log.textContent = `ボールを なげた！\nゆれている......`;
+
+            let catchRate = ballType === 'normal' ? 0.65 : (ballType === 'super' ? 0.85 : (ballType === 'hyper' ? 0.95 : 1.0));
+            if (battleState.isMega) { catchRate -= 0.2; }
+
+            const roll = Math.random();
             setTimeout(() => {
-                playRetroSound('clear');
-                log.innerHTML = `やったぜ！ ${battleState.enemyName}を つかまえた！<br>💰 <strong>+100 ぽけえん</strong>`;
-                cloudData.study_balance[currentUser].pokeen += 100;
-                if(!cloudData.study_zukan_normal[currentUser].includes(battleState.enemy.id)) cloudData.study_zukan_normal[currentUser].push(battleState.enemy.id);
+                bIcon.className = "";
+                if (roll <= catchRate) {
+                    playRetroSound('clear');
+                    log.innerHTML = `やったぜ！ 【${enemyName}】を つかまえた！ 🎉`;
+                    if (battleState.isMega) {
+                        if (!cloudData["study_zukan_mega"][currentUser].includes(enemy.id)) cloudData["study_zukan_mega"][currentUser].push(enemy.id);
+                    } else {
+                        if (!cloudData["study_zukan_normal"][currentUser].includes(enemy.id)) cloudData["study_zukan_normal"][currentUser].push(enemy.id);
+                    }
+                    const rewardCoins = [100, 150, 200, 300, 500][Math.floor(Math.random() * 5)];
+                    cloudData["study_balance"][currentUser].pokeen += rewardCoins;
+                    log.innerHTML += `<br>💰 <strong>+${rewardCoins} ぽけえん</strong> をてにいれた！`;
+                    
+                    setTimeout(() => playPokemonCry(enemy.id), 500);
+                } else {
+                    log.innerHTML = `あ！ ボールから とびだしてしまった！\n【${enemyName}】は にげていった！ 💨`;
+                }
+                cloudData["study_fixed_encounters"][currentUser] = null;
+                cloudData["study_v3_chosen_challenge"][currentUser] = null; 
                 document.getElementById('battleCloseBtn').style.display = "block";
-                triggerCloudSave();
-            }, 1500);
+                saveAllToCloud();
+            }, 1400);
         }
 
-        function closeBattleModal() { playRetroSound('click'); switchBgmMode('main'); document.getElementById('battleModal').style.display = 'none'; renderUI(); }
+        function closeBattleModal() { 
+            playRetroSound('click'); 
+            switchBgmMode('main'); 
+            document.getElementById('battleModal').style.display = 'none'; 
+            renderUI(); 
+        }
+
+        function openSecretParentMenu() {
+            const pw = prompt("パパ・ママ専用パスワード：");
+            if (pw === "1022") { document.getElementById('secretParentPanel').style.display = 'block'; window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }
+        }
+        function closeSecretParentMenu() { playRetroSound('click'); document.getElementById('secretParentPanel').style.display = 'none'; }
+
+        function saveChallengePoolFromParent() {
+            const txt = document.getElementById('parentChallengePoolInput').value;
+            if (txt) {
+                const arr = txt.split(',').map(x => x.trim()).filter(x => x.length > 0);
+                cloudData["study_v3_challenge_pool"][currentUser] = arr;
+                alert(`🎰 ${currentUser === 'kouta' ? 'こうた' : 'はると'}のチャレンジミッション候補を保存しました`);
+                saveAllToCloud();
+            }
+        }
+
+        function adjustParentData(type) {
+            const amount = parseInt(document.getElementById('parentAmount').value) || 0;
+            if(type === 'pokeen') cloudData.study_balance[currentUser].pokeen += amount;
+            if(type === 'ticket') cloudData.study_balance[currentUser].gachaCount += amount;
+            if(type === 'ball_normal') cloudData.study_v2_bag_balls[currentUser].normal += amount;
+            if(type === 'ball_super') cloudData.study_v2_bag_balls[currentUser].super += amount;
+            if(type === 'ball_hyper') cloudData.study_v2_bag_balls[currentUser].hyper += amount;
+            if(type === 'ball_master') cloudData.study_v2_bag_balls[currentUser].master += amount;
+            if(type === 'candy') cloudData.study_v2_bag_candy[currentUser] += amount;
+            renderUI();
+            saveAllToCloud();
+            alert("データを調整しました");
+        }
 
         function resetCurrentUserData() {
-            if(confirm("ほんとうに セーブデータを けしますか？")) {
-                cloudData.study_balance[currentUser] = { pokeen: 300, gachaCount: 0 };
+            if(confirm("本当にセーブデータをリセットしますか？")) {
+                cloudData.study_balance[currentUser] = { "pokeen": 300, "gachaCount": 0 };
+                // 🔥 初期化対応
                 cloudData.study_level[currentUser] = {};
                 cloudData.study_zukan_normal[currentUser] = [];
                 cloudData.study_zukan_mega[currentUser] = [];
@@ -1027,23 +1326,40 @@
                 cloudData.study_v2_calendar[currentUser] = [];
                 cloudData.study_v3_chosen_challenge[currentUser] = null;
                 cloudData.study_user_pokemon[currentUser] = null;
-                cloudData["study_progress_" + todayStr][currentUser] = { done: [], zoneClaimed: {} };
-                triggerCloudSave(); alert("リセット しました"); changeUser(currentUser);
+                
+                // 本日のミッション進捗も完全リセット
+                if (!cloudData["study_progress_" + todayStr]) {
+                    cloudData["study_progress_" + todayStr] = {};
+                }
+                cloudData["study_progress_" + todayStr][currentUser] = { done: [], zoneClaimed: {}, gachaClaimed: false };
+                
+                saveAllToCloud();
+                alert("リセットしました");
+                changeUser(currentUser);
             }
         }
-        
-        function adjustParentData(type) {
-            const a = parseInt(document.getElementById('parentAmount').value) || 0;
-            if(type==='pokeen') cloudData.study_balance[currentUser].pokeen += a;
-            if(type==='ticket') cloudData.study_balance[currentUser].gachaCount += a;
-            if(type==='candy') cloudData.study_v2_bag_candy[currentUser] += a;
-            if(type==='ball_normal') cloudData.study_v2_bag_balls[currentUser].normal += a;
-            renderUI(); triggerCloudSave(); alert("データを調整しました");
-        }
-        function saveChallengePoolFromParent() {
-            const txt = document.getElementById('parentChallengePoolInput').value;
-            cloudData["study_v3_challenge_pool"][currentUser] = txt.split(',').map(x=>x.trim()).filter(x=>x);
-            triggerCloudSave(); alert("保存しました");
+
+        function spinChallengeSlot() {
+            playRetroSound('click');
+            const pool = cloudData["study_v3_challenge_pool"][currentUser] || defaultPools[currentUser];
+            if (pool.length === 0) return;
+            const slotBtn = document.getElementById('challengeSlotBtn');
+            slotBtn.disabled = true;
+            let count = 0;
+            const interval = setInterval(() => {
+                playRetroSound('click');
+                document.getElementById('challengeSlotWindow').textContent = "🎯 " + pool[count % pool.length];
+                count++;
+                if (count > 15) {
+                    clearInterval(interval);
+                    playRetroSound('coin');
+                    const finalChoice = pool[Math.floor(Math.random() * pool.length)];
+                    document.getElementById('challengeSlotWindow').textContent = "🎯 チャレンジ: " + finalChoice;
+                    cloudData["study_v3_chosen_challenge"][currentUser] = finalChoice;
+                    renderUI();
+                    saveAllToCloud();
+                }
+            }, 100);
         }
     </script>
 </body>
