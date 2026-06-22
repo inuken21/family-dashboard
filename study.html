@@ -467,7 +467,7 @@
         let currentUser = 'kouta';
         let battleState = {};
 
-        // 🔥 BGM遅延セットアップ（エラー防止用）
+        // 🔥 BGM遅延セットアップ
         let isBgmOn = false;
         let currentBgmMode = 'main';
         let mainBgm, battleBgm;
@@ -503,7 +503,6 @@
             }
         }
 
-        // 🔥 魔法の遅延 AudioContext (絶対フリーズさせない)
         let audioCtx = null;
         function getAudioCtx() {
             if (!audioCtx) {
@@ -583,12 +582,11 @@
 
         async function initApp() {
             try {
-                initBGM(); // 音声DOMをここで安全に取得
+                initBGM(); 
                 const response = await fetch(GAS_URL);
                 const res = await response.json();
                 if (res) {
                     Object.keys(res).forEach(k => {
-                        // 修正: study_progress_ も必ずクラウドから復元する
                         if (cloudData[k] !== undefined || k.startsWith("study_progress_")) {
                             try { cloudData[k] = JSON.parse(res[k]); } catch(e) { cloudData[k] = res[k]; }
                         }
@@ -600,7 +598,7 @@
             } catch(e) {}
             
             if (!appReady) {
-                clearTimeout(fallbackTimer); // エラーが起きなかったらタイマーを解除
+                clearTimeout(fallbackTimer);
                 appReady = true;
                 const cover = document.getElementById('loadingCover');
                 if(cover) cover.style.display = 'none';
@@ -945,7 +943,7 @@
                     for (let i = range.start; i <= range.end; i++) {
                         const idStr = String(i).padStart(4, '0');
                         const hasIt = ownedNormal.includes(idStr); if (hasIt) ownedCount++; totalCount++;
-                        if (showCaughtOnly && !hasIt) continue; // 🔥 バグ修正: もってるソート対応（returnからcontinueに変更）
+                        if (showCaughtOnly && !hasIt) continue; // 🔥 バグ修正: もってるソート対応
                         createPkmBox(grid, idStr, i, hasIt);
                     }
                 });
