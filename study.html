@@ -166,6 +166,19 @@
 </head>
 <body>
 
+    <script>
+        let appReady = false;
+        const fallbackTimer = setTimeout(() => {
+            if (!appReady) {
+                console.warn("通信タイムアウトまたはエラー発生。オフラインで強制起動します。");
+                appReady = true;
+                const cover = document.getElementById('loadingCover');
+                if(cover) cover.style.display = 'none';
+                if(typeof changeUser === 'function') changeUser('kouta');
+            }
+        }, 5000);
+    </script>
+
     <div id="loadingCover" class="loading-cover">🔴 ぼうけんのしょを 同期中...</div>
     <div id="syncBadge" class="sync-badge">同期完了</div>
 
@@ -454,22 +467,27 @@
         let currentUser = 'kouta';
         let battleState = {};
 
-        // 🔥 新BGMシステム
+        // 🔥 BGM遅延セットアップ（エラー防止用）
         let isBgmOn = false;
         let currentBgmMode = 'main';
-        const mainBgm = document.getElementById('bgmMain');
-        const battleBgm = document.getElementById('bgmBattle');
-        mainBgm.volume = 0.25;
-        battleBgm.volume = 0.3;
+        let mainBgm, battleBgm;
+
+        function initBGM() {
+            mainBgm = document.getElementById('bgmMain');
+            battleBgm = document.getElementById('bgmBattle');
+            if (mainBgm) mainBgm.volume = 0.25;
+            if (battleBgm) battleBgm.volume = 0.3;
+        }
 
         function toggleBGM() {
             isBgmOn = !isBgmOn;
             document.getElementById('bgmToggleBtn').textContent = isBgmOn ? "🔊" : "🔇";
             if(isBgmOn) {
-                if(currentBgmMode === 'main') mainBgm.play().catch(e=>{});
-                else battleBgm.play().catch(e=>{});
+                if(currentBgmMode === 'main') { if(mainBgm) mainBgm.play().catch(e=>{}); }
+                else { if(battleBgm) battleBgm.play().catch(e=>{}); }
             } else {
-                mainBgm.pause(); battleBgm.pause();
+                if(mainBgm) mainBgm.pause(); 
+                if(battleBgm) battleBgm.pause();
             }
         }
 
@@ -477,37 +495,48 @@
             currentBgmMode = mode;
             if(!isBgmOn) return;
             if(mode === 'main') {
-                battleBgm.pause(); battleBgm.currentTime = 0;
-                mainBgm.play().catch(e=>{});
+                if(battleBgm) { battleBgm.pause(); battleBgm.currentTime = 0; }
+                if(mainBgm) mainBgm.play().catch(e=>{});
             } else {
-                mainBgm.pause(); mainBgm.currentTime = 0;
-                battleBgm.play().catch(e=>{});
+                if(mainBgm) { mainBgm.pause(); mainBgm.currentTime = 0; }
+                if(battleBgm) battleBgm.play().catch(e=>{});
             }
         }
 
-        // ピコピコ効果音
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playRetroSound(type) {
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-            const t = audioCtx.currentTime;
-            if (type === 'click') {
-                const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
-                osc.type = 'square'; osc.frequency.setValueAtTime(880, t);
-                gain.gain.setValueAtTime(0.05, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
-                osc.connect(gain); gain.connect(audioCtx.destination); osc.start(t); osc.stop(t + 0.1);
-            } else if (type === 'clear') {
-                [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
-                    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
-                    o.type = 'square'; o.frequency.setValueAtTime(f, t + i*0.1);
-                    g.gain.setValueAtTime(0.05, t + i*0.1); g.gain.exponentialRampToValueAtTime(0.001, t + i*0.1 + 0.15);
-                    o.connect(g); g.connect(audioCtx.destination); o.start(t + i*0.1); o.stop(t + i*0.1 + 0.15);
-                });
-            } else if (type === 'coin') {
-                const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
-                osc.type = 'square'; osc.frequency.setValueAtTime(987.77, t);
-                gain.gain.setValueAtTime(0.05, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
-                osc.connect(gain); gain.connect(audioCtx.destination); osc.start(t); osc.stop(t + 0.1);
+        // 🔥 魔法の遅延 AudioContext (絶対フリーズさせない)
+        let audioCtx = null;
+        function getAudioCtx() {
+            if (!audioCtx) {
+                try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) { console.warn("Audio Context非対応"); }
             }
+            return audioCtx;
+        }
+
+        function playRetroSound(type) {
+            const ctx = getAudioCtx();
+            if(!ctx) return;
+            if(ctx.state === 'suspended') ctx.resume();
+            const t = ctx.currentTime;
+            try {
+                if (type === 'click') {
+                    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                    osc.type = 'square'; osc.frequency.setValueAtTime(880, t);
+                    gain.gain.setValueAtTime(0.05, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+                    osc.connect(gain); gain.connect(ctx.destination); osc.start(t); osc.stop(t + 0.1);
+                } else if (type === 'clear') {
+                    [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
+                        const o = ctx.createOscillator(); const g = ctx.createGain();
+                        o.type = 'square'; o.frequency.setValueAtTime(f, t + i*0.1);
+                        g.gain.setValueAtTime(0.05, t + i*0.1); g.gain.exponentialRampToValueAtTime(0.001, t + i*0.1 + 0.15);
+                        o.connect(g); g.connect(ctx.destination); o.start(t + i*0.1); o.stop(t + i*0.1 + 0.15);
+                    });
+                } else if (type === 'coin') {
+                    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                    osc.type = 'square'; osc.frequency.setValueAtTime(987.77, t);
+                    gain.gain.setValueAtTime(0.05, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+                    osc.connect(gain); gain.connect(ctx.destination); osc.start(t); osc.stop(t + 0.1);
+                }
+            } catch(e) {}
         }
 
         const pkmNameCache = {}; 
@@ -525,15 +554,17 @@
             return `No.${baseId}`;
         }
 
-        async function playPokemonCry(idStr) {
+        function playPokemonCry(idStr) {
             const baseId = parseInt(idStr.split('_')[0]);
             try {
-                const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${baseId}`);
-                const data = await res.json();
-                if (data.cries && data.cries.latest) {
-                    const audio = new Audio(data.cries.latest);
-                    audio.play().catch(e => console.log("音声ブロック", e));
-                }
+                fetch(`https://pokeapi.co/api/v2/pokemon/${baseId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.cries && data.cries.latest) {
+                        const audio = new Audio(data.cries.latest);
+                        audio.play().catch(e => console.log("音声ブロック", e));
+                    }
+                });
             } catch(e) {}
         }
 
@@ -550,22 +581,15 @@
             }
         }
 
-        let appReady = false;
         async function initApp() {
-            setTimeout(() => {
-                if (!appReady) {
-                    appReady = true;
-                    document.getElementById('loadingCover').style.display = 'none';
-                    changeUser('kouta');
-                }
-            }, 5000);
-
             try {
+                initBGM(); // 音声DOMをここで安全に取得
                 const response = await fetch(GAS_URL);
                 const res = await response.json();
                 if (res) {
                     Object.keys(res).forEach(k => {
-                        if (cloudData[k] !== undefined) {
+                        // 修正: study_progress_ も必ずクラウドから復元する
+                        if (cloudData[k] !== undefined || k.startsWith("study_progress_")) {
                             try { cloudData[k] = JSON.parse(res[k]); } catch(e) { cloudData[k] = res[k]; }
                         }
                     });
@@ -576,8 +600,10 @@
             } catch(e) {}
             
             if (!appReady) {
+                clearTimeout(fallbackTimer); // エラーが起きなかったらタイマーを解除
                 appReady = true;
-                document.getElementById('loadingCover').style.display = 'none';
+                const cover = document.getElementById('loadingCover');
+                if(cover) cover.style.display = 'none';
                 changeUser('kouta');
             }
         }
@@ -909,7 +935,7 @@
             if (zukanTab === 'mega') {
                 megaList.forEach((p, i) => {
                     const hasIt = ownedMega.includes(p.id); if (hasIt) ownedCount++; totalCount++;
-                    if (showCaughtOnly && !hasIt) continue; // 🔥 バグ修正: return -> continue
+                    if (showCaughtOnly && !hasIt) return; // 🔥 バグ修正: もってるソート対応
                     createPkmBox(grid, p.id, i+1, hasIt);
                 });
             } else {
@@ -919,7 +945,7 @@
                     for (let i = range.start; i <= range.end; i++) {
                         const idStr = String(i).padStart(4, '0');
                         const hasIt = ownedNormal.includes(idStr); if (hasIt) ownedCount++; totalCount++;
-                        if (showCaughtOnly && !hasIt) continue; // 🔥 バグ修正: return -> continue
+                        if (showCaughtOnly && !hasIt) continue; // 🔥 バグ修正: もってるソート対応（returnからcontinueに変更）
                         createPkmBox(grid, idStr, i, hasIt);
                     }
                 });
