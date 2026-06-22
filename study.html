@@ -13,7 +13,8 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'M PLUS Rounded 1c', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 16px; padding-bottom: 80px; user-select: none; }
         header { position: relative; text-align: center; margin: 12px 0 24px 0; padding: 0 36px; }
-        header h1 { font-size: 1.2rem; font-weight: 900; color: #0f172a; margin: 0; letter-spacing: -0.5px; }
+        /* 🔥 タイトルを2段構成にしても綺麗に見えるように line-height を調整 */
+        header h1 { font-size: 1.25rem; font-weight: 900; color: #0f172a; margin: 0; letter-spacing: -0.5px; line-height: 1.3; }
         .secret-gear-btn { position: absolute; right: 4px; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: #94a3b8; padding: 6px; }
         .bgm-toggle-btn { position: absolute; left: 4px; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: #0f172a; padding: 6px; }
         
@@ -183,19 +184,15 @@
     <div id="syncBadge" class="sync-badge">同期完了</div>
 
     <audio id="bgmMain" loop>
-        <source src="https://play.pokemonshowdown.com/audio/dpp-route-201.mp3" type="audio/mpeg">
-        <source src="https://play.pokemonshowdown.com/audio/bw-route-1.mp3" type="audio/mpeg">
-        <source src="https://opengameart.org/sites/default/files/Rolemusic_-_plasto.mp3" type="audio/mpeg">
+        <source src="https://archive.org/download/PokemonFireRedLeafGreenOST/117.%20Route%201.mp3" type="audio/mpeg">
     </audio>
     <audio id="bgmBattle" loop>
-        <source src="https://play.pokemonshowdown.com/audio/dpp-wild-pokemon.mp3" type="audio/mpeg">
-        <source src="https://play.pokemonshowdown.com/audio/bw-wild-pokemon.mp3" type="audio/mpeg">
-        <source src="https://opengameart.org/sites/default/files/Battle%20Theme%201.mp3" type="audio/mpeg">
+        <source src="https://archive.org/download/PokemonFireRedLeafGreenOST/107.%20Battle%20%28Wild%20Pok%C3%A9mon%29.mp3" type="audio/mpeg">
     </audio>
 
     <header>
         <button id="bgmToggleBtn" class="bgm-toggle-btn" onclick="toggleBGM()">🔇</button>
-        <h1 id="mainTitleHeader">⚔️ ポケットモンスター こうた&はると</h1>
+        <h1 id="mainTitleHeader">⚔️ ポケットモンスター<br>こうた&はると</h1>
         <button type="button" class="secret-gear-btn" onclick="openSecretParentMenu()">⚙️</button>
     </header>
 
@@ -506,7 +503,7 @@
         let audioCtx = null;
         function getAudioCtx() {
             if (!audioCtx) {
-                try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) { console.warn("Audio Context非対応"); }
+                try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
             }
             return audioCtx;
         }
@@ -678,8 +675,10 @@
         function renderUI() {
             if (!cloudData["study_balance"][currentUser]) cloudData["study_balance"][currentUser] = { "pokeen": 300, "gachaCount": 1 };
             if (!cloudData["study_level"][currentUser]) cloudData["study_level"][currentUser] = { "exp": 0 };
-            if (!cloudData["study_zukan_normal"][currentUser]) cloudData["study_zukan_normal"][currentUser] = [];
-            if (!cloudData["study_zukan_mega"][currentUser]) cloudData["study_zukan_mega"][currentUser] = [];
+            // 🔥 配列じゃない壊れたデータがクラウドにあった場合に備えて強制リセットする安全装置
+            if (!Array.isArray(cloudData["study_zukan_normal"][currentUser])) cloudData["study_zukan_normal"][currentUser] = [];
+            if (!Array.isArray(cloudData["study_zukan_mega"][currentUser])) cloudData["study_zukan_mega"][currentUser] = [];
+            
             if (!cloudData["study_v2_bag_balls"] || !cloudData["study_v2_bag_balls"][currentUser]) {
                 if(!cloudData["study_v2_bag_balls"]) cloudData["study_v2_bag_balls"] = {};
                 cloudData["study_v2_bag_balls"][currentUser] = { normal: 5, super: 1, hyper: 0, master: 0 };
@@ -926,14 +925,18 @@
             const mode = document.getElementById('regionSelector').value;
             const showCaughtOnly = document.getElementById('caughtOnlyToggle') ? document.getElementById('caughtOnlyToggle').checked : false;
             
-            const ownedNormal = cloudData["study_zukan_normal"][currentUser] || [];
-            const ownedMega = cloudData["study_zukan_mega"][currentUser] || [];
+            let ownedNormal = cloudData["study_zukan_normal"][currentUser];
+            if (!Array.isArray(ownedNormal)) ownedNormal = []; // 🔥 安全装置
+            
+            let ownedMega = cloudData["study_zukan_mega"][currentUser];
+            if (!Array.isArray(ownedMega)) ownedMega = []; // 🔥 安全装置
+
             let totalCount = 0, ownedCount = 0;
 
             if (zukanTab === 'mega') {
                 megaList.forEach((p, i) => {
                     const hasIt = ownedMega.includes(p.id); if (hasIt) ownedCount++; totalCount++;
-                    if (showCaughtOnly && !hasIt) return; // 🔥 バグ修正: もってるソート対応
+                    if (showCaughtOnly && !hasIt) return;
                     createPkmBox(grid, p.id, i+1, hasIt);
                 });
             } else {
@@ -943,7 +946,7 @@
                     for (let i = range.start; i <= range.end; i++) {
                         const idStr = String(i).padStart(4, '0');
                         const hasIt = ownedNormal.includes(idStr); if (hasIt) ownedCount++; totalCount++;
-                        if (showCaughtOnly && !hasIt) continue; // 🔥 バグ修正: もってるソート対応
+                        if (showCaughtOnly && !hasIt) continue;
                         createPkmBox(grid, idStr, i, hasIt);
                     }
                 });
@@ -969,7 +972,12 @@
                 if (!idStr.includes('_')) {
                     const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${baseId}`);
                     const data = await res.json();
-                    const flavor = data.flavor_text_entries.find(f => f.language.name === "ja-Hrkt");
+                    
+                    // 🔥 ひらがなが無ければ漢字を探す賢いフォールバック機能
+                    const flavorHrkt = data.flavor_text_entries.find(f => f.language.name === "ja-Hrkt");
+                    const flavorJa = data.flavor_text_entries.find(f => f.language.name === "ja");
+                    const flavor = flavorHrkt || flavorJa;
+                    
                     if (flavor) {
                         const cleanText = flavor.flavor_text.replace(/\n|\f|\r/g, ' ');
                         document.getElementById('zukanDetailText').textContent = cleanText;
@@ -1040,7 +1048,8 @@
             if (cloudData["study_fixed_encounters"][currentUser]) return cloudData["study_fixed_encounters"][currentUser];
 
             const rKeys = Object.keys(regions); const rolled = {};
-            const ownedNormal = cloudData["study_zukan_normal"][currentUser] || [];
+            let ownedNormal = cloudData["study_zukan_normal"][currentUser];
+            if (!Array.isArray(ownedNormal)) ownedNormal = []; // 安全装置
 
             let unownedId = "0001";
             for (let attempt = 0; attempt < 100; attempt++) {
