@@ -98,7 +98,7 @@
         .progress-fill-bar { height: 100%; background: #22c55e; width: 0%; transition: width 0.3s ease; }
         .progress-text-label { position: absolute; width: 100%; text-align: center; font-size: 0.75rem; font-weight: 900; color: #0f172a; }
 
-        .zukan-display-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; max-height: 240px; overflow-y: auto; }
+        .zukan-display-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; max-height: 240px; overflow-y: auto; padding-right: 2px; }
         .grid-pokemon-box { background: white; border: 2px solid #0f172a; border-radius: 8px; padding: 6px 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 68px; position: relative; cursor: pointer; }
         .grid-pokemon-box:active { transform: scale(0.95); }
         .grid-pokemon-box img { width: 34px; height: 34px; object-fit: contain; }
@@ -171,7 +171,6 @@
         let appReady = false;
         const fallbackTimer = setTimeout(() => {
             if (!appReady) {
-                console.warn("通信タイムアウト。オフラインで強制起動します。");
                 appReady = true;
                 const cover = document.getElementById('loadingCover');
                 if(cover) cover.style.display = 'none';
@@ -220,16 +219,11 @@
             <span id="lblMissionTitle">⚔️ 本日のミッション！</span> 
             <span id="expPreview" style="font-size:0.75rem; color:#64748b;">0/0</span>
         </h2>
-        
-        <div class="mission-hp-bg">
-            <div id="missionProgressBar" class="mission-hp-fill"></div>
-        </div>
-        
+        <div class="mission-hp-bg"><div id="missionProgressBar" class="mission-hp-fill"></div></div>
         <div class="slot-box" id="slotBoxArea">
             <div id="challengeSlotWindow" class="slot-window">🎰 ボタンをおして チャレンジを きめよう！</div>
             <button type="button" id="challengeSlotBtn" class="slot-trigger-btn" onclick="spinChallengeSlot()">スタート！</button>
         </div>
-
         <div id="questList"></div>
     </div>
 
@@ -247,26 +241,11 @@
     <div class="card">
         <h2><span id="lblShopTitle">🏪 フレンドリーショップ</span></h2>
         <div class="shop-grid">
-            <button class="shop-item-btn" onclick="buyItem('🍬 ふしぎなあめ', 100)">
-                <span class="shop-title-cell">🍬 ふしぎなあめ (レベルを1あげる)</span>
-                <span class="shop-price-cell">100 💰</span>
-            </button>
-            <button class="shop-item-btn" onclick="buyItem('🎫 ぼうけん券', 500)">
-                <span class="shop-title-cell">🎫 ぼうけん券 (1回おでかけ)</span>
-                <span class="shop-price-cell">500 💰</span>
-            </button>
-            <button class="shop-item-btn" onclick="buyItem('🔴 モンスターボール', 100)">
-                <span class="shop-title-cell"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png">モンスターボール (ほかくりつ:ふつう)</span>
-                <span class="shop-price-cell">100 💰</span>
-            </button>
-            <button class="shop-item-btn" onclick="buyItem('🔵 スーパーボール', 300)">
-                <span class="shop-title-cell"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png">スーパーボール (ほかくりつ:高め)</span>
-                <span class="shop-price-cell">300 💰</span>
-            </button>
-            <button class="shop-item-btn" onclick="buyItem('🟡 ハイパーボール', 600)">
-                <span class="shop-title-cell"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png">ハイパーボール (ほかくりつ:超高い)</span>
-                <span class="shop-price-cell">600 💰</span>
-            </button>
+            <button class="shop-item-btn" onclick="buyItem('🍬 ふしぎなあめ', 100)"><span class="shop-title-cell">🍬 ふしぎなあめ (レベルを1あげる)</span><span class="shop-price-cell">100 💰</span></button>
+            <button class="shop-item-btn" onclick="buyItem('🎫 ぼうけん券', 500)"><span class="shop-title-cell">🎫 ぼうけん券 (1回おでかけ)</span><span class="shop-price-cell">500 💰</span></button>
+            <button class="shop-item-btn" onclick="buyItem('🔴 モンスターボール', 100)"><span class="shop-title-cell"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png">モンスターボール (ほかくりつ:ふつう)</span><span class="shop-price-cell">100 💰</span></button>
+            <button class="shop-item-btn" onclick="buyItem('🔵 スーパーボール', 300)"><span class="shop-title-cell"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png">スーパーボール (ほかくりつ:高め)</span><span class="shop-price-cell">300 💰</span></button>
+            <button class="shop-item-btn" onclick="buyItem('🟡 ハイパーボール', 600)"><span class="shop-title-cell"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png">ハイパーボール (ほかくりつ:超高い)</span><span class="shop-price-cell">600 💰</span></button>
         </div>
     </div>
 
@@ -290,6 +269,14 @@
             <button style="font-family:inherit; font-size:0.7rem; font-weight:bold; padding:6px;" onclick="adjustParentData('ball_master')">➕マスター</button>
             <button style="font-family:inherit; font-size:0.7rem; font-weight:bold; padding:6px;" onclick="adjustParentData('candy')">➕🍬あめ</button>
         </div>
+        
+        <div style="background:#fff; padding:10px; border-radius:10px; border:1px solid #cbd5e1; margin-bottom:12px;">
+            <label style="font-size:0.8rem; font-weight:bold; color:#0f172a; cursor:pointer;">
+                <input type="checkbox" id="devZukanToggle" onchange="toggleDevZukan()"> 🛠️ 図鑑全開モード (テスト用)
+            </label>
+            <p style="font-size:0.6rem; color:#64748b; margin:4px 0 0 0;">ONにすると図鑑が全種類表示されます（セーブデータには影響しません）。</p>
+        </div>
+
         <button style="width:100%; font-family:inherit; font-size:0.8rem; font-weight:bold; background:#ef4444; color:white; border:none; border-radius:8px; padding:10px;" onclick="resetCurrentUserData()">🚨 セーブデータをリセットする</button>
         <button style="width:100%; margin-top:8px; font-family:inherit; font-size:0.8rem; background:#64748b; color:white; border:none; border-radius:8px; padding:6px;" onclick="closeSecretParentMenu()">閉じる</button>
     </div>
@@ -312,7 +299,6 @@
                         <button id="tabNormalBtn" class="zukan-tab-btn active" onclick="switchZukanTab('normal')">通常ずかん</button>
                         <button id="tabMegaBtn" class="zukan-tab-btn" onclick="switchZukanTab('mega')">メガシンカ</button>
                     </div>
-                    
                     <div style="display: flex; gap: 4px; margin-bottom: 10px;">
                         <select id="regionSelector" class="region-select" onchange="renderZukanGrid()" style="margin-bottom: 0; flex: 1;">
                             <option value="all">🔍 ぜんぶ表示する</option>
@@ -328,7 +314,6 @@
                             <input type="checkbox" id="caughtOnlyToggle" onchange="renderZukanGrid()" style="margin-right: 4px;">もってる
                         </label>
                     </div>
-
                     <div class="progress-container">
                         <div id="zukanProgressBar" class="progress-fill-bar"></div>
                         <div id="zukanProgressText" class="progress-text-label">0 / 0 (0%)</div>
@@ -375,22 +360,10 @@
             <h3 id="lblAdventureModalTitle" style="margin:0; color:#facc15; font-size:1.05rem;">どこに ぼうけんに でかける？</h3>
             <p id="lblAdventureModalDesc" style="font-size:0.75rem; color:#94a3b8; margin:4px 0;">1ひきは かならず はじめて出会う ポケモンだぞ！</p>
             <div class="adventure-zone-grid">
-                <button class="zone-btn" onclick="startBattle('water')">
-                    <span class="zone-title" style="color:#3b82f6;">🌊 みずべ</span>
-                    <img id="shadow-water" class="silhouette-preview" src="" alt="?">
-                </button>
-                <button class="zone-btn" onclick="startBattle('forest')">
-                    <span class="zone-title" style="color:#22c55e;">🌳 もり</span>
-                    <img id="shadow-forest" class="silhouette-preview" src="" alt="?">
-                </button>
-                <button class="zone-btn" onclick="startBattle('volcano')">
-                    <span class="zone-title" style="color:#ef4444;">🌋 かざん</span>
-                    <img id="shadow-volcano" class="silhouette-preview" src="" alt="?">
-                </button>
-                <button class="zone-btn" onclick="startBattle('thunder')">
-                    <span class="zone-title" style="color:#eab308;">⚡ いなずま</span>
-                    <img id="shadow-thunder" class="silhouette-preview" src="" alt="?">
-                </button>
+                <button class="zone-btn" onclick="startBattle('water')"><span class="zone-title" style="color:#3b82f6;">🌊 みずべ</span><img id="shadow-water" class="silhouette-preview" src="" alt="?"></button>
+                <button class="zone-btn" onclick="startBattle('forest')"><span class="zone-title" style="color:#22c55e;">🌳 もり</span><img id="shadow-forest" class="silhouette-preview" src="" alt="?"></button>
+                <button class="zone-btn" onclick="startBattle('volcano')"><span class="zone-title" style="color:#ef4444;">🌋 かざん</span><img id="shadow-volcano" class="silhouette-preview" src="" alt="?"></button>
+                <button class="zone-btn" onclick="startBattle('thunder')"><span class="zone-title" style="color:#eab308;">⚡ いなずま</span><img id="shadow-thunder" class="silhouette-preview" src="" alt="?"></button>
             </div>
             <button type="button" class="battle-btn" style="background:#475569; margin-top:14px; height:38px; font-size:0.85rem;" onclick="closeAdventureModal()">やめる</button>
         </div>
@@ -463,14 +436,13 @@
         let currentUser = 'kouta';
         let battleState = {};
 
-        // 🔥 BGM統合システム（1つのYouTubeプレイヤーで曲を差し替える！）
+        // 🔥 YouTube Player API (Playsinlineでスマホ・iPad対応！)
         let bgmPlayer;
         let isYoutubeReady = false;
         let isBgmOn = false;
         let currentBgmMode = 'main';
         
-        // 使用する曲のYouTube動画ID
-        const MAIN_BGM_ID = 'e7n8DID-zVs';   // ポケモン赤緑 OP
+        const MAIN_BGM_ID = 'e7n8DID-zVs';   // 赤緑 OP
         const BATTLE_BGM_ID = 'IQhk79DIq7A'; // 戦闘！野生ポケモン
 
         function onYouTubeIframeAPIReady() {
@@ -478,16 +450,14 @@
                 height: '10',
                 width: '10',
                 videoId: MAIN_BGM_ID,
-                playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': MAIN_BGM_ID },
+                playerVars: { 'playsinline': 1, 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': MAIN_BGM_ID },
                 events: {
                     'onReady': (e) => {
                         e.target.setVolume(20);
                         isYoutubeReady = true;
                     },
                     'onStateChange': (e) => {
-                        if (e.data === YT.PlayerState.ENDED) {
-                            e.target.playVideo(); // 強制ループ
-                        }
+                        if (e.data === YT.PlayerState.ENDED) e.target.playVideo();
                     }
                 }
             });
@@ -496,7 +466,12 @@
         function toggleBGM() {
             isBgmOn = !isBgmOn;
             document.getElementById('bgmToggleBtn').textContent = isBgmOn ? "🔊" : "🔇";
-            if (!isYoutubeReady) return;
+            if (!isYoutubeReady) {
+                if(isBgmOn) alert("おんがくの じゅんびちゅう です。もうすこし まってね！");
+                isBgmOn = false;
+                document.getElementById('bgmToggleBtn').textContent = "🔇";
+                return;
+            }
             if(isBgmOn) {
                 bgmPlayer.playVideo();
             } else {
@@ -510,14 +485,12 @@
             if (!isYoutubeReady) return;
             
             let targetId = mode === 'main' ? MAIN_BGM_ID : BATTLE_BGM_ID;
-            let volume = mode === 'main' ? 20 : 35; // 戦闘は少し大きめ
+            let volume = mode === 'main' ? 20 : 35;
             
-            // カセット（曲）を差し替える！
             bgmPlayer.loadVideoById({videoId: targetId});
             bgmPlayer.setVolume(volume);
             
             if (!isBgmOn) {
-                // BGMオフ設定なら、読み込んだ直後に止める
                 setTimeout(() => { bgmPlayer.pauseVideo(); }, 100);
             }
         }
@@ -579,7 +552,7 @@
                 .then(data => {
                     if (data.cries && data.cries.latest) {
                         const audio = new Audio(data.cries.latest);
-                        audio.play().catch(e => console.log("音声ブロック", e));
+                        audio.play().catch(e => {});
                     }
                 });
             } catch(e) {}
@@ -630,6 +603,11 @@
                 appReady = true;
                 const cover = document.getElementById('loadingCover');
                 if(cover) cover.style.display = 'none';
+                
+                // 図鑑初期化バグ回避のため一度強制的にリセット
+                const regionSel = document.getElementById('regionSelector');
+                if (regionSel) regionSel.value = 'all';
+                
                 changeUser('kouta');
             }
         }
@@ -707,8 +685,8 @@
         function renderUI() {
             if (!cloudData["study_balance"][currentUser]) cloudData["study_balance"][currentUser] = { "pokeen": 300, "gachaCount": 1 };
             if (!cloudData["study_level"][currentUser]) cloudData["study_level"][currentUser] = {};
-            if (!cloudData["study_zukan_normal"][currentUser]) cloudData["study_zukan_normal"][currentUser] = [];
-            if (!cloudData["study_zukan_mega"][currentUser]) cloudData["study_zukan_mega"][currentUser] = [];
+            if (!Array.isArray(cloudData["study_zukan_normal"][currentUser])) cloudData["study_zukan_normal"][currentUser] = [];
+            if (!Array.isArray(cloudData["study_zukan_mega"][currentUser])) cloudData["study_zukan_mega"][currentUser] = [];
             if (!cloudData["study_v2_bag_balls"] || !cloudData["study_v2_bag_balls"][currentUser]) {
                 if(!cloudData["study_v2_bag_balls"]) cloudData["study_v2_bag_balls"] = {};
                 cloudData["study_v2_bag_balls"][currentUser] = { normal: 5, super: 1, hyper: 0, master: 0 };
@@ -899,6 +877,7 @@
                         playRetroSound('coin');
                         cloudData["study_user_pokemon"][currentUser] = p.id; 
                         
+                        // 🔥 相棒に選んだら即座に図鑑に登録
                         if (!cloudData["study_zukan_normal"][currentUser].includes(p.id)) {
                             cloudData["study_zukan_normal"][currentUser].push(p.id);
                         }
@@ -969,7 +948,20 @@
             }
         }
 
-        function openZukanModal() { playRetroSound('click'); document.getElementById('zukanModal').style.display = 'flex'; switchZukanTab('normal'); }
+        // 🔥 パパママ用 図鑑全開テストモード
+        let devZukanCompleteMode = false;
+        function toggleDevZukan() {
+            devZukanCompleteMode = document.getElementById('devZukanToggle').checked;
+            alert(devZukanCompleteMode ? "図鑑全開モードをONにしました！" : "元のセーブデータに戻しました。");
+        }
+
+        function openZukanModal() { 
+            playRetroSound('click'); 
+            document.getElementById('zukanModal').style.display = 'flex'; 
+            // 開くたびに確実に見出しを「all」にリセットする
+            document.getElementById('regionSelector').value = 'all';
+            switchZukanTab('normal'); 
+        }
         function closeZukanModal() { playRetroSound('click'); document.getElementById('zukanModal').style.display = 'none'; }
         function switchZukanTab(tab) {
             playRetroSound('click');
@@ -995,7 +987,9 @@
 
             if (zukanTab === 'mega') {
                 megaList.forEach((p, i) => {
-                    const hasIt = ownedMega.includes(p.id); if (hasIt) ownedCount++; totalCount++;
+                    // 🔥 テストモードがONなら全種類持っている判定にする
+                    const hasIt = devZukanCompleteMode || ownedMega.includes(p.id); 
+                    if (hasIt) ownedCount++; totalCount++;
                     if (showCaughtOnly && !hasIt) return;
                     createPkmBox(grid, p.id, i+1, hasIt);
                 });
@@ -1005,7 +999,9 @@
                     const range = regions[rKey];
                     for (let i = range.start; i <= range.end; i++) {
                         const idStr = String(i).padStart(4, '0');
-                        const hasIt = ownedNormal.includes(idStr); if (hasIt) ownedCount++; totalCount++;
+                        // 🔥 テストモードがONなら全種類持っている判定にする
+                        const hasIt = devZukanCompleteMode || ownedNormal.includes(idStr); 
+                        if (hasIt) ownedCount++; totalCount++;
                         if (showCaughtOnly && !hasIt) continue;
                         createPkmBox(grid, idStr, i, hasIt);
                     }
@@ -1033,6 +1029,7 @@
                     const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${baseId}`);
                     const data = await res.json();
                     
+                    // 🔥 ひらがな版を最優先で取得し、無ければ漢字版にフォールバック
                     const flavorHrkt = data.flavor_text_entries.find(f => f.language.name === "ja-Hrkt");
                     const flavorJa = data.flavor_text_entries.find(f => f.language.name === "ja");
                     const flavor = flavorHrkt || flavorJa;
@@ -1320,6 +1317,7 @@
         function resetCurrentUserData() {
             if(confirm("本当にセーブデータをリセットしますか？")) {
                 cloudData.study_balance[currentUser] = { "pokeen": 300, "gachaCount": 0 };
+                // 🔥 初期化対応
                 cloudData.study_level[currentUser] = {};
                 cloudData.study_zukan_normal[currentUser] = [];
                 cloudData.study_zukan_mega[currentUser] = [];
