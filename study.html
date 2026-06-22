@@ -7,937 +7,669 @@
     <title>ポケットモンスター こうた&はると</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --bg-color: #f8f9fa; 
-            --text-color: #0f172a; 
+            --bg-color: #f0f4f8; 
+            --text-color: #1e293b; 
             --border-color: #0f172a;
             --kouta-main: #3b82f6; 
             --haruto-main: #ef4444; 
-            --box-shadow: 4px 4px 0px var(--border-color);
+            --card-shadow: 0 6px 0px rgba(0,0,0,0.15);
+            --border-radius: 20px;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        /* 🔥 フォントを丸ゴシックに戻し、太字をベースに設定 */
         body { 
-            font-family: 'M PLUS Rounded 1c', 'Helvetica Neue', Arial, sans-serif;
-            font-weight: 800;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
             background-color: var(--bg-color); 
             color: var(--text-color); 
             margin: 0; 
-            padding: 16px; 
-            padding-bottom: 80px; 
+            padding: 0;
+            padding-bottom: 90px; /* ボトムナビの分 */
             user-select: none; 
         }
 
-        header { position: relative; text-align: center; margin: 12px 0 24px 0; padding: 0 36px; }
-        header h1 { font-size: 1.3rem; font-weight: 900; color: var(--text-color); margin: 0; line-height: 1.3; text-shadow: 2px 2px 0px #cbd5e1; }
-        .secret-gear-btn { position: absolute; right: 4px; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: #94a3b8; padding: 6px; }
-        .bgm-toggle-btn { position: absolute; left: 4px; top: -2px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: var(--text-color); padding: 6px; }
-        
-        /* GB風の太枠ブロックデザインはそのまま維持！ */
-        .user-switcher { display: flex; gap: 16px; margin-bottom: 24px; }
-        .user-tab { flex: 1; height: 56px; text-align: center; border: 4px solid var(--border-color); font-size: 1.1rem; font-weight: 900; font-family: inherit; cursor: pointer; background: #cbd5e1; color: var(--border-color); box-shadow: var(--box-shadow); border-radius: 4px; transition: transform 0.1s, box-shadow 0.1s; }
+        /* 背景の装飾（ポケモン風のやわらかい雰囲気） */
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 20%),
+                        radial-gradient(circle at 90% 80%, rgba(239, 68, 68, 0.05) 0%, transparent 20%);
+            z-index: -1;
+        }
+
+        header { padding: 16px; text-align: center; position: relative; }
+        header h1 { font-size: 1.2rem; font-weight: 900; line-height: 1.3; margin: 0; }
+        .secret-gear-btn { position: absolute; right: 12px; top: 16px; font-size: 1.4rem; background: none; border: none; cursor: pointer; opacity: 0.4; }
+        .bgm-toggle-btn { position: absolute; left: 12px; top: 16px; font-size: 1.4rem; background: none; border: none; cursor: pointer; }
+
+        /* 🔥 トレーナー領域のデザイン */
+        .trainer-section { padding: 0 16px 16px; }
+        .user-switcher { display: flex; gap: 12px; margin-bottom: 12px; }
+        .user-tab { flex: 1; height: 48px; border: 3px solid var(--border-color); border-radius: 14px; font-size: 1rem; font-weight: 800; font-family: inherit; cursor: pointer; background: #cbd5e1; box-shadow: 0 4px 0 var(--border-color); transition: 0.1s; }
         .user-tab.kouta.active { background-color: var(--kouta-main); color: white; }
         .user-tab.haruto.active { background-color: var(--haruto-main); color: white; }
-        .user-tab:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--border-color); }
+        .user-tab:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--border-color); }
 
-        .card { background: white; border-radius: 4px; padding: 18px 16px; margin-bottom: 24px; border: 4px solid var(--border-color); box-shadow: var(--box-shadow); }
-        .card h2 { font-size: 1.1rem; margin: 0 0 14px 0; font-weight: 900; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px dotted var(--border-color); padding-bottom: 8px; }
-
-        .status-card { background: #e2e8f0; color: var(--text-color); }
-        .status-item { display: table-cell; width: 33.33%; text-align: center; font-size: 0.8rem; font-weight: 900; border-right: 4px solid var(--border-color); vertical-align: middle; }
-        .status-item:last-child { border-right: none; }
-        .status-item .val { display: block; font-size: 1.3rem; font-weight: 900; margin-top: 4px; color: #ea580c; }
-
-        .partner-display-bar { background: #ffffff; border: 4px solid var(--border-color); border-radius: 4px; padding: 10px 14px; margin-bottom: 20px; display: table; width: 100%; cursor: pointer; box-shadow: var(--box-shadow); }
-        .partner-display-bar:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--border-color); }
-        .partner-img-cell { display: table-cell; width: 50px; vertical-align: middle; }
-        .partner-img-cell img { width: 48px; height: 48px; object-fit: contain; display: block; margin: 0 auto; image-rendering: pixelated; }
-        .partner-info-cell { display: table-cell; vertical-align: middle; padding-left: 10px; }
-        .partner-lbl { font-size: 0.75rem; font-weight: 900; color: #475569; display: block; margin-bottom: 2px; }
-        .partner-pkm-name { font-size: 1.05rem; font-weight: 900; color: var(--text-color); }
-        .partner-change-hint { display: table-cell; vertical-align: middle; text-align: right; font-size: 0.8rem; font-weight: 900; color: var(--border-color); }
-
-        .mission-hp-bg { width: 100%; height: 16px; background: #cbd5e1; border-radius: 0; border: 4px solid var(--border-color); margin-bottom: 20px; overflow: hidden; }
-        .mission-hp-fill { height: 100%; background: #22c55e; width: 0%; transition: width 0.4s; }
-
-        .zone-header { font-size: 0.9rem; font-weight: 900; color: white; padding: 6px 14px; border: 4px solid var(--border-color); border-bottom: none; display: inline-block; box-shadow: var(--box-shadow); transform: translateY(4px); position: relative; z-index: 2; }
-        .hw-zone { background-color: #f59e0b; }
-        .self-zone { background-color: #10b981; }
-        .lesson-zone { background-color: #3b82f6; }
-        .challenge-zone { background-color: #ef4444; }
-        .zone-container { border: 4px solid var(--border-color); padding: 12px; background: #f8fafc; box-shadow: var(--box-shadow); margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
-
-        .quest-item { display: flex; align-items: center; background: white; border: 4px solid var(--border-color); border-radius: 4px; padding: 12px 10px; cursor: pointer; box-shadow: 2px 2px 0 var(--border-color); transition: all 0.1s; }
-        .quest-item:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--border-color); }
-        .quest-item.done { background: #cbd5e1; color: #64748b; }
-        .quest-fake-cb { width: 24px; height: 24px; border: 4px solid var(--border-color); background: white; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
-        .quest-item.done .quest-fake-cb { background: var(--text-color); color: white; border-color: var(--border-color); }
-        .quest-cell-text { padding-left: 12px; font-size: 0.95rem; font-weight: 900; line-height: 1.3; }
-        .quest-item.done .quest-cell-text { text-decoration: line-through; }
-
-        .slot-box { display: flex; align-items: center; justify-content: space-between; background: var(--border-color); border: 4px solid var(--border-color); border-radius: 4px; padding: 12px 14px; margin-bottom: 16px; color: white; min-height: 60px; }
-        .slot-window { flex: 1; text-align: left; font-size: 0.95rem; font-weight: 900; color: #facc15; padding-right: 10px; white-space: normal; word-break: break-word; line-height: 1.3; }
-        .slot-trigger-btn { background: white; color: var(--border-color); border: 4px solid var(--border-color); padding: 8px 14px; font-family: inherit; font-size: 0.85rem; font-weight: 900; cursor: pointer; box-shadow: 2px 2px 0px #cbd5e1; flex-shrink: 0; align-self: center; }
-        .slot-trigger-btn:active { transform: translate(2px,2px); box-shadow: 0 0 0 transparent; }
-        .slot-trigger-btn:disabled { background: #64748b; color: #94a3b8; box-shadow: none; cursor: not-allowed; }
-
-        .action-menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 24px 0; }
-        .menu-btn { height: 64px; border: 4px solid var(--border-color); font-family: inherit; font-size: 0.85rem; font-weight: 900; cursor: pointer; box-shadow: var(--box-shadow); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px; border-radius: 4px; }
-        .menu-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--border-color); }
-        .btn-bag { background: #facc15; color: var(--text-color); }
-        .btn-zukan { background: #22d3ee; color: var(--text-color); }
-        .btn-calendar { background: #c084fc; color: white; }
-
-        .big-adventure-trigger { width: 100%; height: 70px; background: #ef4444; color: white; border: 4px solid var(--border-color); font-family: inherit; font-size: 1.15rem; font-weight: 900; box-shadow: var(--box-shadow); cursor: pointer; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; gap: 12px; border-radius: 4px; }
-        .big-adventure-trigger img { width: 28px; height: 28px; object-fit: contain; image-rendering: pixelated; }
-        .big-adventure-trigger:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--border-color); }
-        .big-adventure-trigger:disabled { background: #94a3b8 !important; color: #e2e8f0 !important; cursor: not-allowed; }
-
-        .shop-grid { display: flex; flex-direction: column; gap: 12px; }
-        .shop-item-btn { display: flex; align-items: center; width: 100%; background: #ffffff; border: 4px solid var(--border-color); padding: 12px; cursor: pointer; text-align: left; box-shadow: 4px 4px 0px #cbd5e1; border-radius: 4px; font-family: inherit; }
-        .shop-item-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #cbd5e1; }
-        .shop-title-cell { flex: 1; font-size: 0.9rem; font-weight: 900; color: var(--text-color); display: flex; align-items: center; }
-        .shop-title-cell img { width: 24px; height: 24px; object-fit: contain; margin-right: 8px; flex-shrink: 0; image-rendering: pixelated; }
-        .shop-price-cell { font-size: 1rem; font-weight: 900; color: #ea580c; white-space: nowrap; margin-left: 10px; text-align: right; }
-
-        /* モーダル群 */
-        .modal-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 16px; }
-        .modal-content { background: white; border: 6px solid var(--border-color); border-radius: 4px; padding: 20px; text-align: center; width: 100%; max-width: 320px; color: var(--text-color); box-shadow: 8px 8px 0px rgba(255,255,255,0.2); }
+        /* 🔥 案2: トレーナーカード（情報統合） */
+        .trainer-card {
+            background: white; border: 4px solid var(--border-color); border-radius: var(--border-radius);
+            padding: 16px; display: flex; align-items: center; position: relative;
+            box-shadow: var(--card-shadow); transition: background-color 0.3s;
+        }
+        .trainer-card.kouta-theme { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-color: var(--kouta-main); }
+        .trainer-card.haruto-theme { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); border-color: var(--haruto-main); }
         
-        .zukan-display-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-height: 280px; overflow-y: auto; margin-top: 12px; padding-right: 4px;}
-        .grid-pokemon-box { background: white; border: 4px solid var(--border-color); padding: 6px 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 72px; position: relative; cursor: pointer; }
-        .grid-pokemon-box img { width: 40px; height: 40px; object-fit: contain; image-rendering: pixelated; }
-        .grid-pokemon-box span { font-size: 0.6rem; font-weight: 900; text-align: center; margin-top: 4px; display: block; width: 100%; overflow: hidden; white-space: nowrap; }
-        .grid-pokemon-box.unowned img { filter: brightness(0); opacity: 0.1; }
-        .zukan-number-badge { position: absolute; top: 0; left: 2px; font-size: 0.5rem; font-weight: 900; color: #64748b; }
+        .partner-pfp { width: 80px; height: 80px; background: white; border: 3px solid var(--border-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 4px 0 rgba(0,0,0,0.1); }
+        .partner-pfp img { width: 70px; height: 70px; object-fit: contain; image-rendering: pixelated; }
+        
+        .trainer-info { flex: 1; padding-left: 14px; }
+        .partner-name-label { font-size: 1.1rem; font-weight: 900; margin-bottom: 4px; display: block; }
+        .level-badge { display: inline-block; background: var(--border-color); color: white; font-size: 0.75rem; padding: 2px 8px; border-radius: 10px; margin-bottom: 6px; }
+        
+        .currency-row { display: flex; gap: 10px; }
+        .currency-item { font-size: 0.9rem; font-weight: 800; background: rgba(255,255,255,0.6); padding: 4px 10px; border-radius: 12px; border: 2px solid rgba(0,0,0,0.05); }
 
-        .battle-hp-bar-bg { width: 100%; height: 14px; background: #cbd5e1; border: 4px solid var(--border-color); margin: 10px 0; }
-        .battle-hp-bar-fill { width: 100%; height: 100%; background: #22c55e; transition: width 0.3s; }
-        .battle-scene-box { display: flex; justify-content: space-around; align-items: center; margin: 16px 0; }
-        .battle-pkm-wrapper img { width: 80px; height: 80px; object-fit: contain; image-rendering: pixelated; }
-        .battle-pkm-wrapper span { display: block; font-size: 0.75rem; font-weight: 900; margin-top: 4px; color: #64748b; }
-        .battle-log { background: var(--border-color); border: 4px solid white; padding: 12px; font-size: 0.95rem; font-weight: 900; text-align: left; min-height: 70px; color: white; white-space: pre-line; line-height: 1.5; margin-bottom: 12px; }
-        .battle-btn { width: 100%; height: 50px; font-family: inherit; background: white; color: var(--border-color); border: 4px solid var(--border-color); font-size: 1.1rem; font-weight: 900; cursor: pointer; box-shadow: 4px 4px 0 var(--border-color); }
-        .battle-btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--border-color); }
+        /* メインコンテンツ */
+        .main-content { padding: 0 16px; }
 
-        .sync-badge { position: fixed; bottom: 16px; right: 16px; background: var(--border-color); color: white; padding: 8px 16px; font-size: 0.8rem; font-weight: 900; z-index: 1000; border: 4px solid white; box-shadow: 4px 4px 0 black; display: none; }
-        .loading-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--border-color); color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10000; font-size: 1.2rem; font-weight: 900; }
+        .big-adventure-trigger { 
+            width: 100%; height: 64px; background: #ef4444; color: white; border: 4px solid var(--border-color); 
+            font-family: inherit; font-size: 1.1rem; font-weight: 900; border-radius: var(--border-radius);
+            box-shadow: 0 5px 0 var(--border-color); cursor: pointer; margin: 16px 0; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .big-adventure-trigger.ready { animation: floatAnim 2s infinite ease-in-out; background: #f43f5e; }
+        @keyframes floatAnim { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        .big-adventure-trigger:disabled { background: #94a3b8; box-shadow: 0 3px 0 #64748b; opacity: 0.6; cursor: not-allowed; }
+
+        .mission-hp-bg { width: 100%; height: 20px; background: #e2e8f0; border-radius: 10px; border: 3px solid var(--border-color); margin-bottom: 20px; overflow: hidden; position: relative; }
+        .mission-hp-fill { height: 100%; background: linear-gradient(90deg, #4ade80, #22c55e); width: 0%; transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+        /* ミッショングループ */
+        .zone-label { font-size: 0.85rem; font-weight: 900; color: white; padding: 4px 14px; border-radius: 10px; margin-bottom: -10px; position: relative; z-index: 1; display: inline-block; margin-left: 12px; border: 2px solid var(--border-color); }
+        .hw-color { background-color: #f59e0b; }
+        .self-color { background-color: #10b981; }
+        .lesson-color { background-color: #3b82f6; }
+        .challenge-color { background-color: #ef4444; }
+
+        .mission-group { background: white; border: 3px solid var(--border-color); border-radius: var(--border-radius); padding: 20px 12px 12px; margin-bottom: 20px; box-shadow: var(--card-shadow); }
+        .quest-item { display: flex; align-items: center; padding: 12px; border-radius: 14px; background: #f8fafc; margin-bottom: 8px; border: 2px solid transparent; cursor: pointer; transition: 0.2s; }
+        .quest-item:active { background: #f1f5f9; transform: scale(0.98); }
+        .quest-item.done { background: #f1f5f9; color: #94a3b8; }
+        .quest-fake-cb { width: 28px; height: 28px; border: 3px solid var(--border-color); border-radius: 8px; background: white; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+        .quest-item.done .quest-fake-cb { background: #22c55e; border-color: #166534; color: white; }
+        .quest-text { padding-left: 12px; font-size: 1rem; font-weight: 700; flex: 1; }
+        .quest-item.done .quest-text { text-decoration: line-through; }
+
+        /* 🔥 案1: ボトムナビゲーション */
+        .bottom-nav { 
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 80px; 
+            background: white; border-top: 4px solid var(--border-color); 
+            display: flex; justify-content: space-around; align-items: center; 
+            z-index: 9000; padding-bottom: env(safe-area-inset-bottom);
+        }
+        .nav-item { background: none; border: none; font-family: inherit; font-size: 0.7rem; font-weight: 800; color: #64748b; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+        .nav-item i { font-size: 1.5rem; color: var(--text-color); }
+        .nav-item:active { transform: scale(0.9); }
+
+        /* ショップなどのリスト項目 */
+        .shop-item { display: flex; align-items: center; padding: 10px; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; margin-bottom: 8px; cursor: pointer; }
+        .shop-item:active { background: #f1f5f9; }
+        .shop-icon { width: 32px; height: 32px; object-fit: contain; }
+        .shop-name { flex: 1; padding-left: 10px; font-weight: 700; font-size: 0.85rem; }
+        .shop-price { font-weight: 900; color: #ea580c; }
+
+        /* 同期バッジ */
+        .sync-badge { position: fixed; top: 12px; left: 50%; transform: translateX(-50%); background: var(--border-color); color: white; padding: 6px 16px; border-radius: 20px; font-size: 0.75rem; z-index: 10001; font-weight: 700; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .loading-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; display: flex; justify-content: center; align-items: center; z-index: 20000; font-weight: 900; font-size: 1.2rem; }
+
+        /* モーダル基本 */
+        .modal-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); display: none; justify-content: center; align-items: center; z-index: 10000; padding: 16px; backdrop-filter: blur(4px); }
+        .modal-content { background: white; border: 4px solid var(--border-color); border-radius: var(--border-radius); padding: 20px; text-align: center; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
+        .modal-title { font-size: 1.2rem; font-weight: 900; margin-bottom: 16px; display: block; border-bottom: 3px solid #f1f5f9; padding-bottom: 8px; }
+        .close-btn { width: 100%; height: 48px; background: #e2e8f0; border: 3px solid var(--border-color); border-radius: 14px; font-family: inherit; font-size: 1rem; font-weight: 800; cursor: pointer; margin-top: 12px; box-shadow: 0 4px 0 var(--border-color); }
     </style>
 </head>
 <body>
 
-    <script>
-        let appReady = false;
-        const fallbackTimer = setTimeout(() => {
-            if (!appReady) {
-                appReady = true;
-                const cover = document.getElementById('loadingCover');
-                if(cover) cover.style.display = 'none';
-                
-                const checkAndInit = setInterval(() => {
-                    if (typeof changeUser === 'function') {
-                        clearInterval(checkAndInit);
-                        changeUser('kouta');
-                    }
-                }, 500);
-            }
-        }, 5000);
-    </script>
-
-    <div id="loadingCover" class="loading-cover">
-        <div>🔴 セーブデータ よみこみちゅう...</div>
-    </div>
+    <div id="loadingCover" class="loading-cover"><div>セーブデータ 同期中...</div></div>
     <div id="syncBadge" class="sync-badge">通信中...</div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
-    <div style="position: fixed; width: 10px; height: 10px; top: 0; left: 0; opacity: 0.01; z-index: -9999; pointer-events: none;">
-        <div id="bgmPlayerDiv"></div>
-    </div>
+    <div style="position: fixed; width: 1px; height: 1px; opacity: 0.01; z-index: -1; pointer-events: none;"><div id="bgmPlayerDiv"></div></div>
 
     <header>
         <button id="bgmToggleBtn" class="bgm-toggle-btn" onclick="toggleBGM()">🔇</button>
-        <h1 id="mainTitleHeader">⚔️ ポケットモンスター<br>こうた & はると</h1>
-        <button type="button" class="secret-gear-btn" onclick="openSecretParentMenu()">⚙️</button>
+        <h1>⚔️ ポケットモンスター<br>こうた & はると</h1>
+        <button class="secret-gear-btn" onclick="openSecretParentMenu()">⚙️</button>
     </header>
 
-    <div class="user-switcher">
-        <button type="button" class="user-tab kouta active" onclick="changeUser('kouta')">💧 こうた</button>
-        <button type="button" class="user-tab haruto" onclick="changeUser('haruto')">🔥 はると</button>
-    </div>
-
-    <div class="card status-card">
-        <div class="status-item"><span id="lblStatusLevel">🏅 レベル</span><span id="userLevel" class="val">1</span></div>
-        <div class="status-item"><span id="lblStatusWallet">👛 おこづかい</span><span id="pokeenBalance" class="val">0</span></div>
-        <div class="status-item"><span id="lblStatusTicket">🎫 チケット</span><span id="ticketCountDisplay" class="val">0</span></div>
-    </div>
-
-    <div class="partner-display-bar" onclick="openPartnerSelectionModal()">
-        <div class="partner-img-cell"><img id="statusBarPartnerImg" src="" alt="相棒"></div>
-        <div class="partner-info-cell">
-            <span id="lblPartnerIntro" class="partner-lbl">いっしょに ぼうけんする あいぼう</span>
-            <span id="statusBarPartnerName" class="partner-pkm-name">---</span>
+    <div class="trainer-section">
+        <div class="user-switcher">
+            <button id="tab-kouta" class="user-tab kouta active" onclick="changeUser('kouta')">💧 こうた</button>
+            <button id="tab-haruto" class="user-tab haruto" onclick="changeUser('haruto')">🔥 はると</button>
         </div>
-        <div id="lblPartnerChangeBtn" class="partner-change-hint">かえる ▶</div>
+        
+        <div id="trainerCard" class="trainer-card kouta-theme" onclick="openPartnerSelectionModal()">
+            <div class="partner-pfp">
+                <img id="cardPartnerImg" src="" alt="相棒">
+            </div>
+            <div class="trainer-info">
+                <span class="level-badge">Lv.<span id="cardPartnerLv">1</span></span>
+                <span id="cardPartnerName" class="partner-name-label">---</span>
+                <div class="currency-row">
+                    <span class="currency-item">💰 <span id="cardPokeen">0</span></span>
+                    <span class="currency-item">🎫 <span id="cardTicket">0</span></span>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="card" id="questCard">
-        <h2>
-            <span id="lblMissionTitle">⚔️ ほんじつの ミッション</span> 
-            <span id="expPreview" style="font-size:0.9rem; color:#64748b;">0/0</span>
-        </h2>
-        
+    <div class="main-content">
+        <button id="adventureBtn" class="big-adventure-trigger" onclick="openAdventureModal()">
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png">
+            ぼうけんに でかける！！
+        </button>
+
         <div class="mission-hp-bg"><div id="missionProgressBar" class="mission-hp-fill"></div></div>
-        
-        <div class="slot-box" id="slotBoxArea">
-            <div id="challengeSlotWindow" class="slot-window">🎰 ボタンをおして チャレンジを きめよう！</div>
-            <button type="button" id="challengeSlotBtn" class="slot-trigger-btn" onclick="spinChallengeSlot()">スタート！</button>
-        </div>
 
-        <div id="questList"></div>
-    </div>
-
-    <div class="action-menu-grid">
-        <button class="menu-btn btn-bag" onclick="openBagModal()">👜<br><span id="lblMenuBag">どうぐ</span></button>
-        <button class="menu-btn btn-zukan" onclick="openZukanModal()">📱<br><span id="lblMenuZukan">ずかん</span></button>
-        <button class="menu-btn btn-calendar" onclick="openCalendarModal()">📅<br><span id="lblMenuRecord">きろく</span></button>
-    </div>
-
-    <button type="button" id="bigAdventureTriggerBtn" class="big-adventure-trigger" onclick="openAdventureSelectionModal()">
-        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="ball">
-        <span id="lblBigAdventureBtnText">ぼうけんに でかける！！</span>
-    </button>
-
-    <div class="card">
-        <h2><span id="lblShopTitle">🏪 フレンドリィショップ</span></h2>
-        <div class="shop-grid">
-            <button class="shop-item-btn" onclick="buyItem('🍬 ふしぎなあめ', 100)"><span class="shop-title-cell">🍬 ふしぎなあめ (レベルUP)</span><span class="shop-price-cell">100 💰</span></button>
-            <button class="shop-item-btn" onclick="buyItem('🎫 ぼうけん券', 500)"><span class="shop-title-cell">🎫 ぼうけん券 (1回おでかけ)</span><span class="shop-price-cell">500 💰</span></button>
-            <button class="shop-item-btn" onclick="buyItem('🔴 モンスターボール', 100)"><span class="shop-title-cell"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png">モンスターボール</span><span class="shop-price-cell">100 💰</span></button>
-            <button class="shop-item-btn" onclick="buyItem('🔵 スーパーボール', 300)"><span class="shop-title-cell"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png">スーパーボール</span><span class="shop-price-cell">300 💰</span></button>
-            <button class="shop-item-btn" onclick="buyItem('🟡 ハイパーボール', 600)"><span class="shop-title-cell"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png">ハイパーボール</span><span class="shop-price-cell">600 💰</span></button>
+        <div id="missionArea">
+            <div class="mission-group" id="slotGroup" style="padding-top:12px;">
+                <div class="slot-box">
+                    <div id="slotWindow" class="slot-window">チャレンジを きめよう！</div>
+                    <button id="slotBtn" class="slot-trigger-btn" onclick="spinSlot()">スタート</button>
+                </div>
+            </div>
+            <div id="missionListContainer"></div>
         </div>
     </div>
 
-    <div id="secretParentPanel" style="background:#e2e8f0; border: 4px solid var(--border-color); margin-top: 24px; padding: 14px; display: none; color: var(--text-color);">
-        <h4 style="margin:0 0 8px 0; color:#dc2626;">⚙️ パパ・ママ専用 調整ルーム</h4>
-        <p style="font-size:0.8rem; font-weight:900; margin:0 0 8px 0;"><span id="parentCurrentTargetName">こうた</span> のデータを操作します。</p>
-        
-        <div style="background:#fff; padding:10px; border:2px solid var(--border-color); margin-bottom:12px;">
-            <span style="font-size:0.8rem; font-weight:bold;">🎰 チャレンジミッション候補（カンマ区切り）</span>
-            <textarea id="parentChallengePoolInput" style="width:100%; height:50px; font-family:inherit; font-size:0.85rem; font-weight:900; margin-top:4px; padding:4px;" placeholder="うわばきを洗う,靴をそろえる"></textarea>
-            <button type="button" style="font-family:inherit; font-size:0.85rem; font-weight:900; background:#22c55e; color:white; border:2px solid var(--border-color); padding:6px; margin-top:4px; width:100%; cursor:pointer;" onclick="saveChallengePoolFromParent()">候補を保存する</button>
-        </div>
+    <nav class="bottom-nav">
+        <button class="nav-item" onclick="openBagModal()"><i>👜</i>どうぐ</button>
+        <button class="nav-item" onclick="openZukanModal()"><i>📱</i>ずかん</button>
+        <button class="nav-item" onclick="openCalendarModal()"><i>📅</i>きろく</button>
+        <button class="nav-item" onclick="openShopModal()"><i>🏪</i>ショップ</button>
+    </nav>
 
-        <div style="display:flex; gap:4px; margin-bottom:12px; flex-wrap: wrap;">
-            <input type="number" id="parentAmount" style="width:60px; font-family:inherit; font-weight:900; text-align:center; border:2px solid var(--border-color);" value="5">
-            <button style="font-family:inherit; font-size:0.85rem; font-weight:900; padding:6px; border:2px solid var(--border-color); cursor:pointer;" onclick="adjustParentData('pokeen')">➕コイン</button>
-            <button style="font-family:inherit; font-size:0.85rem; font-weight:900; padding:6px; border:2px solid var(--border-color); cursor:pointer;" onclick="adjustParentData('ticket')">➕🎫チケ</button>
-            <button style="font-family:inherit; font-size:0.85rem; font-weight:900; padding:6px; border:2px solid var(--border-color); cursor:pointer;" onclick="adjustParentData('candy')">➕🍬あめ</button>
-            <button style="font-family:inherit; font-size:0.85rem; font-weight:900; padding:6px; border:2px solid var(--border-color); cursor:pointer;" onclick="adjustParentData('ball_normal')">➕🔴</button>
-        </div>
-        
-        <div style="background:#fff; padding:10px; border:2px solid var(--border-color); margin-bottom:12px;">
-            <label style="font-size:0.85rem; font-weight:bold; cursor:pointer;">
-                <input type="checkbox" id="devZukanToggle" onchange="toggleDevZukan()"> 🛠️ 図鑑全開モード (テスト用)
-            </label>
-        </div>
-
-        <button style="width:100%; font-family:inherit; font-size:0.95rem; font-weight:bold; background:#ef4444; color:white; border:4px solid var(--border-color); padding:10px; cursor:pointer;" onclick="resetCurrentUserData()">🚨 セーブデータを初期化する</button>
-        <button style="width:100%; margin-top:8px; font-family:inherit; font-size:0.95rem; font-weight:bold; background:white; color:var(--text-color); border:4px solid var(--border-color); padding:10px; cursor:pointer;" onclick="closeSecretParentMenu()">閉じる</button>
-    </div>
-
-    <div id="bagModal" class="modal-cover">
-        <div class="modal-content">
-            <h3 style="margin:0 0 16px 0; font-size:1.2rem;">👜 どうぐ</h3>
-            <div id="bagItemsContainer"></div>
-            <button type="button" class="battle-btn" style="margin-top:16px;" onclick="closeBagModal()">とじる</button>
-        </div>
-    </div>
-
+    <div id="bagModal" class="modal-cover"><div class="modal-content"><span class="modal-title">👜 もってるどうぐ</span><div id="bagList"></div><button class="close-btn" onclick="closeModal('bagModal')">とじる</button></div></div>
+    
     <div id="zukanModal" class="modal-cover">
-        <div class="modal-content" style="max-width: 360px; padding: 12px;">
-            <h3 style="margin:0 0 12px 0; font-size:1.2rem;">📱 ポケモンずかん</h3>
+        <div class="modal-content">
+            <span class="modal-title">📱 ポケモンずかん</span>
             <div style="display: flex; gap: 4px; margin-bottom: 8px;">
-                <button id="tabNormalBtn" class="battle-btn" style="height:40px; font-size:0.95rem; flex:1;" onclick="switchZukanTab('normal')">通常ずかん</button>
-                <button id="tabMegaBtn" class="battle-btn" style="height:40px; font-size:0.95rem; flex:1; background:#f8fafc;" onclick="switchZukanTab('mega')">メガシンカ</button>
+                <button id="zNormalBtn" class="user-tab active" style="height:36px; font-size:0.8rem;" onclick="setZukanTab('normal')">つうじょう</button>
+                <button id="zMegaBtn" class="user-tab" style="height:36px; font-size:0.8rem;" onclick="setZukanTab('mega')">メガシンカ</button>
             </div>
-            <div style="display: flex; gap: 4px; margin-bottom: 10px;">
-                <select id="regionSelector" onchange="renderZukanGrid()" style="flex: 1; font-family:inherit; font-size:0.9rem; font-weight:900; border: 4px solid var(--border-color); padding: 4px;">
-                    <option value="all">🔍 ぜんぶ表示</option>
-                    <option value="kanto">カントー (001-151)</option>
-                    <option value="johto">ジョウト (152-251)</option>
-                    <option value="hoenn">ホウエン (252-386)</option>
-                    <option value="sinnoh">シンオウ (387-493)</option>
-                    <option value="unova">イッシュ (494-649)</option>
-                    <option value="kalos">カロス (650-721)</option>
-                    <option value="paldea">パルデア (906-1025)</option>
+            <div style="display: flex; gap: 4px; margin-bottom: 8px;">
+                <select id="regionSel" onchange="renderZukan()" style="flex:1; border-radius:8px; border:2px solid var(--border-color); font-family:inherit; padding:4px;">
+                    <option value="all">🔍 ぜんぶ</option>
+                    <option value="kanto">カントー</option><option value="johto">ジョウト</option><option value="hoenn">ホウエン</option><option value="paldea">パルデア</option>
                 </select>
-                <label style="border: 4px solid var(--border-color); padding: 0 8px; display: flex; align-items: center; font-size: 0.85rem; font-weight: bold; cursor: pointer;">
-                    <input type="checkbox" id="caughtOnlyToggle" onchange="renderZukanGrid()" style="margin-right: 4px;">もってる
-                </label>
+                <label style="font-size:0.8rem; font-weight:bold; display:flex; align-items:center;"><input type="checkbox" id="caughtOnly" onchange="renderZukan()">もってる</label>
             </div>
-            <div style="background: var(--border-color); color: white; padding: 4px; font-size: 0.95rem; font-weight:900; text-align: right;" id="zukanProgressText">0 / 0 (0%)</div>
-            <div class="zukan-display-grid" id="zukanGridDisplay"></div>
-            <button type="button" class="battle-btn" style="margin-top:12px;" onclick="closeZukanModal()">とじる</button>
+            <div style="font-size:0.8rem; text-align:right; font-weight:800; margin-bottom:8px;" id="zukanStats">0 / 0</div>
+            <div class="zukan-display-grid" id="zukanGrid"></div>
+            <button class="close-btn" onclick="closeModal('zukanModal')">とじる</button>
         </div>
     </div>
 
-    <div id="zukanDetailModal" class="modal-cover" style="z-index: 10000;">
-        <div class="modal-content" style="background: white;">
-            <img id="zukanDetailImg" src="" style="width: 120px; height: 120px; display: block; margin: 0 auto; image-rendering: pixelated;">
-            <h3 id="zukanDetailName" style="margin: 10px 0; font-size: 1.4rem;">...</h3>
-            <div style="border: 4px solid var(--border-color); padding: 12px; text-align: left; font-size: 1.05rem; font-weight: 900; line-height: 1.6; min-height: 100px; background: #f8fafc;" id="zukanDetailText">
-                データを よみこみちゅう...
-            </div>
-            <button type="button" class="battle-btn" style="margin-top:16px;" onclick="closeZukanDetailModal()">とじる</button>
-        </div>
-    </div>
-
-    <div id="calendarModal" class="modal-cover">
+    <div id="zukanDetailModal" class="modal-cover">
         <div class="modal-content">
-            <h3 style="margin:0 0 8px 0; font-size:1.2rem;">📅 ぼうけんのきろく</h3>
-            <p id="totalStampLabel" style="font-size:0.95rem; font-weight:900; margin:0 0 16px 0;">ぼうけん日数: 0日</p>
-            <div id="calendarMonthTitle" style="font-size:1.1rem; font-weight:bold; border-bottom:4px solid var(--border-color); padding-bottom:4px; margin-bottom:8px;">----年 --月</div>
-            <div class="calendar-grid" id="calendarGridDisplay"></div>
-            <button type="button" class="battle-btn" style="margin-top:16px;" onclick="closeCalendarModal()">とじる</button>
+            <img id="zdImg" src="" style="width:120px; height:120px;">
+            <h3 id="zdName" style="margin:10px 0;">---</h3>
+            <div id="zdText" style="text-align:left; background:#f1f5f9; padding:12px; border-radius:12px; font-size:0.9rem; line-height:1.6; font-weight:700;">---</div>
+            <button class="close-btn" onclick="closeModal('zukanDetailModal')">とじる</button>
         </div>
     </div>
 
-    <div id="partnerSelectModal" class="modal-cover">
-        <div class="modal-content" style="max-width:360px;">
-            <h3 style="margin:0 0 12px 0; font-size:1.2rem;">あいぼう を えらぼう！</h3>
-            <div id="partnerSelectGroupContainer" style="max-height: 300px; overflow-y: auto; text-align:left;"></div>
-            <button type="button" class="battle-btn" style="margin-top:16px;" onclick="closePartnerSelectModal()">やめる</button>
-        </div>
-    </div>
-
-    <div id="adventureModal" class="modal-cover">
-        <div class="modal-content">
-            <h3 id="lblAdventureModalTitle" style="margin:0 0 12px 0; font-size:1.2rem;">どこに でかける？</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                <button style="border: 4px solid var(--border-color); background:white; padding:12px; font-family:inherit; font-size:0.95rem; font-weight:900; cursor:pointer;" onclick="startBattle('water')">🌊 みずべ<br><img id="shadow-water" style="width:40px; filter:brightness(0);" src=""></button>
-                <button style="border: 4px solid var(--border-color); background:white; padding:12px; font-family:inherit; font-size:0.95rem; font-weight:900; cursor:pointer;" onclick="startBattle('forest')">🌳 もり<br><img id="shadow-forest" style="width:40px; filter:brightness(0);" src=""></button>
-                <button style="border: 4px solid var(--border-color); background:white; padding:12px; font-family:inherit; font-size:0.95rem; font-weight:900; cursor:pointer;" onclick="startBattle('volcano')">🌋 かざん<br><img id="shadow-volcano" style="width:40px; filter:brightness(0);" src=""></button>
-                <button style="border: 4px solid var(--border-color); background:white; padding:12px; font-family:inherit; font-size:0.95rem; font-weight:900; cursor:pointer;" onclick="startBattle('thunder')">⚡ いなずま<br><img id="shadow-thunder" style="width:40px; filter:brightness(0);" src=""></button>
-            </div>
-            <button type="button" class="battle-btn" style="margin-top:16px;" onclick="closeAdventureModal()">やめる</button>
-        </div>
-    </div>
+    <div id="shopModal" class="modal-cover"><div class="modal-content"><span class="modal-title">🏪 フレンドリィショップ</span><div id="shopList"></div><button class="close-btn" onclick="closeModal('shopModal')">とじる</button></div></div>
+    <div id="calendarModal" class="modal-cover"><div class="modal-content"><span class="modal-title">📅 ぼうけんのきろく</span><p id="totalDays">0日</p><div id="calGrid" class="calendar-grid"></div><button class="close-btn" onclick="closeModal('calendarModal')">とじる</button></div></div>
+    
+    <div id="partnerModal" class="modal-cover"><div class="modal-content"><span class="modal-title">あいぼうを えらぶ</span><div id="partnerGroups"></div><button class="close-btn" onclick="closeModal('partnerModal')">やめる</button></div></div>
+    <div id="adventureModal" class="modal-cover"><div class="modal-content"><span class="modal-title">どこに でかける？</span><div id="zoneGrid" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;"></div><button class="close-btn" onclick="closeModal('adventureModal')">やめる</button></div></div>
 
     <div id="battleModal" class="modal-cover">
         <div class="modal-content">
-            <h3 style="margin:0; font-size:1.1rem;">やせいポケモン が あらわれた！</h3>
-            <div class="battle-hp-bar-bg"><div id="enemyHpBar" class="battle-hp-bar-fill"></div></div>
+            <div class="battle-hp-bar-bg"><div id="battleHp" class="battle-hp-bar-fill"></div></div>
             <div class="battle-scene-box">
-                <div class="battle-pkm-wrapper"><img id="battlePartnerImg" src=""><span id="battlePartnerName">---</span></div>
-                <div style="font-size:1.2rem; font-weight:bold;">VS</div>
-                <div class="battle-pkm-wrapper"><img id="battleEnemyImg" src=""><span id="battleEnemyName">---</span></div>
+                <div class="battle-pkm-wrapper"><img id="bMyImg" src=""><span>Lv.<span id="bMyLv"></span></span><span id="bMyName"></span></div>
+                <div style="font-weight:900;">VS</div>
+                <div class="battle-pkm-wrapper"><img id="bEnImg" src=""><span id="bEnName"></span></div>
             </div>
-            <div id="battleLogBox" class="battle-log"></div>
-            <img id="ballIcon" src="" style="display:none; width:48px; margin: 8px auto; image-rendering: pixelated;">
-            
-            <button type="button" id="battleActionBtn" class="battle-btn" onclick="nextBattlePhase()">たたかう</button>
-            
-            <div id="ballSelectSection" style="display:none;">
-                <p style="font-size:1rem; font-weight:900; margin: 4px 0;">どうぐ を つかう</p>
-                <div style="display:flex; gap:4px; justify-content:center;">
-                    <div style="flex:1; border:4px solid var(--border-color); padding:4px; cursor:pointer;" onclick="throwBall('normal')"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" style="width:24px; image-rendering:pixelated;"><br><span style="font-size:0.75rem; font-weight:900;">x<span id="countP">0</span></span></div>
-                    <div style="flex:1; border:4px solid var(--border-color); padding:4px; cursor:pointer;" onclick="throwBall('super')"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png" style="width:24px; image-rendering:pixelated;"><br><span style="font-size:0.75rem; font-weight:900;">x<span id="countS">0</span></span></div>
-                    <div style="flex:1; border:4px solid var(--border-color); padding:4px; cursor:pointer;" onclick="throwBall('hyper')"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png" style="width:24px; image-rendering:pixelated;"><br><span style="font-size:0.75rem; font-weight:900;">x<span id="countH">0</span></span></div>
-                    <div style="flex:1; border:4px solid var(--border-color); padding:4px; cursor:pointer;" onclick="throwBall('master')"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png" style="width:24px; image-rendering:pixelated;"><br><span style="font-size:0.75rem; font-weight:900;">x<span id="countM">0</span></span></div>
-                </div>
-            </div>
-
-            <button type="button" id="battleCloseBtn" class="battle-btn" style="display:none; margin-top:12px;" onclick="closeBattleModal()">もどる</button>
+            <div id="battleLog" class="battle-log"></div>
+            <img id="bBall" src="" style="display:none; width:48px; margin:0 auto 10px;">
+            <button id="bAction" class="battle-btn" onclick="battleNext()">たたかう</button>
+            <div id="bItems" style="display:none; display:flex; gap:4px;"></div>
+            <button id="bClose" class="battle-btn" style="display:none; margin-top:10px;" onclick="closeModal('battleModal')">もどる</button>
         </div>
     </div>
 
     <script>
         const GAS_URL = "https://script.google.com/macros/s/AKfycbw0YdRq2aEPNBXCtByhIst6wVS0WDDv1olhdg49m66yUFP6hoyTf8m_lo4V6JL98lkU/exec";
-        const now = new Date();
-        const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+        const todayStr = new Date().toISOString().split('T')[0];
 
+        // マスタデータ
         const masterTasks = {
             kouta: { homework: ["音読", "計算ドリル", "漢字ドリル"], selfStudy: ["5分漢字ドリル", "ポケモン計算ドリル"] },
             haruto: { homework: [], selfStudy: ["えいご", "ポケモンドリル", "プリント"] }
         };
         const defaultPools = { kouta: ["うわばきをあらう", "くつをそろえる"], haruto: ["うわばきをあらう", "くつをそろえる"] };
-        const regions = { kanto: { start: 1, end: 151 }, johto: { start: 152, end: 251 }, hoenn: { start: 252, end: 386 }, sinnoh: { start: 387, end: 493 }, unova: { start: 494, end: 649 }, kalos: { start: 650, end: 721 }, paldea: { start: 906, end: 1025 } };
-        const megaList = [ {id:"0006_f2", name:"メガリザードンX"}, {id:"0003_f2", name:"メガフシギバナ"}, {id:"0009_f2", name:"メガカメックス"}, {id:"0150_f2", name:"メガミュウツーX"}, {id:"0384_f2", name:"メガレックウザ"},  {id:"0094_f2", name:"メガゲンガー"}, {id:"0448_f2", name:"メガルカリオ"} ];
-        const regionalStarters = [ { region: "カントー", starters: [{id:"0001", name:"フシギダネ"}, {id:"0004", name:"ヒトカゲ"}, {id:"0007", name:"ゼニガメ"}, {id:"0025", name:"ピカチュウ"}] }, { region: "ジョウト", starters: [{id:"0152", name:"チコリータ"}, {id:"0155", name:"ヒノアラシ"}, {id:"0158", name:"ワニノコ"}] }, { region: "ホウエン", starters: [{id:"0252", name:"キモリ"}, {id:"0255", name:"アチャモ"}, {id:"0258", name:"ミズゴロウ"}] }, { region: "パルデア", starters: [{id:"0906", name:"ニャオハ"}, {id:"0909", name:"ホゲータ"}, {id:"0912", name:"クワッス"}] } ];
-        const starterPool = { water: [{id:"0009"}, {id:"0158"}, {id:"0393"}, {id:"0658"}], forest: [{id:"0003"}, {id:"0152"}, {id:"0387"}, {id:"0906"}], volcano: [{id:"0006"}, {id:"0155"}, {id:"0390"}, {id:"0909"}], thunder: [{id:"0026"}, {id:"0448"}, {id:"0150"}, {id:"0384"}] };
-        const moves = { electric: ["10まんボルト", "かみなり"], fire: ["かえんほうしゃ", "だいもんじ"], water: ["ハイドロポンプ", "なみのり"], grass: ["はっぱカッター", "ソーラービーム"], normal: ["たいあたり", "はかいこうせん"], mega: ["しんそく", "ギガインパクト"] };
+        const regions = { kanto: { start: 1, end: 151 }, johto: { start: 152, end: 251 }, hoenn: { start: 252, end: 386 }, paldea: { start: 906, end: 1025 } };
+        const megaList = [ {id:"0006_f2"}, {id:"0003_f2"}, {id:"0009_f2"}, {id:"0150_f2"}, {id:"0094_f2"} ];
+        const regionalStarters = [ { region: "カントー", starters: ["0001","0004","0007","0025"] }, { region: "ジョウト", starters: ["0152","0155","0158"] }, { region: "パルデア", starters: ["0906","0909","0912"] } ];
+        const starterPool = { water: ["0009","0158","0393"], forest: ["0003","0152","0906"], volcano: ["0006","0155","0909"], thunder: ["0026","0448","0150"] };
         const ballAssets = { normal: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png", super: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png", hyper: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png", master: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png" };
 
-        let cloudData = {
-            "study_user_pokemon": { "kouta": "0025", "haruto": "0004" },
-            "study_balance": { "kouta": { pokeen: 300, gachaCount: 0 }, "haruto": { pokeen: 300, gachaCount: 0 } },
-            "study_level": { "kouta": { "0025": 0 }, "haruto": { "0004": 0 } },
-            "study_zukan_normal": { "kouta": ["0025"], "haruto": ["0004"] },
-            "study_zukan_mega": { "kouta": [], "haruto": [] },
-            "study_fixed_encounters": { "kouta": null, "haruto": null },
-            "study_v2_calendar": { "kouta": [], "haruto": [] },
-            "study_v2_bag_candy": { "kouta": 0, "haruto": 0 },
-            "study_v2_bag_balls": { "kouta": { normal: 5, super: 1, hyper: 0, master: 0 }, "haruto": { normal: 5, super: 1, hyper: 0, master: 0 } },
-            "study_v3_challenge_pool": { "kouta": [...defaultPools.kouta], "haruto": [...defaultPools.haruto] },
-            "study_v3_chosen_challenge": { "kouta": null, "haruto": null }
-        };
-
+        // アプリ状態
         let currentUser = 'kouta';
+        let cloudData = {
+            study_user_pokemon: { kouta: "0025", haruto: "0004" },
+            study_balance: { kouta: { pokeen: 300, gachaCount: 0 }, haruto: { pokeen: 300, gachaCount: 0 } },
+            study_level: { kouta: { "0025": 0 }, haruto: { "0004": 0 } },
+            study_zukan_normal: { kouta: ["0025"], haruto: ["0004"] },
+            study_zukan_mega: { kouta: [], haruto: [] },
+            study_v2_calendar: { kouta: [], haruto: [] },
+            study_v2_bag_candy: { kouta: 0, haruto: 0 },
+            study_v2_bag_balls: { kouta: { normal: 5, super: 1, hyper: 0, master: 0 }, haruto: { normal: 5, super: 1, hyper: 0, master: 0 } },
+            study_v3_challenge_pool: { kouta: [...defaultPools.kouta], haruto: [...defaultPools.haruto] },
+            study_v3_chosen_challenge: { kouta: null, haruto: null }
+        };
+        let zukanTab = 'normal';
+        let devZukanMode = false;
         let battleState = {};
 
-        // 🔥 YouTube BGM ロジック
-        let bgmPlayer;
-        let isYoutubeReady = false;
-        let isBgmOn = false;
-        let currentBgmMode = 'main';
-        const MAIN_BGM_ID = 'e7n8DID-zVs'; 
-        const BATTLE_BGM_ID = 'IQhk79DIq7A'; 
-        let userHasInteracted = false;
+        // 🔥 BGMシステム (1プレイヤー統合)
+        let bgmPlayer, isYoutubeReady = false, isBgmOn = false, currentBgmMode = 'main';
+        const MAIN_BGM_ID = 'e7n8DID-zVs', BATTLE_BGM_ID = 'IQhk79DIq7A';
 
         function onYouTubeIframeAPIReady() {
             bgmPlayer = new YT.Player('bgmPlayerDiv', {
-                height: '10', width: '10', videoId: MAIN_BGM_ID,
+                height: '1', width: '1', videoId: MAIN_BGM_ID,
                 playerVars: { 'playsinline': 1, 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': MAIN_BGM_ID },
-                events: { 'onReady': (e) => { e.target.setVolume(25); isYoutubeReady = true; } }
+                events: { 'onReady': () => isYoutubeReady = true }
             });
-        }
-
-        function unlockAudio() {
-            if(!userHasInteracted) {
-                userHasInteracted = true;
-                if(isYoutubeReady && isBgmOn) bgmPlayer.playVideo();
-            }
         }
 
         function toggleBGM() {
-            unlockAudio();
             isBgmOn = !isBgmOn;
             document.getElementById('bgmToggleBtn').textContent = isBgmOn ? "🔊" : "🔇";
             if (!isYoutubeReady) return;
-            if(isBgmOn) { bgmPlayer.playVideo(); } else { bgmPlayer.pauseVideo(); }
+            isBgmOn ? bgmPlayer.playVideo() : bgmPlayer.pauseVideo();
         }
 
-        function switchBgmMode(mode) {
+        function switchBgm(mode) {
             if (currentBgmMode === mode) return;
             currentBgmMode = mode;
             if (!isYoutubeReady) return;
-            let targetId = mode === 'main' ? MAIN_BGM_ID : BATTLE_BGM_ID;
-            bgmPlayer.loadVideoById({videoId: targetId});
-            if (!isBgmOn) setTimeout(() => { bgmPlayer.pauseVideo(); }, 100);
+            bgmPlayer.loadVideoById({videoId: mode === 'main' ? MAIN_BGM_ID : BATTLE_BGM_ID});
+            if (!isBgmOn) setTimeout(() => bgmPlayer.pauseVideo(), 200);
         }
 
-        let audioCtx = null;
-        function getAudioCtx() { if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} } return audioCtx; }
-        function playRetroSound(type) {
-            const ctx = getAudioCtx(); if(!ctx) return;
-            if(ctx.state === 'suspended') ctx.resume();
-            const t = ctx.currentTime;
-            try {
-                if (type === 'click') {
-                    const osc = ctx.createOscillator(); const gain = ctx.createGain();
-                    osc.type = 'square'; osc.frequency.setValueAtTime(880, t);
-                    gain.gain.setValueAtTime(0.05, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
-                    osc.connect(gain); gain.connect(ctx.destination); osc.start(t); osc.stop(t + 0.1);
-                } else if (type === 'clear') {
-                    [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
-                        const o = ctx.createOscillator(); const g = ctx.createGain();
-                        o.type = 'square'; o.frequency.setValueAtTime(f, t + i*0.1);
-                        g.gain.setValueAtTime(0.05, t + i*0.1); g.gain.exponentialRampToValueAtTime(0.001, t + i*0.1 + 0.15);
-                        o.connect(g); g.connect(ctx.destination); o.start(t + i*0.1); o.stop(t + i*0.1 + 0.15);
-                    });
-                } else if (type === 'coin') {
-                    const osc = ctx.createOscillator(); const gain = ctx.createGain();
-                    osc.type = 'square'; osc.frequency.setValueAtTime(987.77, t);
-                    gain.gain.setValueAtTime(0.05, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
-                    osc.connect(gain); gain.connect(ctx.destination); osc.start(t); osc.stop(t + 0.1);
-                }
-            } catch(e) {}
-        }
-
-        const pkmNameCache = {}; 
-        async function getPokemonNameAsync(idStr) {
-            const baseId = parseInt(idStr.split('_')[0]);
-            for (let g of regionalStarters) { const f = g.starters.find(x => x.id === idStr); if (f) return f.name; }
-            const m = megaList.find(x => x.id === idStr); if (m) return m.name;
-            if (pkmNameCache[baseId]) return pkmNameCache[baseId];
-            try {
-                const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${baseId}`);
-                const data = await res.json();
-                const jp = data.names.find(n => n.language.name === "ja-Hrkt" || n.language.name === "ja");
-                if (jp) { pkmNameCache[baseId] = jp.name; return jp.name; }
-            } catch(e) {}
-            return `No.${baseId}`;
-        }
-
-        function playPokemonCry(idStr) {
-            const baseId = parseInt(idStr.split('_')[0]);
-            try { fetch(`https://pokeapi.co/api/v2/pokemon/${baseId}`).then(r=>r.json()).then(d=>{ if(d.cries && d.cries.latest) new Audio(d.cries.latest).play().catch(e=>{}); }); } catch(e){}
-        }
-
-        // 🔥 デバウンス付きの安全なセーブ機構
-        let saveTimeout = null;
-        function triggerCloudSave() {
+        // 🔥 1つのJSONにまとめて送るセーブ通信
+        let saveTimer = null;
+        function save() {
             const badge = document.getElementById('syncBadge');
-            badge.textContent = "🔄 セーブをじゅんび...";
-            badge.style.display = "block";
-            badge.style.background = "#eab308";
-            
-            if(saveTimeout) clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(async () => {
-                badge.textContent = "☁️ つうしんちゅう...";
+            badge.style.display = "block"; badge.textContent = "きろくちゅう...";
+            if(saveTimer) clearTimeout(saveTimer);
+            saveTimer = setTimeout(async () => {
                 try {
-                    for (let key of Object.keys(cloudData)) {
-                        await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'save', key: key, value: JSON.stringify(cloudData[key]) })});
-                    }
-                    badge.textContent = "✅ きろくしました！";
-                    badge.style.background = "#22c55e";
-                    setTimeout(() => { badge.style.display = "none"; badge.style.background = "var(--border-color)"; }, 2000);
-                } catch (e) {
-                    badge.textContent = "❌ セーブしっぱい";
-                    badge.style.background = "#ef4444";
-                }
-            }, 2500); 
+                    // 全データをまとめて1回でPOST
+                    const payload = { action: 'save_all', data: JSON.stringify(cloudData) };
+                    await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) });
+                    badge.textContent = "きろく かんりょう！";
+                    setTimeout(() => badge.style.display = "none", 2000);
+                } catch (e) { badge.textContent = "つうしん しっぱい"; }
+            }, 1500);
         }
 
-        async function initApp() {
-            try {
-                const response = await fetch(GAS_URL);
-                const res = await response.json();
-                if (res) {
-                    Object.keys(res).forEach(k => {
-                        if (cloudData[k] !== undefined || k.startsWith("study_progress_")) {
-                            try { cloudData[k] = JSON.parse(res[k]); } catch(e) { cloudData[k] = res[k]; }
-                        }
-                    });
-                    ['kouta', 'haruto'].forEach(user => {
-                        if (cloudData.study_level && cloudData.study_level[user]) {
-                            if (typeof cloudData.study_level[user] === 'number' || cloudData.study_level[user].exp !== undefined) {
-                                let oldExp = cloudData.study_level[user].exp || 0;
-                                cloudData.study_level[user] = {};
-                                if (cloudData.study_user_pokemon && cloudData.study_user_pokemon[user]) cloudData.study_level[user][cloudData.study_user_pokemon[user]] = oldExp;
-                            }
-                        }
-                    });
-                }
-            } catch(e) {}
-            
-            if (!appReady) {
-                clearTimeout(fallbackTimer);
-                appReady = true;
-                const cover = document.getElementById('loadingCover');
-                if(cover) cover.style.display = 'none';
-                changeUser('kouta');
-            }
-        }
-        window.addEventListener('DOMContentLoaded', initApp);
-
-        function getImgUrl(id) {
-            if (!id) return "";
-            const isMega = id.includes('_');
-            const base = isMega ? id.split('_')[0] : id;
+        // 基本ロジック
+        function calculateLevel(exp) { return Math.floor((exp || 0) / 3) + 1; }
+        function getImgUrl(id) { 
+            const isMega = id.includes('_'); const base = isMega ? id.split('_')[0] : id;
             return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${String(parseInt(base)).padStart(3, '0')}${isMega ? "_" + id.split('_')[1] : ""}.png`;
         }
-
-        function calculateLevel(exp) { return Math.floor((exp || 0) / 3) + 1; }
-        
-        function getEvolvedId(baseId, level) {
-            if (!baseId || baseId === "0025") return "0025";
-            let offset = 0;
-            if (level >= 36) offset = 2; else if (level >= 16) offset = 1;
+        function getEvolvedId(baseId, lv) {
+            if (!baseId || baseId === "0025") return baseId;
+            let offset = lv >= 36 ? 2 : (lv >= 16 ? 1 : 0);
             return String(parseInt(baseId) + offset).padStart(4, '0');
         }
 
+        async function init() {
+            try {
+                const res = await fetch(GAS_URL).then(r => r.json());
+                if (res) {
+                    Object.keys(res).forEach(k => {
+                        if (k === 'all_data') { // まとめて送られてきた場合
+                            const parsed = JSON.parse(res[k]);
+                            Object.assign(cloudData, parsed);
+                        } else if (cloudData[k] !== undefined || k.startsWith("study_progress_")) {
+                            try { cloudData[k] = JSON.parse(res[k]); } catch(e) { cloudData[k] = res[k]; }
+                        }
+                    });
+                }
+            } catch(e) {}
+            document.getElementById('loadingCover').style.display = 'none';
+            changeUser('kouta');
+        }
+        window.addEventListener('DOMContentLoaded', init);
+
         function changeUser(user) {
-            unlockAudio(); playRetroSound('click');
             currentUser = user;
             document.querySelectorAll('.user-tab').forEach(t => t.classList.remove('active'));
-            document.querySelector(`.user-tab.${user}`).classList.add('active');
-            if (!cloudData["study_user_pokemon"] || !cloudData["study_user_pokemon"][currentUser]) { openPartnerSelectionModal(); } else { renderUI(); }
-        }
-
-        function getLessons(user, dayIdx) {
-            let lessons = [];
-            if (user === 'kouta') {
-                if (dayIdx === 1 || dayIdx === 4) lessons.push("プール（スイミング）");
-                if (dayIdx === 5) lessons.push("おおつかたいそう");
-            } else {
-                if (dayIdx === 1) lessons.push("ぷーる（すいみんぐ）");
-                if (dayIdx === 4) lessons.push("ようちえんさっかー");
-                if (dayIdx === 5) lessons.push("おおつかたいそう");
-                if (dayIdx === 0) lessons.push("さっかーの れんしゅう");
-            }
-            return lessons;
-        }
-
-        function toggleTask(task) {
-            unlockAudio(); playRetroSound('click');
-            let doneList = cloudData["study_progress_" + todayStr][currentUser].done;
-            if (doneList.includes(task)) cloudData["study_progress_" + todayStr][currentUser].done = doneList.filter(t => t !== task);
-            else cloudData["study_progress_" + todayStr][currentUser].done.push(task);
-            
+            document.getElementById(`tab-${user}`).classList.add('active');
             renderUI();
-            checkZoneClear();
-            triggerCloudSave(); 
         }
 
         function renderUI() {
-            if (!cloudData["study_balance"][currentUser]) cloudData["study_balance"][currentUser] = { pokeen: 300, gachaCount: 1 };
-            if (!cloudData["study_level"][currentUser]) cloudData["study_level"][currentUser] = {};
-            if (!Array.isArray(cloudData["study_zukan_normal"][currentUser])) cloudData["study_zukan_normal"][currentUser] = [];
-            if (!Array.isArray(cloudData["study_zukan_mega"][currentUser])) cloudData["study_zukan_mega"][currentUser] = [];
-            if (!cloudData["study_v2_bag_balls"] || !cloudData["study_v2_bag_balls"][currentUser]) cloudData["study_v2_bag_balls"][currentUser] = { normal: 5, super: 1, hyper: 0, master: 0 };
-            if (cloudData["study_v2_bag_candy"][currentUser] === undefined) cloudData["study_v2_bag_candy"][currentUser] = 0;
-            if (!cloudData["study_v2_calendar"]) cloudData["study_v2_calendar"][currentUser] = [];
-            if (!cloudData["study_v3_chosen_challenge"]) cloudData["study_v3_chosen_challenge"] = {};
-            if (!cloudData["study_progress_" + todayStr]) cloudData["study_progress_" + todayStr] = { kouta: { done: [] }, haruto: { done: [] } };
-            if (!cloudData["study_progress_" + todayStr][currentUser].zoneClaimed) cloudData["study_progress_" + todayStr][currentUser].zoneClaimed = {};
+            const user = cloudData.study_balance[currentUser];
+            const baseId = cloudData.study_user_pokemon[currentUser];
+            const exp = (cloudData.study_level[currentUser] && cloudData.study_level[currentUser][baseId]) || 0;
+            const lv = calculateLevel(exp);
+            const evolvedId = getEvolvedId(baseId, lv);
 
-            const balance = cloudData["study_balance"][currentUser];
-            const baseId = cloudData["study_user_pokemon"][currentUser];
-            const exp = cloudData["study_level"][currentUser][baseId] || 0;
-            const level = calculateLevel(exp);
+            // トレーナーカード更新
+            const card = document.getElementById('trainerCard');
+            card.className = `trainer-card ${currentUser}-theme`;
+            document.getElementById('cardPartnerImg').src = getImgUrl(evolvedId);
+            getPokemonNameAsync(evolvedId).then(n => document.getElementById('cardPartnerName').textContent = n);
+            document.getElementById('cardPartnerLv').textContent = lv;
+            document.getElementById('cardPokeen').textContent = user.pokeen;
+            document.getElementById('cardTicket').textContent = user.gachaCount;
+            document.getElementById('userLevel').textContent = lv;
+            document.getElementById('pokeenBalance').textContent = user.pokeen;
+            document.getElementById('ticketCountDisplay').textContent = user.gachaCount;
 
-            document.getElementById('userLevel').textContent = level;
-            document.getElementById('pokeenBalance').textContent = balance.pokeen + " 💰";
-            document.getElementById('ticketCountDisplay').textContent = (balance.gachaCount || 0) + " まい";
-            document.getElementById('bigAdventureTriggerBtn').disabled = (!balance.gachaCount || balance.gachaCount <= 0);
+            // 冒険ボタン
+            const btn = document.getElementById('adventureBtn');
+            btn.disabled = user.gachaCount <= 0;
+            user.gachaCount > 0 ? btn.classList.add('ready') : btn.classList.remove('ready');
 
-            if (baseId) {
-                const currentEvolvedId = getEvolvedId(baseId, level);
-                document.getElementById('statusBarPartnerImg').style.display = "block";
-                document.getElementById('statusBarPartnerImg').src = getImgUrl(currentEvolvedId);
-                getPokemonNameAsync(currentEvolvedId).then(name => document.getElementById('statusBarPartnerName').textContent = name + ` (Lv.${level})`);
-            }
-
-            const winEl = document.getElementById('challengeSlotWindow');
-            const slotBtn = document.getElementById('challengeSlotBtn');
-            const slotArea = document.getElementById('slotBoxArea');
-            const chosenChallenge = cloudData["study_v3_chosen_challenge"][currentUser];
-            
-            if (chosenChallenge) { slotArea.style.display = "none"; } 
-            else { slotArea.style.display = "flex"; winEl.textContent = "🎰 ボタンをおして チャレンジを きめよう！"; slotBtn.style.display = "inline-block"; slotBtn.disabled = false; }
-
-            const listEl = document.getElementById('questList'); listEl.innerHTML = '';
-            let totalTasks = 0, completedTasks = 0;
-            const doneList = cloudData["study_progress_" + todayStr][currentUser]?.done || [];
-
-            function renderZone(title, icon, colorClass, tasks) {
-                if (tasks.length === 0) return;
-                const header = document.createElement('div'); header.className = `zone-header ${colorClass}`; header.innerHTML = `${icon} ${title}`; listEl.appendChild(header);
-                const container = document.createElement('div'); container.className = 'zone-container';
-                tasks.forEach(task => {
-                    totalTasks++; const isDone = doneList.includes(task); if (isDone) completedTasks++;
-                    const item = document.createElement('div'); item.className = `quest-item ${isDone ? 'done' : ''}`; item.onclick = () => toggleTask(task);
-                    item.innerHTML = `<div class="quest-fake-cb">${isDone ? '✔️' : ''}</div><div class="quest-cell-text">${task}</div>`;
-                    container.appendChild(item);
-                });
-                listEl.appendChild(container);
-            }
-
-            renderZone("しゅくだい", "🎒", "hw-zone", masterTasks[currentUser].homework);
-            renderZone("じしゅう", "📖", "self-zone", masterTasks[currentUser].selfStudy);
-            renderZone("ならいごと", "🏃", "lesson-zone", getLessons(currentUser, now.getDay()));
-            if (chosenChallenge) renderZone("チャレンジ", "🔥", "challenge-zone", [chosenChallenge]);
-
-            document.getElementById('expPreview').textContent = `${completedTasks}/${totalTasks}`;
-            document.getElementById('missionProgressBar').style.width = totalTasks === 0 ? "0%" : `${(completedTasks/totalTasks)*100}%`;
-            document.getElementById('parentCurrentTargetName').textContent = currentUser === 'kouta' ? 'こうた' : 'はると';
-            document.getElementById('parentChallengePoolInput').value = (cloudData["study_v3_challenge_pool"][currentUser] || defaultPools[currentUser]).join(',');
-            
-            // 図鑑の初期表示バグ回避のため、見えないところで再描画しておく
-            renderZukanGrid();
+            // ミッション描画
+            renderMissions();
         }
 
-        function checkZoneClear() {
-            const prog = cloudData["study_progress_" + todayStr][currentUser];
-            const doneList = prog.done || [];
-            const claimed = prog.zoneClaimed || {};
-            const baseId = cloudData["study_user_pokemon"][currentUser];
+        function renderMissions() {
+            const container = document.getElementById('missionListContainer'); container.innerHTML = '';
+            const progress = cloudData[`study_progress_${todayStr}`] || { kouta: { done: [] }, haruto: { done: [] } };
+            const doneList = progress[currentUser]?.done || [];
             
+            let total = 0, done = 0;
             const zones = [
-                { id: 'hw', name: 'しゅくだい', tasks: masterTasks[currentUser].homework, reward: () => { cloudData.study_balance[currentUser].pokeen += 100; cloudData.study_v2_bag_balls[currentUser].normal += 1; cloudData.study_balance[currentUser].gachaCount += 1; return "💰100ぽけえん、🔴ボールx1、🎫ぼうけん券x1"; } },
-                { id: 'self', name: 'じしゅう', tasks: masterTasks[currentUser].selfStudy, reward: () => { cloudData.study_balance[currentUser].pokeen += 100; cloudData.study_v2_bag_balls[currentUser].normal += 1; cloudData.study_balance[currentUser].gachaCount += 1; return "💰100ぽけえん、🔴ボールx1、🎫ぼうけん券x1"; } },
-                { id: 'lesson', name: 'ならいごと', tasks: getLessons(currentUser, now.getDay()), reward: () => { cloudData.study_balance[currentUser].pokeen += 150; cloudData.study_balance[currentUser].gachaCount += 1; return "💰150ぽけえん、🎫ぼうけん券x1"; } }
+                { id: 'hw', name: 'しゅくだい', color: 'hw-color', tasks: masterTasks[currentUser].homework },
+                { id: 'self', name: 'じしゅう', color: 'self-color', tasks: masterTasks[currentUser].selfStudy },
+                { id: 'lesson', name: 'ならいごと', color: 'lesson-color', tasks: getLessons() }
             ];
-            const chosenChallenge = cloudData["study_v3_chosen_challenge"][currentUser];
-            if (chosenChallenge) zones.push({ id: 'chal', name: 'チャレンジ', tasks: [chosenChallenge], reward: () => { cloudData.study_balance[currentUser].gachaCount += 1; if(baseId) cloudData.study_level[currentUser][baseId] = (cloudData.study_level[currentUser][baseId] || 0) + 3; return "🎫ぼうけん券x1 と 🌟経験値アップ！"; } });
+            const chal = cloudData.study_v3_chosen_challenge[currentUser];
+            if (chal) zones.push({ id: 'chal', name: 'チャレンジ', color: 'challenge-color', tasks: [chal] });
 
-            let newlyClaimed = [];
+            zones.forEach(z => {
+                if (z.tasks.length === 0) return;
+                const head = document.createElement('div'); head.className = `zone-label ${z.color}`; head.textContent = z.name; container.appendChild(head);
+                const group = document.createElement('div'); group.className = 'mission-group';
+                z.tasks.forEach(t => {
+                    total++; const isDone = doneList.includes(t); if (isDone) done++;
+                    const item = document.createElement('div'); item.className = `quest-item ${isDone?'done':''}`;
+                    item.innerHTML = `<div class="quest-fake-cb">${isDone?'✔':''}</div><div class="quest-text">${t}</div>`;
+                    item.onclick = () => toggleMission(t); group.appendChild(item);
+                });
+                container.appendChild(group);
+            });
+
+            document.getElementById('expPreview').textContent = `${done}/${total}`;
+            document.getElementById('missionProgressBar').style.width = total === 0 ? "0%" : `${(done/total)*100}%`;
+            document.getElementById('slotGroup').style.display = chal ? 'none' : 'block';
+        }
+
+        function toggleMission(task) {
+            if(!cloudData[`study_progress_${todayStr}`]) cloudData[`study_progress_${todayStr}`] = { kouta:{done:[], zoneClaimed:{}}, haruto:{done:[], zoneClaimed:{}} };
+            let list = cloudData[`study_progress_${todayStr}`][currentUser].done;
+            if(list.includes(task)) cloudData[`study_progress_${todayStr}`][currentUser].done = list.filter(x => x !== task);
+            else list.push(task);
+            
+            renderUI(); checkRewards(); save();
+        }
+
+        function checkRewards() {
+            const prog = cloudData[`study_progress_${todayStr}`][currentUser];
+            const claimed = prog.zoneClaimed || {};
+            const zones = [
+                { id: 'hw', name: 'しゅくだい', tasks: masterTasks[currentUser].homework, r: () => { cloudData.study_balance[currentUser].pokeen += 100; cloudData.study_balance[currentUser].gachaCount += 1; return "💰100 + 🎫1"; } },
+                { id: 'self', name: 'じしゅう', tasks: masterTasks[currentUser].selfStudy, r: () => { cloudData.study_balance[currentUser].pokeen += 100; cloudData.study_balance[currentUser].gachaCount += 1; return "💰100 + 🎫1"; } },
+                { id: 'lesson', name: 'ならいごと', tasks: getLessons(), r: () => { cloudData.study_balance[currentUser].pokeen += 150; cloudData.study_balance[currentUser].gachaCount += 1; return "💰150 + 🎫1"; } }
+            ];
+            const chal = cloudData.study_v3_chosen_challenge[currentUser];
+            if(chal) zones.push({ id: 'chal', name: 'チャレンジ', tasks:[chal], r: () => { cloudData.study_balance[currentUser].gachaCount += 1; const id=cloudData.study_user_pokemon[currentUser]; cloudData.study_level[currentUser][id] = (cloudData.study_level[currentUser][id]||0)+3; return "🎫1 + 🌟経験値UP"; } });
+
             zones.forEach(z => {
                 if (z.tasks.length > 0 && !claimed[z.id]) {
-                    if (z.tasks.every(t => doneList.includes(t))) {
-                        claimed[z.id] = true; newlyClaimed.push(`【${z.name}】クリア！\n👉 ${z.reward()}`);
+                    if (z.tasks.every(t => prog.done.includes(t))) {
+                        claimed[z.id] = true;
+                        setTimeout(() => alert(`【${z.name}】クリア！\nほうしゅう: ${z.r()}`), 200);
                     }
                 }
             });
-
-            if (newlyClaimed.length > 0) {
-                playRetroSound('clear'); prog.zoneClaimed = claimed;
-                const calendarList = cloudData["study_v2_calendar"][currentUser];
-                if (!calendarList.includes(todayStr)) {
-                    calendarList.push(todayStr);
-                    if (calendarList.length % 5 === 0) { cloudData["study_v2_bag_candy"][currentUser]++; newlyClaimed.push("🏅 スタンプが5マス貯まり『ふしぎなあめ』をゲット！"); }
-                }
-                setTimeout(() => { alert("🎉 ゾーンクリア！\n\n" + newlyClaimed.join("\n\n")); renderUI(); triggerCloudSave(); }, 100);
-            }
+            prog.zoneClaimed = claimed;
         }
 
-        let devZukanCompleteMode = false;
-        function toggleDevZukan() {
-            devZukanCompleteMode = document.getElementById('devZukanToggle').checked;
-            alert(devZukanCompleteMode ? "図鑑全開モードをONにしました！" : "元のセーブデータに戻しました。");
-            renderZukanGrid(); // 即座に反映
+        // 🔥 ひらがな説明をピンポイントで探すロジック
+        async function showZukanDetail(id) {
+            const baseId = parseInt(id.split('_')[0]);
+            const modal = document.getElementById('zukanDetailModal');
+            document.getElementById('zdImg').src = getImgUrl(id);
+            document.getElementById('zdName').textContent = "..."; document.getElementById('zdText').textContent = "よみこみちゅう...";
+            modal.style.display = 'flex';
+
+            try {
+                const name = await getPokemonNameAsync(id); document.getElementById('zdName').textContent = name;
+                if (!id.includes('_')) {
+                    const data = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${baseId}`).then(r => r.json());
+                    const hrkt = data.flavor_text_entries.find(f => f.language.name === "ja-Hrkt");
+                    const ja = data.flavor_text_entries.find(f => f.language.name === "ja");
+                    const text = (hrkt || ja || {flavor_text: "データがありません"}).flavor_text.replace(/\n|\f|\r/g, ' ');
+                    document.getElementById('zdText').textContent = text;
+                } else { document.getElementById('zdText').textContent = "メガシンカ した すごいすがた だ！"; }
+                playPokemonCry(id);
+            } catch(e) { document.getElementById('zdText').textContent = "つうしんエラー"; }
         }
 
-        function renderZukanGrid() {
-            const grid = document.getElementById('zukanGridDisplay'); if (!grid) return; grid.innerHTML = '';
+        function renderZukan() {
+            const grid = document.getElementById('zukanGrid'); if (!grid) return; grid.innerHTML = '';
+            const mode = document.getElementById('regionSel').value;
+            const caughtOnly = document.getElementById('caughtOnly').checked;
+            const owned = cloudData[zukanTab==='normal'?'study_zukan_normal':'study_zukan_mega'][currentUser] || [];
             
-            const selector = document.getElementById('regionSelector');
-            const mode = selector ? selector.value : 'all';
-            const toggle = document.getElementById('caughtOnlyToggle');
-            const showCaughtOnly = toggle ? toggle.checked : false;
-            
-            let ownedNormal = cloudData["study_zukan_normal"][currentUser] || [];
-            let ownedMega = cloudData["study_zukan_mega"][currentUser] || [];
-            let totalCount = 0, ownedCount = 0;
-
-            if (typeof zukanTab === 'undefined' || zukanTab === 'normal') {
-                const loopKeys = (mode === 'all') ? Object.keys(regions) : [mode];
-                loopKeys.forEach(rKey => {
-                    for (let i = regions[rKey].start; i <= regions[rKey].end; i++) {
-                        const idStr = String(i).padStart(4, '0');
-                        const hasIt = devZukanCompleteMode || ownedNormal.includes(idStr); 
-                        if (hasIt) ownedCount++; totalCount++;
-                        if (showCaughtOnly && !hasIt) continue;
-                        createPkmBox(grid, idStr, i, hasIt);
+            let total = 0, count = 0;
+            if (zukanTab === 'normal') {
+                const loopKeys = mode === 'all' ? Object.keys(regions) : [mode];
+                loopKeys.forEach(rk => {
+                    for (let i = regions[rk].start; i <= regions[rk].end; i++) {
+                        const id = String(i).padStart(4, '0'); const has = devZukanMode || owned.includes(id);
+                        if (has) count++; total++;
+                        if (caughtOnly && !has) continue;
+                        createZBox(grid, id, i, has);
                     }
                 });
             } else {
                 megaList.forEach((p, i) => {
-                    const hasIt = devZukanCompleteMode || ownedMega.includes(p.id); 
-                    if (hasIt) ownedCount++; totalCount++;
-                    if (showCaughtOnly && !hasIt) return;
-                    createPkmBox(grid, p.id, i+1, hasIt);
+                    const has = devZukanMode || owned.includes(p.id); if (has) count++; total++;
+                    if (caughtOnly && !has) return;
+                    createZBox(grid, p.id, i+1, has);
                 });
             }
-            
-            const progressTxt = document.getElementById('zukanProgressText');
-            const progressFill = document.getElementById('zukanProgressBar');
-            const percent = totalCount > 0 ? Math.floor((ownedCount / totalCount) * 100) : 0;
-            if (progressTxt) progressTxt.textContent = `${ownedCount} / ${totalCount} 匹 (${percent}%)`;
-            if (progressFill) progressFill.style.width = `${percent}%`;
+            document.getElementById('zukanStats').textContent = `${count} / ${total} 匹`;
         }
 
-        async function showZukanDetail(idStr) {
-            unlockAudio(); playRetroSound('click');
-            const baseId = parseInt(idStr.split('_')[0]);
-            
-            document.getElementById('zukanDetailImg').src = getImgUrl(idStr);
-            document.getElementById('zukanDetailName').textContent = "...";
-            document.getElementById('zukanDetailText').textContent = "データ を よみこみちゅう...";
-            document.getElementById('zukanDetailModal').style.display = 'flex';
-            
-            try {
-                const name = await getPokemonNameAsync(idStr);
-                document.getElementById('zukanDetailName').textContent = name;
-                
-                if (!idStr.includes('_')) {
-                    const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${baseId}`);
-                    const data = await res.json();
-                    
-                    const flavorHrkt = data.flavor_text_entries.find(f => f.language.name === "ja-Hrkt");
-                    const flavorJa = data.flavor_text_entries.find(f => f.language.name === "ja");
-                    const flavor = flavorHrkt || flavorJa;
-                    
-                    if (flavor) {
-                        const cleanText = flavor.flavor_text.replace(/\n|\f|\r/g, ' ');
-                        document.getElementById('zukanDetailText').textContent = cleanText;
-                    } else {
-                        document.getElementById('zukanDetailText').textContent = "せつめいぶん が ありません。";
-                    }
-                } else {
-                    document.getElementById('zukanDetailText').textContent = "メガシンカ した すごい ポケモン だ！";
-                }
-                playPokemonCry(idStr);
-            } catch (e) {
-                document.getElementById('zukanDetailText').textContent = "つうしん エラー です。";
+        function createZBox(grid, id, num, has) {
+            const box = document.createElement('div'); box.className = `grid-pokemon-box ${has?'':'unowned'}`;
+            box.innerHTML = `<div class="zukan-number-badge">#${num}</div><img src="${getImgUrl(id)}"><span>${has?'...':'？？？？'}</span>`;
+            if (has) {
+                box.onclick = () => showZukanDetail(id);
+                getPokemonNameAsync(id).then(n => box.querySelector('span').textContent = n);
             }
-        }
-        function closeZukanDetailModal() { playRetroSound('click'); document.getElementById('zukanDetailModal').style.display = 'none'; }
-
-        function createPkmBox(grid, id, displayNum, hasIt) {
-            const box = document.createElement('div'); box.className = hasIt ? 'grid-pokemon-box' : 'grid-pokemon-box unowned';
-            box.innerHTML = `<div class="zukan-number-badge">#${String(displayNum).padStart(3, '0')}</div><img src="${getImgUrl(id)}"><span id="zname-${id}-${Date.now()}">...</span>`;
-            box.onclick = () => { if (hasIt) showZukanDetail(id); };
             grid.appendChild(box);
-            if (hasIt) { getPokemonNameAsync(id).then(name => { const el = box.querySelector('span'); if(el) el.textContent = name; }); }
-            else { box.querySelector('span').textContent = "？？？？"; }
         }
 
         function openPartnerSelectionModal() {
-            unlockAudio(); playRetroSound('click');
-            const container = document.getElementById('partnerSelectGroupContainer'); container.innerHTML = '';
-            
-            regionalStarters.forEach(group => {
-                const title = document.createElement('div'); title.className = 'region-group-title'; title.textContent = group.region; container.appendChild(title);
-                const grid = document.createElement('div'); grid.className = 'partner-select-grid';
-                
-                group.starters.forEach(p => {
-                    const exp = cloudData.study_level[currentUser][p.id] || 0;
-                    const lv = calculateLevel(exp);
-                    const currentId = getEvolvedId(p.id, lv);
-                    
-                    const box = document.createElement('div'); box.className = 'partner-choice-box'; 
-                    box.innerHTML = `<div class="partner-lv-badge">Lv.${lv}</div><img src="${getImgUrl(currentId)}"><div>...</div>`;
-                    
-                    getPokemonNameAsync(currentId).then(n => { box.querySelectorAll('div')[1].textContent = n; });
-                    box.addEventListener('click', () => {
-                        playRetroSound('click');
-                        cloudData["study_user_pokemon"][currentUser] = p.id; 
-                        if (!cloudData["study_zukan_normal"][currentUser].includes(p.id)) cloudData["study_zukan_normal"][currentUser].push(p.id);
-                        closePartnerSelectModal(); renderUI(); triggerCloudSave();
-                    });
+            const container = document.getElementById('partnerGroups'); container.innerHTML = '';
+            regionalStarters.forEach(g => {
+                const head = document.createElement('div'); head.style.cssText = "font-weight:900; margin:10px 0 5px; border-left:4px solid var(--border-color); padding-left:8px;"; head.textContent = g.region; container.appendChild(head);
+                const grid = document.createElement('div'); grid.style.cssText = "display:grid; grid-template-columns:1fr 1fr; gap:8px;";
+                g.starters.forEach(id => {
+                    const exp = (cloudData.study_level[currentUser] && cloudData.study_level[currentUser][id]) || 0;
+                    const lv = calculateLevel(exp); const evId = getEvolvedId(id, lv);
+                    const box = document.createElement('div'); box.className = 'shop-item';
+                    box.innerHTML = `<img class="shop-icon" src="${getImgUrl(evId)}"><div class="shop-name"><span style="font-size:0.6rem; display:block;">Lv.${lv}</span><span id="pns-${evId}">...</span></div>`;
+                    getPokemonNameAsync(evId).then(n => document.getElementById(`pns-${evId}`).textContent = n);
+                    box.onclick = () => {
+                        cloudData.study_user_pokemon[currentUser] = id;
+                        if (!cloudData.study_zukan_normal[currentUser].includes(id)) cloudData.study_zukan_normal[currentUser].push(id);
+                        closeModal('partnerModal'); renderUI(); save();
+                    };
                     grid.appendChild(box);
                 });
                 container.appendChild(grid);
             });
-            document.getElementById('partnerSelectModal').style.display = 'flex';
+            document.getElementById('partnerModal').style.display = 'flex';
         }
-        function closePartnerSelectModal() { playRetroSound('click'); document.getElementById('partnerSelectModal').style.display = 'none'; }
 
-        function openZukanModal() { unlockAudio(); playRetroSound('click'); document.getElementById('zukanModal').style.display = 'flex'; document.getElementById('regionSelector').value = 'all'; switchZukanTab('normal'); }
-        function closeZukanModal() { playRetroSound('click'); document.getElementById('zukanModal').style.display = 'none'; }
-        let zukanTab = 'normal';
-        function switchZukanTab(tab) { zukanTab = tab; document.getElementById('tabNormalBtn').style.background = tab==='normal'?'white':'#cbd5e1'; document.getElementById('tabMegaBtn').style.background = tab==='mega'?'white':'#cbd5e1'; document.getElementById('regionSelectWrapper').style.display = tab==='normal'?'flex':'none'; renderZukanGrid(); }
-        
-        function openBagModal() { unlockAudio(); playRetroSound('click'); const c = document.getElementById('bagItemsContainer'); c.innerHTML=''; const items = [{t:'ぼうけん券', count:cloudData.study_balance[currentUser].gachaCount, act:"closeBagModal();openAdventureSelectionModal()"}, {t:'ふしぎなあめ', count:cloudData.study_v2_bag_candy[currentUser], act:"useCandyFromBag()"}]; items.forEach(i => { const r = document.createElement('div'); r.className='bag-item-row'; r.innerHTML=`<div class="bag-item-info"><span class="bag-item-title">${i.t}</span><span class="bag-item-count">x${i.count}</span></div><button class="battle-btn" style="width:auto; height:34px; font-size:0.9rem;" ${i.count<=0?'disabled':''} onclick="${i.act}">つかう</button>`; c.appendChild(r); }); document.getElementById('bagModal').style.display = 'flex'; }
-        function closeBagModal() { playRetroSound('click'); document.getElementById('bagModal').style.display = 'none'; }
-        function useCandyFromBag() { if(cloudData.study_v2_bag_candy[currentUser]>0){ const id = cloudData.study_user_pokemon[currentUser]; if(!id) return; playRetroSound('clear'); cloudData.study_v2_bag_candy[currentUser]--; cloudData.study_level[currentUser][id] = (cloudData.study_level[currentUser][id]||0)+3; alert(`🍬 あめをつかった！`); openBagModal(); renderUI(); triggerCloudSave(); } }
-        
-        function openCalendarModal() { unlockAudio(); playRetroSound('click'); document.getElementById('calendarModal').style.display='flex'; }
-        function closeCalendarModal() { playRetroSound('click'); document.getElementById('calendarModal').style.display='none'; }
-        function openSecretParentMenu() { unlockAudio(); if(prompt("パスワード：")==="1022"){ document.getElementById('secretParentPanel').style.display='block'; window.scrollTo(0,9999); } }
-        function closeSecretParentMenu() { playRetroSound('click'); document.getElementById('secretParentPanel').style.display='none'; }
-        
-        function buyItem(name, price) {
-            unlockAudio(); playRetroSound('click');
-            const b = cloudData["study_balance"][currentUser];
-            if (b.pokeen < price) { alert("ぽけえんが たりない！"); return; }
-            if (confirm(`【${name}】と こうかんする？`)) {
-                playRetroSound('coin'); b.pokeen -= price;
-                if(name.includes('あめ')) cloudData.study_v2_bag_candy[currentUser]++;
-                if(name.includes('券')) b.gachaCount++;
-                if(name.includes('モンスターボール')) cloudData.study_v2_bag_balls[currentUser].normal++;
-                if(name.includes('スーパーボール')) cloudData.study_v2_bag_balls[currentUser].super++;
-                if(name.includes('ハイパーボール')) cloudData.study_v2_bag_balls[currentUser].hyper++;
-                renderUI(); triggerCloudSave(); alert(`バッグにいれたよ！`);
+        function openShopModal() {
+            const c = document.getElementById('shopList'); c.innerHTML = '';
+            const items = [
+                {n:'🍬 ふしぎなあめ', p:100, act:() => { cloudData.study_v2_bag_candy[currentUser]++; }},
+                {n:'🎫 ぼうけん券', p:500, act:() => { cloudData.study_balance[currentUser].gachaCount++; }},
+                {n:'🔴 モンスターボール', p:100, act:() => { cloudData.study_v2_bag_balls[currentUser].normal++; }}
+            ];
+            items.forEach(i => {
+                const row = document.createElement('div'); row.className = 'shop-item';
+                row.innerHTML = `<div class="shop-name">${i.n}</div><div class="shop-price">${i.p}💰</div>`;
+                row.onclick = () => {
+                    if(cloudData.study_balance[currentUser].pokeen >= i.p) {
+                        cloudData.study_balance[currentUser].pokeen -= i.p; i.act(); renderUI(); save(); alert("かったよ！");
+                    } else { alert("おかねが たりないよ！"); }
+                };
+                c.appendChild(row);
+            });
+            document.getElementById('shopModal').style.display = 'flex';
+        }
+
+        // 便利関数
+        const getPokemonNameAsync = async (id) => {
+            const bid = id.split('_')[0]; if(pkmNameCache[id]) return pkmNameCache[id];
+            try {
+                const d = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${parseInt(bid)}`).then(r=>r.json());
+                const n = d.names.find(x => x.language.name === 'ja-Hrkt' || x.language.name === 'ja').name;
+                pkmNameCache[id] = n; return n;
+            } catch(e) { return "No." + bid; }
+        };
+        const getLessons = () => {
+            const d = new Date().getDay(); const u = currentUser;
+            if(u==='kouta') return (d===1||d===4) ? ["プール（スイミング）"] : (d===5 ? ["おおつかたいそう"] : []);
+            return (d===1)?["ぷーる"]:(d===4)?["さっかー"]:(d===5)?["たいそう"]:(d===0)?["さっかーのれんしゅう"]:[];
+        };
+        const setZukanTab = (t) => { zukanTab = t; document.getElementById('zNormalBtn').className = t==='normal'?'user-tab active':'user-tab'; document.getElementById('zMegaBtn').className = t==='mega'?'user-tab active':'user-tab'; renderZukan(); };
+        const openZukanModal = () => { document.getElementById('zukanModal').style.display='flex'; renderZukan(); };
+        const openBagModal = () => {
+            const c = document.getElementById('bagList'); c.innerHTML='';
+            const items = [{n:'🍬 ふしぎなあめ', c:cloudData.study_v2_bag_candy[currentUser], act:()=>useCandy()}];
+            items.forEach(i => { const r = document.createElement('div'); r.className='shop-item'; r.innerHTML=`<div class="shop-name">${i.n} (x${i.c})</div>`; r.onclick=i.act; c.appendChild(r); });
+            document.getElementById('bagModal').style.display='flex';
+        };
+        const useCandy = () => {
+            const id = cloudData.study_user_pokemon[currentUser]; if(cloudData.study_v2_bag_candy[currentUser]>0 && id){
+                cloudData.study_v2_bag_candy[currentUser]--; cloudData.study_level[currentUser][id] = (cloudData.study_level[currentUser][id]||0)+3;
+                alert("レベルが あがった！"); closeModal('bagModal'); renderUI(); save();
             }
-        }
-
-        // バトル関連
-        function openAdventureSelectionModal() { unlockAudio(); playRetroSound('click'); if(cloudData.study_balance[currentUser].gachaCount<=0) return; document.getElementById('adventureModal').style.display = 'flex'; }
-        function closeAdventureModal() { playRetroSound('click'); document.getElementById('adventureModal').style.display = 'none'; }
-        
-        async function startBattle(zone) {
-            playRetroSound('click'); closeAdventureModal();
-            cloudData.study_balance[currentUser].gachaCount--;
-            switchBgmMode('battle');
-
-            const enemyId = "000" + (Math.floor(Math.random()*9)+1); // 仮ランダム
-            const baseId = cloudData["study_user_pokemon"][currentUser];
-            const currentMyId = getEvolvedId(baseId, calculateLevel(cloudData.study_level[currentUser][baseId]));
-            
-            battleState = { step: 0, enemy: {id: enemyId}, myName: "相棒", enemyName: "やせいポケモン" };
-            
-            document.getElementById('enemyHpBar').style.width = "100%";
-            document.getElementById('battlePartnerImg').src = getImgUrl(currentMyId);
-            document.getElementById('battleEnemyImg').src = getImgUrl(enemyId);
-            document.getElementById('battleLogBox').textContent = `あ！ 野生の ポケモン が あらわれた！`;
-            
-            document.getElementById('ballIcon').style.display = "none"; 
-            document.getElementById('battleActionBtn').style.display = "block";
-            document.getElementById('ballSelectSection').style.display = "none";
-            document.getElementById('battleCloseBtn').style.display = "none";
-            document.getElementById('battleModal').style.display = 'flex';
-            
-            getPokemonNameAsync(currentMyId).then(n => { battleState.myName = n; document.getElementById('battlePartnerName').textContent = n; });
-            getPokemonNameAsync(enemyId).then(n => { battleState.enemyName = n; document.getElementById('battleEnemyName').textContent = n; playPokemonCry(enemyId); });
-            triggerCloudSave();
-        }
-
-        function nextBattlePhase() {
-            playRetroSound('click');
-            const log = document.getElementById('battleLogBox');
-            if (battleState.step === 0) {
-                log.textContent = `いけっ！ ${battleState.myName}！\nこうかは ばつぐんだ！ 💥`;
-                document.getElementById('enemyHpBar').style.width = "35%";
-                battleState.step = 1;
-            } else if (battleState.step === 1) {
-                log.textContent = `やせいの ${battleState.enemyName}の こうげき！\nしかし かわした！`;
-                document.getElementById('enemyHpBar').style.width = "10%";
-                document.getElementById('battleActionBtn').style.display = "none";
-                const balls = cloudData["study_v2_bag_balls"][currentUser];
-                document.getElementById('countP').textContent = balls.normal;
-                document.getElementById('countS').textContent = balls.super;
-                document.getElementById('countH').textContent = balls.hyper;
-                document.getElementById('countM').textContent = balls.master;
-                document.getElementById('ballSelectSection').style.display = "block";
+        };
+        const spinSlot = () => {
+            const p = cloudData.study_v3_challenge_pool[currentUser]; if(!p || p.length===0) return;
+            document.getElementById('slotBtn').disabled=true; let i=0;
+            const iv = setInterval(() => { document.getElementById('slotWindow').textContent = p[i%p.length]; i++; if(i>15){ clearInterval(iv); const res = p[Math.floor(Math.random()*p.length)]; document.getElementById('slotWindow').textContent = "🎯 " + res; cloudData.study_v3_chosen_challenge[currentUser] = res; renderUI(); save(); } }, 100);
+        };
+        const openCalendarModal = () => {
+            const days = cloudData.study_v2_calendar[currentUser] || [];
+            document.getElementById('totalDays').textContent = `ぼうけんした日: ${days.length}日`;
+            const g = document.getElementById('calGrid'); g.innerHTML='';
+            for(let i=1; i<=31; i++){ const d = document.createElement('div'); d.className=`calendar-cell ${days.find(x=>x.includes(`-${String(i).padStart(2,'0')}`))?'stamped':''}`; d.textContent=i; g.appendChild(d); }
+            document.getElementById('calendarModal').style.display='flex';
+        };
+        const openAdventureModal = () => {
+            const g = document.getElementById('zoneGrid'); g.innerHTML='';
+            Object.keys(starterPool).forEach(z => {
+                const b = document.createElement('button'); b.style.cssText="border:3px solid var(--border-color); background:white; border-radius:12px; padding:10px; font-family:inherit;";
+                b.innerHTML = `${z==='water'?'🌊':z==='forest'?'🌳':z==='volcano'?'🌋':'⚡'}<br><img src="${getImgUrl(starterPool[z][0])}" style="width:40px; filter:brightness(0);">`;
+                b.onclick = () => startBattle(z); g.appendChild(b);
+            });
+            document.getElementById('adventureModal').style.display='flex';
+        };
+        const startBattle = (z) => {
+            closeModal('adventureModal'); switchBgm('battle');
+            const enId = starterPool[z][Math.floor(Math.random()*starterPool[z].length)];
+            const baseId = cloudData.study_user_pokemon[currentUser];
+            const lv = calculateLevel(cloudData.study_level[currentUser][baseId]);
+            const myId = getEvolvedId(baseId, lv);
+            battleState = { step:0, enId:enId, myName:"...", enName:"..." };
+            document.getElementById('bMyImg').src = getImgUrl(myId); document.getElementById('bEnImg').src = getImgUrl(enId);
+            document.getElementById('bMyLv').textContent = lv; document.getElementById('battleHp').style.width="100%";
+            document.getElementById('battleLog').textContent = "あ！ やせいポケモン が あらわれた！";
+            document.getElementById('bAction').style.display='block'; document.getElementById('bClose').style.display='none';
+            getPokemonNameAsync(myId).then(n => { battleState.myName = n; document.getElementById('bMyName').textContent=n; });
+            getPokemonNameAsync(enId).then(n => { battleState.enName = n; document.getElementById('bEnName').textContent=n; playPokemonCry(enId); });
+            document.getElementById('battleModal').style.display='flex';
+        };
+        const battleNext = () => {
+            const log = document.getElementById('battleLog');
+            if(battleState.step===0){ log.textContent=`いけっ！ ${battleState.myName}！\nこうかは ばつぐんだ！`; document.getElementById('battleHp').style.width="30%"; battleState.step=1; }
+            else { log.textContent="どうぐ を つかおう！"; document.getElementById('bAction').style.display='none'; 
+                const items = document.getElementById('bItems'); items.innerHTML=''; items.style.display='flex';
+                const b = cloudData.study_v2_bag_balls[currentUser];
+                Object.keys(b).forEach(k => { 
+                    const d = document.createElement('div'); d.style.cssText="flex:1; border:3px solid var(--border-color); padding:5px; border-radius:10px; cursor:pointer;";
+                    d.innerHTML = `<img src="${ballAssets[k]}" style="width:24px;"><br>x${b[k]}`;
+                    d.onclick = () => throwBall(k); items.appendChild(d);
+                });
             }
-        }
-
-        function throwBall(type) {
-            playRetroSound('click');
-            document.getElementById('ballSelectSection').style.display = "none";
-            const log = document.getElementById('battleLogBox');
-            document.getElementById('ballIcon').src = ballAssets[type];
-            document.getElementById('ballIcon').style.display = "block";
-            log.textContent = `ボールを なげた！`;
-            
+        };
+        const throwBall = (k) => {
+            document.getElementById('bItems').style.display='none';
+            const log = document.getElementById('battleLog'); log.textContent = "ボールを なげた！";
+            const ball = document.getElementById('bBall'); ball.src = ballAssets[k]; ball.style.display='block';
             setTimeout(() => {
-                playRetroSound('clear');
-                log.innerHTML = `やったぜ！ ${battleState.enemyName}を つかまえた！<br>💰 <strong>+100 ぽけえん</strong>`;
-                cloudData.study_balance[currentUser].pokeen += 100;
-                if(!cloudData.study_zukan_normal[currentUser].includes(battleState.enemy.id)) cloudData.study_zukan_normal[currentUser].push(battleState.enemy.id);
-                document.getElementById('battleCloseBtn').style.display = "block";
-                triggerCloudSave();
+                ball.style.display='none';
+                if(Math.random() < 0.8 || k==='master'){
+                    log.innerHTML=`やったぜ！ ${battleState.enName} を つかまえた！<br>💰 +100 ぽけえん！`;
+                    cloudData.study_balance[currentUser].pokeen += 100;
+                    if(!cloudData.study_zukan_normal[currentUser].includes(battleState.enId)) cloudData.study_zukan_normal[currentUser].push(battleState.enId);
+                    document.getElementById('bClose').style.display='block'; save();
+                } else { log.textContent="あ！ にげられてしまった！"; document.getElementById('bClose').style.display='block'; }
             }, 1500);
-        }
-
-        function closeBattleModal() { playRetroSound('click'); switchBgmMode('main'); document.getElementById('battleModal').style.display = 'none'; renderUI(); }
-
-        function resetCurrentUserData() {
-            if(confirm("ほんとうに セーブデータを けしますか？")) {
-                cloudData.study_balance[currentUser] = { pokeen: 300, gachaCount: 0 };
-                cloudData.study_level[currentUser] = {};
-                cloudData.study_zukan_normal[currentUser] = [];
-                cloudData.study_zukan_mega[currentUser] = [];
-                cloudData.study_v2_bag_balls[currentUser] = { normal: 5, super: 1, hyper: 0, master: 0 };
-                cloudData.study_v2_bag_candy[currentUser] = 0;
-                cloudData.study_v2_calendar[currentUser] = [];
-                cloudData.study_v3_chosen_challenge[currentUser] = null;
-                cloudData.study_user_pokemon[currentUser] = null;
-                cloudData["study_progress_" + todayStr][currentUser] = { done: [], zoneClaimed: {} };
-                triggerCloudSave(); alert("リセット しました"); changeUser(currentUser);
-            }
-        }
-        
-        function adjustParentData(type) {
+        };
+        const closeModal = (id) => { 
+            document.getElementById(id).style.display='none'; 
+            if(id==='battleModal') switchBgm('main');
+            renderUI(); 
+        };
+        const openSecretParentMenu = () => { if(prompt("PW")==="1022") document.getElementById('secretParentPanel').style.display='block'; };
+        const closeSecretParentMenu = () => document.getElementById('secretParentPanel').style.display='none';
+        const toggleDevZukan = () => { devZukanMode = document.getElementById('devZukanToggle').checked; renderZukan(); };
+        const adjustParentData = (type) => {
             const a = parseInt(document.getElementById('parentAmount').value) || 0;
             if(type==='pokeen') cloudData.study_balance[currentUser].pokeen += a;
             if(type==='ticket') cloudData.study_balance[currentUser].gachaCount += a;
             if(type==='candy') cloudData.study_v2_bag_candy[currentUser] += a;
             if(type==='ball_normal') cloudData.study_v2_bag_balls[currentUser].normal += a;
-            renderUI(); triggerCloudSave(); alert("データを調整しました");
-        }
-        function saveChallengePoolFromParent() {
-            const txt = document.getElementById('parentChallengePoolInput').value;
-            cloudData["study_v3_challenge_pool"][currentUser] = txt.split(',').map(x=>x.trim()).filter(x=>x);
-            triggerCloudSave(); alert("保存しました");
-        }
+            renderUI(); save();
+        };
+        const saveChallengePoolFromParent = () => {
+            cloudData.study_v3_challenge_pool[currentUser] = document.getElementById('parentChallengePoolInput').value.split(',').map(x=>x.trim());
+            save(); alert("保存完了");
+        };
+        const resetCurrentUserData = () => {
+            if(confirm("リセット？")){
+                cloudData.study_balance[currentUser] = {pokeen:300, gachaCount:0}; cloudData.study_level[currentUser] = {};
+                cloudData.study_zukan_normal[currentUser] = []; cloudData.study_v2_calendar[currentUser] = [];
+                cloudData.study_user_pokemon[currentUser] = null; save(); renderUI();
+            }
+        };
     </script>
 </body>
 </html>
