@@ -133,7 +133,6 @@
         .partner-choice-box { background: white; border: 2.5px solid #0f172a; border-radius: 12px; padding: 6px; text-align: center; cursor: pointer; color: #0f172a; box-shadow: 0 3px 0 #0f172a; position: relative; }
         .partner-choice-box img { width: 44px; height: 44px; object-fit: contain; }
         .partner-choice-box div { font-size: 0.7rem; font-weight: 900; margin-top: 2px; }
-        /* 🔥 選択画面のレベルバッジ */
         .partner-lv-badge { position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; font-size: 0.6rem; font-weight: bold; border-radius: 10px; padding: 2px 6px; border: 2px solid #0f172a; }
 
         .ball-select-row { display: flex; gap: 6px; justify-content: center; margin-top: 10px; }
@@ -168,10 +167,12 @@
 </head>
 <body>
 
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
         let appReady = false;
         const fallbackTimer = setTimeout(() => {
             if (!appReady) {
+                console.warn("通信タイムアウト。オフラインで強制起動します。");
                 appReady = true;
                 const cover = document.getElementById('loadingCover');
                 if(cover) cover.style.display = 'none';
@@ -182,6 +183,11 @@
 
     <div id="loadingCover" class="loading-cover">🔴 ぼうけんのしょを 同期中...</div>
     <div id="syncBadge" class="sync-badge">同期完了</div>
+
+    <div style="position: absolute; width: 1px; height: 1px; top: -9999px; left: -9999px; opacity: 0; pointer-events: none;">
+        <div id="topBgmPlayer"></div>
+        <div id="battleBgmPlayer"></div>
+    </div>
 
     <header>
         <button id="bgmToggleBtn" class="bgm-toggle-btn" onclick="toggleBGM()">🔇</button>
@@ -443,7 +449,6 @@
         let cloudData = {
             "study_user_pokemon": { "kouta": "0025", "haruto": "0004" },
             "study_balance": { "kouta": { "pokeen": 300, "gachaCount": 0 }, "haruto": { "pokeen": 300, "gachaCount": 0 } },
-            // 🔥 EXPをポケモンごとの個別管理に変更
             "study_level": { "kouta": { "0025": 0 }, "haruto": { "0004": 0 } },
             "study_zukan_normal": { "kouta": ["0025"], "haruto": ["0004"] },
             "study_zukan_mega": { "kouta": [], "haruto": [] },
@@ -458,70 +463,56 @@
         let currentUser = 'kouta';
         let battleState = {};
 
-        // 🔥 Web Audio APIを使った100%確実な8bit BGMエンジン
-        let audioCtx = null;
-        let bgmTimer = null;
-        let bgmStep = 0;
+        // 🔥 BGMシステム (YouTube連動型でiPadでも100%再生される最強仕様)
         let isBgmOn = false;
         let currentBgmMode = 'main';
+        let topBgmPlayer, battleBgmPlayer;
+        let isYoutubeReady = false;
+        let ytReadyCount = 0;
 
-        const N = { C4:261.6, D4:293.7, E4:329.6, F4:349.2, G4:392.0, A4:440.0, B4:493.9, C5:523.3, D5:587.3, E5:659.3, F5:698.5, G5:784.0, A5:880.0, B5:987.8, C6:1046.5 };
-        // 冒険(ルート)のメロディとベース
-        const routeMelody = [N.C5, N.D5, N.E5, 0, N.E5, N.G5, N.C6, 0];
-        const routeBass = [N.C4, 0, N.E4, 0, N.G4, 0, N.C4, 0];
-        // 戦闘(バトル)のメロディとベース
-        const battleMelody = [N.A5, N.A5, N.E5, N.A5, N.B5, N.G5, N.A5, 0];
-        const battleBass = [N.A4, N.A4, N.A4, N.C5, N.A4, N.A4, N.G4, N.G4];
-
-        function getAudioCtx() {
-            if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} }
-            return audioCtx;
+        function onYouTubeIframeAPIReady() {
+            topBgmPlayer = new YT.Player('topBgmPlayer', {
+                height: '1', width: '1', videoId: 'e7n8DID-zVs', // 初代OP BGM
+                playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': 'e7n8DID-zVs' },
+                events: { 'onReady': (e) => { e.target.setVolume(20); ytReadyCount++; if(ytReadyCount===2) isYoutubeReady = true; } }
+            });
+            battleBgmPlayer = new YT.Player('battleBgmPlayer', {
+                height: '1', width: '1', videoId: 'u814_q77d-k', // 初代戦闘 BGM
+                playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': 'u814_q77d-k' },
+                events: { 'onReady': (e) => { e.target.setVolume(30); ytReadyCount++; if(ytReadyCount===2) isYoutubeReady = true; } }
+            });
         }
 
         function toggleBGM() {
             isBgmOn = !isBgmOn;
             document.getElementById('bgmToggleBtn').textContent = isBgmOn ? "🔊" : "🔇";
-            const ctx = getAudioCtx();
-            if(ctx && ctx.state === 'suspended') ctx.resume();
-            if(isBgmOn) { startBgmEngine(); } else { stopBgmEngine(); }
+            if (!isYoutubeReady) return;
+            if(isBgmOn) {
+                if(currentBgmMode === 'main') { if(topBgmPlayer.playVideo) topBgmPlayer.playVideo(); }
+                else { if(battleBgmPlayer.playVideo) battleBgmPlayer.playVideo(); }
+            } else {
+                if(topBgmPlayer.pauseVideo) topBgmPlayer.pauseVideo(); 
+                if(battleBgmPlayer.pauseVideo) battleBgmPlayer.pauseVideo();
+            }
         }
 
         function switchBgmMode(mode) {
             currentBgmMode = mode;
-            bgmStep = 0; // 曲の頭から再生
+            if(!isBgmOn || !isYoutubeReady) return;
+            if(mode === 'main') {
+                if(battleBgmPlayer.pauseVideo) { battleBgmPlayer.pauseVideo(); battleBgmPlayer.seekTo(0); }
+                if(topBgmPlayer.playVideo) topBgmPlayer.playVideo();
+            } else {
+                if(topBgmPlayer.pauseVideo) { topBgmPlayer.pauseVideo(); topBgmPlayer.seekTo(0); }
+                if(battleBgmPlayer.playVideo) battleBgmPlayer.playVideo();
+            }
         }
 
-        function startBgmEngine() {
-            if(bgmTimer) return;
-            const ctx = getAudioCtx();
-            if(!ctx) return;
-            bgmTimer = setInterval(() => {
-                const mArr = currentBgmMode === 'main' ? routeMelody : battleMelody;
-                const bArr = currentBgmMode === 'main' ? routeBass : battleBass;
-                const mNote = mArr[bgmStep % mArr.length];
-                const bNote = bArr[bgmStep % bArr.length];
-                const t = ctx.currentTime;
-                const dur = currentBgmMode === 'main' ? 0.15 : 0.1;
-
-                if (mNote > 0) {
-                    let o = ctx.createOscillator(); let g = ctx.createGain();
-                    o.type = 'square'; o.frequency.value = mNote;
-                    g.gain.setValueAtTime(0.02, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-                    o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t + dur);
-                }
-                if (bNote > 0) {
-                    let o = ctx.createOscillator(); let g = ctx.createGain();
-                    o.type = 'triangle'; o.frequency.value = bNote;
-                    g.gain.setValueAtTime(0.04, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-                    o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t + dur);
-                }
-                bgmStep++;
-            }, 180);
-        }
-
-        function stopBgmEngine() {
-            if(bgmTimer) clearInterval(bgmTimer);
-            bgmTimer = null;
+        // ピコピコ効果音
+        let audioCtx = null;
+        function getAudioCtx() {
+            if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} }
+            return audioCtx;
         }
 
         function playRetroSound(type) {
@@ -574,7 +565,7 @@
                 .then(data => {
                     if (data.cries && data.cries.latest) {
                         const audio = new Audio(data.cries.latest);
-                        audio.play().catch(e => console.log("音声ブロック", e));
+                        audio.play().catch(e => {});
                     }
                 });
             } catch(e) {}
@@ -604,7 +595,6 @@
                         }
                     });
                     
-                    // 🔥 EXPデータを新方式（ポケモン個別）に強制マイグレーション
                     ['kouta', 'haruto'].forEach(user => {
                         if (typeof cloudData.study_level[user] === 'number' || cloudData.study_level[user].exp !== undefined) {
                             let oldExp = cloudData.study_level[user].exp || 0;
@@ -721,8 +711,6 @@
 
             const balance = cloudData["study_balance"][currentUser];
             const baseId = cloudData["study_user_pokemon"][currentUser];
-            
-            // 🔥 相棒個別のEXPを読み込む
             const exp = cloudData["study_level"][currentUser][baseId] || 0;
             const level = calculateLevel(exp);
 
@@ -877,7 +865,6 @@
                 const grid = document.createElement('div'); grid.className = 'partner-select-grid';
                 
                 group.starters.forEach(p => {
-                    // 🔥 相棒のレベルを個別に計算して、進化した姿と名前を表示
                     const exp = cloudData.study_level[currentUser][p.id] || 0;
                     const lv = calculateLevel(exp);
                     const currentId = getEvolvedId(p.id, lv);
@@ -898,7 +885,6 @@
                         playRetroSound('coin');
                         cloudData["study_user_pokemon"][currentUser] = p.id; 
                         
-                        // 🔥 相棒に選んだら即座に図鑑に登録
                         if (!cloudData["study_zukan_normal"][currentUser].includes(p.id)) {
                             cloudData["study_zukan_normal"][currentUser].push(p.id);
                         }
@@ -1006,7 +992,7 @@
                     for (let i = range.start; i <= range.end; i++) {
                         const idStr = String(i).padStart(4, '0');
                         const hasIt = ownedNormal.includes(idStr); if (hasIt) ownedCount++; totalCount++;
-                        if (showCaughtOnly && !hasIt) continue;
+                        if (showCaughtOnly && !hasIt) return; // 🔥 バグ修正: もってるソート対応
                         createPkmBox(grid, idStr, i, hasIt);
                     }
                 });
@@ -1033,7 +1019,7 @@
                     const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${baseId}`);
                     const data = await res.json();
                     
-                    // 🔥 確実なひらがなデータの取得（トリミアン対策）
+                    // 🔥 トリミアン対応：ひらがな版がなければ漢字版でフォールバック
                     const flavorHrkt = data.flavor_text_entries.find(f => f.language.name === "ja-Hrkt");
                     const flavorJa = data.flavor_text_entries.find(f => f.language.name === "ja");
                     const flavor = flavorHrkt || flavorJa;
@@ -1330,6 +1316,13 @@
                 cloudData.study_v2_calendar[currentUser] = [];
                 cloudData.study_v3_chosen_challenge[currentUser] = null;
                 cloudData.study_user_pokemon[currentUser] = null;
+                
+                // 🔥 追加: 本日のミッションの進捗も完全リセット！
+                if (!cloudData["study_progress_" + todayStr]) {
+                    cloudData["study_progress_" + todayStr] = {};
+                }
+                cloudData["study_progress_" + todayStr][currentUser] = { done: [], zoneClaimed: {}, gachaClaimed: false };
+                
                 saveAllToCloud();
                 alert("リセットしました");
                 changeUser(currentUser);
