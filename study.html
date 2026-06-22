@@ -133,7 +133,7 @@
         .partner-choice-box { background: white; border: 2.5px solid #0f172a; border-radius: 12px; padding: 6px; text-align: center; cursor: pointer; color: #0f172a; box-shadow: 0 3px 0 #0f172a; position: relative; }
         .partner-choice-box img { width: 44px; height: 44px; object-fit: contain; }
         .partner-choice-box div { font-size: 0.7rem; font-weight: 900; margin-top: 2px; }
-        .partner-lv-badge { position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; font-size: 0.6rem; font-weight: bold; border-radius: 10px; padding: 2px 6px; border: 2px solid #0f172a; }
+        .partner-lv-badge { position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; font-size: 0.6rem; font-weight: bold; border-radius: 10px; padding: 2px 6px; border: 2px solid #0f172a; z-index: 10; }
 
         .ball-select-row { display: flex; gap: 6px; justify-content: center; margin-top: 10px; }
         .ball-choice-item { flex: 1; background: rgba(255,255,255,0.1); border: 2px solid #475569; border-radius: 12px; padding: 6px 2px; text-align: center; cursor: pointer; }
@@ -167,7 +167,6 @@
 </head>
 <body>
 
-    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
         let appReady = false;
         const fallbackTimer = setTimeout(() => {
@@ -184,9 +183,10 @@
     <div id="loadingCover" class="loading-cover">🔴 ぼうけんのしょを 同期中...</div>
     <div id="syncBadge" class="sync-badge">同期完了</div>
 
-    <div style="position: absolute; width: 1px; height: 1px; top: -9999px; left: -9999px; opacity: 0; pointer-events: none;">
-        <div id="topBgmPlayer"></div>
-        <div id="battleBgmPlayer"></div>
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <div style="position: fixed; width: 10px; height: 10px; top: 0; left: 0; opacity: 0.01; z-index: -9999; pointer-events: none;">
+        <div id="bgmPlayerDiv"></div>
     </div>
 
     <header>
@@ -463,23 +463,33 @@
         let currentUser = 'kouta';
         let battleState = {};
 
-        // 🔥 BGMシステム (YouTube連動型でiPadでも100%再生される最強仕様)
+        // 🔥 BGM統合システム（1つのYouTubeプレイヤーで曲を差し替える！）
+        let bgmPlayer;
+        let isYoutubeReady = false;
         let isBgmOn = false;
         let currentBgmMode = 'main';
-        let topBgmPlayer, battleBgmPlayer;
-        let isYoutubeReady = false;
-        let ytReadyCount = 0;
+        
+        // 使用する曲のYouTube動画ID
+        const MAIN_BGM_ID = 'e7n8DID-zVs';   // ポケモン赤緑 OP
+        const BATTLE_BGM_ID = 'IQhk79DIq7A'; // 戦闘！野生ポケモン
 
         function onYouTubeIframeAPIReady() {
-            topBgmPlayer = new YT.Player('topBgmPlayer', {
-                height: '1', width: '1', videoId: 'e7n8DID-zVs', // 初代OP BGM
-                playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': 'e7n8DID-zVs' },
-                events: { 'onReady': (e) => { e.target.setVolume(20); ytReadyCount++; if(ytReadyCount===2) isYoutubeReady = true; } }
-            });
-            battleBgmPlayer = new YT.Player('battleBgmPlayer', {
-                height: '1', width: '1', videoId: 'u814_q77d-k', // 初代戦闘 BGM
-                playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': 'u814_q77d-k' },
-                events: { 'onReady': (e) => { e.target.setVolume(30); ytReadyCount++; if(ytReadyCount===2) isYoutubeReady = true; } }
+            bgmPlayer = new YT.Player('bgmPlayerDiv', {
+                height: '10',
+                width: '10',
+                videoId: MAIN_BGM_ID,
+                playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': MAIN_BGM_ID },
+                events: {
+                    'onReady': (e) => {
+                        e.target.setVolume(20);
+                        isYoutubeReady = true;
+                    },
+                    'onStateChange': (e) => {
+                        if (e.data === YT.PlayerState.ENDED) {
+                            e.target.playVideo(); // 強制ループ
+                        }
+                    }
+                }
             });
         }
 
@@ -488,23 +498,27 @@
             document.getElementById('bgmToggleBtn').textContent = isBgmOn ? "🔊" : "🔇";
             if (!isYoutubeReady) return;
             if(isBgmOn) {
-                if(currentBgmMode === 'main') { if(topBgmPlayer.playVideo) topBgmPlayer.playVideo(); }
-                else { if(battleBgmPlayer.playVideo) battleBgmPlayer.playVideo(); }
+                bgmPlayer.playVideo();
             } else {
-                if(topBgmPlayer.pauseVideo) topBgmPlayer.pauseVideo(); 
-                if(battleBgmPlayer.pauseVideo) battleBgmPlayer.pauseVideo();
+                bgmPlayer.pauseVideo();
             }
         }
 
         function switchBgmMode(mode) {
+            if (currentBgmMode === mode) return;
             currentBgmMode = mode;
-            if(!isBgmOn || !isYoutubeReady) return;
-            if(mode === 'main') {
-                if(battleBgmPlayer.pauseVideo) { battleBgmPlayer.pauseVideo(); battleBgmPlayer.seekTo(0); }
-                if(topBgmPlayer.playVideo) topBgmPlayer.playVideo();
-            } else {
-                if(topBgmPlayer.pauseVideo) { topBgmPlayer.pauseVideo(); topBgmPlayer.seekTo(0); }
-                if(battleBgmPlayer.playVideo) battleBgmPlayer.playVideo();
+            if (!isYoutubeReady) return;
+            
+            let targetId = mode === 'main' ? MAIN_BGM_ID : BATTLE_BGM_ID;
+            let volume = mode === 'main' ? 20 : 35; // 戦闘は少し大きめ
+            
+            // カセット（曲）を差し替える！
+            bgmPlayer.loadVideoById({videoId: targetId});
+            bgmPlayer.setVolume(volume);
+            
+            if (!isBgmOn) {
+                // BGMオフ設定なら、読み込んだ直後に止める
+                setTimeout(() => { bgmPlayer.pauseVideo(); }, 100);
             }
         }
 
@@ -565,7 +579,7 @@
                 .then(data => {
                     if (data.cries && data.cries.latest) {
                         const audio = new Audio(data.cries.latest);
-                        audio.play().catch(e => {});
+                        audio.play().catch(e => console.log("音声ブロック", e));
                     }
                 });
             } catch(e) {}
@@ -992,7 +1006,7 @@
                     for (let i = range.start; i <= range.end; i++) {
                         const idStr = String(i).padStart(4, '0');
                         const hasIt = ownedNormal.includes(idStr); if (hasIt) ownedCount++; totalCount++;
-                        if (showCaughtOnly && !hasIt) return; // 🔥 バグ修正: もってるソート対応
+                        if (showCaughtOnly && !hasIt) continue;
                         createPkmBox(grid, idStr, i, hasIt);
                     }
                 });
@@ -1019,7 +1033,6 @@
                     const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${baseId}`);
                     const data = await res.json();
                     
-                    // 🔥 トリミアン対応：ひらがな版がなければ漢字版でフォールバック
                     const flavorHrkt = data.flavor_text_entries.find(f => f.language.name === "ja-Hrkt");
                     const flavorJa = data.flavor_text_entries.find(f => f.language.name === "ja");
                     const flavor = flavorHrkt || flavorJa;
@@ -1307,7 +1320,6 @@
         function resetCurrentUserData() {
             if(confirm("本当にセーブデータをリセットしますか？")) {
                 cloudData.study_balance[currentUser] = { "pokeen": 300, "gachaCount": 0 };
-                // 🔥 初期化対応: 空のオブジェクトをセット
                 cloudData.study_level[currentUser] = {};
                 cloudData.study_zukan_normal[currentUser] = [];
                 cloudData.study_zukan_mega[currentUser] = [];
@@ -1317,7 +1329,7 @@
                 cloudData.study_v3_chosen_challenge[currentUser] = null;
                 cloudData.study_user_pokemon[currentUser] = null;
                 
-                // 🔥 追加: 本日のミッションの進捗も完全リセット！
+                // 本日のミッション進捗も完全リセット
                 if (!cloudData["study_progress_" + todayStr]) {
                     cloudData["study_progress_" + todayStr] = {};
                 }
