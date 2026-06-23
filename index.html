@@ -47,8 +47,15 @@
             padding-bottom: 60px;
         }
 
-        header { text-align: center; padding: 5px 0; }
+        header { text-align: center; padding: 5px 0 10px 0; }
         header h1 { margin: 0; font-size: 1.3rem; font-weight: 800; color: #1e293b; }
+        
+        /* 🆕 ヘッダー統合型の更新ステータスデザイン */
+        .save-status-header {
+            font-size: 0.75rem; color: #475569; font-weight: bold;
+            background-color: #e2e8f0; padding: 2px 10px; border-radius: 12px;
+            display: inline-block; margin-top: 6px; box-shadow: var(--inner-shadow);
+        }
 
         .card, .schedule-box {
             background: white; padding: 15px; border-radius: var(--border-radius);
@@ -199,10 +206,9 @@
         
         .memo-textarea { width: 100%; height: 60px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; resize: vertical; line-height: 1.4; box-shadow: var(--inner-shadow); }
         .responsive-textarea { width: 100%; height: 120px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; resize: vertical; line-height: 1.5; box-shadow: var(--inner-shadow); }
-        .save-status { font-size: 0.75rem; color: var(--muted-text); text-align: right; margin-top: 4px; font-weight: bold; }
         .loading-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(241, 245, 249, 0.9); display: flex; justify-content: center; align-items: center; z-index: 9999; font-weight: bold; color: #475569; font-size: 1.1rem; }
 
-        /* 🆕 Phase1: ユーザー登録モーダル ＆ トースト通知 */
+        /* User modal & Toast */
         .user-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); display: flex; justify-content: center; align-items: center; z-index: 10000; }
         .user-modal { background: white; padding: 25px; border-radius: 12px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         .user-modal h3 { margin: 0 0 10px 0; font-size: 1.1rem; color: #1e293b; }
@@ -234,6 +240,8 @@
 
     <header>
         <h1>Family Dashboard</h1>
+        <!-- 🆕 ここに最終更新ステータスを移動・統合しました -->
+        <div id="saveStatus" class="save-status-header">☁️ 同期完了</div>
     </header>
 
     <div class="schedule-box">
@@ -358,7 +366,6 @@
     <div class="card" style="padding: 10px;">
         <h2 style="font-size: 1rem; margin-bottom: 6px;">✍ ... メモ欄</h2>
         <textarea id="customMemo" class="memo-textarea" placeholder="自由なメモ書きに（ご夫婦でリアルタイム共有されます）"></textarea>
-        <div id="saveStatus" class="save-status">同期完了</div>
     </div>
 
     <div class="tab-button-container">
@@ -490,7 +497,6 @@
         let koutaCalMonth = new Date().getMonth();
         let activePanelDateStr = null;
         
-        // 🆕 ユーザー名（ローカルストレージ）
         let localUserName = localStorage.getItem('family_app_user_name');
 
         function setUserName(name) {
@@ -500,7 +506,6 @@
             showToast(`👤 ${name}さんとして登録しました`);
         }
 
-        // 🆕 トースト通知表示関数
         let toastTimeout;
         function showToast(msg) {
             const toast = document.getElementById('toast');
@@ -531,10 +536,9 @@
                 globalCloudData = await response.json();
                 document.getElementById('loading').style.display = 'none';
                 
-                // 🆕 ロード時に最終更新情報を表示
                 const lastInfo = globalCloudData['last_update_info'];
                 if(lastInfo) {
-                    document.getElementById('saveStatus').textContent = `同期完了 [最終更新: ${lastInfo}]`;
+                    document.getElementById('saveStatus').textContent = `☁️ 同期完了 [最終更新: ${lastInfo}]`;
                 }
             } catch (e) { document.getElementById('loading').textContent = "⚠️ 同期エラーが発生しました。"; }
         }
@@ -545,15 +549,14 @@
                 await fetch(GAS_WEB_APP_URL, { method: 'POST', body: JSON.stringify({ action: 'save', key: key, value: value }) });
                 globalCloudData[key] = value;
                 
-                // 🆕 保存時に最終更新者を記録（UIを待たせないように非同期で飛ばす）
                 if(!silent && localUserName) {
                     const now = new Date();
                     const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
                     const updateInfo = `今日 ${timeStr} (${localUserName})`;
-                    document.getElementById('saveStatus').textContent = `同期完了 [最終更新: ${updateInfo}]`;
+                    document.getElementById('saveStatus').textContent = `☁️ 同期完了 [最終更新: ${updateInfo}]`;
                     fetch(GAS_WEB_APP_URL, { method: 'POST', body: JSON.stringify({ action: 'save', key: 'last_update_info', value: updateInfo }) });
                 } else {
-                    document.getElementById('saveStatus').textContent = "同期完了";
+                    document.getElementById('saveStatus').textContent = "☁️ 同期完了";
                 }
             } catch (e) { document.getElementById('saveStatus').textContent = "❌ 保存失敗"; }
         }
@@ -681,7 +684,6 @@
                 delBtn.addEventListener('click', async () => {
                     listData.splice(index, 1);
                     renderCustomTodoList(child);
-                    // 🆕 削除時にトースト通知を表示
                     showToast('🗑️ タスクを削除しました');
                     await saveCloudData("todo_list_" + child, JSON.stringify(listData.map(t => ({ text: t.text, date: t.date, checked: t.checked }))));
                 });
@@ -838,7 +840,6 @@
         let memoTimeout; document.getElementById('customMemo').addEventListener('input', (e) => { clearTimeout(memoTimeout); memoTimeout = setTimeout(() => { saveCloudData("memo", e.target.value); }, 1000); });
 
         window.addEventListener('DOMContentLoaded', async () => {
-            // 🆕 初回アクセス時のユーザー名登録モーダル制御
             if (!localUserName) {
                 document.getElementById('userModal').style.display = 'flex';
             }
