@@ -50,7 +50,6 @@
         header { text-align: center; padding: 5px 0 10px 0; }
         header h1 { margin: 0; font-size: 1.3rem; font-weight: 800; color: #1e293b; }
         
-        /* 🆕 ヘッダー統合型の更新ステータスデザイン */
         .save-status-header {
             font-size: 0.75rem; color: #475569; font-weight: bold;
             background-color: #e2e8f0; padding: 2px 10px; border-radius: 12px;
@@ -202,13 +201,7 @@
         .terakoya-alert { background-color: var(--terakoya-bg); border-left: 4px solid var(--terakoya-text); color: var(--terakoya-text); }
         .bento-alert { background-color: var(--haruto-bg); border-left: 4px solid var(--haruto-border); color: var(--haruto-text); }
         .terakoya-alert, .bento-alert { font-weight: bold; padding: 8px; margin-bottom: 10px; font-size: 0.85rem; display: none; border-radius: 0 4px 4px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .badge { background-color: #64748b; color: white; padding: 1px 5px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; margin-left: 5px; }
         
-        .memo-textarea { width: 100%; height: 60px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; resize: vertical; line-height: 1.4; box-shadow: var(--inner-shadow); }
-        .responsive-textarea { width: 100%; height: 120px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; resize: vertical; line-height: 1.5; box-shadow: var(--inner-shadow); }
-        .loading-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(241, 245, 249, 0.9); display: flex; justify-content: center; align-items: center; z-index: 9999; font-weight: bold; color: #475569; font-size: 1.1rem; }
-
-        /* User modal & Toast */
         .user-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); display: flex; justify-content: center; align-items: center; z-index: 10000; }
         .user-modal { background: white; padding: 25px; border-radius: 12px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         .user-modal h3 { margin: 0 0 10px 0; font-size: 1.1rem; color: #1e293b; }
@@ -240,7 +233,6 @@
 
     <header>
         <h1>Family Dashboard</h1>
-        <!-- 🆕 ここに最終更新ステータスを移動・統合しました -->
         <div id="saveStatus" class="save-status-header">☁️ 同期完了</div>
     </header>
 
@@ -683,24 +675,38 @@
                 const delBtn = document.createElement('button'); delBtn.type = 'button'; delBtn.className = 'todo-del-btn'; delBtn.innerHTML = '🗑️';
                 delBtn.addEventListener('click', async () => {
                     listData.splice(index, 1);
+                    // 🛠️ 削除時も即座にローカルキャッシュを上書きしてから再描画
+                    globalCloudData["todo_list_" + child] = JSON.stringify(listData.map(t => ({ text: t.text, date: t.date, checked: t.checked })));
                     renderCustomTodoList(child);
                     showToast('🗑️ タスクを削除しました');
-                    await saveCloudData("todo_list_" + child, JSON.stringify(listData.map(t => ({ text: t.text, date: t.date, checked: t.checked }))));
+                    await saveCloudData("todo_list_" + child, globalCloudData["todo_list_" + child]);
                 });
                 li.appendChild(label); li.appendChild(delBtn); listEl.appendChild(li);
             });
             document.getElementById(child + '-todo-count').textContent = `残り: ${incompleteCount}個`;
         }
 
+        // 🛠️ 【今回のメイン修正】追加したデータをローカルキャッシュに即座に反映させるロジックに修正
         async function addCustomTodo(child) {
             const inputEl = document.getElementById(child + '-todo-input');
             const dateEl = document.getElementById(child + '-todo-date');
             if (!inputEl || !inputEl.value.trim()) return;
-            let listData = []; try { listData = JSON.parse(globalCloudData["todo_list_" + child] || "[]"); } catch(e){}
+            
+            let listData = []; 
+            try { listData = JSON.parse(globalCloudData["todo_list_" + child] || "[]"); } catch(e){}
+            
             listData.push({ text: inputEl.value.trim(), date: dateEl.value || null, checked: false });
+            
+            const rawJsonStr = JSON.stringify(listData);
+            // 💡 ここがキモ：クラウドにリクエストを送る「前」に、ローカルデータを最新データで上書き！
+            globalCloudData["todo_list_" + child] = rawJsonStr;
+            
             inputEl.value = ''; dateEl.value = ''; previewTodoDate(child, '');
+            // 1ミリ秒で即座に新しいタスクを含んだ状態で再描画が走る
             renderCustomTodoList(child);
-            await saveCloudData("todo_list_" + child, JSON.stringify(listData));
+            
+            // その後、非同期でGAS側に静かに保存をかける
+            await saveCloudData("todo_list_" + child, rawJsonStr);
         }
 
         function selectDay(dayNum) {
@@ -856,7 +862,6 @@
             
             renderCustomTodoList('kouta'); 
             renderCustomTodoList('haruto'); 
-            document.getElementById('customMemo').value = globalCloudData["memo"] || "";
             
             for (let i = 1; i <= 5; i++) {
                 const btn = document.getElementById('btn-day-' + i);
