@@ -58,7 +58,7 @@
         .quest-cell-text { padding-left: 10px; font-size: 0.9rem; font-weight: 900; color: #1e293b; line-height: 1.3; }
         .quest-item.done .quest-cell-text { text-decoration: line-through; }
 
-        .slot-box { display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #334155 0%, #1e293b 100%); border: 3px solid #0f172a; border-radius: 14px; padding: 12px 14px; margin-bottom: 12px; color: white; min-height: 60px; }
+        .slot-box { display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #334155 0%, #1e293b 100%); border: 3px solid #0f172a; border-radius: 14px; padding: 12px 14px; margin-bottom: 12px; color: white; min-height: 60px; width: 100%; }
         .slot-window { flex: 1; text-align: left; font-size: 0.95rem; font-weight: 900; color: #facc15; padding-right: 10px; white-space: normal; word-break: break-word; line-height: 1.3; }
         .slot-trigger-btn { background: #ea580c; color: white; border: 2px solid white; border-radius: 10px; padding: 8px 14px; font-family: inherit; font-size: 0.8rem; font-weight: 900; cursor: pointer; box-shadow: 0 3px 0 #000; flex-shrink: 0; align-self: center; }
         .slot-trigger-btn:active { transform: translateY(1px); box-shadow: 0 2px 0 #000; }
@@ -154,7 +154,7 @@
         .battle-pkm-wrapper { text-align: center; width: 45%; }
         .battle-pkm-wrapper img { width: 68px; height: 68px; object-fit: contain; }
         .battle-pkm-wrapper span { display: block; font-size: 0.7rem; font-weight: 900; margin-top: 4px; color: #cbd5e1; }
-        .battle-log { background: #0f172a; border: 2px solid #475569; padding: 10px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; text-align: left; min-height: 64px; color: #facc15; white-space: pre-line; line-height: 1.4; }
+        .battle-log { background: #0f172a; border: 2px solid #475569; padding: 10px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; text-align: left; min-height: 64px; color: #facc15; white-space: pre-line; line-height: 1.5; margin-bottom: 12px; }
         .battle-btn { width: 100%; height: 46px; font-family: inherit; background: #ea580c; color: white; border: 2.5px solid white; border-radius: 24px; font-size: 1rem; font-weight: 900; cursor: pointer; }
         .modal-close-btn { font-family: inherit; background: #22c55e; color: white; border: 2px solid white; padding: 12px; border-radius: 24px; font-weight: 900; width: 100%; font-size: 1rem; display: none; }
         
@@ -220,10 +220,12 @@
             <span id="expPreview" style="font-size:0.75rem; color:#64748b;">0/0</span>
         </h2>
         <div class="mission-hp-bg"><div id="missionProgressBar" class="mission-hp-fill"></div></div>
+        
         <div class="slot-box" id="slotBoxArea">
             <div id="challengeSlotWindow" class="slot-window">🎰 ボタンをおして チャレンジを きめよう！</div>
             <button type="button" id="challengeSlotBtn" class="slot-trigger-btn" onclick="spinChallengeSlot()">スタート！</button>
         </div>
+        
         <div id="questList"></div>
     </div>
 
@@ -413,7 +415,7 @@
         const megaList = [ {id:"0006_f2", name:"メガリザードンX"}, {id:"0006_f3", name:"メガリザードンY"}, {id:"0003_f2", name:"メガフシギバナ"}, {id:"0009_f2", name:"メガカメックス"}, {id:"0150_f2", name:"メガミュウツーX"}, {id:"0150_f3", name:"メガミュウツーY"}, {id:"0384_f2", name:"メガレックウザ"},  {id:"0094_f2", name:"メガゲンガー"}, {id:"0448_f2", name:"メガルカリオ"}, {id:"0257_f2", name:"メガバシャーモ"} ];
         const regionalStarters = [ { region: "とくべつ枠 ⚡", starters: [{id:"0025", name:"ピカチュウ"}] }, { region: "カントー地方 (初代)", starters: [{id:"0001", name:"フシギダネ"}, {id:"0004", name:"ヒトカゲ"}, {id:"0007", name:"ゼニガメ"}] }, { region: "ジョウト地方", starters: [{id:"0152", name:"チコリータ"}, {id:"0155", name:"ヒノアラシ"}, {id:"0158", name:"ワニノコ"}] }, { region: "ホウエン地方", starters: [{id:"0252", name:"キモリ"}, {id:"0255", name:"アチャモ"}, {id:"0258", name:"ミズゴロウ"}] }, { region: "シンオウ地方", starters: [{id:"0387", name:"ナエトル"}, {id:"0390", name:"ヒコザル"}, {id:"0393", name:"ポッチャマ"}] }, { region: "カロス地方", starters: [{id:"0650", name:"ハリマロン"}, {id:"0653", name:"フォッコ"}, {id:"0656", name:"ケロマツ"}] }, { region: "パルデア地方 (最新)", starters: [{id:"0906", name:"ニャオハ"}, {id:"0909", name:"ホゲータ"}, {id:"0912", name:"クワッス"}] } ];
         const starterPool = { water: [{id:"0009", name:"カメックス"}, {id:"0158", name:"ワニノコ"}, {id:"0258", name:"ミズゴロウ"}, {id:"0393", name:"ポッチャマ"}, {id:"0658", name:"ゲッコウガ"}], forest: [{id:"0003", name:"フシギバナ"}, {id:"0152", name:"チコリータ"}, {id:"0252", name:"キモリ"}, {id:"0387", name:"ナエトル"}, {id:"0906", name:"ニャオハ"}], volcano: [{id:"0006", name:"リザードン"}, {id:"0155", name:"ヒノアラシ"}, {id:"0255", name:"アチャモ"}, {id:"0390", name:"ヒコザル"}, {id:"0909", name:"ホゲータ"}], thunder: [{id:"0026", name:"ライチュウ"}, {id:"0448", name:"ルカリオ"}, {id:"0150", name:"ミュウツー"}, {id:"0384", name:"レックウザ"}] };
-        const moves = { electric: ["10慢ボルト", "かみなり", "ボルテッカー", "アイアンテール"], fire: ["ひのこ", "かえんほうしゃ", "だいもんじ", "ブラストバーン"], water: ["みずでっぽう", "ハイドロポンプ", "アクアブレイク", "みずしゅりけん"], grass: ["つるのむち", "リーフブレード", "ソーラービーム", "ハードプラント"], normal: ["たいあたり", "ずつき", "メガトンパンチ", "はかいこうせん"], mega: ["しんそく", "インファイト", "ガリョウテンセイ", "サイコブレイク", "りゅうのまい"] };
+        const moves = { electric: ["10まんボルト", "かみなり", "ボルテッカー", "アイアンテール"], fire: ["ひのこ", "かえんほうしゃ", "だいもんじ", "ブラストバーン"], water: ["みずでっぽう", "ハイドロポンプ", "アクアブレイク", "みずしゅりけん"], grass: ["つるのむち", "リーフブレード", "ソーラービーム", "ハードプラント"], normal: ["たいあたり", "ずつき", "メガトンパンチ", "はかいこうせん"], mega: ["しんそく", "インファイト", "ガリョウテンセイ", "サイコブレイク", "りゅうのまい"] };
         const ballAssets = { normal: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png", super: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png", hyper: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png", master: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png", ticket: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ss-ticket.png" };
 
         let currentUser = 'kouta';
@@ -501,7 +503,6 @@
             } catch(e) {}
         }
 
-        // 🔥 セーブ通信最適化：3秒デバウンスで、バックグラウンド一括1リクエスト送信
         let saveTimeout = null;
         function triggerCloudSave() {
             const badge = document.getElementById('syncBadge');
@@ -607,20 +608,6 @@
             if (!cloudData["study_user_pokemon"] || !cloudData["study_user_pokemon"][currentUser]) { openPartnerSelectionModal(); } else { renderUI(); }
         }
 
-        function getLessons(user, dayIdx) {
-            let lessons = [];
-            if (user === 'kouta') {
-                if (dayIdx === 1 || dayIdx === 4) lessons.push("プール（スイミング） 🏊‍♂️");
-                if (dayIdx === 5) lessons.push("おおつかたいそう 🤸");
-            } else {
-                if (dayIdx === 1) lessons.push("ぷーる（すいみんぐ） 🏊‍♂️");
-                if (dayIdx === 4) lessons.push("ようちえんさっかー ⚽");
-                if (dayIdx === 5) lessons.push("おおつかたいそう 🤸");
-                if (dayIdx === 0) lessons.push("さっかーの れんしゅう ⚽");
-            }
-            return lessons;
-        }
-
         function toggleTask(taskName) {
             unlockAudio(); playRetroSound('click');
             if (!cloudData["study_progress_" + todayStr]) {
@@ -710,13 +697,16 @@
             renderZone("しゅくだい", "🎒", "hw-zone", masterTasks[currentUser].homework);
             renderZone("じしゅう", "📖", "self-zone", masterTasks[currentUser].selfStudy);
             renderZone("ならいごと", "🏃", "lesson-zone", getLessons(currentUser, now.getDay()));
-            if (chosenChallenge) renderZone("チャレンジ", "🔥", "challenge-zone", [chosenChallenge]);
+            
+            // 🔥 バグ修正: スロット終了後に消えてしまわないよう、決定されたチャレンジを「チャレンジゾーン」として確実にHTMLへ追加描画する
+            if (chosenChallenge) {
+                renderZone("チャレンジ", "🔥", "challenge-zone", [chosenChallenge]);
+            }
 
             document.getElementById('expPreview').textContent = `${completedTasks}/${totalTasks}`;
             document.getElementById('missionProgressBar').style.width = totalTasks === 0 ? "0%" : `${(completedTasks/totalTasks)*100}%`;
             document.getElementById('parentCurrentTargetName').textContent = currentUser === 'kouta' ? 'こうた' : 'はると';
             
-            // 🔥 バグ修正: 親コントロールパネル入力時、プールから壊れないよう安全な配列フォールバックを確保
             const currentPool = cloudData["study_v3_challenge_pool"][currentUser] || defaultPools[currentUser];
             document.getElementById('parentChallengePoolInput').value = currentPool.join(',');
             
@@ -903,7 +893,6 @@
         }
         function closePartnerSelectModal() { playRetroSound('click'); document.getElementById('partnerSelectModal').style.display = 'none'; }
 
-        let zukanTab = 'normal';
         function openZukanModal() { 
             unlockAudio(); playRetroSound('click'); 
             document.getElementById('zukanModal').style.display = 'flex'; 
@@ -972,42 +961,10 @@
             }
         }
 
-        function getOrRollFixedEncounters() {
-            if (!cloudData["study_fixed_encounters"]) cloudData["study_fixed_encounters"] = { "kouta": null, "haruto": null };
-            if (cloudData["study_fixed_encounters"][currentUser]) return cloudData["study_fixed_encounters"][currentUser];
-
-            const rKeys = Object.keys(regions); const rolled = {};
-            let ownedNormal = cloudData["study_zukan_normal"][currentUser] || [];
-
-            let unownedId = "0001";
-            for (let attempt = 0; attempt < 100; attempt++) {
-                const rKey = rKeys[Math.floor(Math.random() * rKeys.length)];
-                const range = regions[rKey];
-                const rId = Math.floor(Math.random() * (range.end - range.start + 1)) + range.start;
-                const idStr = String(rId).padStart(4, '0');
-                if (!ownedNormal.includes(idStr)) { unownedId = idStr; break; }
-            }
-            rolled["water"] = { id: unownedId, name: `No.${parseInt(unownedId)}` };
-
-            const zones = ["forest", "volcano", "thunder"];
-            zones.forEach(zone => {
-                if (Math.random() < 0.35) {
-                    rolled[zone] = starterPool[zone][Math.floor(Math.random() * starterPool[zone].length)];
-                } else {
-                    const range = regions[rKeys[Math.floor(Math.random() * rKeys.length)]];
-                    const rId = Math.floor(Math.random() * (range.end - range.start + 1)) + range.start;
-                    rolled[zone] = { id: String(rId).padStart(4, '0'), name: `No.${rId}` };
-                }
-            });
-            cloudData["study_fixed_encounters"][currentUser] = rolled; 
-            return rolled;
-        }
-
         function openAdventureSelectionModal() { 
             unlockAudio(); playRetroSound('click'); 
-            if(cloudData.study_balance[currentUser].gachaCount<=0) return; 
+            if(cloudData.study_balance[currentUser].gachaCount <= 0) return; 
             
-            // 🔥 バグ修正: モーダルを開く"直前"にシルエット用の画像を確実に生成・流し込みする
             const encounters = getOrRollFixedEncounters();
             Object.keys(encounters).forEach(zone => {
                 const imgEl = document.getElementById(`shadow-${zone}`);
@@ -1046,22 +1003,11 @@
             document.getElementById('battleCloseBtn').style.display = "none";
             document.getElementById('battleModal').style.display = 'flex';
             
-            // 🔥 次回のためにランダム抽選記憶を綺麗サッパリ消去しておく
             cloudData["study_fixed_encounters"][currentUser] = null;
             
             getPokemonNameAsync(currentMyId).then(n => { battleState.myName = n; document.getElementById('battlePartnerName').textContent = n; });
             getPokemonNameAsync(finalEnemy.id).then(n => { battleState.enemyName = n; document.getElementById('battleEnemyName').textContent = n; playPokemonCry(finalEnemy.id); });
             triggerCloudSave();
-        }
-
-        function getPokemonAttackMove(id, pkmName) {
-            if (id === "0025" || pkmName.includes("ピカチュウ") || pkmName.includes("ライチュウ")) return moves.electric[Math.floor(Math.random() * moves.electric.length)];
-            if (id.includes('_') || pkmName.includes("メガ") || pkmName.includes("レックウザ") || pkmName.includes("ミュウツー")) return moves.mega[Math.floor(Math.random() * moves.mega.length)];
-            const num = parseInt(id.split('_')[0]);
-            if ([1,2,3,152,153,154,252,253,254,387,388,389,650,651,652,906,907,908].includes(num)) return moves.grass[Math.floor(Math.random() * moves.grass.length)];
-            if ([4,5,6,155,156,157,255,256,257,390,391,392,653,654,655,909,910,911].includes(num)) return moves.fire[Math.floor(Math.random() * moves.fire.length)];
-            if ([7,8,9,158,159,160,258,259,260,393,394,395,656,657,658,912,913,914].includes(num)) return moves.water[Math.floor(Math.random() * moves.water.length)];
-            return moves.normal[Math.floor(Math.random() * moves.normal.length)];
         }
 
         function nextBattlePhase() {
@@ -1141,7 +1087,7 @@
                 cloudData.study_v3_chosen_challenge[currentUser] = null;
                 cloudData.study_user_pokemon[currentUser] = null;
                 cloudData["study_progress_" + todayStr][currentUser] = { done: [], zoneClaimed: {} };
-                triggerCloudSave(); alert("リreset しました"); changeUser(currentUser);
+                triggerCloudSave(); alert("リセット しました"); changeUser(currentUser);
             }
         }
         
@@ -1162,7 +1108,6 @@
             triggerCloudSave(); alert("保存しました");
         }
 
-        // 🔥 バグ修正: ストライキを起こしていたスロットフリーズを完全に解消
         function spinChallengeSlot() {
             playRetroSound('click');
             const pool = cloudData["study_v3_challenge_pool"][currentUser] || defaultPools[currentUser];
