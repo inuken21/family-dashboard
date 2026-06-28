@@ -15,17 +15,14 @@
             --card-shadow: 0 4px 12px rgba(15, 23, 42, 0.05); 
             --inner-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04); 
             
-            /* 👦 こうたカラー */
             --kouta-bg: #e6f0fa;
             --kouta-border: #4a7ab5;
             --kouta-text: #2b4c7e;
             
-            /* 👶 はるとカラー */
             --haruto-bg: #fdf0e6;
             --haruto-border: #e69d5e;
             --haruto-text: #8c532b;
             
-            /* アクションカラー */
             --btn-neutral-bg: #e2e8f0;
             --btn-neutral-text: #475569;
             --btn-neutral-active: #cbd5e1;
@@ -75,7 +72,6 @@
         .day-btn { flex: 1; padding: 10px 0; border: 1px solid #cbd5e1; background-color: white; color: #64748b; border-radius: 6px; font-weight: bold; font-size: 0.9rem; cursor: pointer; text-align: center; user-select: none; -webkit-user-select: none; overflow: hidden; }
         .day-btn.active { background-color: #475569; color: white; border-color: #475569; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
 
-        /* 送り・迎え 1行ハーフ＆ハーフ型エリア */
         .transfer-row { display: flex; gap: 8px; margin-bottom: 15px; width: 100%; }
         .transfer-box { flex: 1; display: flex; align-items: center; justify-content: space-between; background-color: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 6px; }
         .transfer-label { font-size: 0.8rem; font-weight: bold; color: #475569; margin-right: 4px; white-space: nowrap; }
@@ -84,20 +80,6 @@
         .transfer-select.status-kenta { background-color: #e0f2fe; color: #0369a1; border-color: #bae6fd; }
         .transfer-select.status-natsuno { background-color: #ffe4e6; color: #be123c; border-color: #fecdd3; }
         .transfer-select.status-none { background-color: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; }
-        
-        /* 🆕 食材定期便チェックエリア用のスタイル */
-        .delivery-panel { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-top: 12px; box-shadow: var(--inner-shadow); }
-        .delivery-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; gap: 8px; }
-        .delivery-row:last-child { border-bottom: none; }
-        .delivery-label-box { flex: 1; font-size: 0.85rem; font-weight: bold; color: #475569; }
-        .delivery-select { padding: 4px 6px; font-size: 0.8rem; font-weight: bold; border-radius: 4px; border: 1px solid #cbd5e1; background-color: #e2e8f0; color: #475569; cursor: pointer; width: 90px; text-align: center; }
-        .delivery-select.status-yet { background-color: #fef3c7; color: #92400e; border-color: #fde68a; }
-        /* 🔔 当日の未定アラート用の激しいアニメーションスタイル */
-        .delivery-select.status-alert { background-color: #ffeeeb; color: #ef4444; border-color: #fca5a5; animation: pulse-border 1.5s infinite; }
-        .delivery-select.status-kenta { background-color: #e0f2fe; color: #0369a1; border-color: #bae6fd; }
-        .delivery-select.status-natsuno { background-color: #ffe4e6; color: #be123c; border-color: #fecdd3; }
-        .delivery-select.status-none { background-color: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; text-decoration: line-through; }
-        @keyframes pulse-border { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
 
         .schedule-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #e2e8f0; }
         .schedule-row:last-child { border-bottom: none; }
@@ -120,6 +102,18 @@
         .res-btn-group { display: flex; gap: 4px; flex-shrink: 0; }
         .res-btn { background-color: var(--btn-neutral-bg); color: var(--btn-neutral-text); border: none; padding: 5px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .res-btn.phone-btn { background-color: var(--btn-phone-bg); color: var(--btn-phone-text); }
+
+        /* 食材注文エリア（グリッド整列対応） */
+        .delivery-panel { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-top: 12px; box-shadow: var(--inner-shadow); }
+        .delivery-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; gap: 6px; }
+        .delivery-label { font-size: 0.85rem; font-weight: bold; color: #334155; width: 100px; flex-shrink: 0; }
+        .delivery-select { flex: 1; padding: 6px 2px; font-size: 0.8rem; font-weight: bold; border-radius: 4px; border: 1px solid #cbd5e1; background-color: #e2e8f0; color: #475569; cursor: pointer; text-align: center; }
+        .delivery-btn { width: 60px; padding: 6px 0; font-size: 0.75rem; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; background: var(--btn-neutral-bg); color: var(--btn-neutral-text); flex-shrink: 0; text-decoration: none; display: flex; justify-content: center; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .delivery-select.status-yet { background-color: #fef3c7; color: #92400e; border-color: #fde68a; }
+        .delivery-select.status-ok { background-color: #d1fae5; color: #065f46; border-color: #a7f3d0; }
+        .delivery-select.status-none { background-color: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; text-decoration: line-through; }
+        .delivery-select.status-alert { background-color: #ffeeeb; color: #ef4444; border-color: #fca5a5; animation: pulse-border 1.5s infinite; }
+        @keyframes pulse-border { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
 
         .todo-panel-child { border-radius: 8px; padding: 12px 12px 12px 16px; margin-bottom: 12px; background-color: #f8fafc; border: 1px solid #e2e8f0; position: relative; overflow: hidden; }
         .todo-panel-child::before { content: ""; position: absolute; top: 0; left: 0; width: 6px; height: 100%; }
@@ -219,14 +213,7 @@
         
         .memo-textarea { width: 100%; height: 120px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; resize: vertical; line-height: 1.5; box-shadow: var(--inner-shadow); outline: none; }
 
-        /* 🆕 消えていたフル画面ローディング（.loading-cover）のスタイルを完全再配備 */
-        .loading-cover {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(241, 245, 249, 0.95); display: flex;
-            justify-content: center; align-items: center; z-index: 99999;
-            font-weight: bold; color: #475569; font-size: 1.1rem;
-        }
-
+        .loading-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(241, 245, 249, 0.95); display: flex; justify-content: center; align-items: center; z-index: 99999; font-weight: bold; color: #475569; font-size: 1.1rem; }
         .user-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); display: flex; justify-content: center; align-items: center; z-index: 10000; }
         .user-modal { background: white; padding: 25px; border-radius: 12px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         .user-modal h3 { margin: 0 0 10px 0; font-size: 1.1rem; color: #1e293b; }
@@ -282,7 +269,7 @@
             <div class="transfer-box">
                 <span class="transfer-label">🌅 送り</span>
                 <select id="sel-dropoff" class="transfer-select" onchange="changeTransferStatus('dropoff', this.value)">
-                    <option value="yet">⚠️ 未定</option>
+                    <option value="yet">未確認</option>
                     <option value="kenta">けんた</option>
                     <option value="natsuno">なつの</option>
                     <option value="none">不要</option>
@@ -291,7 +278,7 @@
             <div class="transfer-box">
                 <span class="transfer-label">🌃 迎え</span>
                 <select id="sel-pickup" class="transfer-select" onchange="changeTransferStatus('pickup', this.value)">
-                    <option value="yet">⚠️ 未定</option>
+                    <option value="yet">未確認</option>
                     <option value="kenta">けんた</option>
                     <option value="natsuno">なつの</option>
                     <option value="none">不要</option>
@@ -343,26 +330,26 @@
 
         <div class="delivery-panel">
             <div class="delivery-row">
-                <div class="delivery-label-box">🥦 パルシステム (火13時〆)</div>
+                <span class="delivery-label">🐄 パル (火13時)</span>
                 <select id="sel-pal" class="delivery-select" onchange="changeDeliveryStatus('pal', this.value)">
                     <option value="yet">未確認</option>
                     <option value="ok">注文済</option>
                     <option value="none">お休み</option>
                 </select>
-                <button type="button" class="res-btn" onclick="launchPalApp()">📱 アプリ</button>
+                <button type="button" class="delivery-btn" onclick="launchPalApp()">アプリ</button>
             </div>
-            <div class="delivery-row" style="flex-direction: column; align-items: stretch; border-bottom: none;">
-                <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-                    <div class="delivery-label-box">🌱 Oisix (木10時〆)</div>
+            <div class="delivery-row" style="flex-direction: column; align-items: stretch; border-bottom: none; padding-bottom: 0;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px;">
+                    <span class="delivery-label">🥦 Oisix (木10時)</span>
                     <select id="sel-oisix" class="delivery-select" onchange="changeDeliveryStatus('oisix', this.value)">
                         <option value="yet">未確認</option>
                         <option value="ok">注文済</option>
                         <option value="none">お休み</option>
                     </select>
-                    <a href="https://www.oisix.com/sc/s190" target="_blank" rel="noopener noreferrer" class="res-btn" style="text-decoration: none; text-align: center;" onclick="openOisixInfo()">🌐 サイト ↗</a>
+                    <a href="https://www.oisix.com/sc/s190" target="_blank" rel="noopener noreferrer" class="delivery-btn" onclick="openOisixInfo()">サイト</a>
                 </div>
-                <details id="oisix-login-details" style="margin-top: 6px; margin-bottom: 0; padding: 6px 10px; background: #fff; border: 1px dashed #cbd5e1;">
-                    <summary style="font-size: 0.75rem; color: var(--muted-text);">🔐 アカウント情報を表示</summary>
+                <details id="oisix-login-details" style="margin-top: 6px; padding: 6px 10px; background: #fff; border: 1px dashed #cbd5e1; border-radius: 4px;">
+                    <summary style="font-size: 0.75rem; color: var(--muted-text); cursor: pointer; outline: none;">🔐 ログイン情報を表示</summary>
                     <div style="font-size: 0.8rem; color: #334155; margin-top: 4px; font-family: monospace; line-height: 1.4;">
                         ID: <strong>myad.d722@gmail.com</strong><br>
                         PW: <strong>td7132myad</strong>
@@ -378,7 +365,7 @@
         <div class="todo-panel-child kouta-theme">
             <div class="todo-panel-header">
                 <span>👦 〈こうた〉タスク</span>
-                <span class="todo-count-badge" id="kouta-todo-count">Remaining</span>
+                <span class="todo-count-badge" id="kouta-todo-count">残り: 0個</span>
             </div>
             <div class="todo-input-row">
                 <input type="text" id="kouta-todo-input" class="todo-input-text" placeholder="例：ヘアカット">
@@ -395,7 +382,7 @@
         <div class="todo-panel-child haruto-theme">
             <div class="todo-panel-header">
                 <span>👶 〈はると〉タスク</span>
-                <span class="todo-count-badge" id="haruto-todo-count">Remaining</span>
+                <span class="todo-count-badge" id="haruto-todo-count">残り: 0個</span>
             </div>
             <div class="todo-input-row">
                 <input type="text" id="haruto-todo-input" class="todo-input-text" placeholder="例：アンケート提出">
@@ -446,7 +433,7 @@
                             <label class="panel-checkbox-label"><input type="checkbox" id="panel-duty-checkbox"> 🧺 給食当番</label>
                         </div>
                         <div class="panel-row" id="panel-b4-lunch-row" style="display:none; background:#f1f5f9; padding:4px; border-radius:4px; width:100%; justify-content:center;">
-                            <label class="panel-checkbox-label"><input type="checkbox" id="panel-lunch-checkbox"> 🥢 給食・清補まで実施する</label>
+                            <label class="panel-checkbox-label"><input type="checkbox" id="panel-lunch-checkbox"> 🥢 給食・清掃まで実施する</label>
                         </div>
                         <div class="panel-preview-box">🕒 下校想定時刻: <span id="panel-time-preview" style="color:var(--kouta-text); font-size:0.9rem;">--:--</span> 頃</div>
                     </div>
@@ -577,7 +564,6 @@
             if (url) window.open(url, '_blank', 'noopener,noreferrer');
         }
 
-        // 🆕 パルシステムのiOS/Android自動出し分けリンク関数
         function launchPalApp() {
             const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
             const url = isiOS 
@@ -586,7 +572,6 @@
             window.open(url, '_blank', 'noopener,noreferrer');
         }
 
-        // 🆕 Oisix遷移時にアカウント情報を自動展開するUX親切設計
         function openOisixInfo() {
             document.getElementById('oisix-login-details').open = true;
         }
@@ -673,31 +658,28 @@
             await saveCloudData(type + "_status_" + targetDateStr, val);
         }
 
-        /* 🆕 定期便ステータスの動的デザイン適用 ＆ アラート監視ロジック */
         function applyDeliveryStyle(type, val) {
             const el = document.getElementById('sel-' + type);
             if(!el) return;
             
-            // 判定用のリアルタイム日時を取得
             const now = new Date();
-            const currentDayIdx = now.getDay(); // 0:日, 1:月, 2:火, 3:水, 4:木...
+            const currentDayIdx = now.getDay();
             const currentHour = now.getHours();
 
             el.className = 'delivery-select';
             
             if (val === 'ok') {
-                el.classList.add('status-kenta'); // 緑がかった完了カラー
+                el.classList.add('status-ok');
                 el.options[0].text = "未確認";
             } else if (val === 'none') {
-                el.classList.add('status-none'); // 打ち消し灰色
+                el.classList.add('status-none');
                 el.options[0].text = "未確認";
             } else {
-                // 🚨 未確認の場合の曜日・時間による自動アラート判定
                 let triggerAlert = false;
                 if (type === 'pal' && currentDayIdx === 2 && currentHour < 13 && currentWeekOffset === 0) {
-                    triggerAlert = true; // 火曜日の13時前
+                    triggerAlert = true; 
                 } else if (type === 'oisix' && currentDayIdx === 4 && currentHour < 10 && currentWeekOffset === 0) {
-                    triggerAlert = true; // 木曜日の10時前
+                    triggerAlert = true; 
                 }
 
                 if (triggerAlert) {
@@ -713,7 +695,6 @@
 
         async function changeDeliveryStatus(type, val) {
             const targetDateStr = getTargetDateStr(selectedDayNum);
-            // 週単位のキーを生成（その日の予定日ベースで連動）
             applyDeliveryStyle(type, val);
             await saveCloudData(type + "_delivery_" + targetDateStr, val);
         }
@@ -833,9 +814,9 @@
             const pickupVal = globalCloudData["pickup_status_" + targetDateStr] || "yet";
             applyTransferStyle('pickup', pickupVal);
 
-            /* 🆕 定期便チェックボックスの状態同期 ＆ 曜日アラートのレンダリング */
             const palVal = globalCloudData["pal_delivery_" + targetDateStr] || "yet";
             applyDeliveryStyle('pal', palVal);
+            
             const oisixVal = globalCloudData["oisix_delivery_" + targetDateStr] || "yet";
             applyDeliveryStyle('oisix', oisixVal);
 
