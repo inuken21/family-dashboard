@@ -260,6 +260,12 @@
             <textarea id="parentChallengePoolInput" style="width:100%; height:50px; font-family:inherit; font-size:0.75rem; margin-top:4px; padding:4px;" placeholder="うわばきを洗う,靴をそろえる"></textarea>
             <button type="button" style="font-family:inherit; font-size:0.7rem; background:#22c55e; color:white; border:none; border-radius:4px; padding:4px 10px; margin-top:4px; width:100%; cursor:pointer;" onclick="saveChallengePoolFromParent()">候補リストをセーブ保存する</button>
         </div>
+        
+        <div style="background:#fff; padding:10px; border-radius:10px; border:1px solid #cbd5e1; margin-bottom:12px;">
+            <span style="font-size:0.75rem; font-weight:bold; color:#0f172a;">🎰 スロットのやり直し</span>
+            <p style="font-size:0.65rem; color:#64748b; margin:4px 0;">子どもが「これやりたくない！」と言った時や、間違えて回した時にリセットできます。</p>
+            <button type="button" style="font-family:inherit; font-size:0.7rem; font-weight:bold; background:#ea580c; color:white; border:none; border-radius:4px; padding:6px; width:100%; cursor:pointer;" onclick="resetChallengeSlot()">🔄 今日のスロットをリセット</button>
+        </div>
 
         <div style="display:flex; gap:4px; margin-bottom:12px; flex-wrap: wrap;">
             <input type="number" id="parentAmount" style="width:50px; font-family:inherit; text-align:center; border:2px solid #cbd5e1; border-radius:8px;" value="5">
@@ -435,6 +441,7 @@
             "study_v3_chosen_challenge": { "kouta": null, "haruto": null }
         };
 
+        // YouTube BGM ロジック
         let bgmPlayer;
         let isYoutubeReady = false;
         let isBgmOn = false;
@@ -503,7 +510,7 @@
             } catch(e) {}
         }
 
-        // 🔥 バグ修正: 通信フリーズを防ぐため、待たずに非同期で全部送る最強の仕組みに変更！
+        // 🔥 通信フリーズを防ぐため、待たずに非同期で全部送る最強の仕組みに変更
         let saveTimeout = null;
         function triggerCloudSave() {
             const badge = document.getElementById('syncBadge');
@@ -515,7 +522,6 @@
             saveTimeout = setTimeout(() => {
                 badge.textContent = "☁️ つうしんちゅう...";
                 
-                // 通信待ちでフリーズさせないよう、バックグラウンドで並行して送る
                 const promises = Object.keys(cloudData).map(key => 
                     fetch(GAS_URL, { 
                         method: 'POST', 
@@ -549,6 +555,25 @@
         function playPokemonCry(idStr) {
             const baseId = parseInt(idStr.split('_')[0]);
             try { fetch(`https://pokeapi.co/api/v2/pokemon/${baseId}`).then(r=>r.json()).then(d=>{ if(d.cries && d.cries.latest) new Audio(d.cries.latest).play().catch(e=>{}); }); } catch(e){}
+        }
+
+        // 🔥 毎日のリセット判定を安全に行う関数
+        function checkDailyReset() {
+            if (!cloudData["study_progress_" + todayStr]) {
+                // 新しい日になったらミッションと「昨日のチャレンジ」を白紙に戻す
+                cloudData["study_progress_" + todayStr] = { 
+                    kouta: { done: [], zoneClaimed: {} }, 
+                    haruto: { done: [], zoneClaimed: {} } 
+                };
+                cloudData["study_v3_chosen_challenge"] = { kouta: null, haruto: null };
+                cloudData["study_fixed_encounters"] = { kouta: null, haruto: null }; 
+            }
+            if (!cloudData["study_progress_" + todayStr][currentUser]) {
+                cloudData["study_progress_" + todayStr][currentUser] = { done: [], zoneClaimed: {} };
+            }
+            if (!cloudData["study_v3_chosen_challenge"]) {
+                cloudData["study_v3_chosen_challenge"] = {};
+            }
         }
 
         async function initApp() {
@@ -628,12 +653,8 @@
 
         function toggleTask(taskName) {
             unlockAudio(); playRetroSound('click');
-            if (!cloudData["study_progress_" + todayStr]) {
-                cloudData["study_progress_" + todayStr] = { kouta: { done: [] }, haruto: { done: [] } };
-            }
-            if (!cloudData["study_progress_" + todayStr][currentUser]) {
-                cloudData["study_progress_" + todayStr][currentUser] = { done: [] };
-            }
+            
+            checkDailyReset();
 
             let doneList = cloudData["study_progress_" + todayStr][currentUser].done;
             
@@ -649,19 +670,16 @@
         }
 
         function renderUI() {
+            checkDailyReset();
+
             if (!cloudData["study_balance"][currentUser]) cloudData["study_balance"][currentUser] = { pokeen: 300, gachaCount: 1 };
             if (!cloudData["study_level"][currentUser]) cloudData["study_level"][currentUser] = {};
             if (!Array.isArray(cloudData["study_zukan_normal"][currentUser])) cloudData["study_zukan_normal"][currentUser] = [];
             if (!Array.isArray(cloudData["study_zukan_mega"][currentUser])) cloudData["study_zukan_mega"][currentUser] = [];
             if (!cloudData["study_v2_bag_balls"] || !cloudData["study_v2_bag_balls"][currentUser]) cloudData["study_v2_bag_balls"][currentUser] = { normal: 5, super: 1, hyper: 0, master: 0 };
             if (cloudData["study_v2_bag_candy"][currentUser] === undefined) cloudData["study_v2_bag_candy"][currentUser] = 0;
-            
             if (!cloudData["study_v2_calendar"]) cloudData["study_v2_calendar"] = {};
             if (!Array.isArray(cloudData["study_v2_calendar"][currentUser])) cloudData["study_v2_calendar"][currentUser] = [];
-            
-            if (!cloudData["study_v3_chosen_challenge"]) cloudData["study_v3_chosen_challenge"] = {};
-            if (!cloudData["study_progress_" + todayStr]) cloudData["study_progress_" + todayStr] = { kouta: { done: [] }, haruto: { done: [] } };
-            if (!cloudData["study_progress_" + todayStr][currentUser].zoneClaimed) cloudData["study_progress_" + todayStr][currentUser].zoneClaimed = {};
 
             const balance = cloudData["study_balance"][currentUser];
             const baseId = cloudData["study_user_pokemon"][currentUser];
@@ -688,7 +706,7 @@
             // 🔥 バグ修正: スロット枠を消さずに、ミッションの内容を表示してボタンを隠す！
             if (chosenChallenge) { 
                 slotArea.style.display = "flex"; 
-                winEl.innerHTML = `🎯 <strong>チャレンジ決定！</strong>リストをチェック！`; 
+                winEl.innerHTML = `🎯 <strong>チャレンジ決定！</strong><br>下のリストからクリアしよう！`; 
                 slotBtn.style.display = "none"; 
             } else { 
                 slotArea.style.display = "flex"; 
@@ -1139,7 +1157,7 @@
                 } else {
                     log.innerHTML = `あ！ ボールから とびだしてしまった！\n${battleState.enemyName}は にげていった！ 💨`;
                 }
-                cloudData["study_v3_chosen_challenge"][currentUser] = null; 
+                
                 document.getElementById('battleCloseBtn').style.display = "block";
                 triggerCloudSave();
             }, 1500);
@@ -1181,7 +1199,6 @@
             triggerCloudSave(); alert("保存しました");
         }
 
-        // 🔥 スロットのストライキを解除し、決定したミッションを表示
         function spinChallengeSlot() {
             playRetroSound('click');
             let pool = cloudData["study_v3_challenge_pool"][currentUser];
@@ -1203,6 +1220,17 @@
                     triggerCloudSave();
                 }
             }, 100);
+        }
+
+        // 🔥 新機能: 親パネルからのチャレンジリセット
+        function resetChallengeSlot() {
+            playRetroSound('click');
+            if(confirm(`${currentUser === 'kouta' ? 'こうた' : 'はると'}の今日のチャレンジをリセットしますか？`)) {
+                cloudData["study_v3_chosen_challenge"][currentUser] = null;
+                renderUI();
+                triggerCloudSave();
+                alert("リセットしました！もう一度スロットを回せます。");
+            }
         }
     </script>
 </body>
