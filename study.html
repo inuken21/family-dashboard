@@ -58,7 +58,7 @@
         .quest-cell-text { padding-left: 10px; font-size: 0.9rem; font-weight: 900; color: #1e293b; line-height: 1.3; }
         .quest-item.done .quest-cell-text { text-decoration: line-through; }
 
-        .slot-box { display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #334155 0%, #1e293b 100%); border: 3px solid #0f172a; border-radius: 14px; padding: 12px 14px; margin-bottom: 12px; color: white; min-height: 60px; width: 100%; }
+        .slot-box { display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #334155 0%, #1e293b 100%); border: 3px solid #0f172a; border-radius: 14px; padding: 12px 14px; margin-bottom: 12px; color: white; min-height: 60px; }
         .slot-window { flex: 1; text-align: left; font-size: 0.95rem; font-weight: 900; color: #facc15; padding-right: 10px; white-space: normal; word-break: break-word; line-height: 1.3; }
         .slot-trigger-btn { background: #ea580c; color: white; border: 2px solid white; border-radius: 10px; padding: 8px 14px; font-family: inherit; font-size: 0.8rem; font-weight: 900; cursor: pointer; box-shadow: 0 3px 0 #000; flex-shrink: 0; align-self: center; }
         .slot-trigger-btn:active { transform: translateY(1px); box-shadow: 0 2px 0 #000; }
@@ -154,7 +154,7 @@
         .battle-pkm-wrapper { text-align: center; width: 45%; }
         .battle-pkm-wrapper img { width: 68px; height: 68px; object-fit: contain; }
         .battle-pkm-wrapper span { display: block; font-size: 0.7rem; font-weight: 900; margin-top: 4px; color: #cbd5e1; }
-        .battle-log { background: #0f172a; border: 2px solid #475569; padding: 10px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; text-align: left; min-height: 64px; color: #facc15; white-space: pre-line; line-height: 1.5; margin-bottom: 12px; }
+        .battle-log { background: #0f172a; border: 2px solid #475569; padding: 10px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; text-align: left; min-height: 64px; color: #facc15; white-space: pre-line; line-height: 1.4; }
         .battle-btn { width: 100%; height: 46px; font-family: inherit; background: #ea580c; color: white; border: 2.5px solid white; border-radius: 24px; font-size: 1rem; font-weight: 900; cursor: pointer; }
         .modal-close-btn { font-family: inherit; background: #22c55e; color: white; border: 2px solid white; padding: 12px; border-radius: 24px; font-weight: 900; width: 100%; font-size: 1rem; display: none; }
         
@@ -350,7 +350,7 @@
     <div id="partnerSelectModal" class="modal-cover">
         <div class="modal-content" style="max-width:340px;">
             <h3 style="margin:0; color:#facc15; font-size:1.05rem;">あいぼうポケモンを えらぼう！</h3>
-            <div id="partnerSelectGroupContainer" style="max-height: 280px; overflow-y: auto; text-align:left;"></div>
+            <div id="partnerSelectGroupContainer" style="max-height: 280px; overflow-y: auto; margin-top: 6px; padding-right: 4px;"></div>
             <button type="button" class="battle-btn" style="background:#475569; margin-top:10px; height:34px; font-size:0.8rem;" onclick="closePartnerSelectModal()">やめる</button>
         </div>
     </div>
@@ -503,6 +503,7 @@
             } catch(e) {}
         }
 
+        // 🔥 バグ修正: 通信フリーズを防ぐため、待たずに非同期で全部送る最強の仕組みに変更！
         let saveTimeout = null;
         function triggerCloudSave() {
             const badge = document.getElementById('syncBadge');
@@ -511,20 +512,23 @@
             badge.style.background = "#eab308";
             
             if(saveTimeout) clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(async () => {
+            saveTimeout = setTimeout(() => {
                 badge.textContent = "☁️ つうしんちゅう...";
-                try {
-                    for (let key of Object.keys(cloudData)) {
-                        await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'save', key: key, value: JSON.stringify(cloudData[key]) })});
-                    }
+                
+                // 通信待ちでフリーズさせないよう、バックグラウンドで並行して送る
+                const promises = Object.keys(cloudData).map(key => 
+                    fetch(GAS_URL, { 
+                        method: 'POST', 
+                        body: JSON.stringify({ action: 'save', key: key, value: JSON.stringify(cloudData[key]) }) 
+                    }).catch(e => console.error(e))
+                );
+
+                Promise.all(promises).then(() => {
                     badge.textContent = "✅ きろくしました！";
                     badge.style.background = "#22c55e";
-                    setTimeout(() => { badge.style.display = "none"; badge.style.background = "var(--border-color)"; }, 2000);
-                } catch (e) {
-                    badge.textContent = "❌ セーブしっぱい";
-                    badge.style.background = "#ef4444";
-                }
-            }, 3000); 
+                    setTimeout(() => { badge.style.display = "none"; badge.style.background = "rgba(0,0,0,0.8)"; }, 2000);
+                });
+            }, 2000); 
         }
 
         const pkmNameCache = {}; 
@@ -608,6 +612,20 @@
             if (!cloudData["study_user_pokemon"] || !cloudData["study_user_pokemon"][currentUser]) { openPartnerSelectionModal(); } else { renderUI(); }
         }
 
+        function getLessons(user, dayIdx) {
+            let lessons = [];
+            if (user === 'kouta') {
+                if (dayIdx === 1 || dayIdx === 4) lessons.push("プール（スイミング） 🏊‍♂️");
+                if (dayIdx === 5) lessons.push("おおつかたいそう 🤸");
+            } else {
+                if (dayIdx === 1) lessons.push("ぷーる（すいみんぐ） 🏊‍♂️");
+                if (dayIdx === 4) lessons.push("ようちえんさっかー ⚽");
+                if (dayIdx === 5) lessons.push("おおつかたいそう 🤸");
+                if (dayIdx === 0) lessons.push("さっかーの れんしゅう ⚽");
+            }
+            return lessons;
+        }
+
         function toggleTask(taskName) {
             unlockAudio(); playRetroSound('click');
             if (!cloudData["study_progress_" + todayStr]) {
@@ -667,8 +685,11 @@
             const slotArea = document.getElementById('slotBoxArea');
             const chosenChallenge = cloudData["study_v3_chosen_challenge"][currentUser];
             
+            // 🔥 バグ修正: スロット枠を消さずに、ミッションの内容を表示してボタンを隠す！
             if (chosenChallenge) { 
-                slotArea.style.display = "none"; 
+                slotArea.style.display = "flex"; 
+                winEl.innerHTML = `🎯 <strong>チャレンジ決定！</strong>リストをチェック！`; 
+                slotBtn.style.display = "none"; 
             } else { 
                 slotArea.style.display = "flex"; 
                 winEl.textContent = "🎰 ボタンをおして チャレンジを きめよう！"; 
@@ -698,10 +719,8 @@
             renderZone("じしゅう", "📖", "self-zone", masterTasks[currentUser].selfStudy);
             renderZone("ならいごと", "🏃", "lesson-zone", getLessons(currentUser, now.getDay()));
             
-            // 🔥 バグ修正: スロット終了後に消えてしまわないよう、決定されたチャレンジを「チャレンジゾーン」として確実にHTMLへ追加描画する
-            if (chosenChallenge) {
-                renderZone("チャレンジ", "🔥", "challenge-zone", [chosenChallenge]);
-            }
+            // 決定したチャレンジはリストの末尾にバッジ付きで追加
+            if (chosenChallenge) renderZone("チャレンジ", "🔥", "challenge-zone", [chosenChallenge]);
 
             document.getElementById('expPreview').textContent = `${completedTasks}/${totalTasks}`;
             document.getElementById('missionProgressBar').style.width = totalTasks === 0 ? "0%" : `${(completedTasks/totalTasks)*100}%`;
@@ -893,6 +912,7 @@
         }
         function closePartnerSelectModal() { playRetroSound('click'); document.getElementById('partnerSelectModal').style.display = 'none'; }
 
+        let zukanTab = 'normal';
         function openZukanModal() { 
             unlockAudio(); playRetroSound('click'); 
             document.getElementById('zukanModal').style.display = 'flex'; 
@@ -961,6 +981,45 @@
             }
         }
 
+        // 🔥 ランダム抽選時に古いデータ形式を検知したら安全にリセットする
+        function getOrRollFixedEncounters() {
+            if (!cloudData["study_fixed_encounters"]) cloudData["study_fixed_encounters"] = { "kouta": null, "haruto": null };
+            
+            let current = cloudData["study_fixed_encounters"][currentUser];
+            // 過去の不正なデータでクラッシュしないようにチェック
+            if (current && typeof current === 'object' && current.water && current.water.id) {
+                return current;
+            }
+
+            const rKeys = Object.keys(regions); 
+            const rolled = {};
+            let ownedNormal = cloudData["study_zukan_normal"][currentUser] || [];
+
+            let unownedId = "0001";
+            for (let attempt = 0; attempt < 100; attempt++) {
+                const rKey = rKeys[Math.floor(Math.random() * rKeys.length)];
+                const range = regions[rKey];
+                const rId = Math.floor(Math.random() * (range.end - range.start + 1)) + range.start;
+                const idStr = String(rId).padStart(4, '0');
+                if (!ownedNormal.includes(idStr)) { unownedId = idStr; break; }
+            }
+            rolled["water"] = { id: unownedId, name: `No.${parseInt(unownedId)}` };
+
+            const zones = ["forest", "volcano", "thunder"];
+            zones.forEach(zone => {
+                if (Math.random() < 0.35) {
+                    rolled[zone] = starterPool[zone][Math.floor(Math.random() * starterPool[zone].length)];
+                } else {
+                    const range = regions[rKeys[Math.floor(Math.random() * rKeys.length)]];
+                    const rId = Math.floor(Math.random() * (range.end - range.start + 1)) + range.start;
+                    rolled[zone] = { id: String(rId).padStart(4, '0'), name: `No.${rId}` };
+                }
+            });
+            cloudData["study_fixed_encounters"][currentUser] = rolled; 
+            triggerCloudSave(); 
+            return rolled;
+        }
+
         function openAdventureSelectionModal() { 
             unlockAudio(); playRetroSound('click'); 
             if(cloudData.study_balance[currentUser].gachaCount <= 0) return; 
@@ -968,7 +1027,9 @@
             const encounters = getOrRollFixedEncounters();
             Object.keys(encounters).forEach(zone => {
                 const imgEl = document.getElementById(`shadow-${zone}`);
-                if (imgEl) imgEl.src = getImgUrl(encounters[zone].id);
+                if (imgEl && encounters[zone]) {
+                    imgEl.src = getImgUrl(encounters[zone].id);
+                }
             });
             
             document.getElementById('adventureModal').style.display = 'flex'; 
@@ -1003,11 +1064,22 @@
             document.getElementById('battleCloseBtn').style.display = "none";
             document.getElementById('battleModal').style.display = 'flex';
             
+            // バトルに入った瞬間、次の冒険のためにランダム記憶を消去
             cloudData["study_fixed_encounters"][currentUser] = null;
             
             getPokemonNameAsync(currentMyId).then(n => { battleState.myName = n; document.getElementById('battlePartnerName').textContent = n; });
             getPokemonNameAsync(finalEnemy.id).then(n => { battleState.enemyName = n; document.getElementById('battleEnemyName').textContent = n; playPokemonCry(finalEnemy.id); });
             triggerCloudSave();
+        }
+
+        function getPokemonAttackMove(id, pkmName) {
+            if (id === "0025" || pkmName.includes("ピカチュウ") || pkmName.includes("ライチュウ")) return moves.electric[Math.floor(Math.random() * moves.electric.length)];
+            if (id.includes('_') || pkmName.includes("メガ") || pkmName.includes("レックウザ") || pkmName.includes("ミュウツー")) return moves.mega[Math.floor(Math.random() * moves.mega.length)];
+            const num = parseInt(id.split('_')[0]);
+            if ([1,2,3,152,153,154,252,253,254,387,388,389,650,651,652,906,907,908].includes(num)) return moves.grass[Math.floor(Math.random() * moves.grass.length)];
+            if ([4,5,6,155,156,157,255,256,257,390,391,392,653,654,655,909,910,911].includes(num)) return moves.fire[Math.floor(Math.random() * moves.fire.length)];
+            if ([7,8,9,158,159,160,258,259,260,393,394,395,656,657,658,912,913,914].includes(num)) return moves.water[Math.floor(Math.random() * moves.water.length)];
+            return moves.normal[Math.floor(Math.random() * moves.normal.length)];
         }
 
         function nextBattlePhase() {
@@ -1102,19 +1174,19 @@
             if(type==='ball_master') cloudData.study_v2_bag_balls[currentUser].master += a;
             renderUI(); triggerCloudSave(); alert("データを調整しました");
         }
+
         function saveChallengePoolFromParent() {
             const txt = document.getElementById('parentChallengePoolInput').value;
             cloudData["study_v3_challenge_pool"][currentUser] = txt.split(',').map(x=>x.trim()).filter(x=>x.length>0);
             triggerCloudSave(); alert("保存しました");
         }
 
+        // 🔥 スロットのストライキを解除し、決定したミッションを表示
         function spinChallengeSlot() {
             playRetroSound('click');
-            const pool = cloudData["study_v3_challenge_pool"][currentUser] || defaultPools[currentUser];
-            if (!pool || pool.length === 0) {
-                alert("パパママメニューから チャレンジミッションを いれてね！");
-                return;
-            }
+            let pool = cloudData["study_v3_challenge_pool"][currentUser];
+            if (!Array.isArray(pool) || pool.length === 0) pool = defaultPools[currentUser];
+            
             const slotBtn = document.getElementById('challengeSlotBtn');
             slotBtn.disabled = true;
             let count = 0;
@@ -1126,7 +1198,6 @@
                     clearInterval(interval);
                     playRetroSound('coin');
                     const finalChoice = pool[Math.floor(Math.random() * pool.length)];
-                    document.getElementById('challengeSlotWindow').textContent = "🎯 チャレンジ: " + finalChoice;
                     cloudData["study_v3_chosen_challenge"][currentUser] = finalChoice;
                     renderUI();
                     triggerCloudSave();
