@@ -103,20 +103,24 @@
         .res-btn { background-color: var(--btn-neutral-bg); color: var(--btn-neutral-text); border: none; padding: 5px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .res-btn.phone-btn { background-color: var(--btn-phone-bg); color: var(--btn-phone-text); }
 
-        /* 🥦 【新設計】食材注文エリア（1行完結・絶対はみ出さないグリッド） */
-        .delivery-panel { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-top: 12px; box-shadow: var(--inner-shadow); }
-        .delivery-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0; gap: 6px; white-space: nowrap; overflow: hidden; }
-        .delivery-row:last-child { border-bottom: none; }
-        .delivery-label { font-size: 0.85rem; font-weight: bold; color: #1e293b; width: 42px; }
-        .delivery-date { font-size: 0.8rem; color: #475569; width: 65px; }
-        .delivery-select { padding: 4px 6px; font-size: 0.8rem; font-weight: bold; border-radius: 6px; border: 1px solid #cbd5e1; background-color: #ffffff; color: #334155; cursor: pointer; outline: none; width: 85px; }
+        /* 🥦 【新設計・案1】食材注文エリア（2行構成でガタつきを100%排除するスタイル） */
+        .delivery-panel { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 10px; margin-top: 12px; box-shadow: var(--inner-shadow); }
+        .delivery-block { border-bottom: 1px solid #e2e8f0; padding: 8px 0; }
+        .delivery-block:last-child { border-bottom: none; padding-bottom: 0; }
+        .delivery-main-row { display: flex; align-items: center; gap: 8px; width: 100%; white-space: nowrap; }
+        .delivery-label { font-size: 0.9rem; font-weight: bold; color: #1e293b; width: 42px; }
+        .delivery-date { font-size: 0.8rem; color: #475569; width: 65px; font-weight: 500; }
+        .delivery-select { padding: 4px 6px; font-size: 0.8rem; font-weight: bold; border-radius: 6px; border: 1px solid #cbd5e1; background-color: #ffffff; color: #334155; cursor: pointer; outline: none; width: 85px; text-align: center; }
         .delivery-select.status-yet { background-color: #fef3c7; color: #92400e; border-color: #fde68a; }
         .delivery-select.status-ok { background-color: #d1fae5; color: #065f46; border-color: #a7f3d0; }
         .delivery-select.status-none { background-color: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; text-decoration: line-through; }
-        .delivery-countdown { font-size: 0.75rem; width: 95px; text-align: left; color: #64748b; }
+        .delivery-link-btn { font-size: 0.75rem; color: #475569; background: var(--btn-neutral-bg); border-radius: 4px; padding: 3px 8px; font-weight: bold; text-decoration: none; margin-left: auto; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        
+        /* 2行目の補助情報エリア */
+        .delivery-sub-row { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; padding-left: 45px; width: 100%; font-size: 0.75rem; color: #64748b; white-space: nowrap; }
+        .delivery-countdown { font-weight: 500; }
         .delivery-countdown.urgent { color: #ef4444; font-weight: bold; }
-        .delivery-history { font-size: 0.7rem; color: #94a3b8; text-align: right; flex-grow: 1; }
-        .delivery-link-btn { font-size: 0.75rem; color: #4a7ab5; text-decoration: none; border-bottom: 1px dashed #4a7ab5; cursor: pointer; margin-left: 2px; }
+        .delivery-history { color: #94a3b8; text-align: right; }
 
         .todo-panel-child { border-radius: 8px; padding: 12px 12px 12px 16px; margin-bottom: 12px; background-color: #f8fafc; border: 1px solid #e2e8f0; position: relative; overflow: hidden; }
         .todo-panel-child::before { content: ""; position: absolute; top: 0; left: 0; width: 6px; height: 100%; }
@@ -212,9 +216,6 @@
         .bento-alert { background-color: var(--haruto-bg); border-left: 4px solid var(--haruto-border); color: var(--haruto-text); }
         .terakoya-alert, .bento-alert { font-weight: bold; padding: 8px; margin-bottom: 10px; font-size: 0.85rem; display: none; border-radius: 0 4px 4px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         
-        /* ✍️ 【復元＆固定】メモ欄が小さくなる不具合を完全に防止、140pxの広さを死守 */
-        .memo-textarea { width: 100%; height: 140px !important; min-height: 140px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; resize: vertical; line-height: 1.5; box-shadow: var(--inner-shadow); outline: none; display: block; }
-
         .loading-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(241, 245, 249, 0.95); display: flex; justify-content: center; align-items: center; z-index: 99999; font-weight: bold; color: #475569; font-size: 1.1rem; }
         .user-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); display: flex; justify-content: center; align-items: center; z-index: 10000; }
         .user-modal { background: white; padding: 25px; border-radius: 12px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
@@ -226,7 +227,6 @@
         .toast-notification { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); background-color: rgba(30, 41, 59, 0.9); color: white; padding: 10px 20px; border-radius: 30px; font-size: 0.85rem; font-weight: bold; opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 9000; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         .toast-notification.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        /* ⚙️ ログイン情報設定パネル用スタイル */
         .config-ui-panel { margin-top: 20px; background: #e2e8f0; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1; }
         .config-ui-row { display: flex; flex-direction: column; margin-bottom: 8px; }
         .config-ui-row label { font-size: 0.8rem; font-weight: bold; color: #475569; margin-bottom: 2px; }
@@ -337,33 +337,41 @@
         </div>
 
         <div class="delivery-panel">
-            <div class="delivery-row" id="row-pal">
-                <span class="delivery-label font-bold">パル</span>
-                <span class="delivery-date" id="date-pal">--/--着</span>
-                <select class="delivery-select" id="sel-pal" onchange="changeDeliveryStatus('pal', this.value)">
-                    <option value="未確認">未確認</option>
-                    <option value="注文済">注文済</option>
-                    <option value="お休み">お休み</option>
-                </select>
-                <span class="delivery-countdown" id="countdown-pal">計算中...</span>
-                <span class="delivery-history" id="history-pal">前回:--</span>
-                <span class="delivery-link-btn" onclick="launchPalApp()">アプリ</span>
+            <div class="delivery-block" id="block-pal">
+                <div class="delivery-main-row">
+                    <span class="delivery-label">パル</span>
+                    <span class="delivery-date" id="date-pal">--/--着</span>
+                    <select class="delivery-select" id="sel-pal" onchange="changeDeliveryStatus('pal', this.value)">
+                        <option value="未確認">未確認</option>
+                        <option value="注文済">注文済</option>
+                        <option value="お休み">お休み</option>
+                    </select>
+                    <span class="delivery-link-btn" onclick="launchPalApp()">アプリ</span>
+                </div>
+                <div class="delivery-sub-row">
+                    <span class="delivery-countdown" id="countdown-pal">計算中...</span>
+                    <span class="delivery-history" id="history-pal">前回:--</span>
+                </div>
             </div>
             
-            <div class="delivery-row" id="row-oisix">
-                <span class="delivery-label font-bold">Oisix</span>
-                <span class="delivery-date" id="date-oisix">--/--着</span>
-                <select class="delivery-select" id="sel-oisix" onchange="changeDeliveryStatus('oisix', this.value)">
-                    <option value="未確認">未確認</option>
-                    <option value="注文済">注文済</option>
-                    <option value="お休み">お休み</option>
-                </select>
-                <span class="delivery-countdown" id="countdown-oisix">計算中...</span>
-                <span class="delivery-history" id="history-oisix">前回:--</span>
-                <span class="delivery-link-btn" onclick="openOisixInfo()">開く</span>
+            <div class="delivery-block" id="block-oisix">
+                <div class="delivery-main-row">
+                    <span class="delivery-label">Oisix</span>
+                    <span class="delivery-date" id="date-oisix">--/--着</span>
+                    <select class="delivery-select" id="sel-oisix" onchange="changeDeliveryStatus('oisix', this.value)">
+                        <option value="未確認">未確認</option>
+                        <option value="注文済">注文済</option>
+                        <option value="お休み">お休み</option>
+                    </select>
+                    <span class="delivery-link-btn" onclick="openOisixInfo()">開く</span>
+                </div>
+                <div class="delivery-sub-row">
+                    <span class="delivery-countdown" id="countdown-oisix">計算中...</span>
+                    <span class="delivery-history" id="history-oisix">前回:--</span>
+                </div>
             </div>
             
-            <details id="oisix-login-details" style="margin-top: 6px; padding: 6px 10px; background: #fff; border: 1px dashed #cbd5e1; border-radius: 4px; width: 100%;">
+            <details id="oisix-login-details" style="margin-top: 8px; padding: 6px 10px; background: #fff; border: 1px dashed #cbd5e1; border-radius: 4px; width: 100%;">
                 <summary style="font-size: 0.75rem; color: var(--muted-text); cursor: pointer; outline: none;">🔐 Oisix アカウント情報を確認</summary>
                 <div id="oisix-credentials-area" style="font-size: 0.8rem; color: #334155; margin-top: 4px; font-family: monospace; line-height: 1.4;">
                     読み込み中...
@@ -614,7 +622,6 @@
             window.open("https://www.oisix.com/sc/s190", '_blank', 'noopener,noreferrer');
         }
 
-        // ⚙️ 画面から入力されたログイン情報をGAS経由でスプレッドシートへ流し込む関数
         async function saveAccountConfigData() {
             const oisixId = document.getElementById('cfg-oisix-id').value.trim();
             const oisixPw = document.getElementById('cfg-oisix-pw').value.trim();
@@ -645,7 +652,6 @@
                     document.getElementById('saveStatus').textContent = `☁️ 同期完了 [最終更新: ${lastInfo}]`;
                 }
 
-                // GASから受け取った機密情報を各プレースホルダーに安全にマッピング
                 const oisixId = globalCloudData['oisix_id'] || "未設定 (最下部で設定してください)";
                 const oisixPw = globalCloudData['oisix_pw'] || "未設定";
                 const bentoId = globalCloudData['bento_id'] || "未設定";
@@ -654,13 +660,12 @@
                 document.getElementById('oisix-credentials-area').innerHTML = `ID: <strong>${oisixId}</strong><br>PW: <strong>${oisixPw}</strong>`;
                 document.getElementById('bento-credentials-area').innerHTML = `ID: <strong>${bentoId}</strong> / PW: <strong>${bentoPw}</strong>`;
 
-                // 最下部の入力フォームの初期値としてもセット
                 document.getElementById('cfg-oisix-id').value = globalCloudData['oisix_id'] || "";
                 document.getElementById('cfg-oisix-pw').value = globalCloudData['oisix_pw'] || "";
                 document.getElementById('cfg-bento-id').value = globalCloudData['bento_id'] || "";
                 document.getElementById('cfg-bento-pw').value = globalCloudData['bento_pw'] || "";
 
-                // 食材宅配の初期セレクト値を反映
+                // 食材宅配のサーバー値をセレクト＆履歴に注入
                 document.getElementById('sel-pal').value = globalCloudData['pal_delivery_status'] || "未確認";
                 document.getElementById('sel-oisix').value = globalCloudData['oisix_delivery_status'] || "未確認";
                 document.getElementById('history-pal').textContent = "前回:" + (globalCloudData['pal_prev_status'] || "未確認");
@@ -738,7 +743,7 @@
             await saveCloudData(type + "_status_" + targetDateStr, val);
         }
 
-        // 🥦 食材宅配用のカウントダウン＆動的日付管理ロジック
+        // 🥦 食材宅配用カウントダウン＆2行構成スタイル対応ロジック
         function updateCountdowns() {
             const now = new Date();
 
@@ -777,7 +782,7 @@
                 element.classList.add('urgent');
                 const h = Math.floor(hoursLeft);
                 const m = Math.floor((msLeft % (1000 * 60 * 60)) / (1000 * 60));
-                element.textContent = `🚨あと ${h}h${m}m`;
+                element.textContent = `🚨あと ${h}時間${m}分`;
             } else {
                 element.classList.remove('urgent');
                 const days = Math.floor(hoursLeft / 24);
@@ -787,6 +792,12 @@
 
         async function changeDeliveryStatus(type, val) {
             showToast("⏳ ステータスを同期中...");
+            const el = document.getElementById('sel-' + type);
+            el.className = 'delivery-select';
+            if (val === 'ok') el.classList.add('status-ok');
+            else if (val === 'none') el.classList.add('status-none');
+            else el.classList.add('status-yet');
+            
             await saveCloudData(type + "_delivery_week", val);
         }
 
@@ -1044,10 +1055,10 @@
             renderCustomTodoList('haruto'); 
             document.getElementById('customMemo').value = globalCloudData["memo"] || "";
             
-            // カウントダウン初期化＆動的計算タイマー始動
+            // 定期計算タイマー始動
             updateCountdowns();
             setInterval(updateCountdowns, 60000);
-
+            
             for (let i = 1; i <= 5; i++) {
                 const btn = document.getElementById('btn-day-' + i);
                 if (btn) btn.addEventListener('click', () => selectDay(i));
