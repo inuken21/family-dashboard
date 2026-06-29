@@ -103,24 +103,26 @@
         .res-btn { background-color: var(--btn-neutral-bg); color: var(--btn-neutral-text); border: none; padding: 5px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .res-btn.phone-btn { background-color: var(--btn-phone-bg); color: var(--btn-phone-text); }
 
-        /* 🥦 【新設計・案1】食材注文エリア（2行構成でガタつきを100%排除するスタイル） */
-        .delivery-panel { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 10px; margin-top: 12px; box-shadow: var(--inner-shadow); }
+        /* 🥦 【修正版】食材注文エリア（横幅を最適化し、間伸びとガタつきを完全に解消） */
+        .delivery-panel { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; margin-top: 12px; box-shadow: var(--inner-shadow); }
         .delivery-block { border-bottom: 1px solid #e2e8f0; padding: 8px 0; }
         .delivery-block:last-child { border-bottom: none; padding-bottom: 0; }
-        .delivery-main-row { display: flex; align-items: center; gap: 8px; width: 100%; white-space: nowrap; }
-        .delivery-label { font-size: 0.9rem; font-weight: bold; color: #1e293b; width: 42px; }
-        .delivery-date { font-size: 0.8rem; color: #475569; width: 65px; font-weight: 500; }
-        .delivery-select { padding: 4px 6px; font-size: 0.8rem; font-weight: bold; border-radius: 6px; border: 1px solid #cbd5e1; background-color: #ffffff; color: #334155; cursor: pointer; outline: none; width: 85px; text-align: center; }
+        .delivery-main-row { display: flex; align-items: center; width: 100%; white-space: nowrap; }
+        .delivery-label { font-size: 0.85rem; font-weight: bold; color: #1e293b; width: 50px; display: inline-flex; align-items: center; }
+        .delivery-date { font-size: 0.8rem; color: #475569; width: 60px; margin-left: 4px; }
+        .delivery-select { padding: 4px 4px; font-size: 0.8rem; font-weight: bold; border-radius: 6px; border: 1px solid #cbd5e1; background-color: #ffffff; color: #334155; cursor: pointer; outline: none; width: 85px; text-align: center; margin-left: 4px; }
         .delivery-select.status-yet { background-color: #fef3c7; color: #92400e; border-color: #fde68a; }
         .delivery-select.status-ok { background-color: #d1fae5; color: #065f46; border-color: #a7f3d0; }
         .delivery-select.status-none { background-color: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; text-decoration: line-through; }
-        .delivery-link-btn { font-size: 0.75rem; color: #475569; background: var(--btn-neutral-bg); border-radius: 4px; padding: 3px 8px; font-weight: bold; text-decoration: none; margin-left: auto; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         
-        /* 2行目の補助情報エリア */
-        .delivery-sub-row { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; padding-left: 45px; width: 100%; font-size: 0.75rem; color: #64748b; white-space: nowrap; }
-        .delivery-countdown { font-weight: 500; }
+        /* ボタンの配置を間伸びしないように右寄せ配置 */
+        .delivery-link-btn { font-size: 0.75rem; color: #475569; background: var(--btn-neutral-bg); border-radius: 4px; padding: 4px 10px; font-weight: bold; text-decoration: none; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); margin-left: auto; }
+        
+        /* 2行目の余白と位置調整 */
+        .delivery-sub-row { display: flex; align-items: center; margin-top: 5px; padding-left: 54px; width: 100%; font-size: 0.75rem; color: #64748b; white-space: nowrap; }
+        .delivery-countdown { font-weight: 500; min-width: 95px; }
         .delivery-countdown.urgent { color: #ef4444; font-weight: bold; }
-        .delivery-history { color: #94a3b8; text-align: right; }
+        .delivery-history { color: #94a3b8; margin-left: auto; padding-right: 2px; }
 
         .todo-panel-child { border-radius: 8px; padding: 12px 12px 12px 16px; margin-bottom: 12px; background-color: #f8fafc; border: 1px solid #e2e8f0; position: relative; overflow: hidden; }
         .todo-panel-child::before { content: ""; position: absolute; top: 0; left: 0; width: 6px; height: 100%; }
@@ -339,7 +341,7 @@
         <div class="delivery-panel">
             <div class="delivery-block" id="block-pal">
                 <div class="delivery-main-row">
-                    <span class="delivery-label">パル</span>
+                    <span class="delivery-label">🐄パル</span>
                     <span class="delivery-date" id="date-pal">--/--着</span>
                     <select class="delivery-select" id="sel-pal" onchange="changeDeliveryStatus('pal', this.value)">
                         <option value="未確認">未確認</option>
@@ -356,7 +358,7 @@
             
             <div class="delivery-block" id="block-oisix">
                 <div class="delivery-main-row">
-                    <span class="delivery-label">Oisix</span>
+                    <span class="delivery-label">🥦Oisix</span>
                     <span class="delivery-date" id="date-oisix">--/--着</span>
                     <select class="delivery-select" id="sel-oisix" onchange="changeDeliveryStatus('oisix', this.value)">
                         <option value="未確認">未確認</option>
@@ -665,7 +667,7 @@
                 document.getElementById('cfg-bento-id').value = globalCloudData['bento_id'] || "";
                 document.getElementById('cfg-bento-pw').value = globalCloudData['bento_pw'] || "";
 
-                // 食材宅配のサーバー値をセレクト＆履歴に注入
+                // 食材宅配のサーバー値を反映
                 document.getElementById('sel-pal').value = globalCloudData['pal_delivery_status'] || "未確認";
                 document.getElementById('sel-oisix').value = globalCloudData['oisix_delivery_status'] || "未確認";
                 document.getElementById('history-pal').textContent = "前回:" + (globalCloudData['pal_prev_status'] || "未確認");
@@ -743,7 +745,6 @@
             await saveCloudData(type + "_status_" + targetDateStr, val);
         }
 
-        // 🥦 食材宅配用カウントダウン＆2行構成スタイル対応ロジック
         function updateCountdowns() {
             const now = new Date();
 
