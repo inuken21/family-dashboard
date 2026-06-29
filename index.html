@@ -103,7 +103,6 @@
         .res-btn { background-color: var(--btn-neutral-bg); color: var(--btn-neutral-text); border: none; padding: 5px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .res-btn.phone-btn { background-color: var(--btn-phone-bg); color: var(--btn-phone-text); }
 
-        /* 食材注文エリア（グリッド対応） */
         .delivery-panel { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-top: 12px; box-shadow: var(--inner-shadow); }
         .delivery-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; gap: 6px; }
         .delivery-label { font-size: 0.85rem; font-weight: bold; color: #334155; width: 100px; flex-shrink: 0; }
@@ -208,6 +207,9 @@
         .bento-alert { background-color: var(--haruto-bg); border-left: 4px solid var(--haruto-border); color: var(--haruto-text); }
         .terakoya-alert, .bento-alert { font-weight: bold; padding: 8px; margin-bottom: 10px; font-size: 0.85rem; display: none; border-radius: 0 4px 4px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         
+        /* 🛠️ 【修正】競合を防ぎ、高さを140pxにきっちり固定・維持するスタイル */
+        .memo-textarea { width: 100%; height: 140px !important; min-height: 140px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; resize: vertical; line-height: 1.5; box-shadow: var(--inner-shadow); outline: none; display: block; }
+
         .loading-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(241, 245, 249, 0.95); display: flex; justify-content: center; align-items: center; z-index: 99999; font-weight: bold; color: #475569; font-size: 1.1rem; }
         .user-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); display: flex; justify-content: center; align-items: center; z-index: 10000; }
         .user-modal { background: white; padding: 25px; border-radius: 12px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
@@ -219,7 +221,6 @@
         .toast-notification { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); background-color: rgba(30, 41, 59, 0.9); color: white; padding: 10px 20px; border-radius: 30px; font-size: 0.85rem; font-weight: bold; opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 9000; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         .toast-notification.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        /* 🆕 設定管理パネル用の新しいスタイル */
         .config-ui-panel { margin-top: 20px; background: #e2e8f0; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1; }
         .config-ui-row { display: flex; flex-direction: column; margin-bottom: 8px; }
         .config-ui-row label { font-size: 0.8rem; font-weight: bold; color: #475569; margin-bottom: 2px; }
@@ -600,7 +601,6 @@
             document.getElementById('oisix-login-details').open = true;
         }
 
-        // 🆕 【新設計】画面から入力されたID・PWを個別にGAS経由でスプレッドシートへ流し込む関数
         async function saveAccountConfigData() {
             const oisixId = document.getElementById('cfg-oisix-id').value.trim();
             const oisixPw = document.getElementById('cfg-oisix-pw').value.trim();
@@ -609,7 +609,6 @@
 
             showToast("⏳ ログイン情報を同期中...");
             
-            // 各項目をGASに非同期送信（設定用シートにルーティングされます）
             await saveCloudData("oisix_id", oisixId, true);
             await saveCloudData("oisix_pw", oisixPw, true);
             await saveCloudData("bento_id", bentoId, true);
@@ -617,7 +616,6 @@
 
             showToast("✅ ログイン情報を安全に保管しました！");
             
-            // 表示エリアをリアルタイムに書き換え
             document.getElementById('oisix-credentials-area').innerHTML = `ID: <strong>${oisixId}</strong><br>PW: <strong>${oisixPw}</strong>`;
             document.getElementById('bento-credentials-area').innerHTML = `ID: <strong>${bentoId}</strong> / PW: <strong>${bentoPw}</strong>`;
         }
@@ -633,17 +631,14 @@
                     document.getElementById('saveStatus').textContent = `☁️ 同期完了 [最終更新: ${lastInfo}]`;
                 }
 
-                // 🛠️ 【読込処理】GASから受け取った機密情報を各プレースホルダーに安全にマッピング
                 const oisixId = globalCloudData['oisix_id'] || "未設定 (最下部で設定してください)";
                 const oisixPw = globalCloudData['oisix_pw'] || "未設定";
                 const bentoId = globalCloudData['bento_id'] || "未設定";
                 const bentoPw = globalCloudData['bento_pw'] || "未設定";
 
-                // いつもの場所のテキストを書き換え
                 document.getElementById('oisix-credentials-area').innerHTML = `ID: <strong>${oisixId}</strong><br>PW: <strong>${oisixPw}</strong>`;
                 document.getElementById('bento-credentials-area').innerHTML = `ID: <strong>${bentoId}</strong> / PW: <strong>${bentoPw}</strong>`;
 
-                // 最下部の入力フォームの初期値としてもセット
                 document.getElementById('cfg-oisix-id').value = globalCloudData['oisix_id'] || "";
                 document.getElementById('cfg-oisix-pw').value = globalCloudData['oisix_pw'] || "";
                 document.getElementById('cfg-bento-id').value = globalCloudData['bento_id'] || "";
@@ -680,12 +675,11 @@
             return `${baseDate.getFullYear()}-${String(baseDate.getMonth() + 1).padStart(2, '0')}-${String(baseDate.getDate()).padStart(2, '0')}`;
         }
 
-        // 🆕 【週次固定用】その指定された日付が属する「月曜日の日付文字列」をキーにするヘルパー関数
         function getWeekBaseKey(dayNum) {
             const dateStr = getTargetDateStr(dayNum);
             const d = new Date(dateStr);
             const day = d.getDay();
-            const diff = d.getDate() - day + (day === 0 ? -6 : 1); // 月曜日に戻す
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
             const monday = new Date(d.setDate(diff));
             return `${monday.getFullYear()}-${String(monday.getMonth() + 1).padStart(2, '0')}-${String(monday.getDate()).padStart(2, '0')}`;
         }
@@ -731,7 +725,6 @@
             await saveCloudData(type + "_status_" + targetDateStr, val);
         }
 
-        // 🆕 食材注文のアラート・スタイル処理
         function applyDeliveryStyle(type, val) {
             const el = document.getElementById('sel-' + type);
             if(!el) return;
@@ -750,7 +743,6 @@
                 el.options[0].text = "未確認";
             } else {
                 let triggerAlert = false;
-                // 当週かつ締め切り当日・時間前の場合に動的警告バッジ
                 if (type === 'pal' && currentDayIdx === 2 && currentHour < 13 && currentWeekOffset === 0) {
                     triggerAlert = true; 
                 } else if (type === 'oisix' && currentDayIdx === 4 && currentHour < 10 && currentWeekOffset === 0) {
@@ -768,7 +760,6 @@
             el.value = val;
         }
 
-        // 🆕 【週次固定に変更】曜日を変えても値がブレないように「週ベースのキー」でGASにセーブ
         async function changeDeliveryStatus(type, val) {
             const weekKey = getWeekBaseKey(selectedDayNum);
             applyDeliveryStyle(type, val);
@@ -890,7 +881,6 @@
             const pickupVal = globalCloudData["pickup_status_" + targetDateStr] || "yet";
             applyTransferStyle('pickup', pickupVal);
 
-            // 🆕 【週次固定表示の同期】曜日切り替え時も「現在の週のベースキー」を呼ぶため、曜日連動でリセットされません
             const weekBaseKey = getWeekBaseKey(dayNum);
             const palVal = globalCloudData["pal_delivery_week_" + weekBaseKey] || "yet";
             applyDeliveryStyle('pal', palVal);
