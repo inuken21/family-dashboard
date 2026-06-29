@@ -103,8 +103,8 @@
         .res-btn { background-color: var(--btn-neutral-bg); color: var(--btn-neutral-text); border: none; padding: 5px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .res-btn.phone-btn { background-color: var(--btn-phone-bg); color: var(--btn-phone-text); }
 
-        /* 🥦 【修正版・案A】食材注文エリア（高さを統一・幅を固定してガタつきと間伸びを完全抹殺） */
-        .delivery-panel { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px; margin-top: 12px; box-shadow: var(--inner-shadow); }
+        /* 食材注文エリア */
+        .delivery-panel { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; margin-top: 12px; box-shadow: var(--inner-shadow); }
         .delivery-block { border-bottom: 1px solid #e2e8f0; padding: 8px 0; }
         .delivery-block:last-child { border-bottom: none; padding-bottom: 0; }
         
@@ -112,19 +112,15 @@
         .delivery-label { font-size: 0.85rem; font-weight: bold; color: #1e293b; width: 55px; display: inline-flex; align-items: center; }
         .delivery-date { font-size: 0.8rem; color: #475569; width: 55px; font-weight: 500; text-align: left; }
         
-        /* プルダウンとボタンの高さを28pxに完全同期、幅も固定してガタつき防止 */
         .delivery-select { height: 28px; padding: 2px 4px; font-size: 0.8rem; font-weight: bold; border-radius: 6px; border: 1px solid #cbd5e1; background-color: #ffffff; color: #334155; cursor: pointer; outline: none; width: 85px; text-align: center; margin-left: 8px; }
-        .delivery-select.status-yet { background-color: #fef3c7; color: #92400e; border-color: #fde68a; }
         .delivery-select.status-ok { background-color: #d1fae5; color: #065f46; border-color: #a7f3d0; }
         .delivery-select.status-none { background-color: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; text-decoration: line-through; }
+        .delivery-select.status-yet { background-color: #fef3c7; color: #92400e; border-color: #fde68a; }
         
-        /* 右端のボタンの横幅を一律「64px」にカチッと固定、高さも28pxで完全統一 */
         .delivery-link-btn { height: 28px; width: 64px; font-size: 0.75rem; color: #475569; background: var(--btn-neutral-bg); border: 1px solid #cbd5e1; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; text-decoration: none; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); margin-left: 8px; }
         
-        /* 2行目の補助情報エリア（位置関係を完全固定） */
         .delivery-sub-row { display: flex; align-items: center; margin-top: 6px; padding-left: 55px; width: 100%; font-size: 0.75rem; color: #64748b; white-space: nowrap; height: 18px; }
         .delivery-countdown { font-weight: 500; display: inline-block; padding: 1px 4px; border-radius: 4px; }
-        /* 24時間未満の薄赤座布団警告スタイル */
         .delivery-countdown.urgent { color: #ef4444; font-weight: bold; background-color: #fee2e2; padding: 1px 6px; }
         .delivery-history { color: #94a3b8; margin-left: auto; font-size: 0.7rem; padding-right: 2px; }
 
@@ -344,7 +340,9 @@
             </div>
         </div>
 
+        <!-- 食材定期便パネル -->
         <div class="delivery-panel">
+            <!-- パルシステム -->
             <div class="delivery-block" id="block-pal">
                 <div class="delivery-main-row">
                     <span class="delivery-label">🐄パル</span>
@@ -362,6 +360,7 @@
                 </div>
             </div>
             
+            <!-- Oisix -->
             <div class="delivery-block" id="block-oisix">
                 <div class="delivery-main-row">
                     <span class="delivery-label">🥦Oisix</span>
@@ -379,6 +378,7 @@
                 </div>
             </div>
             
+            <!-- アカウントカンペ表示用のdetails -->
             <details id="oisix-login-details" style="margin-top: 8px; padding: 6px 10px; background: #fff; border: 1px dashed #cbd5e1; border-radius: 4px; width: 100%;">
                 <summary style="font-size: 0.75rem; color: var(--muted-text); cursor: pointer; outline: none;">🔐 Oisix アカウント情報を確認</summary>
                 <div id="oisix-credentials-area" style="font-size: 0.8rem; color: #334155; margin-top: 4px; font-family: monospace; line-height: 1.4;">
@@ -673,11 +673,9 @@
                 document.getElementById('cfg-bento-id').value = globalCloudData['bento_id'] || "";
                 document.getElementById('cfg-bento-pw').value = globalCloudData['bento_pw'] || "";
 
-                // 食材宅配のサーバー値を反映
                 document.getElementById('sel-pal').value = globalCloudData['pal_delivery_status'] || "未確認";
                 document.getElementById('sel-oisix').value = globalCloudData['oisix_delivery_status'] || "未確認";
                 
-                // 初回読み込み時のCSS反映
                 document.getElementById('sel-pal').className = 'delivery-select ' + getStatusClass(globalCloudData['pal_delivery_status']);
                 document.getElementById('sel-oisix').className = 'delivery-select ' + getStatusClass(globalCloudData['oisix_delivery_status']);
 
@@ -768,12 +766,12 @@
             // パルシステム：火曜13:00〆切 ➔ 翌々週月曜着
             const palInfo = getDeadlineAndArrival(now, 2, 13, 2); 
             document.getElementById('date-pal').textContent = `${palInfo.arrivalMonth}/${palInfo.arrivalDate}着`;
-            renderCountdown('countdown-pal', palInfo.msLeft);
+            renderCountdown('countdown-pal', palInfo.msLeft, document.getElementById('sel-pal').value);
 
             // Oisix：木曜10:00〆切 ➔ 翌週月曜着
             const oisixInfo = getDeadlineAndArrival(now, 4, 10, 1); 
             document.getElementById('date-oisix').textContent = `${oisixInfo.arrivalMonth}/${oisixInfo.arrivalDate}着`;
-            renderCountdown('countdown-oisix', oisixInfo.msLeft);
+            renderCountdown('countdown-oisix', oisixInfo.msLeft, document.getElementById('sel-oisix').value);
         }
 
         function getDeadlineAndArrival(now, deadlineDay, deadlineHour, weeksToArrival) {
@@ -791,8 +789,19 @@
             return { msLeft: msLeft, arrivalMonth: arrival.getMonth() + 1, arrivalDate: arrival.getDate() };
         }
 
-        function renderCountdown(elementId, msLeft) {
+        // 🔥【修正】ステータス(currentStatus)を確認して、未確認以外ならアラートを消灯するロジック
+        function renderCountdown(elementId, msLeft, currentStatus) {
             const element = document.getElementById(elementId);
+            
+            // 注文完了、またはお休み設定されている場合はアラートを消灯し完了表記へ
+            if (currentStatus === '注文済' || currentStatus === 'お休み') {
+                element.classList.remove('urgent');
+                element.style.color = '#94a3b8'; // 落ち着いたグレー
+                element.textContent = currentStatus === '注文済' ? '🎉 手続き完了' : '⏸️ 今週はパス';
+                return;
+            }
+            
+            element.style.color = ''; // デフォルトCSS定義に戻す
             const hoursLeft = msLeft / (1000 * 60 * 60);
             if (hoursLeft < 0) { element.textContent = "処理中..."; return; }
 
@@ -815,6 +824,9 @@
             if (val === '注文済') el.classList.add('status-ok');
             else if (val === 'お休み') el.classList.add('status-none');
             else el.classList.add('status-yet');
+            
+            // ステータスを即時判定させてアラートを切り替える
+            updateCountdowns();
             
             await saveCloudData(type + "_delivery_week", val);
         }
@@ -1073,7 +1085,7 @@
             renderCustomTodoList('haruto'); 
             document.getElementById('customMemo').value = globalCloudData["memo"] || "";
             
-            // 定期計算タイマー始動
+            // カウントダウン定期更新始動
             updateCountdowns();
             setInterval(updateCountdowns, 60000);
             
