@@ -103,26 +103,30 @@
         .res-btn { background-color: var(--btn-neutral-bg); color: var(--btn-neutral-text); border: none; padding: 5px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .res-btn.phone-btn { background-color: var(--btn-phone-bg); color: var(--btn-phone-text); }
 
-        /* 🥦 【修正版】食材注文エリア（横幅を最適化し、間伸びとガタつきを完全に解消） */
-        .delivery-panel { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; margin-top: 12px; box-shadow: var(--inner-shadow); }
+        /* 🥦 【修正版・案A】食材注文エリア（高さを統一・幅を固定してガタつきと間伸びを完全抹殺） */
+        .delivery-panel { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px; margin-top: 12px; box-shadow: var(--inner-shadow); }
         .delivery-block { border-bottom: 1px solid #e2e8f0; padding: 8px 0; }
         .delivery-block:last-child { border-bottom: none; padding-bottom: 0; }
+        
         .delivery-main-row { display: flex; align-items: center; width: 100%; white-space: nowrap; }
-        .delivery-label { font-size: 0.85rem; font-weight: bold; color: #1e293b; width: 50px; display: inline-flex; align-items: center; }
-        .delivery-date { font-size: 0.8rem; color: #475569; width: 60px; margin-left: 4px; }
-        .delivery-select { padding: 4px 4px; font-size: 0.8rem; font-weight: bold; border-radius: 6px; border: 1px solid #cbd5e1; background-color: #ffffff; color: #334155; cursor: pointer; outline: none; width: 85px; text-align: center; margin-left: 4px; }
+        .delivery-label { font-size: 0.85rem; font-weight: bold; color: #1e293b; width: 55px; display: inline-flex; align-items: center; }
+        .delivery-date { font-size: 0.8rem; color: #475569; width: 55px; font-weight: 500; text-align: left; }
+        
+        /* プルダウンとボタンの高さを28pxに完全同期、幅も固定してガタつき防止 */
+        .delivery-select { height: 28px; padding: 2px 4px; font-size: 0.8rem; font-weight: bold; border-radius: 6px; border: 1px solid #cbd5e1; background-color: #ffffff; color: #334155; cursor: pointer; outline: none; width: 85px; text-align: center; margin-left: 8px; }
         .delivery-select.status-yet { background-color: #fef3c7; color: #92400e; border-color: #fde68a; }
         .delivery-select.status-ok { background-color: #d1fae5; color: #065f46; border-color: #a7f3d0; }
         .delivery-select.status-none { background-color: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; text-decoration: line-through; }
         
-        /* ボタンの配置を間伸びしないように右寄せ配置 */
-        .delivery-link-btn { font-size: 0.75rem; color: #475569; background: var(--btn-neutral-bg); border-radius: 4px; padding: 4px 10px; font-weight: bold; text-decoration: none; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); margin-left: auto; }
+        /* 右端のボタンの横幅を一律「64px」にカチッと固定、高さも28pxで完全統一 */
+        .delivery-link-btn { height: 28px; width: 64px; font-size: 0.75rem; color: #475569; background: var(--btn-neutral-bg); border: 1px solid #cbd5e1; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; text-decoration: none; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); margin-left: 8px; }
         
-        /* 2行目の余白と位置調整 */
-        .delivery-sub-row { display: flex; align-items: center; margin-top: 5px; padding-left: 54px; width: 100%; font-size: 0.75rem; color: #64748b; white-space: nowrap; }
-        .delivery-countdown { font-weight: 500; min-width: 95px; }
-        .delivery-countdown.urgent { color: #ef4444; font-weight: bold; }
-        .delivery-history { color: #94a3b8; margin-left: auto; padding-right: 2px; }
+        /* 2行目の補助情報エリア（位置関係を完全固定） */
+        .delivery-sub-row { display: flex; align-items: center; margin-top: 6px; padding-left: 55px; width: 100%; font-size: 0.75rem; color: #64748b; white-space: nowrap; height: 18px; }
+        .delivery-countdown { font-weight: 500; display: inline-block; padding: 1px 4px; border-radius: 4px; }
+        /* 24時間未満の薄赤座布団警告スタイル */
+        .delivery-countdown.urgent { color: #ef4444; font-weight: bold; background-color: #fee2e2; padding: 1px 6px; }
+        .delivery-history { color: #94a3b8; margin-left: auto; font-size: 0.7rem; padding-right: 2px; }
 
         .todo-panel-child { border-radius: 8px; padding: 12px 12px 12px 16px; margin-bottom: 12px; background-color: #f8fafc; border: 1px solid #e2e8f0; position: relative; overflow: hidden; }
         .todo-panel-child::before { content: ""; position: absolute; top: 0; left: 0; width: 6px; height: 100%; }
@@ -218,6 +222,8 @@
         .bento-alert { background-color: var(--haruto-bg); border-left: 4px solid var(--haruto-border); color: var(--haruto-text); }
         .terakoya-alert, .bento-alert { font-weight: bold; padding: 8px; margin-bottom: 10px; font-size: 0.85rem; display: none; border-radius: 0 4px 4px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         
+        .memo-textarea { width: 100%; height: 140px !important; min-height: 140px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; resize: vertical; line-height: 1.5; box-shadow: var(--inner-shadow); outline: none; display: block; }
+
         .loading-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(241, 245, 249, 0.95); display: flex; justify-content: center; align-items: center; z-index: 99999; font-weight: bold; color: #475569; font-size: 1.1rem; }
         .user-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); display: flex; justify-content: center; align-items: center; z-index: 10000; }
         .user-modal { background: white; padding: 25px; border-radius: 12px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
@@ -670,10 +676,21 @@
                 // 食材宅配のサーバー値を反映
                 document.getElementById('sel-pal').value = globalCloudData['pal_delivery_status'] || "未確認";
                 document.getElementById('sel-oisix').value = globalCloudData['oisix_delivery_status'] || "未確認";
+                
+                // 初回読み込み時のCSS反映
+                document.getElementById('sel-pal').className = 'delivery-select ' + getStatusClass(globalCloudData['pal_delivery_status']);
+                document.getElementById('sel-oisix').className = 'delivery-select ' + getStatusClass(globalCloudData['oisix_delivery_status']);
+
                 document.getElementById('history-pal').textContent = "前回:" + (globalCloudData['pal_prev_status'] || "未確認");
                 document.getElementById('history-oisix').textContent = "前回:" + (globalCloudData['oisix_prev_status'] || "未確認");
 
             } catch (e) { document.getElementById('loading').textContent = "⚠️ 同期エラーが発生しました。"; }
+        }
+
+        function getStatusClass(val) {
+            if (val === '注文済') return 'status-ok';
+            if (val === 'お休み') return 'status-none';
+            return 'status-yet';
         }
 
         async function saveCloudData(key, value, silent = false) {
@@ -795,8 +812,8 @@
             showToast("⏳ ステータスを同期中...");
             const el = document.getElementById('sel-' + type);
             el.className = 'delivery-select';
-            if (val === 'ok') el.classList.add('status-ok');
-            else if (val === 'none') el.classList.add('status-none');
+            if (val === '注文済') el.classList.add('status-ok');
+            else if (val === 'お休み') el.classList.add('status-none');
             else el.classList.add('status-yet');
             
             await saveCloudData(type + "_delivery_week", val);
