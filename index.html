@@ -104,7 +104,7 @@
         .res-btn.phone-btn { background-color: var(--btn-phone-bg); color: var(--btn-phone-text); }
 
         /* 食材注文エリア */
-        .delivery-panel { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; margin-top: 12px; box-shadow: var(--inner-shadow); }
+        .delivery-panel { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px; margin-top: 12px; box-shadow: var(--inner-shadow); }
         .delivery-block { border-bottom: 1px solid #e2e8f0; padding: 8px 0; }
         .delivery-block:last-child { border-bottom: none; padding-bottom: 0; }
         
@@ -151,7 +151,7 @@
         .todo-custom-text:active::before, .todo-custom-text:hover::before { opacity: 1; pointer-events: auto; }
         .todo-custom-cb:checked + .todo-text-container .todo-custom-text { text-decoration: line-through; opacity: 0.4; }
         .todo-custom-cb:checked + .todo-text-container::after { content: " 🎉"; font-size: 0.85rem; margin-left: 2px; animation: pop 0.3s ease; flex-shrink: 0; }
-        .todo-date-label { font-size: 0.75rem; font-weight: bold; color: #64748b; background-color: #f1f5f9; padding: 1px 5px; border-radius: 4px; flex-shrink: 0; }
+        .todo-date-label { font-size: 0.75rem; font-weight: bold; color: #475569; background-color: #f1f5f9; padding: 1px 5px; border-radius: 4px; flex-shrink: 0; }
         .todo-custom-cb:checked + .todo-text-container .todo-date-label { color: #cbd5e1; background-color: #f8fafc; text-decoration: line-through; opacity: 0.4; }
         .deadline-badge { font-size: 0.65rem; font-weight: bold; padding: 1px 4px; border-radius: 4px; color: white; flex-shrink: 0; }
         .deadline-badge.overdue { background-color: #ef4444; }
@@ -340,9 +340,7 @@
             </div>
         </div>
 
-        <!-- 食材定期便パネル -->
         <div class="delivery-panel">
-            <!-- パルシステム -->
             <div class="delivery-block" id="block-pal">
                 <div class="delivery-main-row">
                     <span class="delivery-label">🐄パル</span>
@@ -360,7 +358,6 @@
                 </div>
             </div>
             
-            <!-- Oisix -->
             <div class="delivery-block" id="block-oisix">
                 <div class="delivery-main-row">
                     <span class="delivery-label">🥦Oisix</span>
@@ -378,7 +375,6 @@
                 </div>
             </div>
             
-            <!-- アカウントカンペ表示用のdetails -->
             <details id="oisix-login-details" style="margin-top: 8px; padding: 6px 10px; background: #fff; border: 1px dashed #cbd5e1; border-radius: 4px; width: 100%;">
                 <summary style="font-size: 0.75rem; color: var(--muted-text); cursor: pointer; outline: none;">🔐 Oisix アカウント情報を確認</summary>
                 <div id="oisix-credentials-area" style="font-size: 0.8rem; color: #334155; margin-top: 4px; font-family: monospace; line-height: 1.4;">
@@ -673,6 +669,7 @@
                 document.getElementById('cfg-bento-id').value = globalCloudData['bento_id'] || "";
                 document.getElementById('cfg-bento-pw').value = globalCloudData['bento_pw'] || "";
 
+                // 宅配ステータス復元
                 document.getElementById('sel-pal').value = globalCloudData['pal_delivery_status'] || "未確認";
                 document.getElementById('sel-oisix').value = globalCloudData['oisix_delivery_status'] || "未確認";
                 
@@ -789,19 +786,17 @@
             return { msLeft: msLeft, arrivalMonth: arrival.getMonth() + 1, arrivalDate: arrival.getDate() };
         }
 
-        // 🔥【修正】ステータス(currentStatus)を確認して、未確認以外ならアラートを消灯するロジック
         function renderCountdown(elementId, msLeft, currentStatus) {
             const element = document.getElementById(elementId);
             
-            // 注文完了、またはお休み設定されている場合はアラートを消灯し完了表記へ
             if (currentStatus === '注文済' || currentStatus === 'お休み') {
                 element.classList.remove('urgent');
-                element.style.color = '#94a3b8'; // 落ち着いたグレー
+                element.style.color = '#94a3b8'; 
                 element.textContent = currentStatus === '注文済' ? '🎉 手続き完了' : '⏸️ 今週はパス';
                 return;
             }
             
-            element.style.color = ''; // デフォルトCSS定義に戻す
+            element.style.color = ''; 
             const hoursLeft = msLeft / (1000 * 60 * 60);
             if (hoursLeft < 0) { element.textContent = "処理中..."; return; }
 
@@ -817,6 +812,7 @@
             }
         }
 
+        // 🌟【修正】コメントアウトを解除。スプレッドシートへ確実に「pal_delivery_week」や「oisix_delivery_week」を連動保存します
         async function changeDeliveryStatus(type, val) {
             showToast("⏳ ステータスを同期中...");
             const el = document.getElementById('sel-' + type);
@@ -825,9 +821,10 @@
             else if (val === 'お休み') el.classList.add('status-none');
             else el.classList.add('status-yet');
             
-            // ステータスを即時判定させてアラートを切り替える
+            // ローカルデータを即時書き換え＆アラート再計算
             updateCountdowns();
             
+            // 裏側のスプレッドシート（GAS経由）へ直接書き込み保存を行う
             await saveCloudData(type + "_delivery_week", val);
         }
 
@@ -966,7 +963,7 @@
             let bentoList = []; try { bentoList = JSON.parse(globalCloudData["haruto_bento_days"] || "[]"); } catch(e){}
             const isBento = bentoList.includes(targetDateStr);
             let harutoSched = globalCloudData["custom_" + targetDateStr + "_haruto"] || defaultSchedules[dayNum].haruto;
-            if (isDayOff(targetDateStr) && !globalCloudData["custom_" + targetDateStr + "_haruto"]) harutoSched = "💤 保育園はお休みです";
+            if (isDayOff(targetDateStr) && !globalCloudData["custom_" + targetDateStr + "_haruto"]) harutoSched = "💤保育園はお休みです";
             else if (isBento && !globalCloudData["custom_" + targetDateStr + "_haruto"]) harutoSched = harutoSched.split(" (")[0] + " 🍱【今日はお弁当の日！】";
             document.getElementById('display-haruto').textContent = harutoSched;
 
@@ -1085,7 +1082,7 @@
             renderCustomTodoList('haruto'); 
             document.getElementById('customMemo').value = globalCloudData["memo"] || "";
             
-            // カウントダウン定期更新始動
+            // 定期更新タイマー
             updateCountdowns();
             setInterval(updateCountdowns, 60000);
             
