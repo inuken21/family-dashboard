@@ -103,7 +103,6 @@
         .res-btn { background-color: var(--btn-neutral-bg); color: var(--btn-neutral-text); border: none; padding: 5px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .res-btn.phone-btn { background-color: var(--btn-phone-bg); color: var(--btn-phone-text); }
 
-        /* 食材定期便パネル（案A最適化・ガタつき完全消滅スタイル） */
         .delivery-panel { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px; margin-top: 12px; box-shadow: var(--inner-shadow); }
         .delivery-block { border-bottom: 1px solid #e2e8f0; padding: 8px 0; }
         .delivery-block:last-child { border-bottom: none; padding-bottom: 0; }
@@ -122,7 +121,7 @@
         .delivery-sub-row { display: flex; align-items: center; margin-top: 6px; padding-left: 55px; width: 100%; font-size: 0.75rem; color: #64748b; white-space: nowrap; height: 18px; }
         .delivery-countdown { font-weight: 500; display: inline-block; padding: 1px 4px; border-radius: 4px; }
         .delivery-countdown.urgent { color: #ef4444; font-weight: bold; background-color: #fee2e2; padding: 1px 6px; }
-        .delivery-history { color: #94a3b8; margin-left: auto; font-size: 0.7rem; padding-right: 2px; }
+        .delivery-history { color: #94a3b8; margin-left: auto; font-size: 0.7°C; padding-right: 2px; }
 
         .todo-panel-child { border-radius: 8px; padding: 12px 12px 12px 16px; margin-bottom: 12px; background-color: #f8fafc; border: 1px solid #e2e8f0; position: relative; overflow: hidden; }
         .todo-panel-child::before { content: ""; position: absolute; top: 0; left: 0; width: 6px; height: 100%; }
@@ -236,6 +235,7 @@
         .config-ui-row label { font-size: 0.8rem; font-weight: bold; color: #475569; margin-bottom: 2px; }
         .config-ui-input { padding: 6px; font-size: 0.85rem; border: 1px solid #cbd5e1; border-radius: 4px; background: white; width: 100%; font-family: monospace; }
         .config-ui-save-btn { width: 100%; padding: 8px 0; background-color: #475569; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 5px; font-size: 0.85rem; }
+        .responsive-textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; outline: none; box-shadow: var(--inner-shadow); resize: none; }
     </style>
 </head>
 <body>
@@ -542,6 +542,7 @@
     </details>
 
     <script>
+        // 🛠️ 【設定】ここにご自身のGASウェブアプリURLを貼り付けてください
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw0YdRq2aEPNBXCtByhIst6wVS0WDDv1olhdg49m66yUFP6hoyTf8m_lo4V6JL98lkU/exec";
 
         const terakoyaDates2026 = [
@@ -645,10 +646,13 @@
             document.getElementById('bento-credentials-area').innerHTML = `ID: <strong>${bentoId}</strong> / PW: <strong>${bentoPw}</strong>`;
         }
 
-        // 🔄 【設計刷新】起動時に一括データ取得、カレンダーと同じKeyValue構造でパッとロード
+        // 🔄 【高速ロード版】今日の「日付」をパラメータに付与して、前後データのみを部分ロード
         async function fetchCloudData() {
             try {
-                const response = await fetch(GAS_WEB_APP_URL);
+                const todayStr = new Date().toISOString().split('T')[0];
+                const fetchUrl = `${GAS_WEB_APP_URL}?baseDate=${todayStr}`;
+
+                const response = await fetch(fetchUrl);
                 globalCloudData = await response.json();
                 document.getElementById('loading').style.display = 'none';
                 
@@ -670,7 +674,6 @@
                 document.getElementById('cfg-bento-id').value = globalCloudData['bento_id'] || "";
                 document.getElementById('cfg-bento-pw').value = globalCloudData['bento_pw'] || "";
 
-                // 動的カウントダウンとセレクト状態を一発で復元
                 updateCountdowns();
 
             } catch (e) { document.getElementById('loading').textContent = "⚠️ 同期エラーが発生しました。"; }
@@ -745,11 +748,9 @@
             await saveCloudData(type + "_status_" + targetDateStr, val);
         }
 
-        // 🥦 【設計刷新版】現在計算された到着日付キーを元に、状態とアラートを完全復元・制御
         function updateCountdowns() {
             const now = new Date();
 
-            // 1. パルシステム：火曜13:00〆切 ➔ 翌々週月曜着
             const palInfo = getDeadlineAndArrival(now, 2, 13, 2); 
             document.getElementById('date-pal').textContent = `${palInfo.arrivalMonth}/${palInfo.arrivalDate}着`;
             
@@ -760,11 +761,9 @@
             applyDeliveryStyle(palSelect, palStatus);
             renderCountdown('countdown-pal', palInfo.msLeft, palStatus);
             
-            // 履歴も地層のように過去の日付キーから100%正確に引っ張るだけ！
             const palPrevKey = `delivery_pal_${palInfo.prevArrivalStr}`;
             document.getElementById('history-pal').textContent = "前回:" + (globalCloudData[palPrevKey] || "未確認");
 
-            // 2. Oisix：木曜10:00〆切 ➔ 翌週月曜着
             const oisixInfo = getDeadlineAndArrival(now, 4, 10, 1); 
             document.getElementById('date-oisix').textContent = `${oisixInfo.arrivalMonth}/${oisixInfo.arrivalDate}着`;
             
@@ -808,7 +807,6 @@
         function renderCountdown(elementId, msLeft, currentStatus) {
             const element = document.getElementById(elementId);
             
-            // 注文済・お休みならアラートを完全消灯し、完了表記にシフト
             if (currentStatus === '注文済' || currentStatus === 'お休み') {
                 element.classList.remove('urgent');
                 element.style.color = '#94a3b8'; 
@@ -839,7 +837,6 @@
             else el.classList.add('status-yet');
         }
 
-        // 🔄 【設計刷新】確実な日付文字列をキーに組み込んで、メインスプレッドシートへ一元送信
         async function changeDeliveryStatus(type, val) {
             showToast("⏳ ステータスを同期中...");
             const el = document.getElementById('sel-' + type);
@@ -847,13 +844,11 @@
             
             const now = new Date();
             const info = (type === 'pal') ? getDeadlineAndArrival(now, 2, 13, 2) : getDeadlineAndArrival(now, 4, 10, 1);
-            const targetKey = `delivery_${type}_${info.arrivalStr}`; // 例: delivery_pal_2026-07-13
+            const targetKey = `delivery_${type}_${info.arrivalStr}`;
             
-            // 即時反映
             globalCloudData[targetKey] = val;
             updateCountdowns();
             
-            // 安全・確実な日付キーで同期保存
             await saveCloudData(targetKey, val);
         }
 
@@ -1111,7 +1106,6 @@
             renderCustomTodoList('haruto'); 
             document.getElementById('customMemo').value = globalCloudData["memo"] || "";
             
-            // 定期更新タイマー
             setInterval(updateCountdowns, 60000);
             
             for (let i = 1; i <= 5; i++) {
