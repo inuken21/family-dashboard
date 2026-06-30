@@ -103,7 +103,7 @@
         .res-btn { background-color: var(--btn-neutral-bg); color: var(--btn-neutral-text); border: none; padding: 5px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .res-btn.phone-btn { background-color: var(--btn-phone-bg); color: var(--btn-phone-text); }
 
-        /* 食材注文エリア */
+        /* 食材定期便パネル（案A最適化・ガタつき完全消滅スタイル） */
         .delivery-panel { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px; margin-top: 12px; box-shadow: var(--inner-shadow); }
         .delivery-block { border-bottom: 1px solid #e2e8f0; padding: 8px 0; }
         .delivery-block:last-child { border-bottom: none; padding-bottom: 0; }
@@ -151,7 +151,7 @@
         .todo-custom-text:active::before, .todo-custom-text:hover::before { opacity: 1; pointer-events: auto; }
         .todo-custom-cb:checked + .todo-text-container .todo-custom-text { text-decoration: line-through; opacity: 0.4; }
         .todo-custom-cb:checked + .todo-text-container::after { content: " 🎉"; font-size: 0.85rem; margin-left: 2px; animation: pop 0.3s ease; flex-shrink: 0; }
-        .todo-date-label { font-size: 0.75rem; font-weight: bold; color: #475569; background-color: #f1f5f9; padding: 1px 5px; border-radius: 4px; flex-shrink: 0; }
+        .todo-date-label { font-size: 0.75rem; font-weight: bold; color: #64748b; background-color: #f1f5f9; padding: 1px 5px; border-radius: 4px; flex-shrink: 0; }
         .todo-custom-cb:checked + .todo-text-container .todo-date-label { color: #cbd5e1; background-color: #f8fafc; text-decoration: line-through; opacity: 0.4; }
         .deadline-badge { font-size: 0.65rem; font-weight: bold; padding: 1px 4px; border-radius: 4px; color: white; flex-shrink: 0; }
         .deadline-badge.overdue { background-color: #ef4444; }
@@ -645,6 +645,7 @@
             document.getElementById('bento-credentials-area').innerHTML = `ID: <strong>${bentoId}</strong> / PW: <strong>${bentoPw}</strong>`;
         }
 
+        // 🔄 【設計刷新】起動時に一括データ取得、カレンダーと同じKeyValue構造でパッとロード
         async function fetchCloudData() {
             try {
                 const response = await fetch(GAS_WEB_APP_URL);
@@ -669,23 +670,10 @@
                 document.getElementById('cfg-bento-id').value = globalCloudData['bento_id'] || "";
                 document.getElementById('cfg-bento-pw').value = globalCloudData['bento_pw'] || "";
 
-                // 宅配ステータス復元
-                document.getElementById('sel-pal').value = globalCloudData['pal_delivery_status'] || "未確認";
-                document.getElementById('sel-oisix').value = globalCloudData['oisix_delivery_status'] || "未確認";
-                
-                document.getElementById('sel-pal').className = 'delivery-select ' + getStatusClass(globalCloudData['pal_delivery_status']);
-                document.getElementById('sel-oisix').className = 'delivery-select ' + getStatusClass(globalCloudData['oisix_delivery_status']);
-
-                document.getElementById('history-pal').textContent = "前回:" + (globalCloudData['pal_prev_status'] || "未確認");
-                document.getElementById('history-oisix').textContent = "前回:" + (globalCloudData['oisix_prev_status'] || "未確認");
+                // 動的カウントダウンとセレクト状態を一発で復元
+                updateCountdowns();
 
             } catch (e) { document.getElementById('loading').textContent = "⚠️ 同期エラーが発生しました。"; }
-        }
-
-        function getStatusClass(val) {
-            if (val === '注文済') return 'status-ok';
-            if (val === 'お休み') return 'status-none';
-            return 'status-yet';
         }
 
         async function saveCloudData(key, value, silent = false) {
@@ -757,18 +745,38 @@
             await saveCloudData(type + "_status_" + targetDateStr, val);
         }
 
+        // 🥦 【設計刷新版】現在計算された到着日付キーを元に、状態とアラートを完全復元・制御
         function updateCountdowns() {
             const now = new Date();
 
-            // パルシステム：火曜13:00〆切 ➔ 翌々週月曜着
+            // 1. パルシステム：火曜13:00〆切 ➔ 翌々週月曜着
             const palInfo = getDeadlineAndArrival(now, 2, 13, 2); 
             document.getElementById('date-pal').textContent = `${palInfo.arrivalMonth}/${palInfo.arrivalDate}着`;
-            renderCountdown('countdown-pal', palInfo.msLeft, document.getElementById('sel-pal').value);
+            
+            const palKey = `delivery_pal_${palInfo.arrivalStr}`;
+            const palStatus = globalCloudData[palKey] || "未確認";
+            const palSelect = document.getElementById('sel-pal');
+            palSelect.value = palStatus;
+            applyDeliveryStyle(palSelect, palStatus);
+            renderCountdown('countdown-pal', palInfo.msLeft, palStatus);
+            
+            // 履歴も地層のように過去の日付キーから100%正確に引っ張るだけ！
+            const palPrevKey = `delivery_pal_${palInfo.prevArrivalStr}`;
+            document.getElementById('history-pal').textContent = "前回:" + (globalCloudData[palPrevKey] || "未確認");
 
-            // Oisix：木曜10:00〆切 ➔ 翌週月曜着
+            // 2. Oisix：木曜10:00〆切 ➔ 翌週月曜着
             const oisixInfo = getDeadlineAndArrival(now, 4, 10, 1); 
             document.getElementById('date-oisix').textContent = `${oisixInfo.arrivalMonth}/${oisixInfo.arrivalDate}着`;
-            renderCountdown('countdown-oisix', oisixInfo.msLeft, document.getElementById('sel-oisix').value);
+            
+            const oisixKey = `delivery_oisix_${oisixInfo.arrivalStr}`;
+            const oisixStatus = globalCloudData[oisixKey] || "未確認";
+            const oisixSelect = document.getElementById('sel-oisix');
+            oisixSelect.value = oisixStatus;
+            applyDeliveryStyle(oisixSelect, oisixStatus);
+            renderCountdown('countdown-oisix', oisixInfo.msLeft, oisixStatus);
+            
+            const oisixPrevKey = `delivery_oisix_${oisixInfo.prevArrivalStr}`;
+            document.getElementById('history-oisix').textContent = "前回:" + (globalCloudData[oisixPrevKey] || "未確認");
         }
 
         function getDeadlineAndArrival(now, deadlineDay, deadlineHour, weeksToArrival) {
@@ -783,12 +791,24 @@
             if (daysToMonday <= 0) daysToMonday += 7;
             arrival.setDate(arrival.getDate() + daysToMonday + (weeksToArrival - 1) * 7);
 
-            return { msLeft: msLeft, arrivalMonth: arrival.getMonth() + 1, arrivalDate: arrival.getDate() };
+            let prevArrival = new Date(arrival.getTime());
+            prevArrival.setDate(prevArrival.getDate() - 7);
+
+            const fmt = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+            return { 
+                msLeft: msLeft, 
+                arrivalMonth: arrival.getMonth() + 1, 
+                arrivalDate: arrival.getDate(),
+                arrivalStr: fmt(arrival),
+                prevArrivalStr: fmt(prevArrival)
+            };
         }
 
         function renderCountdown(elementId, msLeft, currentStatus) {
             const element = document.getElementById(elementId);
             
+            // 注文済・お休みならアラートを完全消灯し、完了表記にシフト
             if (currentStatus === '注文済' || currentStatus === 'お休み') {
                 element.classList.remove('urgent');
                 element.style.color = '#94a3b8'; 
@@ -812,20 +832,29 @@
             }
         }
 
-        // 🌟【修正】コメントアウトを解除。スプレッドシートへ確実に「pal_delivery_week」や「oisix_delivery_week」を連動保存します
-        async function changeDeliveryStatus(type, val) {
-            showToast("⏳ ステータスを同期中...");
-            const el = document.getElementById('sel-' + type);
+        function applyDeliveryStyle(el, val) {
             el.className = 'delivery-select';
             if (val === '注文済') el.classList.add('status-ok');
             else if (val === 'お休み') el.classList.add('status-none');
             else el.classList.add('status-yet');
+        }
+
+        // 🔄 【設計刷新】確実な日付文字列をキーに組み込んで、メインスプレッドシートへ一元送信
+        async function changeDeliveryStatus(type, val) {
+            showToast("⏳ ステータスを同期中...");
+            const el = document.getElementById('sel-' + type);
+            applyDeliveryStyle(el, val);
             
-            // ローカルデータを即時書き換え＆アラート再計算
+            const now = new Date();
+            const info = (type === 'pal') ? getDeadlineAndArrival(now, 2, 13, 2) : getDeadlineAndArrival(now, 4, 10, 1);
+            const targetKey = `delivery_${type}_${info.arrivalStr}`; // 例: delivery_pal_2026-07-13
+            
+            // 即時反映
+            globalCloudData[targetKey] = val;
             updateCountdowns();
             
-            // 裏側のスプレッドシート（GAS経由）へ直接書き込み保存を行う
-            await saveCloudData(type + "_delivery_week", val);
+            // 安全・確実な日付キーで同期保存
+            await saveCloudData(targetKey, val);
         }
 
         function updateWeekTitle() {
@@ -1083,7 +1112,6 @@
             document.getElementById('customMemo').value = globalCloudData["memo"] || "";
             
             // 定期更新タイマー
-            updateCountdowns();
             setInterval(updateCountdowns, 60000);
             
             for (let i = 1; i <= 5; i++) {
