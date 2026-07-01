@@ -140,7 +140,7 @@
         .todo-selected-date-preview { font-size: 0.75rem; margin-bottom: 6px; padding-left: 2px; font-weight: bold; display: none; }
         
         .todo-custom-list { list-style: none; padding: 0; margin: 0; }
-        .todo-custom-item { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px dashed rgba(0,0,0,0.05); gap: 8px; }
+        .todo-custom-item { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px dashed #cbd5e1; gap: 8px; }
         .todo-custom-item:last-child { border-bottom: none; }
         .todo-custom-label { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; cursor: pointer; flex: 1; min-width: 0; position: relative; }
         .todo-custom-cb { transform: scale(1.1); cursor: pointer; flex-shrink: 0; }
@@ -498,7 +498,8 @@
         <div class="card haruto-card">
             <h2>👶 はると 持ち物リスト</h2>
             <div id="haruto-bento-alert" class="bento-alert">🍴 本日は【給食（予約）の日】です！</div>
-            <details><summary>毎日の基本セット</summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="y-base1"><label for="y-base1">タオル/コップ袋/赤パン袋/バインダー</label></li><li class="todo-item"><input type="checkbox" id="y-base5"><label for="y-base5">食具（フォーク・スプーン等） <span id="haruto-bento-badge" class="badge" style="display:none;">本日必要！</span></label></li><li class="todo-item"><input type="checkbox" id="y-base6"><label for="y-base6">水筒</label></li></ul></div></details>
+            <div id="haruto-obento-alert" class="rule-box" style="background-color:#fffbeb; border-left:4px solid #f59f00; color:#b45309; font-weight:bold; margin-bottom:10px; font-size:0.85rem; display:none;">🍱 本日は【お弁当が必要な日】です！</div>
+            <details><summary>毎日の基本セット</summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="y-base1"><label for="y-base1">タオル/コップ袋/赤パン袋/バインダー</label></li><li class="todo-item"><input type="checkbox" id="y-base5"><label for="y-base5"><span id="haruto-mochimono-lunch-text">食具（フォーク・スプーン等）</span> <span id="haruto-bento-badge" class="badge" style="display:none;">本日必要！</span></label></li><li class="todo-item"><input type="checkbox" id="y-base6"><label for="y-base6">水筒</label></li></ul></div></details>
             <details><summary>あおむし広場</summary><div class="details-content"><div class="rule-box">⚠️ スイミングの日は、朝事務所の前のかごに入れること！</div><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="y-ao1"><label for="y-ao1">あおむしバック/おやつ</label></li></ul></div></details>
             <details><summary>鷺沼スイミング</summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="y-sw1"><label for="y-sw1">帽子・水着/タオル・会員証</label></li></ul></div></details>
             <details><summary>サッカー</summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="y-sc1"><label for="y-sc1">サッカーボール</label></li></ul></div></details>
@@ -982,19 +983,49 @@
             document.getElementById('kouta-lunch-badge').style.display = isDuty ? "inline-block" : "none";
             if (isDuty) document.getElementById('kouta-lunch-details').open = true;
 
+            // 🍴 はると給食予約状況の読み込み
             let bentoList = []; try { bentoList = JSON.parse(globalCloudData["haruto_bento_days"] || "[]"); } catch(e){}
-            const isBento = bentoList.includes(targetDateStr);
-            let harutoSched = globalCloudData["custom_" + targetDateStr + "_haruto"] || defaultSchedules[dayNum].haruto;
-            if (isDayOff(targetDateStr) && !globalCloudData["custom_" + targetDateStr + "_haruto"]) harutoSched = "💤保育園はお休みです";
-            else if (isBento && !globalCloudData["custom_" + targetDateStr + "_haruto"]) harutoSched = harutoSched.split(" (")[0] + " 🍴【今日はお弁当ではなく給食予約の日！】";
+            const isLunchDay = bentoList.includes(targetDateStr); // カレンダーに登録がある日＝給食の日
+            
+            let harutoSched = globalCloudData["custom_" + targetDateStr + "_haruto"];
+            if (!harutoSched) {
+                if (isDayOff(targetDateStr)) {
+                    harutoSched = "💤保育園はお休みです";
+                } else {
+                    const baseSched = defaultSchedules[dayNum].haruto;
+                    // カレンダー設定（isLunchDay）の有無で表示を切り替え
+                    if (isLunchDay) {
+                        harutoSched = `${baseSched} 🍴【今日は給食の日！】`;
+                    } else {
+                        harutoSched = `${baseSched} 🍱【今日はお弁当の日！】`;
+                    }
+                }
+            }
             document.getElementById('display-haruto').textContent = harutoSched;
 
             const offFlag = isDayOff(targetDateStr);
             document.getElementById('kouta-terakoya-alert').style.display = (isTerakoya && !offFlag) ? "block" : "none";
             document.getElementById('kouta-terakoya-details').style.display = (isTerakoya && !offFlag) ? "block" : "none";
             if (isTerakoya && !offFlag) document.getElementById('kouta-terakoya-details').open = true;
-            document.getElementById('haruto-bento-alert').style.display = (isBento && !offFlag) ? "block" : "none";
-            document.getElementById('haruto-bento-badge').style.display = (isBento && !offFlag) ? "inline" : "none";
+            
+            // アラートパネルと持ち物タブの出し分け
+            if (!offFlag) {
+                if (isLunchDay) {
+                    document.getElementById('haruto-bento-alert').style.display = "block"; // 「今日は給食（予約）の日です！」を表示
+                    document.getElementById('haruto-obento-alert').style.display = "none";  // お弁当警告は隠す
+                    document.getElementById('haruto-bento-badge').style.display = "none";   // 持ち物の「本日必要！」バッジを隠す
+                    document.getElementById('haruto-mochimono-lunch-text').innerHTML = "食具（フォーク・スプーン等）";
+                } else {
+                    document.getElementById('haruto-bento-alert').style.display = "none";   // 給食アラートは隠す
+                    document.getElementById('haruto-obento-alert').style.display = "block"; // 「今日はお弁当が必要な日です！」を表示
+                    document.getElementById('haruto-bento-badge').style.display = "inline";  // 持ち物に「本日必要！」バッジを表示
+                    document.getElementById('haruto-mochimono-lunch-text').innerHTML = "<strong>お弁当</strong> / 食具セット";
+                }
+            } else {
+                document.getElementById('haruto-bento-alert').style.display = "none";
+                document.getElementById('haruto-obento-alert').style.display = "none";
+                document.getElementById('haruto-bento-badge').style.display = "none";
+            }
 
             const wakuVal = globalCloudData["res_wakuwaku_status_" + targetDateStr] || "yet";
             const aomuVal = globalCloudData["res_aomushi_status_" + targetDateStr] || "yet";
