@@ -121,7 +121,7 @@
         .delivery-sub-row { display: flex; align-items: center; margin-top: 6px; padding-left: 55px; width: 100%; font-size: 0.75rem; color: #64748b; white-space: nowrap; height: 18px; }
         .delivery-countdown { font-weight: 500; display: inline-block; padding: 1px 4px; border-radius: 4px; }
         .delivery-countdown.urgent { color: #ef4444; font-weight: bold; background-color: #fee2e2; padding: 1px 6px; }
-        .delivery-history { color: #94a3b8; margin-left: auto; font-size: 0.7°C; padding-right: 2px; }
+        .delivery-history { color: #94a3b8; margin-left: auto; font-size: 0.7rem; padding-right: 2px; }
 
         .todo-panel-child { border-radius: 8px; padding: 12px 12px 12px 16px; margin-bottom: 12px; background-color: #f8fafc; border: 1px solid #e2e8f0; position: relative; overflow: hidden; }
         .todo-panel-child::before { content: ""; position: absolute; top: 0; left: 0; width: 6px; height: 100%; }
@@ -175,7 +175,7 @@
         .kouta-badge { font-size: 0.55rem; font-weight: bold; padding: 1px 3px; border-radius: 3px; color: white; background-color: var(--kouta-border); }
         .kouta-duty-badge { font-size: 0.55rem; background-color: #475569; color: white; padding: 0px 2px; border-radius: 2px; font-weight: bold; }
         .cal-day.bento-active { background-color: var(--haruto-bg); border-color: var(--haruto-border); color: var(--haruto-text); font-weight: bold; }
-        .cal-day.bento-active::after { content: "🍱"; position: absolute; top: -1px; right: 1px; font-size: 0.6rem; }
+        .cal-day.bento-active::after { content: "🍴"; position: absolute; top: -1px; right: 1px; font-size: 0.6rem; }
         .cal-month-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; margin-top: 5px; }
         .cal-nav-btn { background-color: var(--btn-neutral-bg); color: var(--btn-neutral-text); border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
 
@@ -467,10 +467,10 @@
         </details>
 
         <details class="bento-details">
-            <summary>🍱 はるとお弁当カレンダー</summary>
+            <summary>🍴 はると給食予約カレンダー</summary>
             <div class="details-content">
                 <div class="bento-link-box">
-                    <a href="https://www.fl39.jp/" target="_blank" rel="noopener noreferrer" class="bento-link-btn">🌐 お弁当予約サイトを開く ↗</a>
+                    <a href="https://www.fl39.jp/" target="_blank" rel="noopener noreferrer" class="bento-link-btn">🌐 給食予約サイトを開く ↗</a>
                     <p class="bento-login-info" id="bento-credentials-area">ID/PW 読み込み中...</p>
                 </div>
                 <div class="cal-month-nav">
@@ -497,8 +497,8 @@
 
         <div class="card haruto-card">
             <h2>👶 はると 持ち物リスト</h2>
-            <div id="haruto-bento-alert" class="bento-alert">🍱 本日は【お弁当の日】です！</div>
-            <details><summary>毎日の基本セット</summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="y-base1"><label for="y-base1">タオル/コップ袋/赤パン袋/バインダー</label></li><li class="todo-item"><input type="checkbox" id="y-base5"><label for="y-base5">弁当 / 食具 <span id="haruto-bento-badge" class="badge" style="display:none;">本日必要！</span></label></li><li class="todo-item"><input type="checkbox" id="y-base6"><label for="y-base6">水筒</label></li></ul></div></details>
+            <div id="haruto-bento-alert" class="bento-alert">🍴 本日は【給食（予約）の日】です！</div>
+            <details><summary>毎日の基本セット</summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="y-base1"><label for="y-base1">タオル/コップ袋/赤パン袋/バインダー</label></li><li class="todo-item"><input type="checkbox" id="y-base5"><label for="y-base5">食具（フォーク・スプーン等） <span id="haruto-bento-badge" class="badge" style="display:none;">本日必要！</span></label></li><li class="todo-item"><input type="checkbox" id="y-base6"><label for="y-base6">水筒</label></li></ul></div></details>
             <details><summary>あおむし広場</summary><div class="details-content"><div class="rule-box">⚠️ スイミングの日は、朝事務所の前のかごに入れること！</div><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="y-ao1"><label for="y-ao1">あおむしバック/おやつ</label></li></ul></div></details>
             <details><summary>鷺沼スイミング</summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="y-sw1"><label for="y-sw1">帽子・水着/タオル・会員証</label></li></ul></div></details>
             <details><summary>サッカー</summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="y-sc1"><label for="y-sc1">サッカーボール</label></li></ul></div></details>
@@ -542,7 +542,6 @@
     </details>
 
     <script>
-        // 🛠️ 【設定】ここにご自身のGASウェブアプリURLを貼り付けてください
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw0YdRq2aEPNBXCtByhIst6wVS0WDDv1olhdg49m66yUFP6hoyTf8m_lo4V6JL98lkU/exec";
 
         const terakoyaDates2026 = [
@@ -646,7 +645,6 @@
             document.getElementById('bento-credentials-area').innerHTML = `ID: <strong>${bentoId}</strong> / PW: <strong>${bentoPw}</strong>`;
         }
 
-        // 🔄 【高速ロード版】今日の「日付」をパラメータに付与して、前後データのみを部分ロード
         async function fetchCloudData() {
             try {
                 const todayStr = new Date().toISOString().split('T')[0];
@@ -988,7 +986,7 @@
             const isBento = bentoList.includes(targetDateStr);
             let harutoSched = globalCloudData["custom_" + targetDateStr + "_haruto"] || defaultSchedules[dayNum].haruto;
             if (isDayOff(targetDateStr) && !globalCloudData["custom_" + targetDateStr + "_haruto"]) harutoSched = "💤保育園はお休みです";
-            else if (isBento && !globalCloudData["custom_" + targetDateStr + "_haruto"]) harutoSched = harutoSched.split(" (")[0] + " 🍱【今日はお弁当の日！】";
+            else if (isBento && !globalCloudData["custom_" + targetDateStr + "_haruto"]) harutoSched = harutoSched.split(" (")[0] + " 🍴【今日はお弁当ではなく給食予約の日！】";
             document.getElementById('display-haruto').textContent = harutoSched;
 
             const offFlag = isDayOff(targetDateStr);
