@@ -985,7 +985,7 @@
 
             // 🍴 はると給食予約状況の読み込み
             let bentoList = []; try { bentoList = JSON.parse(globalCloudData["haruto_bento_days"] || "[]"); } catch(e){}
-            const isLunchDay = bentoList.includes(targetDateStr); // カレンダーに登録がある日＝給食の日
+            const isLunchDay = bentoList.includes(targetDateStr);
             
             let harutoSched = globalCloudData["custom_" + targetDateStr + "_haruto"];
             if (!harutoSched) {
@@ -993,7 +993,6 @@
                     harutoSched = "💤保育園はお休みです";
                 } else {
                     const baseSched = defaultSchedules[dayNum].haruto;
-                    // カレンダー設定（isLunchDay）の有無で表示を切り替え
                     if (isLunchDay) {
                         harutoSched = `${baseSched} 🍴【今日は給食の日！】`;
                     } else {
@@ -1008,17 +1007,16 @@
             document.getElementById('kouta-terakoya-details').style.display = (isTerakoya && !offFlag) ? "block" : "none";
             if (isTerakoya && !offFlag) document.getElementById('kouta-terakoya-details').open = true;
             
-            // アラートパネルと持ち物タブの出し分け
             if (!offFlag) {
                 if (isLunchDay) {
-                    document.getElementById('haruto-bento-alert').style.display = "block"; // 「今日は給食（予約）の日です！」を表示
-                    document.getElementById('haruto-obento-alert').style.display = "none";  // お弁当警告は隠す
-                    document.getElementById('haruto-bento-badge').style.display = "none";   // 持ち物の「本日必要！」バッジを隠す
+                    document.getElementById('haruto-bento-alert').style.display = "block"; 
+                    document.getElementById('haruto-obento-alert').style.display = "none";  
+                    document.getElementById('haruto-bento-badge').style.display = "none";   
                     document.getElementById('haruto-mochimono-lunch-text').innerHTML = "食具（フォーク・スプーン等）";
                 } else {
-                    document.getElementById('haruto-bento-alert').style.display = "none";   // 給食アラートは隠す
-                    document.getElementById('haruto-obento-alert').style.display = "block"; // 「今日はお弁当が必要な日です！」を表示
-                    document.getElementById('haruto-bento-badge').style.display = "inline";  // 持ち物に「本日必要！」バッジを表示
+                    document.getElementById('haruto-bento-alert').style.display = "none";   
+                    document.getElementById('haruto-obento-alert').style.display = "block"; 
+                    document.getElementById('haruto-bento-badge').style.display = "inline";  
                     document.getElementById('haruto-mochimono-lunch-text').innerHTML = "<strong>お弁当</strong> / 食具セット";
                 }
             } else {
@@ -1116,21 +1114,33 @@
 
         let memoTimeout; document.getElementById('customMemo').addEventListener('input', (e) => { clearTimeout(memoTimeout); memoTimeout = setTimeout(() => { saveCloudData("memo", e.target.value); }, 1000); });
 
+        // 🚀 初期起動時のロード順番最適化処理
         window.addEventListener('DOMContentLoaded', async () => {
             if (!localUserName) {
                 document.getElementById('userModal').style.display = 'flex';
             }
 
+            // 1. まず先にGoogleから必要なデータを完全にロード（通信を最優先で完了させる）
             await fetchCloudData(); 
             
+            // 2. 読み込み完了したデータを使って、カレンダーを描画するベース年月をセット
+            koutaCalYear = new Date().getFullYear();
+            koutaCalMonth = new Date().getMonth();
+            currentCalYear = new Date().getFullYear();
+            currentCalMonth = new Date().getMonth();
+            
+            renderKoutaCalendar(koutaCalYear, koutaCalMonth); 
+            renderBentoCalendar(currentCalYear, currentCalMonth); 
+            
+            // 3. 今日の曜日を計算する
             const MathToday = new Date();
             let currentDay = MathToday.getDay(); 
             if (currentDay === 0 || currentDay === 6) currentDay = 1; 
             
-            renderKoutaCalendar(koutaCalYear, koutaCalMonth); 
-            renderBentoCalendar(currentCalYear, currentCalMonth); 
+            // 4. データが100%揃った状態で初めて初期表示の曜日をアクティブにする（これで一発目から給食の日になります！）
             selectDay(currentDay);
             
+            // 5. その他の自由タスクや永続データを反映
             renderCustomTodoList('kouta'); 
             renderCustomTodoList('haruto'); 
             document.getElementById('customMemo').value = globalCloudData["memo"] || "";
