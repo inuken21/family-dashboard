@@ -985,7 +985,8 @@
                     
                     if (config.period === "off") {
                         isKoutaSchoolOff = true;
-                        koutaSched = `☀️ **【学校休み】** / ${defaultSchedules[dayNum].kouta}`;
+                        // ☀️ 不要なカッコやアスタリスクをきれいに除去してスマートに！
+                        koutaSched = `☀️ 学校休み / ${defaultSchedules[dayNum].kouta}`;
                     } else {
                         isDuty = !!config.isDuty; 
                         const typeStr = config.isBTime ? "B" : "A"; 
@@ -1150,7 +1151,7 @@
         document.getElementById('kouta-cal-prev').addEventListener('click', () => { koutaCalMonth--; if (koutaCalMonth < 0) { koutaCalMonth = 11; koutaCalYear--; } renderKoutaCalendar(koutaCalYear, koutaCalMonth); document.getElementById('kouta-quick-panel').style.display='none'; });
         document.getElementById('kouta-cal-next').addEventListener('click', () => { koutaCalMonth++; if (koutaCalMonth > 11) { koutaCalMonth = 0; koutaCalYear--; } renderKoutaCalendar(koutaCalYear, koutaCalMonth); document.getElementById('kouta-quick-panel').style.display='none'; });
         document.getElementById('cal-prev').addEventListener('click', () => { currentCalMonth--; if (currentCalMonth < 0) { currentCalMonth = 11; currentCalYear--; } renderBentoCalendar(currentCalYear, currentCalMonth); });
-        document.getElementById('cal-next').addEventListener('click', () => { currentCalMonth++; if (currentCalMonth > 11) { currentCalMonth = 0; currentCalYear--; } renderBentoCalendar(currentCalYear, currentCalMonth); });
+        document.getElementById('cal-next').addEventListener('click', () => { currentCalMonth++; if (currentCalMonth > 11) { currentCalMonth = 0; currentCalYear++; } renderBentoCalendar(currentCalYear, currentCalMonth); });
 
         async function toggleEdit(target) {
             const displayEl = document.getElementById("display-" + target); const inputEl = document.getElementById("input-" + target); const btnEl = document.getElementById("edit-btn-" + target);
@@ -1192,7 +1193,7 @@
             }
         });
 
-       document.getElementById('edit-btn-kouta').addEventListener('click', () => toggleEdit('kouta')); document.getElementById('edit-btn-haruto').addEventListener('click', () => toggleEdit('haruto'));
+        document.getElementById('edit-btn-kouta').addEventListener('click', () => toggleEdit('kouta')); document.getElementById('edit-btn-haruto').addEventListener('click', () => toggleEdit('haruto'));
     </script>
 </body>
 </html>
