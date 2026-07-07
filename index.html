@@ -170,14 +170,20 @@
         .cal-day { padding: 6px 0; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.85rem; cursor: pointer; position: relative; min-height: 44px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
         .cal-day.empty { background-color: transparent; border: none; cursor: default; min-height: auto; box-shadow: none; }
         .cal-day.day-off { background-color: #e2e8f0; color: #94a3b8; border-color: #cbd5e1; cursor: not-allowed; box-shadow: none; }
+        
         .cal-day.kouta-active-b { background-color: #e2e8f0; border-color: var(--kouta-border); box-shadow: var(--inner-shadow); }
         .cal-day.kouta-active-off { background-color: #f1f5f9; border-color: #94a3b8; box-shadow: var(--inner-shadow); }
         .kouta-badge-container { display: flex; flex-direction: column; gap: 1px; align-items: center; margin-top: 2px; }
         .kouta-badge { font-size: 0.55rem; font-weight: bold; padding: 1px 3px; border-radius: 3px; color: white; background-color: var(--kouta-border); }
         .kouta-badge.badge-off { background-color: #64748b; }
         .kouta-duty-badge { font-size: 0.55rem; background-color: #475569; color: white; padding: 0px 2px; border-radius: 2px; font-weight: bold; }
-        .cal-day.bento-active { background-color: var(--haruto-bg); border-color: var(--haruto-border); color: var(--haruto-text); font-weight: bold; }
-        .cal-day.bento-active::after { content: "🍴"; position: absolute; top: -1px; right: 1px; font-size: 0.6rem; }
+        
+        /* 👶 はるとカレンダー用トグルデザイン */
+        .cal-day.haruto-lunch-active { background-color: var(--haruto-bg); border-color: var(--haruto-border); color: var(--haruto-text); font-weight: bold; }
+        .cal-day.haruto-lunch-active::after { content: "🍴"; position: absolute; top: -1px; right: 1px; font-size: 0.6rem; }
+        .cal-day.haruto-off-active { background-color: #f1f5f9; border-color: #94a3b8; color: #64748b; font-weight: bold; }
+        .cal-day.haruto-off-active::after { content: "☀️"; position: absolute; top: -1px; right: 1px; font-size: 0.6rem; }
+        
         .cal-month-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; margin-top: 5px; }
         .cal-nav-btn { background-color: var(--btn-neutral-bg); color: var(--btn-neutral-text); border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
 
@@ -472,7 +478,7 @@
         </details>
 
         <details class="bento-details">
-            <summary>🍴 はると給食予約カレンダー</summary>
+            <summary>🍴 はると給食・お休み予約カレンダー</summary>
             <div class="details-content">
                 <div class="bento-link-box">
                     <a href="https://www.fl39.jp/" target="_blank" rel="noopener noreferrer" class="bento-link-btn">🌐 給食予約サイトを開く ↗</a>
@@ -483,6 +489,7 @@
                     <span id="cal-month-title" style="font-weight: bold; font-size: 1rem; color: var(--haruto-text);"></span>
                     <button type="button" class="cal-nav-btn" id="cal-next">次月 ▶</button>
                 </div>
+                <p style="margin:0 0 8px 0; font-size:0.75rem; color:var(--muted-text); text-align:center;">タップで切替: 白(弁当) ➔ オレンジ(🍴給食) ➔ グレー(☀️休み)</p>
                 <div class="cal-container" id="bento-calendar"></div>
             </div>
         </details>
@@ -504,7 +511,7 @@
             <h2>👶 はると 持ち物リスト</h2>
             <div id="haruto-bento-alert" class="bento-alert">🍴 本日は【給食（予約）の日】です！</div>
             <div id="haruto-obento-alert" class="rule-box" style="background-color:#fffbeb; border-left:4px solid #f59f00; color:#b45309; font-weight:bold; margin-bottom:10px; font-size:0.85rem; display:none;">🍱 本日は【お弁当が必要な日】です！</div>
-            <details><summary>毎日の基本セット</summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="y-base1"><label for="y-base1">タオル/コップ袋/赤パン袋/バインダー</label></li><li class="todo-item"><input type="checkbox" id="y-base5"><label for="y-base5"><span id="haruto-mochimono-lunch-text">食具（フォーク・スプーン等）</span> <span id="haruto-bento-badge" class="badge" style="display:none;">本日必要！</span></label></li><li class="todo-item"><input type="checkbox" id="y-base6"><label for="y-base6">水筒</label></li></ul></div></details>
+            <details><summary>毎日の基本セット</summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="y-base1"><label for="y-base1">タオル/コップ袋/赤パン袋/ババインダー</label></li><li class="todo-item"><input type="checkbox" id="y-base5"><label for="y-base5"><span id="haruto-mochimono-lunch-text">食具（フォーク・スプーン等）</span> <span id="haruto-bento-badge" class="badge" style="display:none;">本日必要！</span></label></li><li class="todo-item"><input type="checkbox" id="y-base6"><label for="y-base6">水筒</label></li></ul></div></details>
             <details><summary>あおむし広場</summary><div class="details-content"><div class="rule-box">⚠️ スイミングの日は、朝事務所の前のかごに入れること！</div><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="y-ao1"><label for="y-ao1">あおむしバック/おやつ</label></li></ul></div></details>
             <details><summary>鷺沼スイミング</summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="y-sw1"><label for="y-sw1">帽子・水着/タオル・会員証</label></li></ul></div></details>
             <details><summary>サッカー</summary><div class="details-content"><ul class="todo-list"><li class="todo-item"><input type="checkbox" id="y-sc1"><label for="y-sc1">サッカーボール</label></li></ul></div></details>
@@ -639,12 +646,10 @@
             const bentoPw = document.getElementById('cfg-bento-pw').value.trim();
 
             showToast("⏳ ログイン情報を同期中...");
-            
             await saveCloudData("oisix_id", oisixId, true);
             await saveCloudData("oisix_pw", oisixPw, true);
             await saveCloudData("bento_id", bentoId, true);
             await saveCloudData("bento_pw", bentoPw, true);
-
             showToast("✅ ログイン情報を安全に保管しました！");
             
             document.getElementById('oisix-credentials-area').innerHTML = `ID: <strong>${oisixId}</strong><br>PW: <strong>${oisixPw}</strong>`;
@@ -679,7 +684,6 @@
                 document.getElementById('cfg-bento-pw').value = globalCloudData['bento_pw'] || "";
 
                 updateCountdowns();
-
             } catch (e) { document.getElementById('loading').textContent = "⚠️ 同期エラーが発生しました。"; }
         }
 
@@ -935,7 +939,7 @@
                 });
                 li.appendChild(label); li.appendChild(delBtn); listEl.appendChild(li);
             });
-            document.getElementById(child + '-todo-count').textContent = `残り: ${incompleteCount}個`;
+            document.getElementById(child + '-todo-count').textContent = `分かりました。残り: ${incompleteCount}個`;
         }
 
         async function addCustomTodo(child) {
@@ -985,7 +989,6 @@
                     
                     if (config.period === "off") {
                         isKoutaSchoolOff = true;
-                        // ☀️ 不要なカッコやアスタリスクをきれいに除去してスマートに！
                         koutaSched = `☀️ 学校休み / ${defaultSchedules[dayNum].kouta}`;
                     } else {
                         isDuty = !!config.isDuty; 
@@ -1009,17 +1012,19 @@
             document.getElementById('kouta-lunch-badge').style.display = (isDuty && !isKoutaSchoolOff) ? "inline-block" : "none";
             if (isDuty && !isKoutaSchoolOff) document.getElementById('kouta-lunch-details').open = true;
 
-            let bentoList = []; try { bentoList = JSON.parse(globalCloudData["haruto_bento_days"] || "[]"); } catch(e){}
-            const isLunchDay = bentoList.includes(targetDateStr);
-            
+            // 🍴 👶 はると君の給食＆お休みステータス判定
+            const harutoState = globalCloudData["haruto_day_state_" + targetDateStr] || "bento"; // デフォルトはお弁当(bento)
             let harutoSched = globalCloudData["custom_" + targetDateStr + "_haruto"];
+            
             if (!harutoSched) {
                 if (isDayOff(targetDateStr)) {
                     harutoSched = "💤保育園はお休みです";
                 } else {
                     const baseSched = defaultSchedules[dayNum].haruto;
-                    if (isLunchDay) {
+                    if (harutoState === "lunch") {
                         harutoSched = `${baseSched} 🍴【今日は給食の日！】`;
+                    } else if (harutoState === "off") {
+                        harutoSched = `☀️ 幼稚園お休み`;
                     } else {
                         harutoSched = `${baseSched} 🍱【今日はお弁当の日！】`;
                     }
@@ -1032,8 +1037,9 @@
             document.getElementById('kouta-terakoya-details').style.display = (isTerakoya && !offFlag && !isKoutaSchoolOff) ? "block" : "none";
             if (isTerakoya && !offFlag && !isKoutaSchoolOff) document.getElementById('kouta-terakoya-details').open = true;
             
-            if (!offFlag) {
-                if (isLunchDay) {
+            // はると君のお休み・給食・お弁当に応じた持ち物アラート自動出し分け
+            if (!offFlag && harutoState !== "off") {
+                if (harutoState === "lunch") {
                     document.getElementById('haruto-bento-alert').style.display = "block"; 
                     document.getElementById('haruto-obento-alert').style.display = "none";  
                     document.getElementById('haruto-bento-badge').style.display = "none";   
@@ -1045,6 +1051,7 @@
                     document.getElementById('haruto-mochimono-lunch-text').innerHTML = "<strong>お弁当</strong> / 食具セット";
                 }
             } else {
+                // 幼稚園休み、または土日祝はアラートを全部消す
                 document.getElementById('haruto-bento-alert').style.display = "none";
                 document.getElementById('haruto-obento-alert').style.display = "none";
                 document.getElementById('haruto-bento-badge').style.display = "none";
@@ -1127,22 +1134,53 @@
         }
         ['panel-period-select', 'panel-btime-checkbox', 'panel-lunch-checkbox', 'panel-duty-checkbox'].forEach(id => document.getElementById(id).addEventListener('change', saveKoutaPanelConfig));
 
+        // 🔄 👶 【はると用トグル式カレンダー描画ロジック】
         function renderBentoCalendar(year, month) {
             const container = document.getElementById('bento-calendar'); if (!container) return; container.innerHTML = '';
             document.getElementById('cal-month-title').textContent = `${year}年${month + 1}月`;
             ['日','月','火','水','木','金','土'].forEach(w => { const h = document.createElement('div'); h.className = 'cal-header'; h.textContent = w; container.appendChild(h); });
             const firstDay = new Date(year, month, 1).getDay(); const lastDate = new Date(year, month + 1, 0).getDate();
-            let bentoList = []; try { bentoList = JSON.parse(globalCloudData["haruto_bento_days"] || "[]"); } catch(e){}
+            
             for (let i = 0; i < firstDay; i++) container.appendChild(document.createElement('div')).className = 'cal-day empty';
             for (let date = 1; date <= lastDate; date++) {
                 const dayEl = document.createElement('div'); dayEl.className = 'cal-day'; dayEl.textContent = date;
                 const cStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
                 if (isDayOff(cStr)) { dayEl.classList.add('day-off'); container.appendChild(dayEl); continue; }
-                if (bentoList.includes(cStr)) dayEl.classList.add('bento-active');
+                
+                // 新しいトグル状態（bento / lunch / off）を読み取ってクラスを付与
+                // ※過去データ（haruto_bento_daysの配列形式）も自動的に"lunch"に変換して互換性を維持する親切設計
+                let currentState = globalCloudData["haruto_day_state_" + cStr];
+                if (!currentState) {
+                    let oldBentoList = []; try { oldBentoList = JSON.parse(globalCloudData["haruto_bento_days"] || "[]"); } catch(e){}
+                    currentState = oldBentoList.includes(cStr) ? "lunch" : "bento";
+                }
+                
+                if (currentState === "lunch") dayEl.classList.add('haruto-lunch-active');
+                else if (currentState === "off") dayEl.classList.add('haruto-off-active');
+                
                 dayEl.addEventListener('click', async () => {
-                    bentoList = bentoList.includes(cStr) ? bentoList.filter(d => d !== cStr) : [...bentoList, cStr];
-                    renderBentoCalendar(currentCalYear, currentCalMonth); selectDay(selectedDayNum);
-                    await saveCloudData("haruto_bento_days", JSON.stringify(bentoList)); 
+                    let nextState = "bento";
+                    if (currentState === "bento") nextState = "lunch";
+                    else if (currentState === "lunch") nextState = "off";
+                    else if (currentState === "off") nextState = "bento";
+                    
+                    globalCloudData["haruto_day_state_" + cStr] = nextState;
+                    
+                    // 互換性維持のため、古い配列データ側も同期させておく
+                    let oldBentoList = []; try { oldBentoList = JSON.parse(globalCloudData["haruto_bento_days"] || "[]"); } catch(e){}
+                    if (nextState === "lunch") {
+                        if (!oldBentoList.includes(cStr)) oldBentoList.push(cStr);
+                    } else {
+                        oldBentoList = oldBentoList.filter(d => d !== cStr);
+                    }
+                    globalCloudData["haruto_bento_days"] = JSON.stringify(oldBentoList);
+                    
+                    renderBentoCalendar(currentCalYear, currentCalMonth); 
+                    selectDay(selectedDayNum);
+                    
+                    // スプレッドシートにまとめて安全保存
+                    await saveCloudData("haruto_day_state_" + cStr, nextState, true);
+                    await saveCloudData("haruto_bento_days", globalCloudData["haruto_bento_days"]);
                 });
                 container.appendChild(dayEl);
             }
@@ -1151,7 +1189,7 @@
         document.getElementById('kouta-cal-prev').addEventListener('click', () => { koutaCalMonth--; if (koutaCalMonth < 0) { koutaCalMonth = 11; koutaCalYear--; } renderKoutaCalendar(koutaCalYear, koutaCalMonth); document.getElementById('kouta-quick-panel').style.display='none'; });
         document.getElementById('kouta-cal-next').addEventListener('click', () => { koutaCalMonth++; if (koutaCalMonth > 11) { koutaCalMonth = 0; koutaCalYear--; } renderKoutaCalendar(koutaCalYear, koutaCalMonth); document.getElementById('kouta-quick-panel').style.display='none'; });
         document.getElementById('cal-prev').addEventListener('click', () => { currentCalMonth--; if (currentCalMonth < 0) { currentCalMonth = 11; currentCalYear--; } renderBentoCalendar(currentCalYear, currentCalMonth); });
-        document.getElementById('cal-next').addEventListener('click', () => { currentCalMonth++; if (currentCalMonth > 11) { currentCalMonth = 0; currentCalYear++; } renderBentoCalendar(currentCalYear, currentCalMonth); });
+        document.getElementById('cal-next').addEventListener('click', () => { currentCalMonth++; if (currentCalMonth > 11) { currentCalMonth = 0; currentCalYear--; } renderBentoCalendar(currentCalYear, currentCalMonth); });
 
         async function toggleEdit(target) {
             const displayEl = document.getElementById("display-" + target); const inputEl = document.getElementById("input-" + target); const btnEl = document.getElementById("edit-btn-" + target);
